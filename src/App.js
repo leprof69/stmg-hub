@@ -31,7 +31,7 @@ function App() {
     <div className="min-h-screen bg-gray-900 flex items-center justify-center">
       <div className="text-center">
         <h1 className="text-white text-3xl font-bold">Bienvenue sur STMG HUB !</h1>
-        <p className="text-gray-400 mt-2">Connecté en tant que : {utilisateur.email}</p>
+        <p className="text-gray-400 mt-2">Connecté : {utilisateur.email}</p>
         <button
           onClick={() => auth.signOut()}
           className="mt-4 bg-red-600 hover:bg-red-700 text-white font-bold p-3 rounded-lg"
@@ -40,3 +40,7 @@ function App() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default App;
