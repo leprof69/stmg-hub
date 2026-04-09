@@ -6,6 +6,8 @@ import Login from "./pages/Login";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import Chapitres from "./pages/Chapitres";
+import Badges from "./pages/MesBadges";
+import Admin from "./pages/Admin";
 
 function App() {
   const [utilisateur, setUtilisateur] = useState(null);
@@ -50,11 +52,10 @@ function App() {
 
   return (
     <div>
-      {/* NAVBAR */}
-      <nav className="bg-gray-800 border-b border-gray-700 px-4 py-3 flex gap-4">
+      <nav className="bg-gray-800 border-b border-gray-700 px-4 py-3 flex gap-4 overflow-x-auto">
         <button
           onClick={() => setPage("dashboard")}
-          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all ${
+          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${
             page === "dashboard" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"
           }`}
         >
@@ -62,17 +63,36 @@ function App() {
         </button>
         <button
           onClick={() => setPage("chapitres")}
-          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all ${
+          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${
             page === "chapitres" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"
           }`}
         >
           📚 Chapitres
         </button>
+        <button
+          onClick={() => setPage("badges")}
+          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${
+            page === "badges" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"
+          }`}
+        >
+          🏅 Badges
+        </button>
+        {profil.role === "admin" && (
+          <button
+            onClick={() => setPage("admin")}
+            className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${
+              page === "admin" ? "bg-red-600 text-white" : "text-gray-400 hover:text-white"
+            }`}
+          >
+            ⚙️ Admin
+          </button>
+        )}
       </nav>
 
-      {/* CONTENU */}
       {page === "dashboard" && <Dashboard profil={profil} />}
       {page === "chapitres" && <Chapitres profil={profil} />}
+      {page === "badges" && <Badges profil={profil} />}
+      {page === "admin" && <Admin />}
     </div>
   );
 }
