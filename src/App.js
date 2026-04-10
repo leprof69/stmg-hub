@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import Chapitres from "./pages/Chapitres";
 import Badges from "./pages/MesBadges";
 import Admin from "./pages/Admin";
+import Profil from "./pages/Profil";
 
 function App() {
   const [utilisateur, setUtilisateur] = useState(null);
@@ -52,37 +53,35 @@ function App() {
 
   return (
     <div>
-      <nav className="bg-gray-800 border-b border-gray-700 px-4 py-3 flex gap-4 overflow-x-auto">
+      <nav className="bg-gray-800 border-b border-gray-700 px-4 py-3 flex gap-2 overflow-x-auto">
         <button
           onClick={() => setPage("dashboard")}
-          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${
-            page === "dashboard" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"
-          }`}
+          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "dashboard" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}
         >
           🏠 Accueil
         </button>
         <button
           onClick={() => setPage("chapitres")}
-          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${
-            page === "chapitres" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"
-          }`}
+          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "chapitres" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}
         >
           📚 Chapitres
         </button>
         <button
           onClick={() => setPage("badges")}
-          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${
-            page === "badges" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"
-          }`}
+          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "badges" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}
         >
           🏅 Badges
+        </button>
+        <button
+          onClick={() => setPage("profil")}
+          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "profil" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}
+        >
+          👤 Profil
         </button>
         {profil.role === "admin" && (
           <button
             onClick={() => setPage("admin")}
-            className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${
-              page === "admin" ? "bg-red-600 text-white" : "text-gray-400 hover:text-white"
-            }`}
+            className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "admin" ? "bg-red-600 text-white" : "text-gray-400 hover:text-white"}`}
           >
             ⚙️ Admin
           </button>
@@ -92,6 +91,18 @@ function App() {
       {page === "dashboard" && <Dashboard profil={profil} />}
       {page === "chapitres" && <Chapitres profil={profil} />}
       {page === "badges" && <Badges profil={profil} />}
+      {page === "profil" && (
+        <Profil
+          profil={profil}
+          onRefaire={() => {
+            setProfil(null);
+          }}
+          onDeconnexion={() => {
+            auth.signOut();
+          }}
+          onMiseAJour={() => chargerProfil(utilisateur)}
+        />
+      )}
       {page === "admin" && <Admin />}
     </div>
   );
