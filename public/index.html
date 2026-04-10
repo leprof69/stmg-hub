@@ -1,5 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+  <style>
+  .card-hover {
+    transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+  }
+  .card-hover:hover {
+    transform: scale(1.05) translateY(-6px) !important;
+    box-shadow: 0 24px 48px rgba(0,0,0,0.12) !important;
+  }
+  .card-hover-sm {
+    transition: transform 0.2s ease !important;
+  }
+  .card-hover-sm:hover {
+    transform: scale(1.08) translateY(-4px) !important;
+  }
+  .btn-anim {
+    transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+  }
+  .btn-anim:hover {
+    transform: scale(1.06) !important;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+</style>
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />

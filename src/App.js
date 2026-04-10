@@ -9,12 +9,16 @@ import Chapitres from "./pages/Chapitres";
 import Badges from "./pages/MesBadges";
 import Admin from "./pages/Admin";
 import Profil from "./pages/Profil";
+import Accueil from "./pages/Accueil";
 
 function App() {
   const [utilisateur, setUtilisateur] = useState(null);
   const [profil, setProfil] = useState(null);
   const [chargement, setChargement] = useState(true);
   const [page, setPage] = useState("dashboard");
+  const [afficherLogin, setAfficherLogin] = useState(false);
+  const [afficherAccueil, setAfficherAccueil] = useState(false);
+  const [modeLogin, setModeLogin] = useState("connexion");
 
   const chargerProfil = async (user) => {
     const docRef = doc(db, "users", user.uid);
@@ -48,12 +52,56 @@ function App() {
     );
   }
 
-  if (!utilisateur) return <Login />;
-  if (!profil) return <Onboarding onTermine={() => chargerProfil(utilisateur)} />;
+  // Pas connecté → page d'accueil ou login
+  if (!utilisateur) {
+    if (afficherLogin) {
+      return <Login modeInitial={modeLogin} />;
+    }
+    return (
+      <Accueil
+        onConnexion={() => { setModeLogin("connexion"); setAfficherLogin(true); }}
+        onInscription={() => { setModeLogin("inscription"); setAfficherLogin(true); }}
+      />
+    );
+  }
 
+  // Connecté mais pas de profil → onboarding
+  if (!profil) {
+    return <Onboarding onTermine={() => chargerProfil(utilisateur)} />;
+  }
+
+  // Connecté → page d'accueil si demandé
+  if (afficherAccueil) {
+    return (
+      <>
+        <nav className="bg-gray-800 border-b border-gray-700 px-4 py-3 flex gap-2 overflow-x-auto">
+          <button
+            onClick={() => setAfficherAccueil(false)}
+            className="text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap text-gray-400 hover:text-white"
+          >
+            ← Retour à l'app
+          </button>
+        </nav>
+        <Accueil
+          onConnexion={() => setAfficherAccueil(false)}
+          onInscription={() => setAfficherAccueil(false)}
+          estConnecte={true}
+        />
+      </>
+    );
+  }
+
+  // Connecté avec profil → app complète
   return (
     <div>
       <nav className="bg-gray-800 border-b border-gray-700 px-4 py-3 flex gap-2 overflow-x-auto">
+        <button
+          onClick={() => setAfficherAccueil(true)}
+          className="text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap text-purple-400 hover:text-purple-300 font-black"
+        >
+          🎓 STMG HUB
+        </button>
+        <div className="w-px bg-gray-600 mx-1" />
         <button
           onClick={() => setPage("dashboard")}
           className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "dashboard" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}
@@ -94,12 +142,8 @@ function App() {
       {page === "profil" && (
         <Profil
           profil={profil}
-          onRefaire={() => {
-            setProfil(null);
-          }}
-          onDeconnexion={() => {
-            auth.signOut();
-          }}
+          onRefaire={() => setProfil(null)}
+          onDeconnexion={() => auth.signOut()}
           onMiseAJour={() => chargerProfil(utilisateur)}
         />
       )}
