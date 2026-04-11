@@ -10,6 +10,7 @@ import Badges from "./pages/MesBadges";
 import Admin from "./pages/Admin";
 import Profil from "./pages/Profil";
 import Accueil from "./pages/Accueil";
+import Missions from "./pages/Missions";
 
 function App() {
   const [utilisateur, setUtilisateur] = useState(null);
@@ -52,7 +53,6 @@ function App() {
     );
   }
 
-  // Pas connecté → page d'accueil ou login
   if (!utilisateur) {
     if (afficherLogin) {
       return <Login modeInitial={modeLogin} />;
@@ -65,12 +65,10 @@ function App() {
     );
   }
 
-  // Connecté mais pas de profil → onboarding
   if (!profil) {
     return <Onboarding onTermine={() => chargerProfil(utilisateur)} />;
   }
 
-  // Connecté → page d'accueil si demandé
   if (afficherAccueil) {
     return (
       <>
@@ -91,7 +89,6 @@ function App() {
     );
   }
 
-  // Connecté avec profil → app complète
   return (
     <div>
       <nav className="bg-gray-800 border-b border-gray-700 px-4 py-3 flex gap-2 overflow-x-auto">
@@ -113,6 +110,12 @@ function App() {
           className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "chapitres" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}
         >
           📚 Chapitres
+        </button>
+        <button
+          onClick={() => setPage("missions")}
+          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "missions" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}
+        >
+          🎯 Missions
         </button>
         <button
           onClick={() => setPage("badges")}
@@ -138,6 +141,7 @@ function App() {
 
       {page === "dashboard" && <Dashboard profil={profil} />}
       {page === "chapitres" && <Chapitres profil={profil} />}
+      {page === "missions" && <Missions profil={profil} />}
       {page === "badges" && <Badges profil={profil} />}
       {page === "profil" && (
         <Profil
