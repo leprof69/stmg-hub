@@ -11,6 +11,7 @@ import Admin from "./pages/Admin";
 import Profil from "./pages/Profil";
 import Accueil from "./pages/Accueil";
 import Missions from "./pages/Missions";
+import Classement from "./pages/Classement";
 
 function App() {
   const [utilisateur, setUtilisateur] = useState(null);
@@ -25,7 +26,7 @@ function App() {
     const docRef = doc(db, "users", user.uid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      setProfil(docSnap.data());
+      setProfil({ id: user.uid, ...docSnap.data() });
     } else {
       setProfil(null);
     }
@@ -118,6 +119,12 @@ function App() {
           🎯 Missions
         </button>
         <button
+          onClick={() => setPage("classement")}
+          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "classement" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}
+        >
+          🏆 Classement
+        </button>
+        <button
           onClick={() => setPage("badges")}
           className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "badges" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}
         >
@@ -142,6 +149,7 @@ function App() {
       {page === "dashboard" && <Dashboard profil={profil} />}
       {page === "chapitres" && <Chapitres profil={profil} />}
       {page === "missions" && <Missions profil={profil} />}
+      {page === "classement" && <Classement profil={profil} />}
       {page === "badges" && <Badges profil={profil} />}
       {page === "profil" && (
         <Profil
