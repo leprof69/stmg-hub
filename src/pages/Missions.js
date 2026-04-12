@@ -12,7 +12,6 @@ const COLORS = {
   B: "#06B6D4",
 };
 
-// Obtenir la date du jour en string
 const getDateJour = () => {
   const today = new Date();
   return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
@@ -29,7 +28,6 @@ const getMois = () => {
   return `${today.getFullYear()}-${today.getMonth() + 1}`;
 };
 
-// Vérifier si une mission a déjà été faite aujourd'hui/cette semaine/ce mois
 const missionDejaFaite = (profil, missionId, type) => {
   const historique = profil.missionsHistorique || {};
   const entree = historique[missionId];
@@ -40,7 +38,6 @@ const missionDejaFaite = (profil, missionId, type) => {
   return false;
 };
 
-// Appel Groq avec détection de triche
 const corrigerAvecGroq = async (mission, reponseEleve) => {
   const prompt = `Tu es un professeur de STMG bienveillant et pédagogue. Tu dois corriger la réponse d'un élève de lycée (15-18 ans).
 
@@ -53,10 +50,10 @@ MOTS-CLÉS ATTENDUS : ${mission.mots_cles ? mission.mots_cles.join(", ") : ""}
 RÉPONSE DE L'ÉLÈVE : ${reponseEleve}
 
 INSTRUCTIONS IMPORTANTES :
-1. Si la réponse est copiée-collée d'une IA (vocabulaire trop soutenu, structure trop parfaite, expressions non scolaires comme "Il convient de noter que", "En outre", "Il est primordial") → score = 0 et indique la triche détectée.
+1. Si la réponse semble copiée d'une IA (vocabulaire trop soutenu, structure trop parfaite, expressions comme "Il convient de noter que", "En outre", "Il est primordial") → score = 0 et indique la triche.
 2. Si la réponse est trop courte (moins de 3 phrases) → score maximum 4/10.
 3. Si la réponse est hors sujet → score maximum 2/10.
-4. Évalue de façon bienveillante comme un prof STMG. Un élève qui fait des efforts mérite au moins 3/10.
+4. Évalue de façon bienveillante. Un élève qui fait des efforts mérite au moins 3/10.
 5. Réponds UNIQUEMENT en JSON sans aucun texte avant ou après.
 
 Format JSON exact :
@@ -83,27 +80,14 @@ Format JSON exact :
   return { score: 5, feedback: "Réponse reçue !", points_forts: "Tu as répondu !", a_ameliorer: "Continue à approfondir.", triche_detectee: false };
 };
 
-// ============================================
-// COMPOSANT CARTE MISSION
-// ============================================
 const CarteMission = ({ mission, profil, onMissionComplete }) => {
   const [reponse, setReponse] = useState("");
   const [correction, setCorrection] = useState(null);
   const [chargement, setChargement] = useState(false);
   const [dejaFaite] = useState(missionDejaFaite(profil, mission.id, mission.type));
 
-  const typeColors = {
-    quotidienne: COLORS.S,
-    hebdomadaire: COLORS.T,
-    mensuelle: COLORS.U,
-  };
-
-  const typeLabels = {
-    quotidienne: "⚡ Quotidienne",
-    hebdomadaire: "📅 Hebdomadaire",
-    mensuelle: "🏆 Mensuelle",
-  };
-
+  const typeColors = { quotidienne: COLORS.S, hebdomadaire: COLORS.T, mensuelle: COLORS.U };
+  const typeLabels = { quotidienne: "⚡ Quotidienne", hebdomadaire: "📅 Hebdomadaire", mensuelle: "🏆 Mensuelle" };
   const couleur = typeColors[mission.type] || COLORS.S;
 
   const soumettre = async () => {
@@ -111,15 +95,11 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
     setChargement(true);
     try {
       const result = await corrigerAvecGroq(mission, reponse);
-
-      // Sauvegarde dans Firestore avec date
       const user = auth.currentUser;
       const userDoc = await getDoc(doc(db, "users", user.uid));
       const userData = userDoc.data();
       const xpGagne = result.triche_detectee ? 0 : Math.round((result.score / 10) * mission.xp);
       const newXP = (userData.xp || 0) + xpGagne;
-
-      // Historique avec date/semaine/mois
       const historique = userData.missionsHistorique || {};
       historique[mission.id] = {
         date: getDateJour(),
@@ -128,12 +108,10 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
         score: result.score,
         xpGagne,
       };
-
       await updateDoc(doc(db, "users", user.uid), {
         xp: newXP,
         missionsHistorique: historique,
       });
-
       setCorrection({ ...result, xpGagne });
       onMissionComplete(xpGagne);
     } catch (err) {
@@ -144,13 +122,7 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
   };
 
   return (
-    <div style={{
-      background: "white", borderRadius: "24px", padding: "28px",
-      border: `2px solid ${couleur}20`,
-      boxShadow: `0 4px 20px ${couleur}15`,
-      marginBottom: "20px",
-    }}>
-      {/* HEADER */}
+    <div style={{ background: "white", borderRadius: "24px", padding: "28px", border: `2px solid ${couleur}20`, boxShadow: `0 4px 20px ${couleur}15`, marginBottom: "20px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px", flexWrap: "wrap", gap: "8px" }}>
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
           <span style={{ background: couleur, color: "white", fontFamily: "'Fredoka One', cursive", padding: "4px 16px", borderRadius: "100px", fontSize: "0.85rem" }}>
@@ -200,9 +172,7 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
           <p style={{ color: "#9CA3AF", fontSize: "0.8rem", marginTop: "8px" }}>
             ⚠️ Réponds avec tes propres mots — l'IA détecte les réponses copiées !
           </p>
-          <button
-            onClick={soumettre}
-            disabled={chargement || reponse.length < 20}
+          <button onClick={soumettre} disabled={chargement || reponse.length < 20}
             style={{
               marginTop: "12px", width: "100%",
               background: reponse.length >= 20 ? couleur : "#E5E7EB",
@@ -265,10 +235,7 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
   );
 };
 
-// ============================================
-// PAGE MISSIONS
-// ============================================
-export default function Missions({ profil }) {
+export default function Missions({ profil, onXPGagne }) {
   const [onglet, setOnglet] = useState("quotidiennes");
   const [xpGagne, setXpGagne] = useState(0);
   const [showNotif, setShowNotif] = useState(false);
@@ -287,28 +254,17 @@ export default function Missions({ profil }) {
     try {
       const snapshot = await getDocs(collection(db, "missions"));
       const toutes = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-
       const quotidiennes = toutes.filter(m => m.type === "quotidienne");
       const hebdomadaires = toutes.filter(m => m.type === "hebdomadaire");
       const mensuelles = toutes.filter(m => m.type === "mensuelle");
-
-      // Rotation par date
       const dayIndex = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
       const weekIndex = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 7));
       const monthIndex = new Date().getMonth();
-
       const missionsJour = quotidiennes.length >= 3
         ? [0, 1, 2].map(i => quotidiennes[(dayIndex + i) % quotidiennes.length])
         : quotidiennes.slice(0, 3);
-
-      const missionHebdo = hebdomadaires.length > 0
-        ? hebdomadaires[weekIndex % hebdomadaires.length]
-        : null;
-
-      const missionMensuelle = mensuelles.length > 0
-        ? mensuelles[monthIndex % mensuelles.length]
-        : null;
-
+      const missionHebdo = hebdomadaires.length > 0 ? hebdomadaires[weekIndex % hebdomadaires.length] : null;
+      const missionMensuelle = mensuelles.length > 0 ? mensuelles[monthIndex % mensuelles.length] : null;
       setMissions({ quotidiennes: missionsJour, hebdomadaire: missionHebdo, mensuelle: missionMensuelle });
     } catch (err) {
       console.error(err);
@@ -320,17 +276,13 @@ export default function Missions({ profil }) {
     setXpGagne(xp);
     setShowNotif(true);
     setTimeout(() => setShowNotif(false), 3000);
+    if (onXPGagne) onXPGagne();
   };
 
-  const missionsHistorique = profil.missionsHistorique || {};
-  const quotidiennesCompletes = missions.quotidiennes.filter(m =>
-    m && missionDejaFaite(profil, m.id, "quotidienne")
-  ).length;
+  const quotidiennesCompletes = missions.quotidiennes.filter(m => m && missionDejaFaite(profil, m.id, "quotidienne")).length;
 
   return (
     <div style={{ minHeight: "100vh", background: "#F8F9FA", fontFamily: "'Nunito', sans-serif" }}>
-
-      {/* NOTIF XP */}
       {showNotif && (
         <div style={{
           position: "fixed", top: "80px", right: "24px", zIndex: 100,
@@ -344,8 +296,6 @@ export default function Missions({ profil }) {
       )}
 
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "24px 16px" }}>
-
-        {/* HEADER */}
         <div style={{ marginBottom: "32px" }}>
           <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2.5rem", color: "#1A1A2E", marginBottom: "8px" }}>
             🎯 Mes Missions
@@ -355,21 +305,13 @@ export default function Missions({ profil }) {
           </p>
         </div>
 
-        {/* PROGRESS QUOTIDIEN */}
-        <div style={{
-          background: "white", borderRadius: "20px", padding: "20px",
-          marginBottom: "24px", border: `2px solid ${COLORS.S}20`,
-          display: "flex", alignItems: "center", gap: "20px",
-        }}>
+        <div style={{ background: "white", borderRadius: "20px", padding: "20px", marginBottom: "24px", border: `2px solid ${COLORS.S}20`, display: "flex", alignItems: "center", gap: "20px" }}>
           <div style={{ flex: 1 }}>
             <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", marginBottom: "8px" }}>
               ⚡ Missions quotidiennes — {quotidiennesCompletes}/3 complétées
             </p>
             <div style={{ background: "#F3F4F6", borderRadius: "100px", height: "10px" }}>
-              <div style={{
-                height: "100%", borderRadius: "100px", background: COLORS.S,
-                width: `${(quotidiennesCompletes / 3) * 100}%`, transition: "width 0.5s",
-              }} />
+              <div style={{ height: "100%", borderRadius: "100px", background: COLORS.S, width: `${(quotidiennesCompletes / 3) * 100}%`, transition: "width 0.5s" }} />
             </div>
           </div>
           <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.8rem", color: COLORS.U }}>
@@ -377,7 +319,6 @@ export default function Missions({ profil }) {
           </div>
         </div>
 
-        {/* ONGLETS */}
         <div style={{ display: "flex", gap: "8px", marginBottom: "24px", flexWrap: "wrap" }}>
           {[
             { id: "quotidiennes", label: "⚡ Quotidiennes", couleur: COLORS.S },
@@ -399,7 +340,6 @@ export default function Missions({ profil }) {
           ))}
         </div>
 
-        {/* CONTENU */}
         {chargement ? (
           <div style={{ textAlign: "center", padding: "60px", color: "#6B7280" }}>
             <p style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem" }}>⏳ Chargement des missions...</p>
@@ -408,24 +348,19 @@ export default function Missions({ profil }) {
           <>
             {onglet === "quotidiennes" && (
               <div>
-                <p style={{ color: "#9CA3AF", fontSize: "0.85rem", marginBottom: "20px" }}>
-                  🔄 Ces missions changent chaque jour à minuit
-                </p>
+                <p style={{ color: "#9CA3AF", fontSize: "0.85rem", marginBottom: "20px" }}>🔄 Ces missions changent chaque jour à minuit</p>
                 {missions.quotidiennes.length === 0 ? (
                   <p style={{ textAlign: "center", color: "#9CA3AF", padding: "40px" }}>Aucune mission disponible pour le moment 🎯</p>
                 ) : (
-                  missions.quotidiennes.map((mission, i) => (
+                  missions.quotidiennes.map((mission) => (
                     <CarteMission key={mission.id} mission={mission} profil={profil} onMissionComplete={handleMissionComplete} />
                   ))
                 )}
               </div>
             )}
-
             {onglet === "hebdomadaire" && (
               <div>
-                <p style={{ color: "#9CA3AF", fontSize: "0.85rem", marginBottom: "20px" }}>
-                  🔄 Cette mission change chaque lundi
-                </p>
+                <p style={{ color: "#9CA3AF", fontSize: "0.85rem", marginBottom: "20px" }}>🔄 Cette mission change chaque lundi</p>
                 {missions.hebdomadaire ? (
                   <CarteMission mission={missions.hebdomadaire} profil={profil} onMissionComplete={handleMissionComplete} />
                 ) : (
@@ -433,12 +368,9 @@ export default function Missions({ profil }) {
                 )}
               </div>
             )}
-
             {onglet === "mensuelle" && (
               <div>
-                <p style={{ color: "#9CA3AF", fontSize: "0.85rem", marginBottom: "20px" }}>
-                  🔄 Cette mission change le 1er de chaque mois
-                </p>
+                <p style={{ color: "#9CA3AF", fontSize: "0.85rem", marginBottom: "20px" }}>🔄 Cette mission change le 1er de chaque mois</p>
                 {missions.mensuelle ? (
                   <CarteMission mission={missions.mensuelle} profil={profil} onMissionComplete={handleMissionComplete} />
                 ) : (

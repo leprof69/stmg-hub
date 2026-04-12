@@ -46,6 +46,15 @@ function App() {
     return () => unsub();
   }, []);
 
+  // Recharger le profil toutes les 30 secondes si connecté
+  useEffect(() => {
+    if (!utilisateur) return;
+    const interval = setInterval(() => {
+      chargerProfil(utilisateur);
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [utilisateur]);
+
   if (chargement) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
@@ -55,9 +64,7 @@ function App() {
   }
 
   if (!utilisateur) {
-    if (afficherLogin) {
-      return <Login modeInitial={modeLogin} />;
-    }
+    if (afficherLogin) return <Login modeInitial={modeLogin} />;
     return (
       <Accueil
         onConnexion={() => { setModeLogin("connexion"); setAfficherLogin(true); }}
@@ -74,10 +81,8 @@ function App() {
     return (
       <>
         <nav className="bg-gray-800 border-b border-gray-700 px-4 py-3 flex gap-2 overflow-x-auto">
-          <button
-            onClick={() => setAfficherAccueil(false)}
-            className="text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap text-gray-400 hover:text-white"
-          >
+          <button onClick={() => setAfficherAccueil(false)}
+            className="text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap text-gray-400 hover:text-white">
             ← Retour à l'app
           </button>
         </nav>
@@ -93,62 +98,46 @@ function App() {
   return (
     <div>
       <nav className="bg-gray-800 border-b border-gray-700 px-4 py-3 flex gap-2 overflow-x-auto">
-        <button
-          onClick={() => setAfficherAccueil(true)}
-          className="text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap text-purple-400 hover:text-purple-300 font-black"
-        >
+        <button onClick={() => setAfficherAccueil(true)}
+          className="text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap text-purple-400 hover:text-purple-300 font-black">
           🎓 STMG HUB
         </button>
         <div className="w-px bg-gray-600 mx-1" />
-        <button
-          onClick={() => setPage("dashboard")}
-          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "dashboard" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}
-        >
+        <button onClick={() => { setPage("dashboard"); chargerProfil(utilisateur); }}
+          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "dashboard" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}>
           🏠 Accueil
         </button>
-        <button
-          onClick={() => setPage("chapitres")}
-          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "chapitres" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}
-        >
+        <button onClick={() => setPage("chapitres")}
+          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "chapitres" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}>
           📚 Chapitres
         </button>
-        <button
-          onClick={() => setPage("missions")}
-          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "missions" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}
-        >
+        <button onClick={() => setPage("missions")}
+          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "missions" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}>
           🎯 Missions
         </button>
-        <button
-          onClick={() => setPage("classement")}
-          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "classement" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}
-        >
+        <button onClick={() => setPage("classement")}
+          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "classement" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}>
           🏆 Classement
         </button>
-        <button
-          onClick={() => setPage("badges")}
-          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "badges" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}
-        >
+        <button onClick={() => setPage("badges")}
+          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "badges" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}>
           🏅 Badges
         </button>
-        <button
-          onClick={() => setPage("profil")}
-          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "profil" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}
-        >
+        <button onClick={() => { setPage("profil"); chargerProfil(utilisateur); }}
+          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "profil" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}>
           👤 Profil
         </button>
         {profil.role === "admin" && (
-          <button
-            onClick={() => setPage("admin")}
-            className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "admin" ? "bg-red-600 text-white" : "text-gray-400 hover:text-white"}`}
-          >
+          <button onClick={() => setPage("admin")}
+            className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "admin" ? "bg-red-600 text-white" : "text-gray-400 hover:text-white"}`}>
             ⚙️ Admin
           </button>
         )}
       </nav>
 
-      {page === "dashboard" && <Dashboard profil={profil} />}
-      {page === "chapitres" && <Chapitres profil={profil} />}
-      {page === "missions" && <Missions profil={profil} />}
+      {page === "dashboard" && <Dashboard profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
+      {page === "chapitres" && <Chapitres profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
+      {page === "missions" && <Missions profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "classement" && <Classement profil={profil} />}
       {page === "badges" && <Badges profil={profil} />}
       {page === "profil" && (

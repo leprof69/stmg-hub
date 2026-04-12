@@ -105,6 +105,7 @@ export default function Classement({ profil }) {
 
   const monRangEleve = classementEleves.findIndex(e => e.id === profil?.id) + 1;
   const monRangLycee = classementLycees.findIndex(l => l.nom === profil?.lycee) + 1;
+  const monRangFamille = classementFamilles.findIndex(f => f.nom === profil?.famille) + 1;
 
   return (
     <div style={{ minHeight: "100vh", background: "#F8F9FA", fontFamily: "'Nunito', sans-serif" }}>
@@ -132,7 +133,7 @@ export default function Classement({ profil }) {
                 </h2>
                 {monRangEleve > 0 && (
                   <span style={{ background: COLORS.S + "15", color: COLORS.S, fontFamily: "'Fredoka One', cursive", padding: "6px 16px", borderRadius: "100px", fontSize: "0.9rem", border: `1px solid ${COLORS.S}30` }}>
-                    Ton rang : {medaille(monRangEleve)} {monRangEleve > 3 ? `#${monRangEleve}` : ""}
+                    Ton rang : {monRangEleve <= 3 ? medaille(monRangEleve) : `#${monRangEleve}`}
                   </span>
                 )}
               </div>
@@ -158,9 +159,7 @@ export default function Classement({ profil }) {
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-                            <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1rem" }}>
-                              {eleve.prenom}
-                            </p>
+                            <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1rem" }}>{eleve.prenom}</p>
                             {estMoi && (
                               <span style={{ background: COLORS.S, color: "white", fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.7rem" }}>Moi</span>
                             )}
@@ -190,7 +189,7 @@ export default function Classement({ profil }) {
                 </h2>
                 {monRangLycee > 0 && (
                   <span style={{ background: COLORS.M + "15", color: COLORS.M, fontFamily: "'Fredoka One', cursive", padding: "6px 16px", borderRadius: "100px", fontSize: "0.9rem", border: `1px solid ${COLORS.M}30` }}>
-                    Ton lycée : {medaille(monRangLycee)} {monRangLycee > 3 ? `#${monRangLycee}` : ""}
+                    Ton lycée : {monRangLycee <= 3 ? medaille(monRangLycee) : `#${monRangLycee}`}
                   </span>
                 )}
               </div>
@@ -214,9 +213,7 @@ export default function Classement({ profil }) {
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-                            <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1rem" }}>
-                              {lycee.nom}
-                            </p>
+                            <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1rem" }}>{lycee.nom}</p>
                             {estMonLycee && (
                               <span style={{ background: COLORS.M, color: "white", fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.7rem" }}>Mon lycée</span>
                             )}
@@ -237,9 +234,17 @@ export default function Classement({ profil }) {
 
             {/* ===== CLASSEMENT FAMILLES ===== */}
             <div style={{ background: "white", borderRadius: "24px", padding: "24px", border: `2px solid ${COLORS.T}20` }}>
-              <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.6rem", color: COLORS.T, marginBottom: "20px" }}>
-                🧬 Classement Familles
-              </h2>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "8px" }}>
+                <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.6rem", color: COLORS.T }}>
+                  🧬 Classement Familles
+                </h2>
+                {monRangFamille > 0 && (
+                  <span style={{ background: COLORS.T + "15", color: COLORS.T, fontFamily: "'Fredoka One', cursive", padding: "6px 16px", borderRadius: "100px", fontSize: "0.9rem", border: `1px solid ${COLORS.T}30` }}>
+                    Ta famille : {monRangFamille <= 3 ? medaille(monRangFamille) : `#${monRangFamille}`}
+                  </span>
+                )}
+              </div>
+
               <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                 {classementFamilles.map((famille, i) => {
                   const rang = i + 1;
@@ -259,7 +264,7 @@ export default function Classement({ profil }) {
                         </div>
                         <span style={{ fontSize: "1.8rem" }}>{familleEmojis[famille.nom]}</span>
                         <div style={{ flex: 1 }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
                             <p style={{ fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "1.1rem" }}>
                               {famille.nom === "Architecte" ? "L'Architecte" :
                                famille.nom === "Visionnaire" ? "Le Visionnaire" :
@@ -280,10 +285,8 @@ export default function Classement({ profil }) {
                       </div>
                       <div style={{ background: "#E5E7EB", borderRadius: "100px", height: "10px", overflow: "hidden", marginLeft: "52px" }}>
                         <div style={{
-                          height: "100%", borderRadius: "100px",
-                          background: couleur,
-                          width: `${pourcentage}%`,
-                          transition: "width 0.5s ease",
+                          height: "100%", borderRadius: "100px", background: couleur,
+                          width: `${pourcentage}%`, transition: "width 0.5s ease",
                         }} />
                       </div>
                     </div>
