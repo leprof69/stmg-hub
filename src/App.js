@@ -12,6 +12,7 @@ import Profil from "./pages/Profil";
 import Accueil from "./pages/Accueil";
 import Missions from "./pages/Missions";
 import Classement from "./pages/Classement";
+import Cartes from "./pages/Cartes";
 
 function App() {
   const [utilisateur, setUtilisateur] = useState(null);
@@ -46,12 +47,9 @@ function App() {
     return () => unsub();
   }, []);
 
-  // Recharger le profil toutes les 30 secondes si connecté
   useEffect(() => {
     if (!utilisateur) return;
-    const interval = setInterval(() => {
-      chargerProfil(utilisateur);
-    }, 30000);
+    const interval = setInterval(() => chargerProfil(utilisateur), 30000);
     return () => clearInterval(interval);
   }, [utilisateur]);
 
@@ -119,6 +117,10 @@ function App() {
           className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "classement" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}>
           🏆 Classement
         </button>
+        <button onClick={() => setPage("cartes")}
+          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "cartes" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}>
+          🃏 Cartes
+        </button>
         <button onClick={() => setPage("badges")}
           className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "badges" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}>
           🏅 Badges
@@ -139,6 +141,7 @@ function App() {
       {page === "chapitres" && <Chapitres profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "missions" && <Missions profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "classement" && <Classement profil={profil} />}
+      {page === "cartes" && <Cartes profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "badges" && <Badges profil={profil} />}
       {page === "profil" && (
         <Profil

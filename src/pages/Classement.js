@@ -1,31 +1,21 @@
 import { useState, useEffect } from "react";
 import { db } from "../firebase";
 import { collection, getDocs } from "firebase/firestore";
+import { COLLECTIONS } from "../data/collections";
 
 const COLORS = {
-  S: "#3B82F6",
-  T: "#7C3AED",
-  M: "#F97316",
-  G: "#10B981",
-  H: "#EF4444",
-  U: "#F59E0B",
-  B: "#06B6D4",
+  S: "#3B82F6", T: "#7C3AED", M: "#F97316",
+  G: "#10B981", H: "#EF4444", U: "#F59E0B", B: "#06B6D4",
 };
 
 const familleColors = {
-  Architecte: COLORS.S,
-  Visionnaire: COLORS.T,
-  Challenger: COLORS.M,
-  Explorateur: COLORS.G,
-  Influenceur: COLORS.H,
+  Architecte: "#3B82F6", Visionnaire: "#7C3AED",
+  Challenger: "#F97316", Explorateur: "#10B981", Influenceur: "#EF4444",
 };
 
 const familleEmojis = {
-  Architecte: "🧠",
-  Visionnaire: "🎨",
-  Challenger: "⚡",
-  Explorateur: "🔬",
-  Influenceur: "🔥",
+  Architecte: "🧠", Visionnaire: "🎨",
+  Challenger: "⚡", Explorateur: "🔬", Influenceur: "🔥",
 };
 
 const niveauNom = (xp) => {
@@ -44,8 +34,24 @@ const medaille = (rang) => {
   return `#${rang}`;
 };
 
+const getNbCartesUniques = (cartes) => {
+  if (!cartes) return 0;
+  return Object.values(cartes).filter(v => v > 0).length;
+};
+
+const getNbCartesRares = (cartes) => {
+  if (!cartes) return 0;
+  const toutesCartes = COLLECTIONS.flatMap(c => c.cartes);
+  return toutesCartes.filter(c =>
+    (cartes[c.id] || 0) > 0 &&
+    ["rare", "epique", "legendaire", "ultra_rare"].includes(c.rarete)
+  ).length;
+};
+
 export default function Classement({ profil }) {
+  const [onglet, setOnglet] = useState("xp");
   const [classementEleves, setClassementEleves] = useState([]);
+  const [classementCollection, setClassementCollection] = useState([]);
   const [classementLycees, setClassementLycees] = useState([]);
   const [classementFamilles, setClassementFamilles] = useState([]);
   const [chargement, setChargement] = useState(true);
@@ -64,20 +70,26 @@ export default function Classement({ profil }) {
       const snapshot = await getDocs(collection(db, "users"));
       const users = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
 
-      // Élèves
+      // XP
       const elevesClasses = users
         .filter(u => u.prenom && u.xp !== undefined)
         .sort((a, b) => (b.xp || 0) - (a.xp || 0))
         .slice(0, 50);
       setClassementEleves(elevesClasses);
 
+      // Collection
+      const elevesCollection = users
+        .filter(u => u.prenom)
+        .map(u => ({ ...u, nbCartes: getNbCartesUniques(u.cartes), nbRares: getNbCartesRares(u.cartes) }))
+        .sort((a, b) => b.nbCartes - a.nbCartes || b.nbRares - a.nbRares)
+        .slice(0, 50);
+      setClassementCollection(elevesCollection);
+
       // Lycées
       const lyceesMap = {};
       users.forEach(u => {
         if (!u.lycee) return;
-        if (!lyceesMap[u.lycee]) {
-          lyceesMap[u.lycee] = { nom: u.lycee, ville: u.lyceeVille || "", xp: 0, eleves: 0 };
-        }
+        if (!lyceesMap[u.lycee]) lyceesMap[u.lycee] = { nom: u.lycee, ville: u.lyceeVille || "", xp: 0, eleves: 0 };
         lyceesMap[u.lycee].xp += (u.xp || 0);
         lyceesMap[u.lycee].eleves += 1;
       });
@@ -104,43 +116,69 @@ export default function Classement({ profil }) {
   };
 
   const monRangEleve = classementEleves.findIndex(e => e.id === profil?.id) + 1;
+  const monRangCollection = classementCollection.findIndex(e => e.id === profil?.id) + 1;
   const monRangLycee = classementLycees.findIndex(l => l.nom === profil?.lycee) + 1;
   const monRangFamille = classementFamilles.findIndex(f => f.nom === profil?.famille) + 1;
 
+  const onglets = [
+    { id: "xp", label: "⚡ XP", couleur: COLORS.S },
+    { id: "collection", label: "🃏 Collection", couleur: "#EC4899" },
+    { id: "lycees", label: "🏫 Lycées", couleur: COLORS.M },
+    { id: "familles", label: "🧬 Familles", couleur: COLORS.T },
+  ];
+
   return (
-    <div style={{ minHeight: "100vh", background: "#F8F9FA", fontFamily: "'Nunito', sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "#F1F5F9", fontFamily: "'Nunito', sans-serif" }}>
       <div style={{ maxWidth: "900px", margin: "0 auto", padding: "24px 16px" }}>
 
         {/* HEADER */}
-        <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2.5rem", color: "#1A1A2E", marginBottom: "4px" }}>
-          🏆 Classement National
-        </h1>
-        <p style={{ color: "#6B7280", marginBottom: "32px" }}>
-          La compétition entre tous les élèves STMG de France !
-        </p>
+        <div style={{ background: "linear-gradient(135deg, #1A1A2E, #2D1B69)", borderRadius: "24px", padding: "28px 32px", marginBottom: "24px" }}>
+          <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2.2rem", color: "white", margin: "0 0 4px" }}>
+            🏆 Classement National
+          </h1>
+          <p style={{ color: "#A78BFA", margin: 0, fontSize: "0.9rem" }}>
+            La compétition entre tous les élèves STMG de France !
+          </p>
+
+          {/* MES RANGS */}
+          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "16px" }}>
+            {[
+              { label: "XP", rang: monRangEleve, couleur: COLORS.S },
+              { label: "Collection", rang: monRangCollection, couleur: "#EC4899" },
+              { label: "Lycée", rang: monRangLycee, couleur: COLORS.M },
+              { label: "Famille", rang: monRangFamille, couleur: COLORS.T },
+            ].map((r, i) => r.rang > 0 && (
+              <div key={i} style={{ background: r.couleur + "25", border: `1px solid ${r.couleur}50`, borderRadius: "12px", padding: "6px 14px", fontFamily: "'Fredoka One', cursive", color: "white", fontSize: "0.85rem" }}>
+                {r.label} : {r.rang <= 3 ? medaille(r.rang) : `#${r.rang}`}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ONGLETS */}
+        <div style={{ display: "flex", gap: "8px", marginBottom: "20px", flexWrap: "wrap" }}>
+          {onglets.map(t => (
+            <button key={t.id} onClick={() => setOnglet(t.id)} style={{
+              background: onglet === t.id ? t.couleur : "white",
+              color: onglet === t.id ? "white" : t.couleur,
+              border: `2px solid ${t.couleur}`,
+              fontFamily: "'Fredoka One', cursive", fontSize: "0.95rem",
+              padding: "10px 20px", borderRadius: "14px", cursor: "pointer",
+              transition: "all 0.2s",
+            }}>{t.label}</button>
+          ))}
+        </div>
 
         {chargement ? (
-          <div style={{ textAlign: "center", padding: "60px" }}>
+          <div style={{ textAlign: "center", padding: "60px", background: "white", borderRadius: "24px" }}>
             <p style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: "#6B7280" }}>⏳ Chargement...</p>
           </div>
         ) : (
           <>
-            {/* ===== CLASSEMENT ÉLÈVES ===== */}
-            <div style={{ background: "white", borderRadius: "24px", padding: "24px", marginBottom: "24px", border: `2px solid ${COLORS.S}20` }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "8px" }}>
-                <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.6rem", color: COLORS.S }}>
-                  👤 Classement Élèves
-                </h2>
-                {monRangEleve > 0 && (
-                  <span style={{ background: COLORS.S + "15", color: COLORS.S, fontFamily: "'Fredoka One', cursive", padding: "6px 16px", borderRadius: "100px", fontSize: "0.9rem", border: `1px solid ${COLORS.S}30` }}>
-                    Ton rang : {monRangEleve <= 3 ? medaille(monRangEleve) : `#${monRangEleve}`}
-                  </span>
-                )}
-              </div>
-
-              {classementEleves.length === 0 ? (
-                <p style={{ textAlign: "center", color: "#9CA3AF", padding: "20px" }}>Aucun élève encore inscrit</p>
-              ) : (
+            {/* CLASSEMENT XP */}
+            {onglet === "xp" && (
+              <div style={{ background: "white", borderRadius: "24px", padding: "24px", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
+                <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: COLORS.S, marginBottom: "20px" }}>⚡ Top Élèves — XP</h2>
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   {classementEleves.map((eleve, i) => {
                     const rang = i + 1;
@@ -149,25 +187,23 @@ export default function Classement({ profil }) {
                     const couleurFamille = familleColors[eleve.famille] || COLORS.S;
                     return (
                       <div key={i} style={{
-                        background: estMoi ? COLORS.S + "10" : "#F8F9FA",
+                        background: estMoi ? COLORS.S + "10" : "#F8FAFC",
                         borderRadius: "16px", padding: "14px 16px",
                         border: estMoi ? `2px solid ${COLORS.S}` : "2px solid transparent",
                         display: "flex", alignItems: "center", gap: "12px",
                       }}>
-                        <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: rang <= 3 ? "1.6rem" : "1rem", width: "40px", textAlign: "center", color: rang <= 3 ? "" : "#9CA3AF" }}>
+                        <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: rang <= 3 ? "1.6rem" : "1rem", width: "40px", textAlign: "center", color: "#9CA3AF" }}>
                           {medaille(rang)}
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-                            <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1rem" }}>{eleve.prenom}</p>
-                            {estMoi && (
-                              <span style={{ background: COLORS.S, color: "white", fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.7rem" }}>Moi</span>
-                            )}
+                            <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1rem", margin: 0 }}>{eleve.prenom}</p>
+                            {estMoi && <span style={{ background: COLORS.S, color: "white", fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.7rem" }}>Moi</span>}
                             <span style={{ background: couleurFamille + "20", color: couleurFamille, fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.7rem" }}>
                               {familleEmojis[eleve.famille]} {eleve.famille}
                             </span>
                           </div>
-                          <p style={{ color: "#9CA3AF", fontSize: "0.8rem", marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                          <p style={{ color: "#9CA3AF", fontSize: "0.8rem", margin: "2px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                             {eleve.lycee} • {niveau.emoji} {niveau.nom}
                           </p>
                         </div>
@@ -178,122 +214,132 @@ export default function Classement({ profil }) {
                     );
                   })}
                 </div>
-              )}
-            </div>
-
-            {/* ===== CLASSEMENT LYCÉES ===== */}
-            <div style={{ background: "white", borderRadius: "24px", padding: "24px", marginBottom: "24px", border: `2px solid ${COLORS.M}20` }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "8px" }}>
-                <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.6rem", color: COLORS.M }}>
-                  🏫 Classement Lycées
-                </h2>
-                {monRangLycee > 0 && (
-                  <span style={{ background: COLORS.M + "15", color: COLORS.M, fontFamily: "'Fredoka One', cursive", padding: "6px 16px", borderRadius: "100px", fontSize: "0.9rem", border: `1px solid ${COLORS.M}30` }}>
-                    Ton lycée : {monRangLycee <= 3 ? medaille(monRangLycee) : `#${monRangLycee}`}
-                  </span>
-                )}
               </div>
+            )}
 
-              {classementLycees.length === 0 ? (
-                <p style={{ textAlign: "center", color: "#9CA3AF", padding: "20px" }}>Aucun lycée encore inscrit</p>
-              ) : (
+            {/* CLASSEMENT COLLECTION */}
+            {onglet === "collection" && (
+              <div style={{ background: "white", borderRadius: "24px", padding: "24px", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
+                <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: "#EC4899", marginBottom: "8px" }}>🃏 Top Collectionneurs</h2>
+                <p style={{ color: "#9CA3AF", fontSize: "0.82rem", marginBottom: "20px" }}>Classement par nombre de cartes uniques obtenues</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                  {classementLycees.map((lycee, i) => {
+                  {classementCollection.map((eleve, i) => {
                     const rang = i + 1;
-                    const estMonLycee = lycee.nom === profil?.lycee;
+                    const estMoi = eleve.id === profil?.id;
+                    const totalDispo = COLLECTIONS.flatMap(c => c.cartes).length;
+                    const prog = Math.round((eleve.nbCartes / totalDispo) * 100);
                     return (
                       <div key={i} style={{
-                        background: estMonLycee ? COLORS.M + "10" : "#F8F9FA",
+                        background: estMoi ? "#EC489910" : "#F8FAFC",
                         borderRadius: "16px", padding: "14px 16px",
-                        border: estMonLycee ? `2px solid ${COLORS.M}` : "2px solid transparent",
+                        border: estMoi ? "2px solid #EC4899" : "2px solid transparent",
                         display: "flex", alignItems: "center", gap: "12px",
                       }}>
-                        <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: rang <= 3 ? "1.6rem" : "1rem", width: "40px", textAlign: "center", color: rang <= 3 ? "" : "#9CA3AF" }}>
+                        <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: rang <= 3 ? "1.6rem" : "1rem", width: "40px", textAlign: "center", color: "#9CA3AF" }}>
                           {medaille(rang)}
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-                            <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1rem" }}>{lycee.nom}</p>
-                            {estMonLycee && (
-                              <span style={{ background: COLORS.M, color: "white", fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.7rem" }}>Mon lycée</span>
-                            )}
+                            <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1rem", margin: 0 }}>{eleve.prenom}</p>
+                            {estMoi && <span style={{ background: "#EC4899", color: "white", fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.7rem" }}>Moi</span>}
+                            <span style={{ background: "#EC489915", color: "#EC4899", fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.7rem" }}>
+                              🔵 {eleve.nbRares} rares+
+                            </span>
                           </div>
-                          <p style={{ color: "#9CA3AF", fontSize: "0.8rem", marginTop: "2px" }}>
-                            {lycee.ville} • {lycee.eleves} élève{lycee.eleves > 1 ? "s" : ""}
-                          </p>
+                          <div style={{ marginTop: "6px", background: "#E5E7EB", borderRadius: "100px", height: "5px" }}>
+                            <div style={{ height: "100%", borderRadius: "100px", background: "linear-gradient(90deg, #EC4899, #9D174D)", width: `${prog}%`, transition: "width 0.5s" }} />
+                          </div>
                         </div>
-                        <div style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.M, fontSize: "1.1rem", flexShrink: 0 }}>
-                          {lycee.xp.toLocaleString()} XP
+                        <div style={{ textAlign: "right", flexShrink: 0 }}>
+                          <p style={{ fontFamily: "'Fredoka One', cursive", color: "#EC4899", fontSize: "1.1rem", margin: 0 }}>{eleve.nbCartes} 🃏</p>
+                          <p style={{ color: "#9CA3AF", fontSize: "0.75rem", margin: 0 }}>{prog}%</p>
                         </div>
                       </div>
                     );
                   })}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
-            {/* ===== CLASSEMENT FAMILLES ===== */}
-            <div style={{ background: "white", borderRadius: "24px", padding: "24px", border: `2px solid ${COLORS.T}20` }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "8px" }}>
-                <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.6rem", color: COLORS.T }}>
-                  🧬 Classement Familles
-                </h2>
-                {monRangFamille > 0 && (
-                  <span style={{ background: COLORS.T + "15", color: COLORS.T, fontFamily: "'Fredoka One', cursive", padding: "6px 16px", borderRadius: "100px", fontSize: "0.9rem", border: `1px solid ${COLORS.T}30` }}>
-                    Ta famille : {monRangFamille <= 3 ? medaille(monRangFamille) : `#${monRangFamille}`}
-                  </span>
+            {/* CLASSEMENT LYCÉES */}
+            {onglet === "lycees" && (
+              <div style={{ background: "white", borderRadius: "24px", padding: "24px", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
+                <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: COLORS.M, marginBottom: "20px" }}>🏫 Classement Lycées</h2>
+                {classementLycees.length === 0 ? (
+                  <p style={{ textAlign: "center", color: "#9CA3AF", padding: "20px" }}>Aucun lycée encore inscrit</p>
+                ) : (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    {classementLycees.map((lycee, i) => {
+                      const rang = i + 1;
+                      const estMonLycee = lycee.nom === profil?.lycee;
+                      return (
+                        <div key={i} style={{
+                          background: estMonLycee ? COLORS.M + "10" : "#F8FAFC",
+                          borderRadius: "16px", padding: "14px 16px",
+                          border: estMonLycee ? `2px solid ${COLORS.M}` : "2px solid transparent",
+                          display: "flex", alignItems: "center", gap: "12px",
+                        }}>
+                          <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: rang <= 3 ? "1.6rem" : "1rem", width: "40px", textAlign: "center", color: "#9CA3AF" }}>
+                            {medaille(rang)}
+                          </div>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                              <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1rem", margin: 0 }}>{lycee.nom}</p>
+                              {estMonLycee && <span style={{ background: COLORS.M, color: "white", fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.7rem" }}>Mon lycée</span>}
+                            </div>
+                            <p style={{ color: "#9CA3AF", fontSize: "0.8rem", margin: "2px 0 0" }}>{lycee.ville} • {lycee.eleves} élève{lycee.eleves > 1 ? "s" : ""}</p>
+                          </div>
+                          <div style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.M, fontSize: "1.1rem", flexShrink: 0 }}>
+                            {lycee.xp.toLocaleString()} XP
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 )}
               </div>
+            )}
 
-              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-                {classementFamilles.map((famille, i) => {
-                  const rang = i + 1;
-                  const estMaFamille = famille.nom === profil?.famille;
-                  const couleur = familleColors[famille.nom] || COLORS.S;
-                  const maxXP = classementFamilles[0]?.xp || 1;
-                  const pourcentage = maxXP > 0 ? Math.round((famille.xp / maxXP) * 100) : 0;
-                  return (
-                    <div key={i} style={{
-                      background: estMaFamille ? couleur + "10" : "#F8F9FA",
-                      borderRadius: "16px", padding: "16px",
-                      border: estMaFamille ? `2px solid ${couleur}` : "2px solid transparent",
-                    }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "10px" }}>
-                        <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: rang <= 3 ? "1.6rem" : "1rem", width: "40px", textAlign: "center", color: rang <= 3 ? "" : "#9CA3AF" }}>
-                          {medaille(rang)}
-                        </div>
-                        <span style={{ fontSize: "1.8rem" }}>{familleEmojis[famille.nom]}</span>
-                        <div style={{ flex: 1 }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-                            <p style={{ fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "1.1rem" }}>
-                              {famille.nom === "Architecte" ? "L'Architecte" :
-                               famille.nom === "Visionnaire" ? "Le Visionnaire" :
-                               famille.nom === "Challenger" ? "Le Challenger" :
-                               famille.nom === "Explorateur" ? "L'Explorateur" : "L'Influenceur"}
-                            </p>
-                            {estMaFamille && (
-                              <span style={{ background: couleur, color: "white", fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.7rem" }}>Ma famille</span>
-                            )}
+            {/* CLASSEMENT FAMILLES */}
+            {onglet === "familles" && (
+              <div style={{ background: "white", borderRadius: "24px", padding: "24px", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
+                <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: COLORS.T, marginBottom: "20px" }}>🧬 Classement Familles</h2>
+                <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                  {classementFamilles.map((famille, i) => {
+                    const rang = i + 1;
+                    const estMaFamille = famille.nom === profil?.famille;
+                    const couleur = familleColors[famille.nom] || COLORS.S;
+                    const maxXP = classementFamilles[0]?.xp || 1;
+                    const pourcentage = maxXP > 0 ? Math.round((famille.xp / maxXP) * 100) : 0;
+                    return (
+                      <div key={i} style={{
+                        background: estMaFamille ? couleur + "10" : "#F8FAFC",
+                        borderRadius: "16px", padding: "16px",
+                        border: estMaFamille ? `2px solid ${couleur}` : "2px solid transparent",
+                      }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "10px" }}>
+                          <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: rang <= 3 ? "1.6rem" : "1rem", width: "40px", textAlign: "center", color: "#9CA3AF" }}>{medaille(rang)}</div>
+                          <span style={{ fontSize: "1.8rem" }}>{familleEmojis[famille.nom]}</span>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                              <p style={{ fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "1.1rem", margin: 0 }}>
+                                {famille.nom === "Architecte" ? "L'Architecte" : famille.nom === "Visionnaire" ? "Le Visionnaire" : famille.nom === "Challenger" ? "Le Challenger" : famille.nom === "Explorateur" ? "L'Explorateur" : "L'Influenceur"}
+                              </p>
+                              {estMaFamille && <span style={{ background: couleur, color: "white", fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.7rem" }}>Ma famille</span>}
+                            </div>
+                            <p style={{ color: "#9CA3AF", fontSize: "0.8rem", margin: "2px 0 0" }}>{famille.eleves} membre{famille.eleves > 1 ? "s" : ""} • {famille.xp.toLocaleString()} XP</p>
                           </div>
-                          <p style={{ color: "#9CA3AF", fontSize: "0.8rem" }}>
-                            {famille.eleves} membre{famille.eleves > 1 ? "s" : ""} • {famille.xp.toLocaleString()} XP
-                          </p>
+                          <div style={{ fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "1.1rem", flexShrink: 0 }}>{pourcentage}%</div>
                         </div>
-                        <div style={{ fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "1.1rem", flexShrink: 0 }}>
-                          {pourcentage}%
+                        <div style={{ background: "#E5E7EB", borderRadius: "100px", height: "10px", overflow: "hidden", marginLeft: "52px" }}>
+                          <div style={{ height: "100%", borderRadius: "100px", background: couleur, width: `${pourcentage}%`, transition: "width 0.5s ease" }} />
                         </div>
                       </div>
-                      <div style={{ background: "#E5E7EB", borderRadius: "100px", height: "10px", overflow: "hidden", marginLeft: "52px" }}>
-                        <div style={{
-                          height: "100%", borderRadius: "100px", background: couleur,
-                          width: `${pourcentage}%`, transition: "width 0.5s ease",
-                        }} />
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
+            )}
           </>
         )}
       </div>

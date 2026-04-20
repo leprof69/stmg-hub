@@ -1,26 +1,51 @@
-import { useState } from "react";
-import { db } from "../firebase";
-import { doc, setDoc, collection, getDocs, deleteDoc } from "firebase/firestore";
+import { useState, useEffect } from "react";
+import { db, auth } from "../firebase";
+import { doc, setDoc, collection, getDocs, deleteDoc, updateDoc } from "firebase/firestore";
 import * as XLSX from "xlsx";
 
 const COLORS = {
-  S: "#3B82F6",
-  T: "#7C3AED",
-  M: "#F97316",
-  G: "#10B981",
-  H: "#EF4444",
-  U: "#F59E0B",
-  B: "#06B6D4",
+  S: "#3B82F6", T: "#7C3AED", M: "#F97316",
+  G: "#10B981", H: "#EF4444", U: "#F59E0B", B: "#06B6D4",
 };
 
 const EMOJI_PAR_MATIERE = {
-  "Management": "🏪",
-  "Droit": "⚖️",
-  "Economie": "📊",
-  "Sciences de Gestion": "💻",
-  "Marketing": "📣",
-  "Ressources Humaines": "👥",
-  "Gestion Finance": "💰",
+  "Management": "🏪", "Droit": "⚖️", "Economie": "📊",
+  "Sciences de Gestion": "💻", "Marketing": "📣",
+  "Ressources Humaines": "👥", "Gestion Finance": "💰",
+};
+
+const familleColors = {
+  Architecte: "#3B82F6", Visionnaire: "#7C3AED",
+  Challenger: "#F97316", Explorateur: "#10B981", Influenceur: "#EF4444",
+};
+
+const familleEmojis = {
+  Architecte: "🧠", Visionnaire: "🎨",
+  Challenger: "⚡", Explorateur: "🔬", Influenceur: "🔥",
+};
+
+const RECOMPENSES_INDIVIDUEL = [
+  { rang: 1, label: "🥇 1er", xp: 200, couleur: "#F59E0B" },
+  { rang: 2, label: "🥈 2ème", xp: 150, couleur: "#9CA3AF" },
+  { rang: 3, label: "🥉 3ème", xp: 100, couleur: "#CD7F32" },
+  { rang: 4, label: "4ème", xp: 75, couleur: "#3B82F6" },
+  { rang: 5, label: "5ème", xp: 50, couleur: "#3B82F6" },
+];
+
+const RECOMPENSES_FAMILLE = [
+  { rang: 1, label: "🥇 1ère", xp: 150, couleur: "#F59E0B" },
+  { rang: 2, label: "🥈 2ème", xp: 100, couleur: "#9CA3AF" },
+  { rang: 3, label: "🥉 3ème", xp: 75, couleur: "#CD7F32" },
+  { rang: 4, label: "4ème", xp: 50, couleur: "#3B82F6" },
+  { rang: 5, label: "5ème", xp: 25, couleur: "#3B82F6" },
+];
+
+// Lecture flexible des colonnes Excel (supporte les deux formats)
+const col = (row, ...keys) => {
+  for (const k of keys) {
+    if (row[k] !== undefined && row[k] !== null && row[k] !== "") return row[k];
+  }
+  return "";
 };
 
 export default function Admin() {
@@ -28,6 +53,88 @@ export default function Admin() {
   const [importChapitres, setImportChapitres] = useState({ loading: false, succes: 0, erreurs: 0, message: "" });
   const [fichierMissions, setFichierMissions] = useState(null);
   const [importMissions, setImportMissions] = useState({ loading: false, succes: 0, erreurs: 0, message: "" });
+  const [xpMessage, setXpMessage] = useState("");
+  const [eleves, setEleves] = useState([]);
+  const [chargementEleves, setChargementEleves] = useState(false);
+  const [recompenseEnCours, setRecompenseEnCours] = useState(false);
+  const [messagesRecompense, setMessagesRecompense] = useState([]);
+  const [xpCustom, setXpCustom] = useState({});
+  const [famillesClassement, setFamillesClassement] = useState([]);
+
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.href = "https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap";
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
+  }, []);
+
+  const chargerEleves = async () => {
+    setChargementEleves(true);
+    try {
+      const snapshot = await getDocs(collection(db, "users"));
+      const users = snapshot.docs.map(d => ({ id: d.id, ...d.data() }))
+        .filter(u => u.prenom && u.xp !== undefined)
+        .sort((a, b) => (b.xp || 0) - (a.xp || 0));
+      setEleves(users);
+      const famillesMap = {};
+      users.forEach(u => {
+        if (!u.famille) return;
+        if (!famillesMap[u.famille]) famillesMap[u.famille] = { nom: u.famille, xp: 0, membres: 0 };
+        famillesMap[u.famille].xp += (u.xp || 0);
+        famillesMap[u.famille].membres += 1;
+      });
+      setFamillesClassement(Object.values(famillesMap).sort((a, b) => b.xp - a.xp));
+      const initXp = {};
+      users.forEach((u, i) => { initXp[u.id] = RECOMPENSES_INDIVIDUEL[i]?.xp || 0; });
+      setXpCustom(initXp);
+    } catch (err) { console.error(err); }
+    setChargementEleves(false);
+  };
+
+  const distribuerXPIndividuel = async (userId, xp, prenom) => {
+    if (!xp || xp <= 0) return;
+    setRecompenseEnCours(true);
+    try {
+      const snap = await getDocs(collection(db, "users"));
+      const user = snap.docs.find(d => d.id === userId);
+      if (!user) return;
+      await updateDoc(doc(db, "users", userId), { xp: (user.data().xp || 0) + xp });
+      setMessagesRecompense(prev => [...prev, `✅ +${xp} XP → ${prenom}`]);
+      await chargerEleves();
+    } catch { setMessagesRecompense(prev => [...prev, `❌ Erreur pour ${prenom}`]); }
+    setRecompenseEnCours(false);
+  };
+
+  const distribuerXPFamille = async (famille, xpParMembre) => {
+    if (!xpParMembre || xpParMembre <= 0) return;
+    setRecompenseEnCours(true);
+    try {
+      const snapshot = await getDocs(collection(db, "users"));
+      const membres = snapshot.docs.filter(d => d.data().famille === famille);
+      for (const membre of membres) {
+        await updateDoc(doc(db, "users", membre.id), { xp: (membre.data().xp || 0) + xpParMembre });
+      }
+      setMessagesRecompense(prev => [...prev, `✅ +${xpParMembre} XP × ${membres.length} membres → Famille ${famille}`]);
+      await chargerEleves();
+    } catch { setMessagesRecompense(prev => [...prev, `❌ Erreur famille ${famille}`]); }
+    setRecompenseEnCours(false);
+  };
+
+  const distribuerTopIndividuel = async () => {
+    if (!window.confirm("Distribuer les XP bonus aux 5 premiers élèves ?")) return;
+    setMessagesRecompense([]);
+    for (let i = 0; i < Math.min(5, eleves.length); i++) {
+      await distribuerXPIndividuel(eleves[i].id, xpCustom[eleves[i].id] ?? RECOMPENSES_INDIVIDUEL[i].xp, eleves[i].prenom);
+    }
+  };
+
+  const distribuerTopFamilles = async () => {
+    if (!window.confirm("Distribuer les XP bonus aux familles ?")) return;
+    setMessagesRecompense([]);
+    for (let i = 0; i < Math.min(5, famillesClassement.length); i++) {
+      await distribuerXPFamille(famillesClassement[i].nom, RECOMPENSES_FAMILLE[i].xp);
+    }
+  };
 
   const importerChapitres = async () => {
     if (!fichierChapitres) return;
@@ -42,27 +149,29 @@ export default function Admin() {
         let succes = 0, erreurs = 0;
         for (const row of rows) {
           try {
-            const id = row.id || `${row.matiere}-${row.classe}-chap${row.ordre}`.toLowerCase().replace(/\s/g, "-");
+            // Support les deux formats de colonnes
+            const id = col(row, "ID", "id") ||
+              `${col(row, "Matière", "matiere")}-${col(row, "Classe", "classe")}-chap${col(row, "Ordre", "ordre")}`.toLowerCase().replace(/\s/g, "-");
+            const notionsRaw = col(row, "Notions (séparées par |)", "notions");
+            const competencesRaw = col(row, "Compétences (séparées par |)", "competences");
             await setDoc(doc(db, "chapitres", id), {
-              matiere: row.matiere || "",
-              classe: row.classe || "",
-              ordre: parseInt(row.ordre) || 0,
-              theme: row.theme || "",
-              titre: row.titre || "",
-              question: row.question || "",
-              notions: row.notions ? String(row.notions).split(",").map(n => n.trim()) : [],
-              competences: row.competences ? String(row.competences).split(",").map(c => c.trim()) : [],
-              url_app: row.url_app || "",
-              url_fiche: row.url_fiche || "",
-              xp: parseInt(row.xp) || 50,
+              matiere: col(row, "Matière", "matiere"),
+              classe: col(row, "Classe", "classe"),
+              ordre: parseInt(col(row, "Ordre", "ordre")) || 0,
+              theme: col(row, "Thème", "theme"),
+              titre: col(row, "Titre du chapitre", "titre"),
+              question: col(row, "Question de gestion", "question"),
+              notions: notionsRaw ? String(notionsRaw).split("|").map(n => n.trim()).filter(Boolean) : [],
+              competences: competencesRaw ? String(competencesRaw).split("|").map(c => c.trim()).filter(Boolean) : [],
+              url_app: col(row, "URL Application", "url_app"),
+              url_fiche: col(row, "URL Fiche de révision", "url_fiche"),
+              xp: parseInt(col(row, "XP", "xp")) || 50,
             });
             succes++;
-          } catch (err) {
-            erreurs++;
-          }
+          } catch (err) { erreurs++; }
         }
         setImportChapitres({ loading: false, succes, erreurs, message: `✅ ${succes} chapitres importés !` });
-      } catch (err) {
+      } catch {
         setImportChapitres({ loading: false, succes: 0, erreurs: 1, message: "❌ Erreur de lecture du fichier" });
       }
     };
@@ -79,32 +188,17 @@ export default function Admin() {
         const workbook = XLSX.read(data, { type: "array" });
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
         const rows = XLSX.utils.sheet_to_json(sheet);
-
-        console.log("Nombre de lignes lues :", rows.length);
-        console.log("Première ligne :", JSON.stringify(rows[0]));
-
         let succes = 0, erreurs = 0;
         for (const row of rows) {
           try {
-            console.log("Ligne :", JSON.stringify(row));
             const id = String(row.id || "").trim();
             const type = String(row.type || "").trim();
             const titre = String(row.titre || "").trim();
-
-            if (!id || !type || !titre) {
-              console.log("Ligne ignorée - champs manquants:", { id, type, titre });
-              erreurs++;
-              continue;
-            }
-
+            if (!id || !type || !titre) { erreurs++; continue; }
             const matiere = String(row.matiere || "").trim();
-            const emoji = EMOJI_PAR_MATIERE[matiere] || "🎯";
-
             await setDoc(doc(db, "missions", id), {
-              id,
-              type,
-              matiere,
-              emoji,
+              id, type, matiere,
+              emoji: EMOJI_PAR_MATIERE[matiere] || "🎯",
               titre,
               contexte: String(row.contexte || "").trim(),
               question: String(row.question || "").trim(),
@@ -112,14 +206,10 @@ export default function Admin() {
               xp: parseInt(row.xp) || 25,
             });
             succes++;
-          } catch (err) {
-            console.error("Erreur ligne :", err);
-            erreurs++;
-          }
+          } catch { erreurs++; }
         }
         setImportMissions({ loading: false, succes, erreurs, message: `✅ ${succes} missions importées !` });
-      } catch (err) {
-        console.error("Erreur générale :", err);
+      } catch {
         setImportMissions({ loading: false, succes: 0, erreurs: 1, message: "❌ Erreur de lecture du fichier" });
       }
     };
@@ -133,37 +223,170 @@ export default function Admin() {
     alert("✅ Toutes les missions supprimées !");
   };
 
-  const Btn = ({ children, onClick, color, disabled = false }) => (
+  const donnerXPMax = async () => {
+    try {
+      await updateDoc(doc(db, "users", auth.currentUser.uid), { xp: 99999 });
+      setXpMessage("✅ 99 999 XP ajoutés ! Actualise la page.");
+      setTimeout(() => setXpMessage(""), 4000);
+    } catch {
+      setXpMessage("❌ Erreur.");
+      setTimeout(() => setXpMessage(""), 4000);
+    }
+  };
+
+  const Btn = ({ children, onClick, color, disabled = false, small = false }) => (
     <button onClick={onClick} disabled={disabled} style={{
       background: disabled ? "#E5E7EB" : color,
       color: disabled ? "#9CA3AF" : "white",
       border: "none", fontFamily: "'Fredoka One', cursive",
-      fontSize: "1rem", padding: "12px 24px",
+      fontSize: small ? "0.85rem" : "1rem",
+      padding: small ? "8px 16px" : "12px 24px",
       borderRadius: "14px", cursor: disabled ? "not-allowed" : "pointer",
       boxShadow: disabled ? "none" : `0 4px 15px ${color}40`,
-    }}>
-      {children}
-    </button>
+      whiteSpace: "nowrap",
+    }}>{children}</button>
   );
 
   return (
-    <div style={{ minHeight: "100vh", background: "#F8F9FA", fontFamily: "'Nunito', sans-serif", padding: "24px 16px" }}>
-      <div style={{ maxWidth: "800px", margin: "0 auto" }}>
+    <div style={{ minHeight: "100vh", background: "#F1F5F9", fontFamily: "'Nunito', sans-serif", padding: "24px 16px" }}>
+      <div style={{ maxWidth: "900px", margin: "0 auto" }}>
 
-        <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2.5rem", color: "#1A1A2E", marginBottom: "8px" }}>
-          ⚙️ Administration
-        </h1>
-        <p style={{ color: "#6B7280", marginBottom: "32px" }}>
-          Panneau d'administration STMG HUB — réservé au professeur
-        </p>
+        {/* HEADER */}
+        <div style={{ background: "linear-gradient(135deg, #1A1A2E, #2D1B69)", borderRadius: "24px", padding: "28px 32px", marginBottom: "32px" }}>
+          <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2.2rem", color: "white", margin: "0 0 4px" }}>⚙️ Administration</h1>
+          <p style={{ color: "#A78BFA", margin: 0, fontSize: "0.9rem" }}>Panneau réservé au professeur — STMG HUB</p>
+        </div>
+
+        {/* RÉCOMPENSES */}
+        <div style={{ background: "white", borderRadius: "24px", padding: "28px", marginBottom: "24px", border: `2px solid ${COLORS.U}20`, boxShadow: `0 4px 20px ${COLORS.U}10` }}>
+          <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: COLORS.U, marginBottom: "8px" }}>🏆 Récompenses du jour</h2>
+          <p style={{ color: "#6B7280", fontSize: "0.9rem", marginBottom: "20px" }}>Distribue des XP bonus aux meilleurs élèves et familles.</p>
+
+          {eleves.length === 0 ? (
+            <Btn onClick={chargerEleves} color={COLORS.U} disabled={chargementEleves}>
+              {chargementEleves ? "⏳ Chargement..." : "📊 Charger le classement"}
+            </Btn>
+          ) : (
+            <div>
+              {/* INDIVIDUEL */}
+              <div style={{ marginBottom: "28px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "8px" }}>
+                  <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1.1rem", margin: 0 }}>👤 Classement individuel</p>
+                  <Btn onClick={distribuerTopIndividuel} color={COLORS.U} disabled={recompenseEnCours} small>🚀 Distribuer Top 5</Btn>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  {eleves.slice(0, 10).map((eleve, i) => {
+                    const recompense = RECOMPENSES_INDIVIDUEL[i];
+                    const couleurFamille = familleColors[eleve.famille] || COLORS.S;
+                    return (
+                      <div key={eleve.id} style={{
+                        background: i < 3 ? COLORS.U + "08" : "#F8FAFC",
+                        borderRadius: "16px", padding: "14px 16px",
+                        border: i < 3 ? `2px solid ${COLORS.U}30` : "2px solid #E5E7EB",
+                        display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap",
+                      }}>
+                        <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: i < 3 ? "1.6rem" : "1rem", width: "40px", textAlign: "center" }}>
+                          {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                            <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1rem", margin: 0 }}>{eleve.prenom}</p>
+                            <span style={{ background: couleurFamille + "20", color: couleurFamille, fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.7rem" }}>
+                              {familleEmojis[eleve.famille]} {eleve.famille}
+                            </span>
+                          </div>
+                          <p style={{ color: "#9CA3AF", fontSize: "0.8rem", margin: "2px 0 0" }}>{(eleve.xp || 0).toLocaleString()} XP</p>
+                        </div>
+                        <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                          <input
+                            type="number"
+                            value={xpCustom[eleve.id] ?? (recompense?.xp || 0)}
+                            onChange={e => setXpCustom(prev => ({ ...prev, [eleve.id]: parseInt(e.target.value) || 0 }))}
+                            style={{ width: "80px", padding: "6px 10px", borderRadius: "10px", border: `2px solid ${COLORS.U}30`, fontFamily: "'Fredoka One', cursive", fontSize: "0.9rem", textAlign: "center", outline: "none" }}
+                          />
+                          <span style={{ color: "#9CA3AF", fontSize: "0.8rem" }}>XP</span>
+                          <Btn onClick={() => distribuerXPIndividuel(eleve.id, xpCustom[eleve.id] ?? recompense?.xp, eleve.prenom)} color={recompense ? recompense.couleur : COLORS.S} disabled={recompenseEnCours} small>
+                            {recompense ? recompense.label : "+XP"}
+                          </Btn>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* FAMILLES */}
+              <div style={{ marginBottom: "20px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "8px" }}>
+                  <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1.1rem", margin: 0 }}>🧬 Classement Familles</p>
+                  <Btn onClick={distribuerTopFamilles} color={COLORS.T} disabled={recompenseEnCours} small>🚀 Distribuer Top 5 familles</Btn>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  {famillesClassement.map((famille, i) => {
+                    const recompense = RECOMPENSES_FAMILLE[i];
+                    const couleur = familleColors[famille.nom] || COLORS.S;
+                    return (
+                      <div key={famille.nom} style={{
+                        background: i < 3 ? couleur + "08" : "#F8FAFC",
+                        borderRadius: "16px", padding: "14px 16px",
+                        border: i < 3 ? `2px solid ${couleur}30` : "2px solid #E5E7EB",
+                        display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap",
+                      }}>
+                        <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: i < 3 ? "1.6rem" : "1rem", width: "40px", textAlign: "center" }}>
+                          {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}
+                        </div>
+                        <span style={{ fontSize: "1.6rem" }}>{familleEmojis[famille.nom]}</span>
+                        <div style={{ flex: 1 }}>
+                          <p style={{ fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "1rem", margin: 0 }}>{famille.nom}</p>
+                          <p style={{ color: "#9CA3AF", fontSize: "0.8rem", margin: "2px 0 0" }}>{famille.membres} membres · {famille.xp.toLocaleString()} XP total</p>
+                        </div>
+                        <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                          <span style={{ fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "0.9rem" }}>+{recompense?.xp || 0} XP/membre</span>
+                          <Btn onClick={() => distribuerXPFamille(famille.nom, recompense?.xp || 0)} color={couleur} disabled={recompenseEnCours} small>
+                            {recompense ? recompense.label : "+XP"}
+                          </Btn>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* LOG */}
+              {messagesRecompense.length > 0 && (
+                <div style={{ background: "#F0FDF4", borderRadius: "16px", padding: "16px", border: "1px solid #BBF7D0" }}>
+                  <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.G, marginBottom: "8px" }}>📋 Journal</p>
+                  {messagesRecompense.map((m, i) => (
+                    <p key={i} style={{ color: "#374151", fontSize: "0.85rem", margin: "2px 0" }}>{m}</p>
+                  ))}
+                  <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
+                    <Btn onClick={chargerEleves} color={COLORS.G} small>🔄 Actualiser</Btn>
+                    <Btn onClick={() => setMessagesRecompense([])} color={COLORS.H} small>🗑️ Effacer</Btn>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* TEST XP */}
+        <div style={{ background: "white", borderRadius: "24px", padding: "28px", marginBottom: "24px", border: `2px solid ${COLORS.U}20` }}>
+          <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: COLORS.U, marginBottom: "8px" }}>⚡ Test — XP Maximum</h2>
+          <p style={{ color: "#6B7280", fontSize: "0.9rem", marginBottom: "20px" }}>Donne 99 999 XP à ton compte pour tester.</p>
+          <Btn onClick={donnerXPMax} color={COLORS.U}>🚀 Donner 99 999 XP (test)</Btn>
+          {xpMessage && (
+            <div style={{ marginTop: "16px", padding: "14px", borderRadius: "14px", background: xpMessage.includes("✅") ? COLORS.G + "15" : COLORS.H + "15" }}>
+              <p style={{ fontFamily: "'Fredoka One', cursive", color: xpMessage.includes("✅") ? COLORS.G : COLORS.H }}>{xpMessage}</p>
+            </div>
+          )}
+        </div>
 
         {/* CHAPITRES */}
-        <div style={{ background: "white", borderRadius: "24px", padding: "28px", marginBottom: "24px", border: `2px solid ${COLORS.S}20`, boxShadow: `0 4px 20px ${COLORS.S}10` }}>
-          <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: COLORS.S, marginBottom: "8px" }}>
-            📚 Importer les chapitres
-          </h2>
-          <p style={{ color: "#6B7280", fontSize: "0.9rem", marginBottom: "20px" }}>
-            Importe le fichier Excel des chapitres dans Firestore.
+        <div style={{ background: "white", borderRadius: "24px", padding: "28px", marginBottom: "24px", border: `2px solid ${COLORS.S}20` }}>
+          <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: COLORS.S, marginBottom: "8px" }}>📚 Importer les chapitres</h2>
+          <p style={{ color: "#6B7280", fontSize: "0.9rem", marginBottom: "4px" }}>Supporte les deux formats de colonnes (ancien et nouveau).</p>
+          <p style={{ color: "#9CA3AF", fontSize: "0.8rem", marginBottom: "20px" }}>
+            Colonnes acceptées : <strong>ID</strong>, <strong>Matière</strong>, <strong>Classe</strong>, <strong>Ordre</strong>, <strong>Thème</strong>, <strong>Titre du chapitre</strong>, <strong>Question de gestion</strong>, <strong>Notions (séparées par |)</strong>, <strong>Compétences (séparées par |)</strong>, <strong>URL Application</strong>, <strong>URL Fiche de révision</strong>, <strong>XP</strong>
           </p>
           <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
             <input type="file" accept=".xlsx" onChange={e => setFichierChapitres(e.target.files[0])}
@@ -173,7 +396,7 @@ export default function Admin() {
             </Btn>
           </div>
           {importChapitres.message && (
-            <div style={{ marginTop: "16px", padding: "14px", borderRadius: "14px", background: importChapitres.erreurs > 0 ? COLORS.H + "15" : COLORS.G + "15", border: `1px solid ${importChapitres.erreurs > 0 ? COLORS.H : COLORS.G}30` }}>
+            <div style={{ marginTop: "16px", padding: "14px", borderRadius: "14px", background: importChapitres.erreurs > 0 ? COLORS.H + "15" : COLORS.G + "15" }}>
               <p style={{ fontFamily: "'Fredoka One', cursive", color: importChapitres.erreurs > 0 ? COLORS.H : COLORS.G }}>{importChapitres.message}</p>
               {importChapitres.erreurs > 0 && <p style={{ color: "#6B7280", fontSize: "0.85rem", marginTop: "4px" }}>{importChapitres.erreurs} erreur(s)</p>}
             </div>
@@ -181,13 +404,9 @@ export default function Admin() {
         </div>
 
         {/* MISSIONS */}
-        <div style={{ background: "white", borderRadius: "24px", padding: "28px", marginBottom: "24px", border: `2px solid ${COLORS.T}20`, boxShadow: `0 4px 20px ${COLORS.T}10` }}>
-          <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: COLORS.T, marginBottom: "8px" }}>
-            🎯 Importer les missions
-          </h2>
-          <p style={{ color: "#6B7280", fontSize: "0.9rem", marginBottom: "20px" }}>
-            Importe le fichier Excel des missions dans Firestore.
-          </p>
+        <div style={{ background: "white", borderRadius: "24px", padding: "28px", marginBottom: "24px", border: `2px solid ${COLORS.T}20` }}>
+          <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: COLORS.T, marginBottom: "8px" }}>🎯 Importer les missions</h2>
+          <p style={{ color: "#6B7280", fontSize: "0.9rem", marginBottom: "20px" }}>Importe le fichier Excel des missions dans Firestore.</p>
           <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
             <input type="file" accept=".xlsx" onChange={e => setFichierMissions(e.target.files[0])}
               style={{ flex: 1, padding: "10px 14px", borderRadius: "12px", border: `2px solid ${COLORS.T}30`, fontFamily: "'Nunito', sans-serif", fontSize: "0.9rem" }} />
@@ -196,7 +415,7 @@ export default function Admin() {
             </Btn>
           </div>
           {importMissions.message && (
-            <div style={{ marginTop: "16px", padding: "14px", borderRadius: "14px", background: importMissions.erreurs > 0 ? COLORS.H + "15" : COLORS.G + "15", border: `1px solid ${importMissions.erreurs > 0 ? COLORS.H : COLORS.G}30` }}>
+            <div style={{ marginTop: "16px", padding: "14px", borderRadius: "14px", background: importMissions.erreurs > 0 ? COLORS.H + "15" : COLORS.G + "15" }}>
               <p style={{ fontFamily: "'Fredoka One', cursive", color: importMissions.erreurs > 0 ? COLORS.H : COLORS.G }}>{importMissions.message}</p>
               {importMissions.erreurs > 0 && <p style={{ color: "#6B7280", fontSize: "0.85rem", marginTop: "4px" }}>{importMissions.erreurs} erreur(s)</p>}
             </div>
@@ -210,20 +429,19 @@ export default function Admin() {
 
         {/* INFOS */}
         <div style={{ background: "white", borderRadius: "24px", padding: "28px", border: `2px solid ${COLORS.G}20` }}>
-          <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: COLORS.G, marginBottom: "16px" }}>
-            💡 Informations
-          </h2>
+          <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: COLORS.G, marginBottom: "16px" }}>💡 Informations</h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             {[
-              { emoji: "📚", texte: "Chapitres : modifier le fichier Excel → réimporter", couleur: COLORS.S },
+              { emoji: "🏆", texte: "Récompenses : charge le classement → distribue les XP bonus en 1 clic", couleur: COLORS.U },
+              { emoji: "📚", texte: "Chapitres : supporte les colonnes 'Matière', 'Titre du chapitre', 'URL Application'...", couleur: COLORS.S },
               { emoji: "🎯", texte: "Missions : modifier le fichier Excel → réimporter", couleur: COLORS.T },
-              { emoji: "🔄", texte: "Les missions changent automatiquement par rotation", couleur: COLORS.M },
               { emoji: "🏅", texte: "Les badges se débloquent automatiquement selon l'XP", couleur: COLORS.U },
+              { emoji: "🃏", texte: "Les cartes sont obtenues en ouvrant des packs avec l'XP", couleur: COLORS.B },
               { emoji: "🔒", texte: "Cette page est réservée aux comptes admin", couleur: COLORS.H },
             ].map((item, i) => (
               <div key={i} style={{ display: "flex", gap: "12px", alignItems: "center", padding: "12px 16px", borderRadius: "14px", background: item.couleur + "10", border: `1px solid ${item.couleur}20` }}>
                 <span style={{ fontSize: "1.5rem" }}>{item.emoji}</span>
-                <p style={{ color: "#374151", fontSize: "0.95rem" }}>{item.texte}</p>
+                <p style={{ color: "#374151", fontSize: "0.95rem", margin: 0 }}>{item.texte}</p>
               </div>
             ))}
           </div>

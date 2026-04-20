@@ -3,13 +3,8 @@ import { auth, db } from "../firebase";
 import { doc, updateDoc, getDoc, collection, getDocs } from "firebase/firestore";
 
 const COLORS = {
-  S: "#3B82F6",
-  T: "#7C3AED",
-  M: "#F97316",
-  G: "#10B981",
-  H: "#EF4444",
-  U: "#F59E0B",
-  B: "#06B6D4",
+  S: "#3B82F6", T: "#7C3AED", M: "#F97316",
+  G: "#10B981", H: "#EF4444", U: "#F59E0B", B: "#06B6D4",
 };
 
 const getDateJour = () => {
@@ -45,7 +40,7 @@ MISSION : ${mission.titre}
 MATIÈRE : ${mission.matiere}
 CONTEXTE : ${mission.contexte}
 QUESTION : ${mission.question}
-MOTS-CLÉS ATTENDUS : ${mission.mots_cles ? mission.mots_cles.join(", ") : ""}
+MOTS-CLÉS ATTENDUS : ${mission.mots_cles ? (Array.isArray(mission.mots_cles) ? mission.mots_cles.join(", ") : mission.mots_cles) : ""}
 
 RÉPONSE DE L'ÉLÈVE : ${reponseEleve}
 
@@ -80,6 +75,7 @@ Format JSON exact :
   return { score: 5, feedback: "Réponse reçue !", points_forts: "Tu as répondu !", a_ameliorer: "Continue à approfondir.", triche_detectee: false };
 };
 
+// ===== CARTE MISSION =====
 const CarteMission = ({ mission, profil, onMissionComplete }) => {
   const [reponse, setReponse] = useState("");
   const [correction, setCorrection] = useState(null);
@@ -131,6 +127,11 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
           <span style={{ background: couleur + "15", color: couleur, fontFamily: "'Fredoka One', cursive", padding: "4px 16px", borderRadius: "100px", fontSize: "0.85rem", border: `1px solid ${couleur}30` }}>
             +{mission.xp} XP
           </span>
+          {dejaFaite && !correction && (
+            <span style={{ background: COLORS.G + "15", color: COLORS.G, fontFamily: "'Fredoka One', cursive", padding: "4px 16px", borderRadius: "100px", fontSize: "0.85rem", border: `1px solid ${COLORS.G}30` }}>
+              ✅ Déjà faite
+            </span>
+          )}
         </div>
         <span style={{ fontSize: "0.85rem", color: "#9CA3AF", fontWeight: 600 }}>{mission.matiere}</span>
       </div>
@@ -144,31 +145,34 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
       </div>
 
       <div style={{ background: couleur + "10", borderRadius: "16px", padding: "16px", marginBottom: "16px", border: `1px solid ${couleur}20` }}>
-        <p style={{ fontFamily: "'Fredoka One', cursive", color: couleur, marginBottom: "4px", fontSize: "0.9rem" }}>❓ Question</p>
-        <p style={{ color: "#374151", lineHeight: 1.7 }}>{mission.question}</p>
+        <p style={{ fontFamily: "'Fredoka One', cursive", color: couleur, marginBottom: "8px", fontSize: "0.9rem" }}>❓ Question</p>
+        <p style={{ color: "#374151", lineHeight: 1.8, whiteSpace: "pre-line" }}>{mission.question}</p>
       </div>
 
-      {dejaFaite && !correction ? (
-        <div style={{ background: COLORS.G + "15", borderRadius: "16px", padding: "16px", border: `1px solid ${COLORS.G}30`, textAlign: "center" }}>
-          <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.G, fontSize: "1.1rem" }}>✅ Mission déjà complétée !</p>
-          <p style={{ color: "#6B7280", fontSize: "0.85rem", marginTop: "4px" }}>Reviens demain pour de nouvelles missions 🔥</p>
-        </div>
-      ) : !correction ? (
+      {!correction ? (
         <div>
           <textarea
             value={reponse}
             onChange={e => setReponse(e.target.value)}
             placeholder="Écris ta réponse ici avec tes propres mots... (minimum 20 caractères)"
             style={{
-              width: "100%", minHeight: "120px", padding: "16px",
+              width: "100%", minHeight: "140px", padding: "16px",
               borderRadius: "16px", border: `2px solid ${couleur}30`,
               fontFamily: "'Nunito', sans-serif", fontSize: "0.95rem",
               lineHeight: 1.6, resize: "vertical", outline: "none",
               boxSizing: "border-box", color: "#374151",
+              opacity: dejaFaite ? 0.7 : 1,
             }}
             onFocus={e => e.target.style.borderColor = couleur}
             onBlur={e => e.target.style.borderColor = couleur + "30"}
           />
+          {dejaFaite && (
+            <div style={{ background: COLORS.G + "10", borderRadius: "12px", padding: "12px 16px", marginTop: "8px", border: `1px solid ${COLORS.G}30` }}>
+              <p style={{ color: COLORS.G, fontSize: "0.85rem", fontFamily: "'Fredoka One', cursive", margin: 0 }}>
+                ✅ Tu as déjà complété cette mission ! Tu peux la refaire pour t'entraîner mais tu ne gagneras plus d'XP.
+              </p>
+            </div>
+          )}
           <p style={{ color: "#9CA3AF", fontSize: "0.8rem", marginTop: "8px" }}>
             ⚠️ Réponds avec tes propres mots — l'IA détecte les réponses copiées !
           </p>
@@ -235,11 +239,12 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
   );
 };
 
+// ===== COMPOSANT PRINCIPAL =====
 export default function Missions({ profil, onXPGagne }) {
   const [onglet, setOnglet] = useState("quotidiennes");
   const [xpGagne, setXpGagne] = useState(0);
   const [showNotif, setShowNotif] = useState(false);
-  const [missions, setMissions] = useState({ quotidiennes: [], hebdomadaire: null, mensuelle: null });
+  const [missions, setMissions] = useState({ quotidiennes: [], hebdomadaires: [], mensuelles: [] });
   const [chargement, setChargement] = useState(true);
 
   useEffect(() => {
@@ -254,18 +259,12 @@ export default function Missions({ profil, onXPGagne }) {
     try {
       const snapshot = await getDocs(collection(db, "missions"));
       const toutes = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-      const quotidiennes = toutes.filter(m => m.type === "quotidienne");
-      const hebdomadaires = toutes.filter(m => m.type === "hebdomadaire");
-      const mensuelles = toutes.filter(m => m.type === "mensuelle");
-      const dayIndex = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
-      const weekIndex = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 7));
-      const monthIndex = new Date().getMonth();
-      const missionsJour = quotidiennes.length >= 3
-        ? [0, 1, 2].map(i => quotidiennes[(dayIndex + i) % quotidiennes.length])
-        : quotidiennes.slice(0, 3);
-      const missionHebdo = hebdomadaires.length > 0 ? hebdomadaires[weekIndex % hebdomadaires.length] : null;
-      const missionMensuelle = mensuelles.length > 0 ? mensuelles[monthIndex % mensuelles.length] : null;
-      setMissions({ quotidiennes: missionsJour, hebdomadaire: missionHebdo, mensuelle: missionMensuelle });
+      // TOUTES les missions affichées — pas de rotation
+      setMissions({
+        quotidiennes: toutes.filter(m => m.type === "quotidienne"),
+        hebdomadaires: toutes.filter(m => m.type === "hebdomadaire"),
+        mensuelles: toutes.filter(m => m.type === "mensuelle"),
+      });
     } catch (err) {
       console.error(err);
     }
@@ -279,52 +278,62 @@ export default function Missions({ profil, onXPGagne }) {
     if (onXPGagne) onXPGagne();
   };
 
-  const quotidiennesCompletes = missions.quotidiennes.filter(m => m && missionDejaFaite(profil, m.id, "quotidienne")).length;
+  const totalQuotidiennes = missions.quotidiennes.length;
+  const quotidiennesCompletes = missions.quotidiennes.filter(m => missionDejaFaite(profil, m.id, "quotidienne")).length;
+  const totalHebdo = missions.hebdomadaires.length;
+  const hebdoCompletes = missions.hebdomadaires.filter(m => missionDejaFaite(profil, m.id, "hebdomadaire")).length;
+  const totalMensuelles = missions.mensuelles.length;
+  const mensuellesCompletes = missions.mensuelles.filter(m => missionDejaFaite(profil, m.id, "mensuelle")).length;
+
+  const onglets = [
+    { id: "quotidiennes", label: "⚡ Quotidiennes", couleur: COLORS.S, total: totalQuotidiennes, faites: quotidiennesCompletes },
+    { id: "hebdomadaires", label: "📅 Hebdomadaires", couleur: COLORS.T, total: totalHebdo, faites: hebdoCompletes },
+    { id: "mensuelles", label: "🏆 Mensuelles", couleur: COLORS.U, total: totalMensuelles, faites: mensuellesCompletes },
+  ];
 
   return (
-    <div style={{ minHeight: "100vh", background: "#F8F9FA", fontFamily: "'Nunito', sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "#F1F5F9", fontFamily: "'Nunito', sans-serif" }}>
       {showNotif && (
         <div style={{
           position: "fixed", top: "80px", right: "24px", zIndex: 100,
-          background: COLORS.U, color: "white",
-          fontFamily: "'Fredoka One', cursive", fontSize: "1.2rem",
+          background: "linear-gradient(135deg, #F59E0B, #B45309)",
+          color: "white", fontFamily: "'Fredoka One', cursive", fontSize: "1.2rem",
           padding: "16px 24px", borderRadius: "20px",
-          boxShadow: `0 8px 30px ${COLORS.U}50`,
+          boxShadow: "0 8px 30px #F59E0B50",
         }}>
           🌟 +{xpGagne} XP gagnés !
         </div>
       )}
 
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "24px 16px" }}>
-        <div style={{ marginBottom: "32px" }}>
-          <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2.5rem", color: "#1A1A2E", marginBottom: "8px" }}>
+
+        {/* HEADER */}
+        <div style={{ background: "linear-gradient(135deg, #1A1A2E, #2D1B69)", borderRadius: "24px", padding: "28px 32px", marginBottom: "24px" }}>
+          <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2.2rem", color: "white", margin: "0 0 4px" }}>
             🎯 Mes Missions
           </h1>
-          <p style={{ color: "#6B7280", fontSize: "1rem" }}>
-            Des situations réelles à analyser avec les notions du cours STMG !
+          <p style={{ color: "#A78BFA", margin: "0 0 20px", fontSize: "0.9rem" }}>
+            Des exercices réels avec calculs et notions du cours SDG !
           </p>
+
+          {/* STATS */}
+          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+            {onglets.map(t => (
+              <div key={t.id} style={{ background: t.couleur + "25", border: `1px solid ${t.couleur}50`, borderRadius: "14px", padding: "8px 18px" }}>
+                <p style={{ fontFamily: "'Fredoka One', cursive", color: "white", fontSize: "0.85rem", margin: 0 }}>
+                  {t.label.split(" ")[0]} {t.faites}/{t.total}
+                </p>
+                <div style={{ background: "rgba(255,255,255,0.2)", borderRadius: "100px", height: "4px", marginTop: "4px" }}>
+                  <div style={{ height: "100%", borderRadius: "100px", background: "white", width: t.total > 0 ? `${(t.faites / t.total) * 100}%` : "0%", transition: "width 0.5s" }} />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div style={{ background: "white", borderRadius: "20px", padding: "20px", marginBottom: "24px", border: `2px solid ${COLORS.S}20`, display: "flex", alignItems: "center", gap: "20px" }}>
-          <div style={{ flex: 1 }}>
-            <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", marginBottom: "8px" }}>
-              ⚡ Missions quotidiennes — {quotidiennesCompletes}/3 complétées
-            </p>
-            <div style={{ background: "#F3F4F6", borderRadius: "100px", height: "10px" }}>
-              <div style={{ height: "100%", borderRadius: "100px", background: COLORS.S, width: `${(quotidiennesCompletes / 3) * 100}%`, transition: "width 0.5s" }} />
-            </div>
-          </div>
-          <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.8rem", color: COLORS.U }}>
-            {quotidiennesCompletes === 3 ? "🏆" : `${quotidiennesCompletes}/3`}
-          </div>
-        </div>
-
+        {/* ONGLETS */}
         <div style={{ display: "flex", gap: "8px", marginBottom: "24px", flexWrap: "wrap" }}>
-          {[
-            { id: "quotidiennes", label: "⚡ Quotidiennes", couleur: COLORS.S },
-            { id: "hebdomadaire", label: "📅 Hebdomadaire", couleur: COLORS.T },
-            { id: "mensuelle", label: "🏆 Mensuelle", couleur: COLORS.U },
-          ].map(tab => (
+          {onglets.map(tab => (
             <button key={tab.id} onClick={() => setOnglet(tab.id)}
               style={{
                 background: onglet === tab.id ? tab.couleur : "white",
@@ -336,45 +345,69 @@ export default function Missions({ profil, onXPGagne }) {
                 boxShadow: onglet === tab.id ? `0 4px 15px ${tab.couleur}40` : "none",
               }}>
               {tab.label}
+              <span style={{ marginLeft: "8px", background: onglet === tab.id ? "rgba(255,255,255,0.25)" : tab.couleur + "15", padding: "2px 8px", borderRadius: "100px", fontSize: "0.8rem" }}>
+                {tab.faites}/{tab.total}
+              </span>
             </button>
           ))}
         </div>
 
         {chargement ? (
-          <div style={{ textAlign: "center", padding: "60px", color: "#6B7280" }}>
-            <p style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem" }}>⏳ Chargement des missions...</p>
+          <div style={{ textAlign: "center", padding: "60px", background: "white", borderRadius: "24px" }}>
+            <p style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: "#6B7280" }}>⏳ Chargement des missions...</p>
           </div>
         ) : (
           <>
+            {/* QUOTIDIENNES */}
             {onglet === "quotidiennes" && (
               <div>
-                <p style={{ color: "#9CA3AF", fontSize: "0.85rem", marginBottom: "20px" }}>🔄 Ces missions changent chaque jour à minuit</p>
+                <p style={{ color: "#9CA3AF", fontSize: "0.85rem", marginBottom: "20px" }}>
+                  📚 {totalQuotidiennes} missions disponibles — {quotidiennesCompletes} déjà complétées aujourd'hui
+                </p>
                 {missions.quotidiennes.length === 0 ? (
-                  <p style={{ textAlign: "center", color: "#9CA3AF", padding: "40px" }}>Aucune mission disponible pour le moment 🎯</p>
+                  <div style={{ textAlign: "center", padding: "60px", background: "white", borderRadius: "24px" }}>
+                    <p style={{ fontFamily: "'Fredoka One', cursive", color: "#9CA3AF", fontSize: "1.2rem" }}>Aucune mission disponible 🎯</p>
+                  </div>
                 ) : (
-                  missions.quotidiennes.map((mission) => (
+                  missions.quotidiennes.map(mission => (
                     <CarteMission key={mission.id} mission={mission} profil={profil} onMissionComplete={handleMissionComplete} />
                   ))
                 )}
               </div>
             )}
-            {onglet === "hebdomadaire" && (
+
+            {/* HEBDOMADAIRES */}
+            {onglet === "hebdomadaires" && (
               <div>
-                <p style={{ color: "#9CA3AF", fontSize: "0.85rem", marginBottom: "20px" }}>🔄 Cette mission change chaque lundi</p>
-                {missions.hebdomadaire ? (
-                  <CarteMission mission={missions.hebdomadaire} profil={profil} onMissionComplete={handleMissionComplete} />
+                <p style={{ color: "#9CA3AF", fontSize: "0.85rem", marginBottom: "20px" }}>
+                  📚 {totalHebdo} missions disponibles — {hebdoCompletes} déjà complétées cette semaine
+                </p>
+                {missions.hebdomadaires.length === 0 ? (
+                  <div style={{ textAlign: "center", padding: "60px", background: "white", borderRadius: "24px" }}>
+                    <p style={{ fontFamily: "'Fredoka One', cursive", color: "#9CA3AF", fontSize: "1.2rem" }}>Aucune mission disponible 📅</p>
+                  </div>
                 ) : (
-                  <p style={{ textAlign: "center", color: "#9CA3AF", padding: "40px" }}>Aucune mission hebdomadaire disponible 📅</p>
+                  missions.hebdomadaires.map(mission => (
+                    <CarteMission key={mission.id} mission={mission} profil={profil} onMissionComplete={handleMissionComplete} />
+                  ))
                 )}
               </div>
             )}
-            {onglet === "mensuelle" && (
+
+            {/* MENSUELLES */}
+            {onglet === "mensuelles" && (
               <div>
-                <p style={{ color: "#9CA3AF", fontSize: "0.85rem", marginBottom: "20px" }}>🔄 Cette mission change le 1er de chaque mois</p>
-                {missions.mensuelle ? (
-                  <CarteMission mission={missions.mensuelle} profil={profil} onMissionComplete={handleMissionComplete} />
+                <p style={{ color: "#9CA3AF", fontSize: "0.85rem", marginBottom: "20px" }}>
+                  📚 {totalMensuelles} missions disponibles — {mensuellesCompletes} déjà complétées ce mois
+                </p>
+                {missions.mensuelles.length === 0 ? (
+                  <div style={{ textAlign: "center", padding: "60px", background: "white", borderRadius: "24px" }}>
+                    <p style={{ fontFamily: "'Fredoka One', cursive", color: "#9CA3AF", fontSize: "1.2rem" }}>Aucune mission disponible 🏆</p>
+                  </div>
                 ) : (
-                  <p style={{ textAlign: "center", color: "#9CA3AF", padding: "40px" }}>Aucune mission mensuelle disponible 🏆</p>
+                  missions.mensuelles.map(mission => (
+                    <CarteMission key={mission.id} mission={mission} profil={profil} onMissionComplete={handleMissionComplete} />
+                  ))
                 )}
               </div>
             )}
