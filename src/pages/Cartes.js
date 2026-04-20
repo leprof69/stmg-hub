@@ -29,7 +29,7 @@ const PACKS = [
     id: "legendaire", nom: "Pack Légendaire", emoji: "👑", cout: 200, nbCartes: 3,
     couleur: "#F59E0B", gradient: "linear-gradient(135deg, #F59E0B, #B45309)",
     description: "3 cartes • Épiques et légendaires possibles !",
-    prob: { commune: 0.39, peu_comune: 0.40, rare: 0.15, epique: 0.04, legendaire: 0.01, ultra_rare: 0.01 }
+    prob: { commune: 0.39, peu_commune: 0.40, rare: 0.15, epique: 0.04, legendaire: 0.01, ultra_rare: 0.01 }
   },
   {
     id: "mystere", nom: "Pack Mystère 🎲", emoji: "🎲", cout: 0, nbCartes: 3,
@@ -69,6 +69,7 @@ const getAujourdhui = () => {
 const Visionneuse = ({ carte, cartesPossedees, indexDansPossedees, onFermer, onPrecedent, onSuivant }) => {
   const config = RARETE_CONFIG[carte.rarete] || RARETE_CONFIG.commune;
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const handleKey = (e) => {
       if (e.key === "ArrowLeft") onPrecedent();
@@ -247,7 +248,7 @@ export default function Cartes({ profil, onXPGagne }) {
     link.rel = "stylesheet";
     document.head.appendChild(link);
     chargerCollection();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const chargerCollection = async () => {
     if (!auth.currentUser) return;
@@ -256,7 +257,6 @@ export default function Cartes({ profil, onXPGagne }) {
     const data = snap.data();
     setMaCollection(data.cartes || {});
 
-    // STREAK
     const today = getAujourdhui();
     const lastVisit = data.lastVisit || "";
     const currentStreak = data.streak || 0;
@@ -268,11 +268,9 @@ export default function Cartes({ profil, onXPGagne }) {
     }
     setStreak(newStreak);
 
-    // PACK MYSTERE (1 fois par semaine)
     const semaine = getDebutSemaine();
     setPackMystereDisponible((data.dernierPackMystere || "") !== semaine);
 
-    // CARTE DU LUNDI (chaque lundi)
     const now = new Date();
     const estLundi = now.getDay() === 1;
     setCarteJourDispo(estLundi && (data.derniereCarteJour || "") !== today);
@@ -306,7 +304,6 @@ export default function Cartes({ profil, onXPGagne }) {
         setPackMystereDisponible(false);
       }
 
-      // Vérif drop complet → +500 XP
       const dropComplete = collection.cartes.every(c => (cartes[c.id] || 0) > 0);
       const dropAvantOuverture = collection.cartes.every(c => (data.cartes?.[c.id] || 0) > 0);
       if (dropComplete && !dropAvantOuverture) {
@@ -414,8 +411,6 @@ export default function Cartes({ profil, onXPGagne }) {
               ))}
             </div>
           </div>
-
-          {/* BARRE PROGRESSION GLOBALE */}
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
               <p style={{ color: "#A78BFA", fontSize: "0.85rem", margin: 0, fontFamily: "'Fredoka One', cursive" }}>📊 Collection globale</p>
@@ -452,7 +447,6 @@ export default function Cartes({ profil, onXPGagne }) {
           </div>
         )}
 
-        {/* RECAP REGLES */}
         <RecapRegles />
 
         {/* ONGLETS */}
@@ -477,10 +471,10 @@ export default function Cartes({ profil, onXPGagne }) {
               const obtenues = col.cartes.filter(c => maCollection[c.id] > 0).length;
               return (
                 <div key={col.id} style={{ background: "white", borderRadius: "24px", overflow: "hidden", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
-                  <div style={{ background: col.gradient, padding: "20px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
+                  <div style={{ background: col.gradient || "linear-gradient(135deg, #1A1A2E, #2D1B69)", padding: "20px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
                     <div>
-                      <p style={{ fontFamily: "'Fredoka One', cursive", color: "white", fontSize: "1.3rem", margin: 0 }}>{col.emoji} {col.nom}</p>
-                      <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "0.82rem", margin: "2px 0 0" }}>{col.description}</p>
+                      <p style={{ fontFamily: "'Fredoka One', cursive", color: "white", fontSize: "1.3rem", margin: 0 }}>{col.emoji || "🃏"} {col.nom}</p>
+                      <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "0.82rem", margin: "2px 0 0" }}>{col.description || ""}</p>
                     </div>
                     <span style={{ background: "rgba(255,255,255,0.2)", color: "white", fontFamily: "'Fredoka One', cursive", padding: "6px 16px", borderRadius: "100px", fontSize: "0.85rem" }}>
                       {obtenues}/{col.cartes.length} obtenues
@@ -520,37 +514,28 @@ export default function Cartes({ profil, onXPGagne }) {
               return (
                 <div key={col.id} style={{ background: "white", borderRadius: "24px", overflow: "hidden", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
                   <div onClick={() => setCollectionOuverte(ouverte ? null : col.id)}
-                    style={{ background: ouverte ? col.gradient : "white", padding: "20px 24px", cursor: "pointer", borderBottom: ouverte ? "none" : "1px solid #F3F4F6", transition: "all 0.3s" }}>
+                    style={{ background: ouverte ? (col.gradient || "linear-gradient(135deg, #1A1A2E, #2D1B69)") : "white", padding: "20px 24px", cursor: "pointer", borderBottom: ouverte ? "none" : "1px solid #F3F4F6", transition: "all 0.3s" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
                       <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                        <div style={{ width: "48px", height: "48px", borderRadius: "14px", background: ouverte ? "rgba(255,255,255,0.2)" : col.couleur + "15", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.6rem" }}>{col.emoji}</div>
+                        <div style={{ width: "48px", height: "48px", borderRadius: "14px", background: ouverte ? "rgba(255,255,255,0.2)" : (col.couleur || "#7C3AED") + "15", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.6rem" }}>{col.emoji || "🃏"}</div>
                         <div>
-                          <p style={{ fontFamily: "'Fredoka One', cursive", color: ouverte ? "white" : col.couleur, fontSize: "1.2rem", margin: 0 }}>{col.nom}</p>
+                          <p style={{ fontFamily: "'Fredoka One', cursive", color: ouverte ? "white" : (col.couleur || "#7C3AED"), fontSize: "1.2rem", margin: 0 }}>{col.nom}</p>
                           <p style={{ color: ouverte ? "rgba(255,255,255,0.7)" : "#9CA3AF", fontSize: "0.8rem", margin: "2px 0 0" }}>{cartesPossedees.length} / {col.cartes.length} cartes</p>
                         </div>
                       </div>
                       <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
                         {prog === 100 && <span style={{ fontSize: "1.4rem" }}>🏆</span>}
-                        <div style={{ background: ouverte ? "rgba(255,255,255,0.2)" : col.couleur + "15", borderRadius: "100px", padding: "6px 16px", fontFamily: "'Fredoka One', cursive", color: ouverte ? "white" : col.couleur, fontSize: "0.9rem" }}>{prog}%</div>
-                        <span style={{ color: ouverte ? "white" : col.couleur, fontSize: "1.2rem" }}>{ouverte ? "▲" : "▼"}</span>
+                        <div style={{ background: ouverte ? "rgba(255,255,255,0.2)" : (col.couleur || "#7C3AED") + "15", borderRadius: "100px", padding: "6px 16px", fontFamily: "'Fredoka One', cursive", color: ouverte ? "white" : (col.couleur || "#7C3AED"), fontSize: "0.9rem" }}>{prog}%</div>
+                        <span style={{ color: ouverte ? "white" : (col.couleur || "#7C3AED"), fontSize: "1.2rem" }}>{ouverte ? "▲" : "▼"}</span>
                       </div>
                     </div>
                     <div style={{ marginTop: "14px", background: ouverte ? "rgba(255,255,255,0.2)" : "#E5E7EB", borderRadius: "100px", height: "6px" }}>
-                      <div style={{ height: "100%", borderRadius: "100px", background: ouverte ? "white" : col.gradient, width: `${prog}%`, transition: "width 0.5s ease" }} />
+                      <div style={{ height: "100%", borderRadius: "100px", background: ouverte ? "white" : (col.gradient || "linear-gradient(135deg, #7C3AED, #4C1D95)"), width: `${prog}%`, transition: "width 0.5s ease" }} />
                     </div>
                   </div>
 
                   {ouverte && (
                     <div style={{ padding: "24px" }}>
-                      {col.scenario && (
-                        <div style={{ background: `linear-gradient(135deg, ${col.couleur}08, ${col.couleur}03)`, border: `1px solid ${col.couleur}20`, borderRadius: "16px", padding: "18px", marginBottom: "20px" }}>
-                          <p style={{ fontFamily: "'Fredoka One', cursive", color: col.couleur, fontSize: "0.9rem", margin: "0 0 8px" }}>📖 Scénario</p>
-                          <p style={{ color: "#374151", fontSize: "0.85rem", lineHeight: 1.8, margin: "0 0 10px", fontStyle: "italic" }}>"{col.scenario}"</p>
-                          <div style={{ background: col.couleur + "15", borderRadius: "10px", padding: "10px 14px", display: "inline-block" }}>
-                            <p style={{ color: col.couleur, fontSize: "0.78rem", fontWeight: "700", margin: 0 }}>📚 {col.lienPedago}</p>
-                          </div>
-                        </div>
-                      )}
                       {statsRarete.length > 0 && (
                         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "20px" }}>
                           {statsRarete.map(s => (
