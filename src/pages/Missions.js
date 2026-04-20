@@ -33,8 +33,12 @@ const missionDejaFaite = (profil, missionId, type) => {
   return false;
 };
 
+// ✅ CORRECTION BASÉE SUR LA CORRECTION DE RÉFÉRENCE DU PROF
 const corrigerAvecGroq = async (mission, reponseEleve) => {
-  const prompt = `Tu es un professeur de STMG bienveillant et pédagogue. Tu dois corriger la réponse d'un élève de lycée (15-18 ans).
+  const aCorrection = mission.correction && mission.correction.trim().length > 10;
+
+  const prompt = aCorrection
+    ? `Tu es un professeur de Sciences de Gestion STMG bienveillant mais exigeant. Tu corriges la réponse d'un élève de lycée (15-18 ans) en la comparant avec la correction de référence du professeur.
 
 MISSION : ${mission.titre}
 MATIÈRE : ${mission.matiere}
@@ -42,17 +46,61 @@ CONTEXTE : ${mission.contexte}
 QUESTION : ${mission.question}
 MOTS-CLÉS ATTENDUS : ${mission.mots_cles ? (Array.isArray(mission.mots_cles) ? mission.mots_cles.join(", ") : mission.mots_cles) : ""}
 
-RÉPONSE DE L'ÉLÈVE : ${reponseEleve}
+CORRECTION DE RÉFÉRENCE DU PROFESSEUR :
+${mission.correction}
 
-INSTRUCTIONS IMPORTANTES :
-1. Si la réponse semble copiée d'une IA (vocabulaire trop soutenu, structure trop parfaite, expressions comme "Il convient de noter que", "En outre", "Il est primordial") → score = 0 et indique la triche.
-2. Si la réponse est trop courte (moins de 3 phrases) → score maximum 4/10.
-3. Si la réponse est hors sujet → score maximum 2/10.
-4. Évalue de façon bienveillante. Un élève qui fait des efforts mérite au moins 3/10.
-5. Réponds UNIQUEMENT en JSON sans aucun texte avant ou après.
+RÉPONSE DE L'ÉLÈVE :
+${reponseEleve}
 
+BARÈME DE CORRECTION (compare la réponse de l'élève avec la correction de référence) :
+- 0/10 : Réponse vide, hors sujet total, lettres aléatoires, ou triche IA détectée
+- 2/10 : Quelques mots sans raisonnement, aucune notion du cours
+- 4/10 : Idée vague, 1 notion correcte mais résultat faux ou incomplet
+- 5/10 : Réponse partielle, calculs partiellement corrects, manque plusieurs éléments clés
+- 6/10 : Bonne compréhension, calculs corrects mais analyse insuffisante
+- 7/10 : Réponse correcte avec les bonnes notions, calculs justes, manque juste une précision
+- 8/10 : Réponse complète, calculs corrects, bonne analyse
+- 9-10/10 : Réponse excellente, calculs justes, analyse complète, raisonnement clair
+
+RÈGLES IMPORTANTES :
+1. Base-toi UNIQUEMENT sur la correction de référence pour évaluer — c'est la référence du prof
+2. Si les calculs sont présents et corrects → c'est un bon signe, valorise-le
+3. Si les notions du cours sont utilisées correctement → valorise-le
+4. Si la réponse semble générée par une IA (style trop soutenu, "Il convient de noter", "En outre") → score = 0, triche_detectee = true
+5. Feedback PERSONNALISÉ — dis précisément ce que l'élève a bien fait et ce qui manque par rapport à la correction
+
+Réponds UNIQUEMENT en JSON sans aucun texte avant ou après.
 Format JSON exact :
-{"score": 7, "feedback": "Très bonne analyse en 2-3 phrases max", "points_forts": "Ce que l'élève a bien fait en 1-2 phrases", "a_ameliorer": "Ce qui manque en 1-2 phrases", "triche_detectee": false}`;
+{"score": 6, "feedback": "Analyse précise de SA réponse comparée à la correction en 2 phrases", "points_forts": "Ce qu'il a bien fait par rapport à la correction en 1 phrase", "a_ameliorer": "Ce qui manque précisément par rapport à la correction en 1 phrase", "triche_detectee": false}`
+
+    : `Tu es un professeur de Sciences de Gestion STMG bienveillant mais exigeant. Tu corriges la réponse d'un élève de lycée (15-18 ans).
+
+MISSION : ${mission.titre}
+MATIÈRE : ${mission.matiere}
+CONTEXTE : ${mission.contexte}
+QUESTION : ${mission.question}
+MOTS-CLÉS ATTENDUS : ${mission.mots_cles ? (Array.isArray(mission.mots_cles) ? mission.mots_cles.join(", ") : mission.mots_cles) : ""}
+
+RÉPONSE DE L'ÉLÈVE :
+${reponseEleve}
+
+BARÈME :
+- 0/10 : Vide, hors sujet, lettres aléatoires, ou triche IA
+- 2/10 : Quelques mots sans raisonnement
+- 4/10 : Idée vague sans notions du cours
+- 5/10 : Réponse partielle, quelques notions correctes
+- 6/10 : Bonne compréhension générale, manque de précision
+- 7/10 : Réponse correcte avec bonnes notions, manque une précision
+- 8/10 : Réponse complète avec raisonnement clair
+- 9-10/10 : Excellente réponse, notions maîtrisées
+
+RÈGLES :
+1. Si la réponse semble générée par une IA → score = 0, triche_detectee = true
+2. Feedback PERSONNALISÉ basé sur ce que l'élève a vraiment écrit
+
+Réponds UNIQUEMENT en JSON sans aucun texte avant ou après.
+Format JSON exact :
+{"score": 6, "feedback": "Analyse précise en 2 phrases", "points_forts": "Ce qu'il a bien fait en 1 phrase", "a_ameliorer": "Ce qui manque en 1 phrase", "triche_detectee": false}`;
 
   const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
@@ -64,7 +112,7 @@ Format JSON exact :
       model: "llama-3.1-8b-instant",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.3,
-      max_tokens: 400,
+      max_tokens: 500,
     }),
   });
 
@@ -104,10 +152,7 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
         score: result.score,
         xpGagne,
       };
-      await updateDoc(doc(db, "users", user.uid), {
-        xp: newXP,
-        missionsHistorique: historique,
-      });
+      await updateDoc(doc(db, "users", user.uid), { xp: newXP, missionsHistorique: historique });
       setCorrection({ ...result, xpGagne });
       onMissionComplete(xpGagne);
     } catch (err) {
@@ -253,21 +298,18 @@ export default function Missions({ profil, onXPGagne }) {
     link.rel = "stylesheet";
     document.head.appendChild(link);
     chargerMissions();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const chargerMissions = async () => {
     try {
       const snapshot = await getDocs(collection(db, "missions"));
       const toutes = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-      // TOUTES les missions affichées — pas de rotation
       setMissions({
         quotidiennes: toutes.filter(m => m.type === "quotidienne"),
         hebdomadaires: toutes.filter(m => m.type === "hebdomadaire"),
         mensuelles: toutes.filter(m => m.type === "mensuelle"),
       });
-    } catch (err) {
-      console.error(err);
-    }
+    } catch (err) { console.error(err); }
     setChargement(false);
   };
 
@@ -298,8 +340,7 @@ export default function Missions({ profil, onXPGagne }) {
           position: "fixed", top: "80px", right: "24px", zIndex: 100,
           background: "linear-gradient(135deg, #F59E0B, #B45309)",
           color: "white", fontFamily: "'Fredoka One', cursive", fontSize: "1.2rem",
-          padding: "16px 24px", borderRadius: "20px",
-          boxShadow: "0 8px 30px #F59E0B50",
+          padding: "16px 24px", borderRadius: "20px", boxShadow: "0 8px 30px #F59E0B50",
         }}>
           🌟 +{xpGagne} XP gagnés !
         </div>
@@ -307,16 +348,9 @@ export default function Missions({ profil, onXPGagne }) {
 
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "24px 16px" }}>
 
-        {/* HEADER */}
         <div style={{ background: "linear-gradient(135deg, #1A1A2E, #2D1B69)", borderRadius: "24px", padding: "28px 32px", marginBottom: "24px" }}>
-          <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2.2rem", color: "white", margin: "0 0 4px" }}>
-            🎯 Mes Missions
-          </h1>
-          <p style={{ color: "#A78BFA", margin: "0 0 20px", fontSize: "0.9rem" }}>
-            Des exercices réels avec calculs et notions du cours SDG !
-          </p>
-
-          {/* STATS */}
+          <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2.2rem", color: "white", margin: "0 0 4px" }}>🎯 Mes Missions</h1>
+          <p style={{ color: "#A78BFA", margin: "0 0 20px", fontSize: "0.9rem" }}>Des exercices réels avec calculs et notions du cours SDG !</p>
           <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
             {onglets.map(t => (
               <div key={t.id} style={{ background: t.couleur + "25", border: `1px solid ${t.couleur}50`, borderRadius: "14px", padding: "8px 18px" }}>
@@ -331,7 +365,6 @@ export default function Missions({ profil, onXPGagne }) {
           </div>
         </div>
 
-        {/* ONGLETS */}
         <div style={{ display: "flex", gap: "8px", marginBottom: "24px", flexWrap: "wrap" }}>
           {onglets.map(tab => (
             <button key={tab.id} onClick={() => setOnglet(tab.id)}
@@ -358,7 +391,6 @@ export default function Missions({ profil, onXPGagne }) {
           </div>
         ) : (
           <>
-            {/* QUOTIDIENNES */}
             {onglet === "quotidiennes" && (
               <div>
                 <p style={{ color: "#9CA3AF", fontSize: "0.85rem", marginBottom: "20px" }}>
@@ -368,15 +400,12 @@ export default function Missions({ profil, onXPGagne }) {
                   <div style={{ textAlign: "center", padding: "60px", background: "white", borderRadius: "24px" }}>
                     <p style={{ fontFamily: "'Fredoka One', cursive", color: "#9CA3AF", fontSize: "1.2rem" }}>Aucune mission disponible 🎯</p>
                   </div>
-                ) : (
-                  missions.quotidiennes.map(mission => (
-                    <CarteMission key={mission.id} mission={mission} profil={profil} onMissionComplete={handleMissionComplete} />
-                  ))
-                )}
+                ) : missions.quotidiennes.map(mission => (
+                  <CarteMission key={mission.id} mission={mission} profil={profil} onMissionComplete={handleMissionComplete} />
+                ))}
               </div>
             )}
 
-            {/* HEBDOMADAIRES */}
             {onglet === "hebdomadaires" && (
               <div>
                 <p style={{ color: "#9CA3AF", fontSize: "0.85rem", marginBottom: "20px" }}>
@@ -386,15 +415,12 @@ export default function Missions({ profil, onXPGagne }) {
                   <div style={{ textAlign: "center", padding: "60px", background: "white", borderRadius: "24px" }}>
                     <p style={{ fontFamily: "'Fredoka One', cursive", color: "#9CA3AF", fontSize: "1.2rem" }}>Aucune mission disponible 📅</p>
                   </div>
-                ) : (
-                  missions.hebdomadaires.map(mission => (
-                    <CarteMission key={mission.id} mission={mission} profil={profil} onMissionComplete={handleMissionComplete} />
-                  ))
-                )}
+                ) : missions.hebdomadaires.map(mission => (
+                  <CarteMission key={mission.id} mission={mission} profil={profil} onMissionComplete={handleMissionComplete} />
+                ))}
               </div>
             )}
 
-            {/* MENSUELLES */}
             {onglet === "mensuelles" && (
               <div>
                 <p style={{ color: "#9CA3AF", fontSize: "0.85rem", marginBottom: "20px" }}>
@@ -404,11 +430,9 @@ export default function Missions({ profil, onXPGagne }) {
                   <div style={{ textAlign: "center", padding: "60px", background: "white", borderRadius: "24px" }}>
                     <p style={{ fontFamily: "'Fredoka One', cursive", color: "#9CA3AF", fontSize: "1.2rem" }}>Aucune mission disponible 🏆</p>
                   </div>
-                ) : (
-                  missions.mensuelles.map(mission => (
-                    <CarteMission key={mission.id} mission={mission} profil={profil} onMissionComplete={handleMissionComplete} />
-                  ))
-                )}
+                ) : missions.mensuelles.map(mission => (
+                  <CarteMission key={mission.id} mission={mission} profil={profil} onMissionComplete={handleMissionComplete} />
+                ))}
               </div>
             )}
           </>

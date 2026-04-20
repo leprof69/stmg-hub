@@ -40,7 +40,6 @@ const RECOMPENSES_FAMILLE = [
   { rang: 5, label: "5ème", xp: 25, couleur: "#3B82F6" },
 ];
 
-// Lecture flexible des colonnes Excel (supporte les deux formats)
 const col = (row, ...keys) => {
   for (const k of keys) {
     if (row[k] !== undefined && row[k] !== null && row[k] !== "") return row[k];
@@ -149,7 +148,6 @@ export default function Admin() {
         let succes = 0, erreurs = 0;
         for (const row of rows) {
           try {
-            // Support les deux formats de colonnes
             const id = col(row, "ID", "id") ||
               `${col(row, "Matière", "matiere")}-${col(row, "Classe", "classe")}-chap${col(row, "Ordre", "ordre")}`.toLowerCase().replace(/\s/g, "-");
             const notionsRaw = col(row, "Notions (séparées par |)", "notions");
@@ -178,6 +176,7 @@ export default function Admin() {
     reader.readAsArrayBuffer(fichierChapitres);
   };
 
+  // ✅ IMPORT MISSIONS — lit aussi la colonne "correction"
   const importerMissions = async () => {
     if (!fichierMissions) return;
     setImportMissions({ loading: true, succes: 0, erreurs: 0, message: "⏳ Import en cours..." });
@@ -203,6 +202,7 @@ export default function Admin() {
               contexte: String(row.contexte || "").trim(),
               question: String(row.question || "").trim(),
               mots_cles: row.mots_cles ? String(row.mots_cles).split(",").map(m => m.trim()) : [],
+              correction: String(row.correction || "").trim(), // ✅ NOUVEAU
               xp: parseInt(row.xp) || 25,
             });
             succes++;
@@ -251,7 +251,6 @@ export default function Admin() {
     <div style={{ minHeight: "100vh", background: "#F1F5F9", fontFamily: "'Nunito', sans-serif", padding: "24px 16px" }}>
       <div style={{ maxWidth: "900px", margin: "0 auto" }}>
 
-        {/* HEADER */}
         <div style={{ background: "linear-gradient(135deg, #1A1A2E, #2D1B69)", borderRadius: "24px", padding: "28px 32px", marginBottom: "32px" }}>
           <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2.2rem", color: "white", margin: "0 0 4px" }}>⚙️ Administration</h1>
           <p style={{ color: "#A78BFA", margin: 0, fontSize: "0.9rem" }}>Panneau réservé au professeur — STMG HUB</p>
@@ -268,7 +267,6 @@ export default function Admin() {
             </Btn>
           ) : (
             <div>
-              {/* INDIVIDUEL */}
               <div style={{ marginBottom: "28px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "8px" }}>
                   <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1.1rem", margin: 0 }}>👤 Classement individuel</p>
@@ -279,12 +277,7 @@ export default function Admin() {
                     const recompense = RECOMPENSES_INDIVIDUEL[i];
                     const couleurFamille = familleColors[eleve.famille] || COLORS.S;
                     return (
-                      <div key={eleve.id} style={{
-                        background: i < 3 ? COLORS.U + "08" : "#F8FAFC",
-                        borderRadius: "16px", padding: "14px 16px",
-                        border: i < 3 ? `2px solid ${COLORS.U}30` : "2px solid #E5E7EB",
-                        display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap",
-                      }}>
+                      <div key={eleve.id} style={{ background: i < 3 ? COLORS.U + "08" : "#F8FAFC", borderRadius: "16px", padding: "14px 16px", border: i < 3 ? `2px solid ${COLORS.U}30` : "2px solid #E5E7EB", display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
                         <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: i < 3 ? "1.6rem" : "1rem", width: "40px", textAlign: "center" }}>
                           {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}
                         </div>
@@ -298,12 +291,8 @@ export default function Admin() {
                           <p style={{ color: "#9CA3AF", fontSize: "0.8rem", margin: "2px 0 0" }}>{(eleve.xp || 0).toLocaleString()} XP</p>
                         </div>
                         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                          <input
-                            type="number"
-                            value={xpCustom[eleve.id] ?? (recompense?.xp || 0)}
-                            onChange={e => setXpCustom(prev => ({ ...prev, [eleve.id]: parseInt(e.target.value) || 0 }))}
-                            style={{ width: "80px", padding: "6px 10px", borderRadius: "10px", border: `2px solid ${COLORS.U}30`, fontFamily: "'Fredoka One', cursive", fontSize: "0.9rem", textAlign: "center", outline: "none" }}
-                          />
+                          <input type="number" value={xpCustom[eleve.id] ?? (recompense?.xp || 0)} onChange={e => setXpCustom(prev => ({ ...prev, [eleve.id]: parseInt(e.target.value) || 0 }))}
+                            style={{ width: "80px", padding: "6px 10px", borderRadius: "10px", border: `2px solid ${COLORS.U}30`, fontFamily: "'Fredoka One', cursive", fontSize: "0.9rem", textAlign: "center", outline: "none" }} />
                           <span style={{ color: "#9CA3AF", fontSize: "0.8rem" }}>XP</span>
                           <Btn onClick={() => distribuerXPIndividuel(eleve.id, xpCustom[eleve.id] ?? recompense?.xp, eleve.prenom)} color={recompense ? recompense.couleur : COLORS.S} disabled={recompenseEnCours} small>
                             {recompense ? recompense.label : "+XP"}
@@ -315,7 +304,6 @@ export default function Admin() {
                 </div>
               </div>
 
-              {/* FAMILLES */}
               <div style={{ marginBottom: "20px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "8px" }}>
                   <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1.1rem", margin: 0 }}>🧬 Classement Familles</p>
@@ -326,12 +314,7 @@ export default function Admin() {
                     const recompense = RECOMPENSES_FAMILLE[i];
                     const couleur = familleColors[famille.nom] || COLORS.S;
                     return (
-                      <div key={famille.nom} style={{
-                        background: i < 3 ? couleur + "08" : "#F8FAFC",
-                        borderRadius: "16px", padding: "14px 16px",
-                        border: i < 3 ? `2px solid ${couleur}30` : "2px solid #E5E7EB",
-                        display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap",
-                      }}>
+                      <div key={famille.nom} style={{ background: i < 3 ? couleur + "08" : "#F8FAFC", borderRadius: "16px", padding: "14px 16px", border: i < 3 ? `2px solid ${couleur}30` : "2px solid #E5E7EB", display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
                         <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: i < 3 ? "1.6rem" : "1rem", width: "40px", textAlign: "center" }}>
                           {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}
                         </div>
@@ -352,7 +335,6 @@ export default function Admin() {
                 </div>
               </div>
 
-              {/* LOG */}
               {messagesRecompense.length > 0 && (
                 <div style={{ background: "#F0FDF4", borderRadius: "16px", padding: "16px", border: "1px solid #BBF7D0" }}>
                   <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.G, marginBottom: "8px" }}>📋 Journal</p>
@@ -384,9 +366,8 @@ export default function Admin() {
         {/* CHAPITRES */}
         <div style={{ background: "white", borderRadius: "24px", padding: "28px", marginBottom: "24px", border: `2px solid ${COLORS.S}20` }}>
           <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: COLORS.S, marginBottom: "8px" }}>📚 Importer les chapitres</h2>
-          <p style={{ color: "#6B7280", fontSize: "0.9rem", marginBottom: "4px" }}>Supporte les deux formats de colonnes (ancien et nouveau).</p>
           <p style={{ color: "#9CA3AF", fontSize: "0.8rem", marginBottom: "20px" }}>
-            Colonnes acceptées : <strong>ID</strong>, <strong>Matière</strong>, <strong>Classe</strong>, <strong>Ordre</strong>, <strong>Thème</strong>, <strong>Titre du chapitre</strong>, <strong>Question de gestion</strong>, <strong>Notions (séparées par |)</strong>, <strong>Compétences (séparées par |)</strong>, <strong>URL Application</strong>, <strong>URL Fiche de révision</strong>, <strong>XP</strong>
+            Colonnes : <strong>ID</strong>, <strong>Matière</strong>, <strong>Classe</strong>, <strong>Ordre</strong>, <strong>Thème</strong>, <strong>Titre du chapitre</strong>, <strong>Question de gestion</strong>, <strong>Notions (séparées par |)</strong>, <strong>Compétences (séparées par |)</strong>, <strong>URL Application</strong>, <strong>URL Fiche de révision</strong>, <strong>XP</strong>
           </p>
           <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
             <input type="file" accept=".xlsx" onChange={e => setFichierChapitres(e.target.files[0])}
@@ -398,7 +379,6 @@ export default function Admin() {
           {importChapitres.message && (
             <div style={{ marginTop: "16px", padding: "14px", borderRadius: "14px", background: importChapitres.erreurs > 0 ? COLORS.H + "15" : COLORS.G + "15" }}>
               <p style={{ fontFamily: "'Fredoka One', cursive", color: importChapitres.erreurs > 0 ? COLORS.H : COLORS.G }}>{importChapitres.message}</p>
-              {importChapitres.erreurs > 0 && <p style={{ color: "#6B7280", fontSize: "0.85rem", marginTop: "4px" }}>{importChapitres.erreurs} erreur(s)</p>}
             </div>
           )}
         </div>
@@ -406,7 +386,9 @@ export default function Admin() {
         {/* MISSIONS */}
         <div style={{ background: "white", borderRadius: "24px", padding: "28px", marginBottom: "24px", border: `2px solid ${COLORS.T}20` }}>
           <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: COLORS.T, marginBottom: "8px" }}>🎯 Importer les missions</h2>
-          <p style={{ color: "#6B7280", fontSize: "0.9rem", marginBottom: "20px" }}>Importe le fichier Excel des missions dans Firestore.</p>
+          <p style={{ color: "#9CA3AF", fontSize: "0.8rem", marginBottom: "20px" }}>
+            Colonnes : <strong>id</strong>, <strong>type</strong>, <strong>matiere</strong>, <strong>titre</strong>, <strong>contexte</strong>, <strong>question</strong>, <strong>mots_cles</strong>, <strong>correction</strong>, <strong>xp</strong>
+          </p>
           <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
             <input type="file" accept=".xlsx" onChange={e => setFichierMissions(e.target.files[0])}
               style={{ flex: 1, padding: "10px 14px", borderRadius: "12px", border: `2px solid ${COLORS.T}30`, fontFamily: "'Nunito', sans-serif", fontSize: "0.9rem" }} />
@@ -417,7 +399,6 @@ export default function Admin() {
           {importMissions.message && (
             <div style={{ marginTop: "16px", padding: "14px", borderRadius: "14px", background: importMissions.erreurs > 0 ? COLORS.H + "15" : COLORS.G + "15" }}>
               <p style={{ fontFamily: "'Fredoka One', cursive", color: importMissions.erreurs > 0 ? COLORS.H : COLORS.G }}>{importMissions.message}</p>
-              {importMissions.erreurs > 0 && <p style={{ color: "#6B7280", fontSize: "0.85rem", marginTop: "4px" }}>{importMissions.erreurs} erreur(s)</p>}
             </div>
           )}
           <div style={{ marginTop: "16px", paddingTop: "16px", borderTop: "1px solid #F3F4F6" }}>
@@ -433,8 +414,8 @@ export default function Admin() {
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             {[
               { emoji: "🏆", texte: "Récompenses : charge le classement → distribue les XP bonus en 1 clic", couleur: COLORS.U },
-              { emoji: "📚", texte: "Chapitres : supporte les colonnes 'Matière', 'Titre du chapitre', 'URL Application'...", couleur: COLORS.S },
-              { emoji: "🎯", texte: "Missions : modifier le fichier Excel → réimporter", couleur: COLORS.T },
+              { emoji: "📚", texte: "Chapitres : supporte les colonnes françaises avec URL Application et URL Fiche", couleur: COLORS.S },
+              { emoji: "🎯", texte: "Missions : la colonne 'correction' permet à l'IA de comparer avec ta réponse de référence", couleur: COLORS.T },
               { emoji: "🏅", texte: "Les badges se débloquent automatiquement selon l'XP", couleur: COLORS.U },
               { emoji: "🃏", texte: "Les cartes sont obtenues en ouvrant des packs avec l'XP", couleur: COLORS.B },
               { emoji: "🔒", texte: "Cette page est réservée aux comptes admin", couleur: COLORS.H },
