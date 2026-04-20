@@ -69,7 +69,6 @@ const getAujourdhui = () => {
 const Visionneuse = ({ carte, cartesPossedees, indexDansPossedees, onFermer, onPrecedent, onSuivant }) => {
   const config = RARETE_CONFIG[carte.rarete] || RARETE_CONFIG.commune;
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const handleKey = (e) => {
       if (e.key === "ArrowLeft") onPrecedent();
@@ -78,7 +77,7 @@ const Visionneuse = ({ carte, cartesPossedees, indexDansPossedees, onFermer, onP
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [indexDansPossedees]);
+  }, [indexDansPossedees, onFermer, onPrecedent, onSuivant]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div onClick={onFermer} style={{
@@ -148,7 +147,7 @@ const CarteMini = ({ carte, onClick }) => {
 const AnimationOuverture = ({ cartes, onTermine }) => {
   const [etape, setEtape] = useState("intro");
   const [retournees, setRetournees] = useState([false, false, false]);
-  useEffect(() => { setTimeout(() => setEtape("reveal"), 800); }, []);
+  useEffect(() => { setTimeout(() => setEtape("reveal"), 800); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const retourner = (i) => { if (retournees[i]) return; const n = [...retournees]; n[i] = true; setRetournees(n); };
   const toutesRetournees = retournees.every(Boolean);
 
@@ -391,7 +390,6 @@ export default function Cartes({ profil, onXPGagne }) {
 
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "24px 16px" }}>
 
-        {/* HEADER */}
         <div style={{ background: "linear-gradient(135deg, #1A1A2E, #2D1B69)", borderRadius: "24px", padding: "28px 32px", marginBottom: "24px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px", marginBottom: "20px" }}>
             <div>
@@ -422,7 +420,6 @@ export default function Cartes({ profil, onXPGagne }) {
           </div>
         </div>
 
-        {/* ALERTES CADEAUX */}
         {carteJourDispo && (
           <div style={{ background: "linear-gradient(135deg, #10B981, #059669)", borderRadius: "20px", padding: "20px 24px", marginBottom: "16px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
             <div>
@@ -449,7 +446,6 @@ export default function Cartes({ profil, onXPGagne }) {
 
         <RecapRegles />
 
-        {/* ONGLETS */}
         <div style={{ display: "flex", gap: "8px", marginBottom: "24px" }}>
           {[{ id: "boutique", label: "🛒 Boutique Packs" }, { id: "collection", label: "📚 Ma Collection" }].map(t => (
             <button key={t.id} onClick={() => setOnglet(t.id)} style={{
@@ -464,7 +460,6 @@ export default function Cartes({ profil, onXPGagne }) {
           ))}
         </div>
 
-        {/* BOUTIQUE */}
         {onglet === "boutique" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             {COLLECTIONS.map(col => {
@@ -502,7 +497,6 @@ export default function Cartes({ profil, onXPGagne }) {
           </div>
         )}
 
-        {/* COLLECTION */}
         {onglet === "collection" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             {COLLECTIONS.map(col => {
