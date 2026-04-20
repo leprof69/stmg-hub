@@ -6,6 +6,7 @@ const COLORS = {
   S: "#3B82F6", T: "#7C3AED", M: "#F97316",
   G: "#10B981", H: "#EF4444", U: "#F59E0B", B: "#06B6D4",
 };
+const MISSION_ENGINE_VERSION = "strict-v4-2026-04-20";
 
 const getDateJour = () => {
   const today = new Date();
@@ -33,12 +34,130 @@ const missionDejaFaite = (profil, missionId, type) => {
   return false;
 };
 
+const normalizeTexte = (texte = "") => String(texte)
+  .toLowerCase()
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .replace(/[^a-z0-9\s]/g, " ")
+  .replace(/\s+/g, " ")
+  .trim();
+
+const extraireTokens = (texte = "") => {
+  const stopWords = new Set(["le", "la", "les", "de", "des", "du", "un", "une", "et", "ou", "en", "dans", "sur", "pour", "avec", "que", "qui", "au", "aux", "par"]);
+  return normalizeTexte(texte)
+    .split(" ")
+    .filter(t => t.length >= 3 && !stopWords.has(t));
+};
+
+const detecterReponseBrouillon = (texte = "") => {
+  const propre = normalizeTexte(texte);
+  if (!propre || propre.length < 20) return true;
+  const tokens = propre.split(" ").filter(Boolean);
+  if (tokens.length < 5) return true;
+  const uniques = new Set(tokens).size;
+  return uniques <= Math.max(2, Math.floor(tokens.length * 0.3));
+};
+
+const evaluerPertinenceLocale = (mission, reponseEleve) => {
+  const reponseTokens = extraireTokens(reponseEleve);
+  if (reponseTokens.length === 0) return { ratio: 0, motsCommuns: 0 };
+
+  const motsCles = Array.isArray(mission.mots_cles) ? mission.mots_cles.join(" ") : (mission.mots_cles || "");
+  const reference = `${mission.correction || ""} ${motsCles}`;
+  const referenceSet = new Set(extraireTokens(reference));
+  if (referenceSet.size === 0) return { ratio: 1, motsCommuns: 0 };
+
+  let communs = 0;
+  for (const token of new Set(reponseTokens)) {
+    if (referenceSet.has(token)) communs++;
+  }
+  return { ratio: communs / referenceSet.size, motsCommuns: communs };
+};
+
+const contientTexteTemplate = (texte = "") => {
+  const t = normalizeTexte(texte);
+  return [
+    "analyse precise de sa reponse comparee a la correction en 2 phrases",
+    "analyse precise en 2 phrases",
+    "ce quil a bien fait en 1 phrase",
+    "ce quil a bien fait par rapport a la correction en 1 phrase",
+    "ce qui manque en 1 phrase",
+    "ce qui manque precisement par rapport a la correction en 1 phrase",
+  ].some(pattern => t.includes(pattern));
+};
+
+const compterMotsClesTrouves = (mission, reponseEleve) => {
+  const reponseNormalisee = normalizeTexte(reponseEleve);
+  const mots = Array.isArray(mission.mots_cles) ? mission.mots_cles : [];
+  let trouves = 0;
+  for (const motCle of mots) {
+    const m = normalizeTexte(motCle);
+    if (m && reponseNormalisee.includes(m)) trouves++;
+  }
+  return trouves;
+};
+
+const scoreMaxLocal = (mission, reponseEleve) => {
+  const repTokens = new Set(extraireTokens(reponseEleve));
+  if (repTokens.size < 5) return 2;
+
+  const motsCles = Array.isArray(mission.mots_cles) ? mission.mots_cles.join(" ") : (mission.mots_cles || "");
+  const referenceGlobale = `${mission.correction || ""} ${mission.question || ""} ${mission.contexte || ""} ${motsCles}`;
+  const corrTokens = new Set(extraireTokens(referenceGlobale));
+  const questionTokens = new Set(extraireTokens(mission.question || ""));
+
+  let communCorrection = 0;
+  for (const t of repTokens) {
+    if (corrTokens.has(t)) communCorrection++;
+  }
+
+  let communQuestion = 0;
+  for (const t of repTokens) {
+    if (questionTokens.has(t)) communQuestion++;
+  }
+
+  const motsClesTrouves = compterMotsClesTrouves(mission, reponseEleve);
+
+  if (communCorrection === 0 && communQuestion <= 1 && motsClesTrouves === 0) return 2;
+  if (communCorrection <= 1 && motsClesTrouves === 0) return 3;
+  if (communCorrection <= 2 && motsClesTrouves <= 1) return 4;
+  if (communCorrection <= 4 && motsClesTrouves <= 1) return 6;
+  return 10;
+};
+
+const feedbackSembleHallucine = (feedback, reponseEleve) => {
+  const fb = normalizeTexte(feedback);
+  const rep = normalizeTexte(reponseEleve);
+  const feedbackParleCalcul = /(calcul|resultat|valeur ajoutee|autofinancement|repartition)/.test(fb);
+  const reponseAElements = /(calcul|valeur|ajoutee|autofinancement|repartition)/.test(rep) || /\d/.test(reponseEleve);
+  return feedbackParleCalcul && !reponseAElements;
+};
+
+const contientFragmentNormalise = (source = "", fragment = "") => {
+  const s = normalizeTexte(source);
+  const f = normalizeTexte(fragment);
+  return f.length >= 4 && s.includes(f);
+};
+
+const preuvesValides = (preuves, source) => Array.isArray(preuves)
+  && preuves.some(p => typeof p === "string" && contientFragmentNormalise(source, p));
+
 // ✅ CORRECTION BASÉE SUR LA CORRECTION DE RÉFÉRENCE DU PROF
 const corrigerAvecGroq = async (mission, reponseEleve) => {
   const aCorrection = mission.correction && mission.correction.trim().length > 10;
+  if (!aCorrection) {
+    return {
+      score: 0,
+      feedback: "Cette mission n'a pas de correction de référence valide côté professeur.",
+      points_forts: "Tu as soumis une réponse.",
+      a_ameliorer: "Demande au professeur de réimporter les missions avec la colonne correction remplie.",
+      triche_detectee: false,
+    };
+  }
 
-  const prompt = aCorrection
-    ? `Tu es un professeur de Sciences de Gestion STMG bienveillant mais exigeant. Tu corriges la réponse d'un élève de lycée (15-18 ans) en la comparant avec la correction de référence du professeur.
+  const prompt = `Tu es un professeur de Sciences de Gestion STMG bienveillant mais exigeant.
+Ta mission est de corriger UNIQUEMENT en comparant la réponse élève à la correction de référence du professeur.
+INTERDICTION d'inventer des calculs ou des éléments qui ne sont pas présents dans la réponse élève.
 
 MISSION : ${mission.titre}
 MATIÈRE : ${mission.matiere}
@@ -52,7 +171,7 @@ ${mission.correction}
 RÉPONSE DE L'ÉLÈVE :
 ${reponseEleve}
 
-BARÈME DE CORRECTION (compare la réponse de l'élève avec la correction de référence) :
+BARÈME DE CORRECTION :
 - 0/10 : Réponse vide, hors sujet total, lettres aléatoires, ou triche IA détectée
 - 2/10 : Quelques mots sans raisonnement, aucune notion du cours
 - 4/10 : Idée vague, 1 notion correcte mais résultat faux ou incomplet
@@ -64,63 +183,135 @@ BARÈME DE CORRECTION (compare la réponse de l'élève avec la correction de r�
 
 RÈGLES IMPORTANTES :
 1. Base-toi UNIQUEMENT sur la correction de référence pour évaluer — c'est la référence du prof
-2. Si les calculs sont présents et corrects → c'est un bon signe, valorise-le
-3. Si les notions du cours sont utilisées correctement → valorise-le
-4. Si la réponse semble générée par une IA (style trop soutenu, "Il convient de noter", "En outre") → score = 0, triche_detectee = true
-5. Feedback PERSONNALISÉ — dis précisément ce que l'élève a bien fait et ce qui manque par rapport à la correction
+2. Si la réponse élève est hors sujet ou sans lien clair avec la correction => score maximum 2/10 et hors_sujet=true
+3. Tu dois fournir des preuves textuelles exactes de la réponse élève ET de la correction
+4. Si tu ne peux pas citer au moins une preuve exacte côté élève, alors hors_sujet=true et score <= 2
+5. Si la réponse semble générée par une IA (style trop soutenu, "Il convient de noter", "En outre") => score = 0, triche_detectee = true
+6. Feedback PERSONNALISÉ : explique précisément ce qui correspond/ne correspond pas à la correction
 
 Réponds UNIQUEMENT en JSON sans aucun texte avant ou après.
 Format JSON exact :
-{"score": 6, "feedback": "Analyse précise de SA réponse comparée à la correction en 2 phrases", "points_forts": "Ce qu'il a bien fait par rapport à la correction en 1 phrase", "a_ameliorer": "Ce qui manque précisément par rapport à la correction en 1 phrase", "triche_detectee": false}`
+{"score": number, "feedback": "Texte personnalisé", "points_forts": "Texte personnalisé", "a_ameliorer": "Texte personnalisé", "triche_detectee": boolean, "hors_sujet": boolean, "preuves_eleve": ["citation exacte élève"], "preuves_correction": ["citation exacte correction"]}`;
 
-    : `Tu es un professeur de Sciences de Gestion STMG bienveillant mais exigeant. Tu corriges la réponse d'un élève de lycée (15-18 ans).
-
-MISSION : ${mission.titre}
-MATIÈRE : ${mission.matiere}
-CONTEXTE : ${mission.contexte}
-QUESTION : ${mission.question}
-MOTS-CLÉS ATTENDUS : ${mission.mots_cles ? (Array.isArray(mission.mots_cles) ? mission.mots_cles.join(", ") : mission.mots_cles) : ""}
-
-RÉPONSE DE L'ÉLÈVE :
-${reponseEleve}
-
-BARÈME :
-- 0/10 : Vide, hors sujet, lettres aléatoires, ou triche IA
-- 2/10 : Quelques mots sans raisonnement
-- 4/10 : Idée vague sans notions du cours
-- 5/10 : Réponse partielle, quelques notions correctes
-- 6/10 : Bonne compréhension générale, manque de précision
-- 7/10 : Réponse correcte avec bonnes notions, manque une précision
-- 8/10 : Réponse complète avec raisonnement clair
-- 9-10/10 : Excellente réponse, notions maîtrisées
-
-RÈGLES :
-1. Si la réponse semble générée par une IA → score = 0, triche_detectee = true
-2. Feedback PERSONNALISÉ basé sur ce que l'élève a vraiment écrit
-
-Réponds UNIQUEMENT en JSON sans aucun texte avant ou après.
-Format JSON exact :
-{"score": 6, "feedback": "Analyse précise en 2 phrases", "points_forts": "Ce qu'il a bien fait en 1 phrase", "a_ameliorer": "Ce qui manque en 1 phrase", "triche_detectee": false}`;
+  const apiKey = process.env.REACT_APP_GROQ_API_KEY;
+  if (!apiKey) {
+    throw new Error("Clé Groq manquante (REACT_APP_GROQ_API_KEY).");
+  }
 
   const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${process.env.REACT_APP_GROQ_API_KEY}`,
+      "Authorization": `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      model: "llama-3.1-8b-instant",
+      model: "llama-3.3-70b-versatile",
       messages: [{ role: "user", content: prompt }],
-      temperature: 0.3,
+      temperature: 0.1,
       max_tokens: 500,
     }),
   });
 
   const data = await response.json();
-  const content = data.choices[0].message.content;
-  const jsonMatch = content.match(/\{[\s\S]*\}/);
-  if (jsonMatch) return JSON.parse(jsonMatch[0]);
-  return { score: 5, feedback: "Réponse reçue !", points_forts: "Tu as répondu !", a_ameliorer: "Continue à approfondir.", triche_detectee: false };
+  if (!response.ok) {
+    const erreurApi = data?.error?.message || "Erreur API Groq.";
+    throw new Error(erreurApi);
+  }
+
+  const content = data?.choices?.[0]?.message?.content || "";
+  if (!content) {
+    throw new Error("Réponse vide du modèle.");
+  }
+
+  const contenuSansFence = content.replace(/```json|```/gi, "").trim();
+  const debut = contenuSansFence.indexOf("{");
+  const fin = contenuSansFence.lastIndexOf("}");
+  if (debut === -1 || fin === -1 || fin <= debut) {
+    return {
+      score: 1,
+      feedback: "Je ne peux pas corriger précisément pour l'instant : réponse IA invalide.",
+      points_forts: "Tu as essayé de répondre.",
+      a_ameliorer: "Réessaie dans quelques secondes.",
+      triche_detectee: false,
+    };
+  }
+
+  let correction = null;
+  try {
+    correction = JSON.parse(contenuSansFence.slice(debut, fin + 1));
+  } catch {
+    return {
+      score: 1,
+      feedback: "Je n'ai pas pu lire la correction IA (format invalide).",
+      points_forts: "Tu as répondu à la mission.",
+      a_ameliorer: "Réessaie pour obtenir une correction fiable.",
+      triche_detectee: false,
+    };
+  }
+
+  const scoreBrut = Number(correction?.score);
+  const scoreNormalise = Number.isFinite(scoreBrut) ? Math.max(0, Math.min(10, Math.round(scoreBrut))) : 1;
+  const preuvesEleve = Array.isArray(correction?.preuves_eleve) ? correction.preuves_eleve.filter(p => typeof p === "string") : [];
+  const preuvesCorrection = Array.isArray(correction?.preuves_correction) ? correction.preuves_correction.filter(p => typeof p === "string") : [];
+  const resultat = {
+    score: scoreNormalise,
+    feedback: String(correction?.feedback || "Correction reçue."),
+    points_forts: String(correction?.points_forts || "Tu as fait un effort de réponse."),
+    a_ameliorer: String(correction?.a_ameliorer || "Ajoute plus de notions du cours."),
+    triche_detectee: Boolean(correction?.triche_detectee),
+  };
+
+  const champsGeneriques = contientTexteTemplate(resultat.feedback)
+    || contientTexteTemplate(resultat.points_forts)
+    || contientTexteTemplate(resultat.a_ameliorer);
+  if (champsGeneriques) {
+    resultat.score = Math.min(resultat.score, 2);
+    resultat.feedback = "La correction IA reçue est trop générique pour être fiable.";
+    resultat.points_forts = "Tu as soumis ta réponse.";
+    resultat.a_ameliorer = "Réessaie avec une réponse structurée liée aux notions du chapitre.";
+  }
+
+  const preuvesEleveOk = preuvesValides(preuvesEleve, reponseEleve);
+  const preuvesCorrectionOk = preuvesValides(preuvesCorrection, mission.correction || "");
+  if (!preuvesEleveOk || !preuvesCorrectionOk) {
+    resultat.score = Math.min(resultat.score, 2);
+    resultat.feedback = "La correction IA n'a pas fourni de preuves textuelles fiables entre ta réponse et la correction du professeur.";
+    resultat.points_forts = "Tu as soumis ta réponse.";
+    resultat.a_ameliorer = "Réponds en reprenant les notions de la question pour permettre une comparaison claire.";
+  }
+
+  if (Boolean(correction?.hors_sujet)) {
+    resultat.score = Math.min(resultat.score, 2);
+  }
+
+  if (detecterReponseBrouillon(reponseEleve)) {
+    resultat.score = 0;
+    resultat.feedback = "Ta réponse est trop courte ou incohérente pour être évaluée correctement.";
+    resultat.points_forts = "Tu as essayé de répondre.";
+    resultat.a_ameliorer = "Rédige une réponse complète avec des notions du cours.";
+    resultat.triche_detectee = false;
+    return resultat;
+  }
+
+  const maxLocal = scoreMaxLocal(mission, reponseEleve);
+  resultat.score = Math.min(resultat.score, maxLocal);
+
+  if (feedbackSembleHallucine(resultat.feedback, reponseEleve)) {
+    resultat.score = Math.min(resultat.score, 2);
+    resultat.feedback = "La correction semble incohérente avec ta réponse réelle.";
+    resultat.points_forts = "Tu as soumis ta réponse.";
+    resultat.a_ameliorer = "Rédige une réponse liée à la question et aux notions attendues.";
+  }
+
+  const { ratio, motsCommuns } = evaluerPertinenceLocale(mission, reponseEleve);
+  if (ratio < 0.06 || motsCommuns < 2) {
+    resultat.score = Math.min(resultat.score, 2);
+    resultat.feedback = "Ta réponse semble hors sujet par rapport à la correction de référence du professeur.";
+    resultat.points_forts = "Tu as soumis une réponse.";
+    resultat.a_ameliorer = "Reprends les notions et mots-clés attendus dans la mission.";
+  }
+
+  return resultat;
 };
 
 // ===== CARTE MISSION =====
@@ -139,21 +330,31 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
     setChargement(true);
     try {
       const result = await corrigerAvecGroq(mission, reponse);
+      const resultFinal = detecterReponseBrouillon(reponse)
+        ? {
+          ...result,
+          score: 0,
+          feedback: "Réponse trop courte ou hors sujet : note automatiquement plafonnée.",
+          points_forts: "Tu as essayé de répondre.",
+          a_ameliorer: "Rédige une réponse complète en lien direct avec la correction de référence.",
+          triche_detectee: false,
+        }
+        : result;
       const user = auth.currentUser;
       const userDoc = await getDoc(doc(db, "users", user.uid));
       const userData = userDoc.data();
-      const xpGagne = result.triche_detectee ? 0 : Math.round((result.score / 10) * mission.xp);
+      const xpGagne = resultFinal.triche_detectee ? 0 : Math.round((resultFinal.score / 10) * mission.xp);
       const newXP = (userData.xp || 0) + xpGagne;
       const historique = userData.missionsHistorique || {};
       historique[mission.id] = {
         date: getDateJour(),
         semaine: String(getNumSemaine()),
         mois: getMois(),
-        score: result.score,
+        score: resultFinal.score,
         xpGagne,
       };
       await updateDoc(doc(db, "users", user.uid), { xp: newXP, missionsHistorique: historique });
-      setCorrection({ ...result, xpGagne });
+      setCorrection({ ...resultFinal, xpGagne });
       onMissionComplete(xpGagne);
     } catch (err) {
       console.error(err);
@@ -275,6 +476,9 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
                 <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.U, fontSize: "1.3rem" }}>
                   🌟 +{correction.xpGagne} XP gagnés !
                 </p>
+                <p style={{ color: "#9CA3AF", fontSize: "0.75rem", marginTop: "6px" }}>
+                  Moteur de correction : {MISSION_ENGINE_VERSION}
+                </p>
               </div>
             </div>
           )}
@@ -351,6 +555,9 @@ export default function Missions({ profil, onXPGagne }) {
         <div style={{ background: "linear-gradient(135deg, #1A1A2E, #2D1B69)", borderRadius: "24px", padding: "28px 32px", marginBottom: "24px" }}>
           <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2.2rem", color: "white", margin: "0 0 4px" }}>🎯 Mes Missions</h1>
           <p style={{ color: "#A78BFA", margin: "0 0 20px", fontSize: "0.9rem" }}>Des exercices réels avec calculs et notions du cours SDG !</p>
+          <p style={{ color: "#C4B5FD", margin: "0 0 14px", fontSize: "0.75rem" }}>
+            Version correction : {MISSION_ENGINE_VERSION}
+          </p>
           <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
             {onglets.map(t => (
               <div key={t.id} style={{ background: t.couleur + "25", border: `1px solid ${t.couleur}50`, borderRadius: "14px", padding: "8px 18px" }}>

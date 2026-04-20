@@ -47,6 +47,14 @@ const col = (row, ...keys) => {
   return "";
 };
 
+const splitMotsCles = (valeur) => {
+  if (!valeur) return [];
+  return String(valeur)
+    .split(/[|,;/]/)
+    .map(m => m.trim())
+    .filter(Boolean);
+};
+
 export default function Admin() {
   const [fichierChapitres, setFichierChapitres] = useState(null);
   const [importChapitres, setImportChapitres] = useState({ loading: false, succes: 0, erreurs: 0, message: "" });
@@ -190,20 +198,22 @@ export default function Admin() {
         let succes = 0, erreurs = 0;
         for (const row of rows) {
           try {
-            const id = String(row.id || "").trim();
-            const type = String(row.type || "").trim();
-            const titre = String(row.titre || "").trim();
+            const id = String(col(row, "id", "ID", "Id")).trim();
+            const type = String(col(row, "type", "Type")).trim().toLowerCase();
+            const titre = String(col(row, "titre", "Titre", "titre mission", "Titre mission")).trim();
             if (!id || !type || !titre) { erreurs++; continue; }
-            const matiere = String(row.matiere || "").trim();
+            const matiere = String(col(row, "matiere", "Matière", "Matiere")).trim();
+            const correction = String(col(row, "correction", "Correction", "correction_reference", "Correction référence", "Correction de référence")).trim();
+            const motsClesRaw = col(row, "mots_cles", "mots-clés", "Mots-clés", "mots cles", "Mots clés");
             await setDoc(doc(db, "missions", id), {
               id, type, matiere,
               emoji: EMOJI_PAR_MATIERE[matiere] || "🎯",
               titre,
-              contexte: String(row.contexte || "").trim(),
-              question: String(row.question || "").trim(),
-              mots_cles: row.mots_cles ? String(row.mots_cles).split(",").map(m => m.trim()) : [],
-              correction: String(row.correction || "").trim(), // ✅ NOUVEAU
-              xp: parseInt(row.xp) || 25,
+              contexte: String(col(row, "contexte", "Contexte")).trim(),
+              question: String(col(row, "question", "Question")).trim(),
+              mots_cles: splitMotsCles(motsClesRaw),
+              correction,
+              xp: parseInt(col(row, "xp", "XP")) || 25,
             });
             succes++;
           } catch { erreurs++; }
