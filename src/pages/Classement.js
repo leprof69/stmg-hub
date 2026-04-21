@@ -55,6 +55,7 @@ export default function Classement({ profil }) {
   const [classementLycees, setClassementLycees] = useState([]);
   const [classementFamilles, setClassementFamilles] = useState([]);
   const [chargement, setChargement] = useState(true);
+  const [erreurClassement, setErreurClassement] = useState("");
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -66,9 +67,10 @@ export default function Classement({ profil }) {
 
   const chargerClassements = async () => {
     setChargement(true);
+    setErreurClassement("");
     try {
       const snapshot = await getDocs(collection(db, "users"));
-      const users = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      const users = snapshot.docs.map(d => ({ id: d.id, ...d.data() })).filter(u => u.role !== "admin");
 
       // XP
       const elevesClasses = users
@@ -111,6 +113,7 @@ export default function Classement({ profil }) {
       setClassementFamilles(Object.values(famillesMap).sort((a, b) => b.xp - a.xp));
     } catch (err) {
       console.error(err);
+      setErreurClassement("Classement indisponible : lecture Firestore refusée pour les élèves.");
     }
     setChargement(false);
   };
@@ -168,6 +171,14 @@ export default function Classement({ profil }) {
             }}>{t.label}</button>
           ))}
         </div>
+
+        {erreurClassement && (
+          <div style={{ background: COLORS.H + "12", border: `1px solid ${COLORS.H}30`, borderRadius: "14px", padding: "12px 14px", marginBottom: "20px" }}>
+            <p style={{ margin: 0, color: COLORS.H, fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem" }}>
+              ⚠️ {erreurClassement}
+            </p>
+          </div>
+        )}
 
         {chargement ? (
           <div style={{ textAlign: "center", padding: "60px", background: "white", borderRadius: "24px" }}>

@@ -71,6 +71,8 @@ export default function Admin() {
   const [xpCustom, setXpCustom] = useState({});
   const [famillesClassement, setFamillesClassement] = useState([]);
   const [erreurEleves, setErreurEleves] = useState("");
+  const [filtreClasse, setFiltreClasse] = useState("toutes");
+  const [filtreLycee, setFiltreLycee] = useState("tous");
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -154,6 +156,32 @@ export default function Admin() {
       await distribuerXPFamille(famillesClassement[i].nom, RECOMPENSES_FAMILLE[i].xp);
     }
   };
+
+  const classesDispo = Array.from(new Set(eleves.map(e => e.classe).filter(Boolean))).sort();
+  const lyceesDispo = Array.from(new Set(eleves.map(e => e.lycee).filter(Boolean))).sort();
+  const elevesFiltres = eleves.filter(e =>
+    (filtreClasse === "toutes" || e.classe === filtreClasse) &&
+    (filtreLycee === "tous" || e.lycee === filtreLycee)
+  );
+
+  const statsParClasse = classesDispo.map(cl => {
+    const membres = eleves.filter(e => e.classe === cl);
+    return {
+      classe: cl,
+      eleves: membres.length,
+      xp: membres.reduce((sum, e) => sum + (e.xp || 0), 0),
+    };
+  }).sort((a, b) => b.xp - a.xp);
+
+  const statsParLycee = lyceesDispo.map(ly => {
+    const membres = eleves.filter(e => e.lycee === ly);
+    return {
+      lycee: ly,
+      ville: membres[0]?.lyceeVille || "",
+      eleves: membres.length,
+      xp: membres.reduce((sum, e) => sum + (e.xp || 0), 0),
+    };
+  }).sort((a, b) => b.xp - a.xp);
 
   const importerChapitres = async () => {
     if (!fichierChapitres) return;
@@ -301,13 +329,46 @@ export default function Admin() {
                 <Btn onClick={chargerEleves} color={COLORS.G} small>🔄 Actualiser les élèves</Btn>
               </div>
 
+              <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "16px" }}>
+                <select value={filtreClasse} onChange={e => setFiltreClasse(e.target.value)}
+                  style={{ padding: "8px 12px", borderRadius: "10px", border: `2px solid ${COLORS.S}30`, fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem", color: "#374151" }}>
+                  <option value="toutes">Toutes les classes</option>
+                  {classesDispo.map(c => <option key={c} value={c}>{c === "premiere" ? "Première STMG" : c === "terminale" ? "Terminale STMG" : c}</option>)}
+                </select>
+
+                <select value={filtreLycee} onChange={e => setFiltreLycee(e.target.value)}
+                  style={{ padding: "8px 12px", borderRadius: "10px", border: `2px solid ${COLORS.T}30`, fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem", color: "#374151", maxWidth: "320px" }}>
+                  <option value="tous">Tous les lycées</option>
+                  {lyceesDispo.map(l => <option key={l} value={l}>{l}</option>)}
+                </select>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "18px" }}>
+                <div style={{ background: "white", border: `1px solid ${COLORS.S}25`, borderRadius: "12px", padding: "10px 12px" }}>
+                  <p style={{ margin: "0 0 6px", fontFamily: "'Fredoka One', cursive", color: COLORS.S, fontSize: "0.85rem" }}>📚 Par classe</p>
+                  {statsParClasse.slice(0, 4).map(item => (
+                    <p key={item.classe} style={{ margin: "2px 0", color: "#6B7280", fontSize: "0.78rem" }}>
+                      {item.classe === "premiere" ? "Première" : item.classe === "terminale" ? "Terminale" : item.classe} · {item.eleves} élève(s) · {item.xp.toLocaleString()} XP
+                    </p>
+                  ))}
+                </div>
+                <div style={{ background: "white", border: `1px solid ${COLORS.T}25`, borderRadius: "12px", padding: "10px 12px" }}>
+                  <p style={{ margin: "0 0 6px", fontFamily: "'Fredoka One', cursive", color: COLORS.T, fontSize: "0.85rem" }}>🏫 Par lycée</p>
+                  {statsParLycee.slice(0, 4).map(item => (
+                    <p key={item.lycee} style={{ margin: "2px 0", color: "#6B7280", fontSize: "0.78rem" }}>
+                      {item.lycee} {item.ville ? `(${item.ville})` : ""} · {item.eleves} élève(s) · {item.xp.toLocaleString()} XP
+                    </p>
+                  ))}
+                </div>
+              </div>
+
               <div style={{ marginBottom: "28px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "8px" }}>
                   <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1.1rem", margin: 0 }}>👤 Élèves (XP + cartes)</p>
                   <Btn onClick={distribuerTopIndividuel} color={COLORS.U} disabled={recompenseEnCours} small>🚀 Distribuer Top 5</Btn>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                  {eleves.map((eleve, i) => {
+                  {elevesFiltres.map((eleve, i) => {
                     const recompense = RECOMPENSES_INDIVIDUEL[i];
                     const couleurFamille = familleColors[eleve.famille] || COLORS.S;
                     const cartesTotal = compterCartesTotal(eleve.cartes || {});
@@ -327,7 +388,7 @@ export default function Admin() {
                             </span>
                           </div>
                           <p style={{ color: "#9CA3AF", fontSize: "0.8rem", margin: "2px 0 0" }}>
-                            {(eleve.xp || 0).toLocaleString()} XP · 🃏 {cartesTotal} cartes ({cartesUniques} uniques)
+                            {(eleve.xp || 0).toLocaleString()} XP · 🃏 {cartesTotal} cartes ({cartesUniques} uniques) · {eleve.classe || "-"} · {eleve.lycee || "-"}
                           </p>
                         </div>
                         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
