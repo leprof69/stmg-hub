@@ -70,6 +70,7 @@ export default function Admin() {
   const [messagesRecompense, setMessagesRecompense] = useState([]);
   const [xpCustom, setXpCustom] = useState({});
   const [famillesClassement, setFamillesClassement] = useState([]);
+  const [erreurEleves, setErreurEleves] = useState("");
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -78,12 +79,17 @@ export default function Admin() {
     document.head.appendChild(link);
   }, []);
 
+  useEffect(() => {
+    chargerEleves();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const chargerEleves = async () => {
     setChargementEleves(true);
+    setErreurEleves("");
     try {
       const snapshot = await getDocs(collection(db, "users"));
       const users = snapshot.docs.map(d => ({ id: d.id, ...d.data() }))
-        .filter(u => u.prenom)
+        .filter(u => u.role !== "admin")
         .sort((a, b) => (b.xp || 0) - (a.xp || 0));
       setEleves(users);
       const famillesMap = {};
@@ -97,7 +103,10 @@ export default function Admin() {
       const initXp = {};
       users.forEach((u, i) => { initXp[u.id] = RECOMPENSES_INDIVIDUEL[i]?.xp || 0; });
       setXpCustom(initXp);
-    } catch (err) { console.error(err); }
+    } catch (err) {
+      console.error(err);
+      setErreurEleves("Impossible de charger les élèves (droits Firestore ou connexion).");
+    }
     setChargementEleves(false);
   };
 
@@ -310,7 +319,9 @@ export default function Admin() {
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-                            <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1rem", margin: 0 }}>{eleve.prenom}</p>
+                            <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1rem", margin: 0 }}>
+                              {eleve.prenom || eleve.nom || eleve.email || `Élève ${eleve.id.slice(0, 6)}`}
+                            </p>
                             <span style={{ background: couleurFamille + "20", color: couleurFamille, fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.7rem" }}>
                               {familleEmojis[eleve.famille]} {eleve.famille}
                             </span>
@@ -376,6 +387,12 @@ export default function Admin() {
                   </div>
                 </div>
               )}
+            </div>
+          )}
+
+          {erreurEleves && (
+            <div style={{ marginTop: "14px", background: COLORS.H + "12", border: `1px solid ${COLORS.H}30`, borderRadius: "12px", padding: "10px 14px" }}>
+              <p style={{ margin: 0, color: COLORS.H, fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem" }}>{erreurEleves}</p>
             </div>
           )}
         </div>
