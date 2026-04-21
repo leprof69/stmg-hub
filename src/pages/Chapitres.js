@@ -20,6 +20,7 @@ export default function Chapitres({ profil, onXPGagne }) {
   const [chargement, setChargement] = useState(false);
   const [chapitreOuvert, setChapitreOuvert] = useState(null);
   const [notifXP, setNotifXP] = useState(null);
+  const peutChoisirClasse = profil.role === "admin" || profil.classe === "terminale";
 
   useEffect(() => {
     const chargerChapitres = async () => {
@@ -79,8 +80,8 @@ export default function Chapitres({ profil, onXPGagne }) {
           <h1 className="text-3xl font-bold">📚 Mes Chapitres</h1>
         </div>
 
-        {/* SÉLECTEUR DE CLASSE — admin uniquement */}
-        {profil.role === "admin" && (
+        {/* SÉLECTEUR DE CLASSE — admin + terminale (révisions première) */}
+        {peutChoisirClasse && (
           <div className="flex gap-3 mb-4">
             <button
               onClick={() => setClasseSelectionnee("premiere")}

@@ -15,25 +15,10 @@ const getDateJour = () => {
   return `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
 };
 
-const getNumSemaine = () => {
-  const today = new Date();
-  const start = new Date(today.getFullYear(), 0, 1);
-  return Math.ceil(((today - start) / 86400000 + start.getDay() + 1) / 7);
-};
-
-const getMois = () => {
-  const today = new Date();
-  return `${today.getFullYear()}-${today.getMonth() + 1}`;
-};
-
-const missionDejaFaite = (profil, missionId, type) => {
+const missionDejaFaite = (profil, missionId) => {
   const historique = profil.missionsHistorique || {};
   const entree = historique[missionId];
-  if (!entree) return false;
-  if (type === "quotidienne") return entree.date === getDateJour();
-  if (type === "hebdomadaire") return entree.semaine === String(getNumSemaine());
-  if (type === "mensuelle") return entree.mois === getMois();
-  return false;
+  return Boolean(entree);
 };
 
 const getMissionXPBase = (mission) => {
@@ -242,6 +227,8 @@ Ta mission est de corriger UNIQUEMENT en comparant la réponse élève à la cor
 INTERDICTION d'inventer des calculs ou des éléments qui ne sont pas présents dans la réponse élève.
 
 MISSION : ${mission.titre}
+NIVEAU : ${mission.niveau || ""}
+DIFFICULTÉ : ${mission.difficulte || ""}
 MATIÈRE : ${mission.matiere}
 CONTEXTE : ${mission.contexte}
 QUESTION : ${mission.question}
@@ -391,11 +378,11 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
   const [reponse, setReponse] = useState("");
   const [correction, setCorrection] = useState(null);
   const [chargement, setChargement] = useState(false);
-  const [dejaFaite] = useState(missionDejaFaite(profil, mission.id, mission.type));
-
-  const typeColors = { quotidienne: COLORS.S, hebdomadaire: COLORS.T, mensuelle: COLORS.U };
-  const typeLabels = { quotidienne: "⚡ Quotidienne", hebdomadaire: "📅 Hebdomadaire", mensuelle: "🏆 Mensuelle" };
-  const couleur = typeColors[mission.type] || COLORS.S;
+  const [dejaFaite] = useState(missionDejaFaite(profil, mission.id));
+  const difficulte = Math.max(1, Math.min(5, Number(mission.difficulte) || 1));
+  const niveau = (mission.niveau || "premiere").toLowerCase();
+  const couleur = difficulte >= 4 ? COLORS.H : difficulte >= 3 ? COLORS.U : COLORS.S;
+  const niveauLabel = niveau === "terminale" ? "📘 Terminale" : "📗 Première";
 
   const soumettre = async () => {
     if (!reponse.trim() || reponse.length < 20) return;
@@ -417,13 +404,11 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
       const userData = userDoc.data();
       const xpBase = getMissionXPBase(mission);
       const xpMissionBoostee = Math.round(xpBase * MISSION_XP_MULTIPLIER);
-      const xpGagne = resultFinal.triche_detectee ? 0 : Math.round((resultFinal.score / 10) * xpMissionBoostee);
+      const xpGagne = (dejaFaite || resultFinal.triche_detectee) ? 0 : Math.round((resultFinal.score / 10) * xpMissionBoostee);
       const newXP = (userData.xp || 0) + xpGagne;
       const historique = userData.missionsHistorique || {};
       historique[mission.id] = {
         date: getDateJour(),
-        semaine: String(getNumSemaine()),
-        mois: getMois(),
         score: resultFinal.score,
         xpGagne,
       };
@@ -442,7 +427,10 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px", flexWrap: "wrap", gap: "8px" }}>
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
           <span style={{ background: couleur, color: "white", fontFamily: "'Fredoka One', cursive", padding: "4px 16px", borderRadius: "100px", fontSize: "0.85rem" }}>
-            {typeLabels[mission.type]}
+            {niveauLabel}
+          </span>
+          <span style={{ background: "#111827", color: "white", fontFamily: "'Fredoka One', cursive", padding: "4px 16px", borderRadius: "100px", fontSize: "0.85rem" }}>
+            {"⭐".repeat(difficulte)} D{difficulte}
           </span>
           <span style={{ background: couleur + "15", color: couleur, fontFamily: "'Fredoka One', cursive", padding: "4px 16px", borderRadius: "100px", fontSize: "0.85rem", border: `1px solid ${couleur}30` }}>
             +{Math.round(getMissionXPBase(mission) * MISSION_XP_MULTIPLIER)} XP
@@ -564,10 +552,12 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
 
 // ===== COMPOSANT PRINCIPAL =====
 export default function Missions({ profil, onXPGagne }) {
-  const [onglet, setOnglet] = useState("quotidiennes");
+  const niveauxAccessibles = profil?.classe === "terminale" ? ["premiere", "terminale"] : ["premiere"];
+  const [niveauSelectionne, setNiveauSelectionne] = useState(profil?.classe === "terminale" ? "terminale" : "premiere");
+  const [matiereSelectionnee, setMatiereSelectionnee] = useState("Toutes");
   const [xpGagne, setXpGagne] = useState(0);
   const [showNotif, setShowNotif] = useState(false);
-  const [missions, setMissions] = useState({ quotidiennes: [], hebdomadaires: [], mensuelles: [] });
+  const [missions, setMissions] = useState([]);
   const [chargement, setChargement] = useState(true);
 
   useEffect(() => {
@@ -581,12 +571,16 @@ export default function Missions({ profil, onXPGagne }) {
   const chargerMissions = async () => {
     try {
       const snapshot = await getDocs(collection(db, "missions"));
-      const toutes = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-      setMissions({
-        quotidiennes: toutes.filter(m => m.type === "quotidienne"),
-        hebdomadaires: toutes.filter(m => m.type === "hebdomadaire"),
-        mensuelles: toutes.filter(m => m.type === "mensuelle"),
-      });
+      const toutes = snapshot.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .filter(m => niveauxAccessibles.includes(String(m.niveau || "").toLowerCase()))
+        .sort((a, b) => {
+          const diffA = Number(a.difficulte) || 1;
+          const diffB = Number(b.difficulte) || 1;
+          if (diffA !== diffB) return diffA - diffB;
+          return (Number(a.ordre) || 999) - (Number(b.ordre) || 999);
+        });
+      setMissions(toutes);
     } catch (err) { console.error(err); }
     setChargement(false);
   };
@@ -598,18 +592,20 @@ export default function Missions({ profil, onXPGagne }) {
     if (onXPGagne) onXPGagne();
   };
 
-  const totalQuotidiennes = missions.quotidiennes.length;
-  const quotidiennesCompletes = missions.quotidiennes.filter(m => missionDejaFaite(profil, m.id, "quotidienne")).length;
-  const totalHebdo = missions.hebdomadaires.length;
-  const hebdoCompletes = missions.hebdomadaires.filter(m => missionDejaFaite(profil, m.id, "hebdomadaire")).length;
-  const totalMensuelles = missions.mensuelles.length;
-  const mensuellesCompletes = missions.mensuelles.filter(m => missionDejaFaite(profil, m.id, "mensuelle")).length;
+  const matieresDisponibles = ["Toutes", ...Array.from(new Set(
+    missions
+      .filter(m => (m.niveau || "premiere").toLowerCase() === niveauSelectionne)
+      .map(m => m.matiere)
+      .filter(Boolean)
+  )).sort()];
 
-  const onglets = [
-    { id: "quotidiennes", label: "⚡ Quotidiennes", couleur: COLORS.S, total: totalQuotidiennes, faites: quotidiennesCompletes },
-    { id: "hebdomadaires", label: "📅 Hebdomadaires", couleur: COLORS.T, total: totalHebdo, faites: hebdoCompletes },
-    { id: "mensuelles", label: "🏆 Mensuelles", couleur: COLORS.U, total: totalMensuelles, faites: mensuellesCompletes },
-  ];
+  const missionsFiltrees = missions.filter(m =>
+    (m.niveau || "premiere").toLowerCase() === niveauSelectionne &&
+    (matiereSelectionnee === "Toutes" || m.matiere === matiereSelectionnee)
+  );
+
+  const missionsCompletes = missionsFiltrees.filter(m => missionDejaFaite(profil, m.id)).length;
+  const totalMissions = missionsFiltrees.length;
 
   return (
     <div style={{ minHeight: "100vh", background: "#F1F5F9", fontFamily: "'Nunito', sans-serif" }}>
@@ -628,40 +624,52 @@ export default function Missions({ profil, onXPGagne }) {
 
         <div style={{ background: "linear-gradient(135deg, #1A1A2E, #2D1B69)", borderRadius: "24px", padding: "28px 32px", marginBottom: "24px" }}>
           <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2.2rem", color: "white", margin: "0 0 4px" }}>🎯 Mes Missions</h1>
-          <p style={{ color: "#A78BFA", margin: "0 0 20px", fontSize: "0.9rem" }}>Des exercices réels avec calculs et notions du cours SDG !</p>
+          <p style={{ color: "#A78BFA", margin: "0 0 20px", fontSize: "0.9rem" }}>Missions classées par niveau, matière et difficulté.</p>
           <p style={{ color: "#C4B5FD", margin: "0 0 14px", fontSize: "0.75rem" }}>
             Version correction : {MISSION_ENGINE_VERSION}
           </p>
-          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
-            {onglets.map(t => (
-              <div key={t.id} style={{ background: t.couleur + "25", border: `1px solid ${t.couleur}50`, borderRadius: "14px", padding: "8px 18px" }}>
+          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>
+            <div style={{ background: "#3B82F625", border: "1px solid #3B82F650", borderRadius: "14px", padding: "8px 18px" }}>
+              <p style={{ fontFamily: "'Fredoka One', cursive", color: "white", fontSize: "0.85rem", margin: 0 }}>
+                Progression : {missionsCompletes}/{totalMissions}
+              </p>
+            </div>
+            {profil?.classe === "terminale" && (
+              <div style={{ background: "#10B98125", border: "1px solid #10B98150", borderRadius: "14px", padding: "8px 18px" }}>
                 <p style={{ fontFamily: "'Fredoka One', cursive", color: "white", fontSize: "0.85rem", margin: 0 }}>
-                  {t.label.split(" ")[0]} {t.faites}/{t.total}
+                  ✅ Accès Terminale + Première
                 </p>
-                <div style={{ background: "rgba(255,255,255,0.2)", borderRadius: "100px", height: "4px", marginTop: "4px" }}>
-                  <div style={{ height: "100%", borderRadius: "100px", background: "white", width: t.total > 0 ? `${(t.faites / t.total) * 100}%` : "0%", transition: "width 0.5s" }} />
-                </div>
               </div>
-            ))}
+            )}
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: "8px", marginBottom: "24px", flexWrap: "wrap" }}>
-          {onglets.map(tab => (
-            <button key={tab.id} onClick={() => setOnglet(tab.id)}
+        <div style={{ display: "flex", gap: "8px", marginBottom: "16px", flexWrap: "wrap" }}>
+          {niveauxAccessibles.map(nv => (
+            <button key={nv} onClick={() => setNiveauSelectionne(nv)}
               style={{
-                background: onglet === tab.id ? tab.couleur : "white",
-                color: onglet === tab.id ? "white" : tab.couleur,
-                border: `2px solid ${tab.couleur}`,
+                background: niveauSelectionne === nv ? (nv === "terminale" ? COLORS.T : COLORS.S) : "white",
+                color: niveauSelectionne === nv ? "white" : (nv === "terminale" ? COLORS.T : COLORS.S),
+                border: `2px solid ${nv === "terminale" ? COLORS.T : COLORS.S}`,
                 fontFamily: "'Fredoka One', cursive", fontSize: "1rem",
                 padding: "10px 20px", borderRadius: "14px", cursor: "pointer",
-                transition: "all 0.2s",
-                boxShadow: onglet === tab.id ? `0 4px 15px ${tab.couleur}40` : "none",
               }}>
-              {tab.label}
-              <span style={{ marginLeft: "8px", background: onglet === tab.id ? "rgba(255,255,255,0.25)" : tab.couleur + "15", padding: "2px 8px", borderRadius: "100px", fontSize: "0.8rem" }}>
-                {tab.faites}/{tab.total}
-              </span>
+              {nv === "terminale" ? "📘 Terminale" : "📗 Première"}
+            </button>
+          ))}
+        </div>
+
+        <div style={{ display: "flex", gap: "8px", marginBottom: "24px", flexWrap: "wrap" }}>
+          {matieresDisponibles.map(mat => (
+            <button key={mat} onClick={() => setMatiereSelectionnee(mat)}
+              style={{
+                background: matiereSelectionnee === mat ? COLORS.U : "white",
+                color: matiereSelectionnee === mat ? "white" : COLORS.U,
+                border: `2px solid ${COLORS.U}`,
+                fontFamily: "'Fredoka One', cursive", fontSize: "0.92rem",
+                padding: "8px 16px", borderRadius: "14px", cursor: "pointer",
+              }}>
+              {mat}
             </button>
           ))}
         </div>
@@ -672,50 +680,18 @@ export default function Missions({ profil, onXPGagne }) {
           </div>
         ) : (
           <>
-            {onglet === "quotidiennes" && (
-              <div>
-                <p style={{ color: "#9CA3AF", fontSize: "0.85rem", marginBottom: "20px" }}>
-                  📚 {totalQuotidiennes} missions disponibles — {quotidiennesCompletes} déjà complétées aujourd'hui
-                </p>
-                {missions.quotidiennes.length === 0 ? (
-                  <div style={{ textAlign: "center", padding: "60px", background: "white", borderRadius: "24px" }}>
-                    <p style={{ fontFamily: "'Fredoka One', cursive", color: "#9CA3AF", fontSize: "1.2rem" }}>Aucune mission disponible 🎯</p>
-                  </div>
-                ) : missions.quotidiennes.map(mission => (
-                  <CarteMission key={mission.id} mission={mission} profil={profil} onMissionComplete={handleMissionComplete} />
-                ))}
-              </div>
-            )}
-
-            {onglet === "hebdomadaires" && (
-              <div>
-                <p style={{ color: "#9CA3AF", fontSize: "0.85rem", marginBottom: "20px" }}>
-                  📚 {totalHebdo} missions disponibles — {hebdoCompletes} déjà complétées cette semaine
-                </p>
-                {missions.hebdomadaires.length === 0 ? (
-                  <div style={{ textAlign: "center", padding: "60px", background: "white", borderRadius: "24px" }}>
-                    <p style={{ fontFamily: "'Fredoka One', cursive", color: "#9CA3AF", fontSize: "1.2rem" }}>Aucune mission disponible 📅</p>
-                  </div>
-                ) : missions.hebdomadaires.map(mission => (
-                  <CarteMission key={mission.id} mission={mission} profil={profil} onMissionComplete={handleMissionComplete} />
-                ))}
-              </div>
-            )}
-
-            {onglet === "mensuelles" && (
-              <div>
-                <p style={{ color: "#9CA3AF", fontSize: "0.85rem", marginBottom: "20px" }}>
-                  📚 {totalMensuelles} missions disponibles — {mensuellesCompletes} déjà complétées ce mois
-                </p>
-                {missions.mensuelles.length === 0 ? (
-                  <div style={{ textAlign: "center", padding: "60px", background: "white", borderRadius: "24px" }}>
-                    <p style={{ fontFamily: "'Fredoka One', cursive", color: "#9CA3AF", fontSize: "1.2rem" }}>Aucune mission disponible 🏆</p>
-                  </div>
-                ) : missions.mensuelles.map(mission => (
-                  <CarteMission key={mission.id} mission={mission} profil={profil} onMissionComplete={handleMissionComplete} />
-                ))}
-              </div>
-            )}
+            <div>
+              <p style={{ color: "#9CA3AF", fontSize: "0.85rem", marginBottom: "20px" }}>
+                📚 {totalMissions} missions — {missionsCompletes} déjà complétées
+              </p>
+              {missionsFiltrees.length === 0 ? (
+                <div style={{ textAlign: "center", padding: "60px", background: "white", borderRadius: "24px" }}>
+                  <p style={{ fontFamily: "'Fredoka One', cursive", color: "#9CA3AF", fontSize: "1.2rem" }}>Aucune mission disponible pour ce filtre 🎯</p>
+                </div>
+              ) : missionsFiltrees.map(mission => (
+                <CarteMission key={mission.id} mission={mission} profil={profil} onMissionComplete={handleMissionComplete} />
+              ))}
+            </div>
           </>
         )}
       </div>

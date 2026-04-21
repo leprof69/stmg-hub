@@ -240,13 +240,15 @@ export default function Admin() {
           try {
             const id = String(col(row, "id", "ID", "Id")).trim();
             const type = String(col(row, "type", "Type")).trim().toLowerCase();
+            const niveau = String(col(row, "niveau", "Niveau", "classe", "Classe") || (type === "mensuelle" || type === "hebdomadaire" ? "terminale" : "premiere")).trim().toLowerCase();
+            const difficulte = Math.max(1, Math.min(5, parseInt(col(row, "difficulte", "Difficulté", "difficulty")) || 1));
             const titre = String(col(row, "titre", "Titre", "titre mission", "Titre mission")).trim();
-            if (!id || !type || !titre) { erreurs++; continue; }
+            if (!id || !titre) { erreurs++; continue; }
             const matiere = String(col(row, "matiere", "Matière", "Matiere")).trim();
             const correction = String(col(row, "correction", "Correction", "correction_reference", "Correction référence", "Correction de référence")).trim();
             const motsClesRaw = col(row, "mots_cles", "mots-clés", "Mots-clés", "mots cles", "Mots clés");
             await setDoc(doc(db, "missions", id), {
-              id, type, matiere,
+              id, type, niveau, difficulte, matiere,
               emoji: EMOJI_PAR_MATIERE[matiere] || "🎯",
               titre,
               contexte: String(col(row, "contexte", "Contexte")).trim(),
@@ -494,7 +496,7 @@ export default function Admin() {
         <div style={{ background: "white", borderRadius: "24px", padding: "28px", marginBottom: "24px", border: `2px solid ${COLORS.T}20` }}>
           <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: COLORS.T, marginBottom: "8px" }}>🎯 Importer les missions</h2>
           <p style={{ color: "#9CA3AF", fontSize: "0.8rem", marginBottom: "20px" }}>
-            Colonnes : <strong>id</strong>, <strong>type</strong>, <strong>matiere</strong>, <strong>titre</strong>, <strong>contexte</strong>, <strong>question</strong>, <strong>mots_cles</strong>, <strong>correction</strong>, <strong>xp</strong>
+            Colonnes : <strong>id</strong>, <strong>niveau</strong>, <strong>difficulte</strong>, <strong>matiere</strong>, <strong>titre</strong>, <strong>contexte</strong>, <strong>question</strong>, <strong>mots_cles</strong>, <strong>correction</strong>, <strong>xp</strong> (ancienne colonne <strong>type</strong> acceptée en compatibilité)
           </p>
           <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
             <input type="file" accept=".xlsx" onChange={e => setFichierMissions(e.target.files[0])}
