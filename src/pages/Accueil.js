@@ -11,18 +11,15 @@ const COLORS = {
 };
 
 const COLOR_LIST = [COLORS.S, COLORS.T, COLORS.M, COLORS.G, COLORS.H, COLORS.U, COLORS.B];
-
-const ROTATIONS = [0, -8, 5, -4, 7, -6, 4, -3, 6, -5, 3];
-
-// Mot avec chaque lettre dans une couleur différente + légèrement tordue
 const MotColore = ({ mot, startIndex = 0 }) => (
   <span style={{ display: "inline-flex", alignItems: "baseline", gap: "0px" }}>
     {mot.split("").map((lettre, i) => (
       <span key={i} style={{
         color: COLOR_LIST[(startIndex + i) % COLOR_LIST.length],
-        transform: `rotate(${ROTATIONS[(startIndex + i) % ROTATIONS.length]}deg) translateY(${i % 2 === 0 ? "-2px" : "2px"})`,
         display: "inline-block",
-        fontFamily: "'Fredoka One', cursive",
+        fontFamily: "'Nunito', sans-serif",
+        fontWeight: 900,
+        letterSpacing: "0.01em",
         lineHeight: 1,
       }}>
         {lettre}
@@ -32,26 +29,25 @@ const MotColore = ({ mot, startIndex = 0 }) => (
 );
 
 const LogoLetters = [
-  { char: "S", color: COLORS.S, rotate: "0deg",   translateY: "0px" },
-  { char: "T", color: COLORS.T, rotate: "-10deg", translateY: "-6px" },
-  { char: "M", color: COLORS.M, rotate: "6deg",   translateY: "4px" },
-  { char: "G", color: COLORS.G, rotate: "-5deg",  translateY: "-3px" },
-  { char: "H", color: COLORS.H, rotate: "8deg",   translateY: "5px" },
-  { char: "U", color: COLORS.U, rotate: "-8deg",  translateY: "-4px" },
-  { char: "B", color: COLORS.B, rotate: "5deg",   translateY: "3px" },
+  { char: "S", color: COLORS.S },
+  { char: "T", color: COLORS.T },
+  { char: "M", color: COLORS.M },
+  { char: "G", color: COLORS.G },
+  { char: "H", color: COLORS.H },
+  { char: "U", color: COLORS.U },
+  { char: "B", color: COLORS.B },
 ];
 
 const Logo = ({ size = "normal" }) => {
   const fontSize = size === "big" ? "5rem" : size === "medium" ? "2.5rem" : "1.8rem";
   const gap = size === "big" ? "6px" : "3px";
   return (
-    <div style={{ display: "flex", alignItems: "center", gap, fontFamily: "'Fredoka One', cursive" }}>
+    <div style={{ display: "flex", alignItems: "center", gap, fontFamily: "'Nunito', sans-serif" }}>
       {LogoLetters.map((l, i) => (
         <span key={i} style={{
-          fontSize, fontWeight: 400, color: l.color,
-          transform: `rotate(${l.rotate}) translateY(${l.translateY})`,
+          fontSize, fontWeight: 900, color: l.color,
           display: "inline-block", lineHeight: 1,
-          textShadow: `2px 2px 0px ${l.color}30`,
+          letterSpacing: "0.02em",
           ...(i === 3 && { marginRight: size === "big" ? "16px" : "8px" }),
         }}>
           {l.char}
@@ -82,12 +78,13 @@ const Btn = ({ children, onClick, color, outline = false, big = false }) => (
     style={{
       background: outline ? "white" : color,
       color: outline ? color : "white",
-      border: `3px solid ${color}`,
-      fontFamily: "'Fredoka One', cursive",
-      fontSize: big ? "1.3rem" : "1rem",
-      padding: big ? "16px 40px" : "12px 28px",
-      borderRadius: "16px", cursor: "pointer",
-      boxShadow: outline ? "none" : `0 6px 20px ${color}40`,
+      border: `2px solid ${color}`,
+      fontFamily: "'Nunito', sans-serif",
+      fontWeight: 800,
+      fontSize: big ? "1.05rem" : "0.95rem",
+      padding: big ? "14px 30px" : "10px 20px",
+      borderRadius: "12px", cursor: "pointer",
+      boxShadow: outline ? "none" : `0 8px 20px ${color}30`,
       display: "inline-flex", alignItems: "center", gap: "8px",
     }}>
     {children}
@@ -97,10 +94,10 @@ const Btn = ({ children, onClick, color, outline = false, big = false }) => (
 const SectionTag = ({ children, color }) => (
   <div style={{
     display: "inline-flex", alignItems: "center", gap: "8px",
-    background: color + "15", color,
-    border: `2px solid ${color}`,
+    background: color + "12", color,
+    border: `1px solid ${color}60`,
     borderRadius: "100px", padding: "8px 20px",
-    fontFamily: "'Fredoka One', cursive", fontSize: "1rem",
+    fontFamily: "'Nunito', sans-serif", fontWeight: 800, fontSize: "0.88rem",
     marginBottom: "16px",
   }}>
     {children}
@@ -113,13 +110,13 @@ const CardEmoji = ({ emoji, couleur, bg, titre, desc, tag }) => {
     <div className="card-hover"
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
-      style={{ background: bg, borderRadius: "28px", padding: "32px", border: `2px solid ${couleur}20`, cursor: "pointer" }}>
-      <div style={{ fontSize: "3.5rem", marginBottom: "20px", display: "inline-block", animation: hov ? "bounce 0.5s ease infinite alternate" : "none" }}>
+      style={{ background: bg, borderRadius: "18px", padding: "28px", border: `1px solid ${couleur}30`, cursor: "pointer" }}>
+      <div style={{ fontSize: "2.6rem", marginBottom: "16px", display: "inline-block", animation: hov ? "bounce 0.3s ease infinite alternate" : "none" }}>
         {emoji}
       </div>
-      <h3 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.4rem", color: "#1A1A2E", marginBottom: "12px" }}>{titre}</h3>
+      <h3 style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 900, fontSize: "1.3rem", color: "#111827", marginBottom: "10px" }}>{titre}</h3>
       <p style={{ color: "#6B7280", lineHeight: 1.7, marginBottom: "20px" }}>{desc}</p>
-      <span style={{ background: couleur, color: "white", fontFamily: "'Fredoka One', cursive", padding: "8px 20px", borderRadius: "100px", fontSize: "0.9rem" }}>
+      <span style={{ background: couleur, color: "white", fontFamily: "'Nunito', sans-serif", fontWeight: 800, padding: "7px 14px", borderRadius: "999px", fontSize: "0.8rem" }}>
         {tag}
       </span>
     </div>
@@ -132,11 +129,11 @@ const CardChiffre = ({ emoji, valeur, label, couleur }) => {
     <div className="card-hover"
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
-      style={{ background: "white", borderRadius: "24px", padding: "20px", boxShadow: `0 4px 20px ${couleur}20`, border: `2px solid ${couleur}20`, cursor: "pointer" }}>
+      style={{ background: "white", borderRadius: "16px", padding: "18px", boxShadow: `0 8px 24px ${couleur}18`, border: `1px solid ${couleur}28`, cursor: "pointer" }}>
       <div style={{ fontSize: "2rem", marginBottom: "8px", display: "inline-block", animation: hov ? "bounce 0.4s ease infinite alternate" : "none" }}>
         {emoji}
       </div>
-      <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2.5rem", color: couleur }}>{valeur}</div>
+      <div style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 900, fontSize: "2.3rem", color: couleur }}>{valeur}</div>
       <div style={{ fontSize: "0.85rem", color: "#6B7280", fontWeight: 700 }}>{label}</div>
     </div>
   );
@@ -148,15 +145,15 @@ const CardEtape = ({ num, emoji, titre, desc, couleur }) => {
     <div className="card-hover"
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
-      style={{ background: couleur + "15", borderRadius: "28px", padding: "32px", border: `2px solid ${couleur}40`, cursor: "pointer" }}>
+      style={{ background: "rgba(255,255,255,0.04)", borderRadius: "18px", padding: "28px", border: `1px solid ${couleur}60`, cursor: "pointer" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "20px" }}>
-        <span style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2.5rem", color: couleur }}>{num}</span>
+        <span style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 900, fontSize: "2.1rem", color: couleur }}>{num}</span>
         <span style={{ fontSize: "3rem", display: "inline-block", animation: hov ? "bounce 0.4s ease infinite alternate" : "none" }}>
           {emoji}
         </span>
       </div>
-      <h3 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.4rem", color: "white", marginBottom: "12px" }}>{titre}</h3>
-      <p style={{ color: "#9CA3AF", lineHeight: 1.7 }}>{desc}</p>
+      <h3 style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 900, fontSize: "1.25rem", color: "white", marginBottom: "10px" }}>{titre}</h3>
+      <p style={{ color: "#D1D5DB", lineHeight: 1.7 }}>{desc}</p>
     </div>
   );
 };
@@ -167,12 +164,12 @@ const CardCompet = ({ emoji, titre, desc, couleur }) => {
     <div className="card-hover"
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
-      style={{ display: "flex", alignItems: "flex-start", gap: "16px", padding: "16px", borderRadius: "16px", background: couleur + "08", border: `1px solid ${couleur}20`, cursor: "pointer" }}>
+      style={{ display: "flex", alignItems: "flex-start", gap: "16px", padding: "16px", borderRadius: "14px", background: couleur + "08", border: `1px solid ${couleur}25`, cursor: "pointer" }}>
       <span style={{ fontSize: "2rem", display: "inline-block", animation: hov ? "bounce 0.4s ease infinite alternate" : "none" }}>
         {emoji}
       </span>
       <div>
-        <p style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.1rem", color: "#1A1A2E" }}>{titre}</p>
+        <p style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 900, fontSize: "1.05rem", color: "#111827" }}>{titre}</p>
         <p style={{ fontSize: "0.9rem", color: "#6B7280" }}>{desc}</p>
       </div>
     </div>
@@ -185,12 +182,12 @@ const CardBadge = ({ emoji, nom, rarete, couleur }) => {
     <div className="card-hover-sm"
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
-      style={{ textAlign: "center", padding: "24px 16px", borderRadius: "24px", border: `2px solid ${couleur}`, background: couleur + "10", boxShadow: `0 4px 20px ${couleur}20`, cursor: "pointer" }}>
+      style={{ textAlign: "center", padding: "20px 14px", borderRadius: "16px", border: `1px solid ${couleur}90`, background: couleur + "10", boxShadow: `0 8px 20px ${couleur}20`, cursor: "pointer" }}>
       <div style={{ fontSize: "3rem", marginBottom: "12px", display: "inline-block", animation: hov ? "bounce 0.4s ease infinite alternate" : "none" }}>
         {emoji}
       </div>
-      <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "0.95rem" }}>{nom}</p>
-      <p style={{ fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "0.8rem", marginTop: "4px" }}>{rarete}</p>
+      <p style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 900, color: "#111827", fontSize: "0.95rem" }}>{nom}</p>
+      <p style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, color: couleur, fontSize: "0.8rem", marginTop: "4px" }}>{rarete}</p>
     </div>
   );
 };
@@ -201,11 +198,11 @@ const CardRecompense = ({ emoji, titre, desc, couleur }) => {
     <div className="card-hover"
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
-      style={{ textAlign: "center", padding: "28px 20px", borderRadius: "24px", background: couleur + "10", border: `2px solid ${couleur}30`, cursor: "pointer" }}>
+      style={{ textAlign: "center", padding: "24px 18px", borderRadius: "16px", background: couleur + "10", border: `1px solid ${couleur}30`, cursor: "pointer" }}>
       <div style={{ fontSize: "3rem", marginBottom: "12px", display: "inline-block", animation: hov ? "bounce 0.4s ease infinite alternate" : "none" }}>
         {emoji}
       </div>
-      <p style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.2rem", color: "#1A1A2E", marginBottom: "8px" }}>{titre}</p>
+      <p style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 900, fontSize: "1.1rem", color: "#111827", marginBottom: "8px" }}>{titre}</p>
       <p style={{ fontSize: "0.9rem", color: "#6B7280", lineHeight: 1.6 }}>{desc}</p>
     </div>
   );
@@ -217,7 +214,7 @@ const CardMaj = ({ emoji, texte, couleur }) => {
     <div className="card-hover-sm"
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
-      style={{ padding: "16px", borderRadius: "16px", background: couleur + "15", color: couleur, fontFamily: "'Fredoka One', cursive", fontSize: "0.95rem", cursor: "pointer" }}>
+      style={{ padding: "14px", borderRadius: "14px", background: couleur + "14", color: couleur, fontFamily: "'Nunito', sans-serif", fontWeight: 800, fontSize: "0.9rem", cursor: "pointer" }}>
       <div style={{ fontSize: "2rem", marginBottom: "8px", display: "inline-block", animation: hov ? "bounce 0.4s ease infinite alternate" : "none" }}>
         {emoji}
       </div>
@@ -240,29 +237,19 @@ export default function Accueil({ onConnexion, onInscription }) {
     style.innerHTML = `
       @keyframes bounce {
         from { transform: translateY(0px) scale(1); }
-        to   { transform: translateY(-8px) scale(1.2); }
-      }
-      @keyframes shake {
-        0%   { transform: rotate(0deg); }
-        25%  { transform: rotate(-10deg); }
-        75%  { transform: rotate(10deg); }
-        100% { transform: rotate(0deg); }
-      }
-      @keyframes pulse {
-        from { transform: scale(1); }
-        to   { transform: scale(1.3); }
+        to   { transform: translateY(-4px) scale(1.06); }
       }
     `;
     document.head.appendChild(style);
   }, []);
 
   return (
-    <div style={{ fontFamily: "'Nunito', sans-serif", background: "white", minHeight: "100vh" }}>
+    <div style={{ fontFamily: "'Nunito', sans-serif", background: "#F8FAFC", minHeight: "100vh" }}>
 
       {/* ===== NAVBAR ===== */}
       <nav style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 50,
-        background: "white", borderBottom: "2px solid #F3F4F6",
+        background: "rgba(255,255,255,0.95)", borderBottom: "1px solid #E5E7EB", backdropFilter: "blur(8px)",
         padding: "12px 24px", display: "flex", alignItems: "center", justifyContent: "space-between",
       }}>
         <Logo size="normal" />
@@ -282,7 +269,7 @@ export default function Accueil({ onConnexion, onInscription }) {
       )}
 
       {/* ===== HERO ===== */}
-      <section style={{ paddingTop: "130px", paddingBottom: "80px", paddingLeft: "24px", paddingRight: "24px", background: "#FAFAFA", textAlign: "center", position: "relative", overflow: "hidden" }}>
+      <section style={{ paddingTop: "130px", paddingBottom: "80px", paddingLeft: "24px", paddingRight: "24px", background: "linear-gradient(180deg, #EEF2FF 0%, #F8FAFC 70%)", textAlign: "center", position: "relative", overflow: "hidden" }}>
         {[
           { color: COLORS.T, top: "60px", left: "5%", size: "200px" },
           { color: COLORS.M, top: "100px", right: "5%", size: "180px" },
@@ -300,15 +287,15 @@ export default function Accueil({ onConnexion, onInscription }) {
           <SectionTag color={COLORS.M}>🔥 La plateforme qui fait kiffer les révisions STMG</SectionTag>
 
           {/* HERO TITRE avec lettres colorées */}
-          <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "clamp(3rem, 9vw, 6rem)", lineHeight: 1.2, marginBottom: "24px", color: "#1A1A2E", display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "16px", alignItems: "baseline" }}>
+          <h1 style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 900, fontSize: "clamp(2.7rem, 8vw, 5.4rem)", lineHeight: 1.1, marginBottom: "24px", color: "#111827", display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "16px", alignItems: "baseline" }}>
             <MotColore mot="Révise." startIndex={0} />
             <MotColore mot="Gagne." startIndex={2} />
             <MotColore mot="Domine." startIndex={4} />
             <span style={{ fontSize: "0.8em" }}>🔥</span>
           </h1>
 
-          <p style={{ fontFamily: "'Fredoka One', cursive", fontSize: "clamp(1.2rem, 3vw, 1.8rem)", color: "#6B7280", marginBottom: "12px" }}>
-            C'est pas de la triche, c'est de la stratégie 😏
+          <p style={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, fontSize: "clamp(1.05rem, 2.4vw, 1.35rem)", color: "#475569", marginBottom: "12px" }}>
+            Révisions STMG modernisées, sans blabla.
           </p>
           <p style={{ fontSize: "1.1rem", color: "#9CA3AF", maxWidth: "600px", margin: "0 auto 40px", lineHeight: 1.8 }}>
             Des applications gamifiées pour chaque chapitre STMG, des badges à débloquer, un classement national et une famille qui te ressemble !
@@ -351,7 +338,7 @@ export default function Accueil({ onConnexion, onInscription }) {
       </section>
 
       {/* ===== COMMENT ÇA MARCHE ===== */}
-      <section style={{ padding: "80px 24px", background: "#1A1A2E" }}>
+      <section style={{ padding: "80px 24px", background: "linear-gradient(140deg, #0F172A, #1E1B4B)" }}>
         <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: "56px" }}>
             <SectionTag color={COLORS.U}>⚡ Simple comme bonjour</SectionTag>
@@ -538,7 +525,7 @@ export default function Accueil({ onConnexion, onInscription }) {
       </section>
 
       {/* ===== CTA FINAL ===== */}
-      <section style={{ padding: "96px 24px", background: "#1A1A2E", textAlign: "center", position: "relative", overflow: "hidden" }}>
+      <section style={{ padding: "96px 24px", background: "linear-gradient(140deg, #111827, #1E1B4B)", textAlign: "center", position: "relative", overflow: "hidden" }}>
         {[
           { color: COLORS.T, top: "20px", left: "5%" },
           { color: COLORS.M, bottom: "20px", right: "5%" },
