@@ -5,7 +5,7 @@ export const COLLECTIONS = [
     xpBonus: 500,
     cartes: [
       { id: "th1_d1_1",  nom: "L'Action Collective Organisée",   rarete: "commune",     image: "/cartes/th1/drop1/1.jpg" },
-      { id: "th1_d1_2",  nom: "Le Level Up",                     rarete: "commune",     image: "/cartes/th1/drop1/2.jpg" },
+      { id: "th1_d1_2",  nom: "Le Level Up",                     rarete: "commune",     image: "/cartes/th1/drop1/1.jpg" },
       { id: "th1_d1_3",  nom: "Le But Non Lucratif",             rarete: "commune",     image: "/cartes/th1/drop1/3.jpg" },
       { id: "th1_d1_4",  nom: "Le But Public",                   rarete: "commune",     image: "/cartes/th1/drop1/4.jpg" },
       { id: "th1_d1_5",  nom: "La Propriété Privée",             rarete: "commune",     image: "/cartes/th1/drop1/5.jpg" },
@@ -183,10 +183,10 @@ export const COLLECTIONS = [
       { id: "th3_d2_21", nom: "Les Dividendes",                      rarete: "commune",     image: "/cartes/th3/drop 2/cd52a84c-ed73-4008-8fd1-9c4fe394972d.jpg" },
       { id: "th3_d2_22", nom: "L'Autofinancement",                   rarete: "rare",        image: "/cartes/th3/drop 2/fa64e378-76d4-4b32-bf05-d3ab4a21caf9.jpg" },
       { id: "th3_d2_23", nom: "La Rentabilité",                      rarete: "peu_commune", image: "/cartes/th3/drop 2/93b9f0fd-c858-4f12-87b5-0af3ca2f7e3d.jpg" },
-      { id: "th3_d2_24", nom: "La RSE",                              rarete: "epique",      image: "/cartes/th3/drop 2/o1IWtgMFD502uieiOaEFYOdEAjIwc5Kn.jpg" },
+      { id: "th3_d2_24", nom: "La RSE",                              rarete: "epique",      image: "/cartes/th3/drop 2/763e015e-8b16-40b5-a7c5-ed59b0dbe21a (1).jpg" },
       { id: "th3_d2_25", nom: "Le Bilan Social",                     rarete: "rare",        image: "/cartes/th3/drop 2/763e015e-8b16-40b5-a7c5-ed59b0dbe21a (1).jpg" },
-      { id: "th3_d2_26", nom: "Le Siège Vide",                       rarete: "commune",     image: "/cartes/th3/drop 2/150SFiql32sDigMs_LyTydn7H1V250f-m.jpg" },
-      { id: "th3_d2_27", nom: "Le Miroir Social",                    rarete: "epique",      image: "/cartes/th3/drop 2/GK0IkTUpfp45xYM6FpkTJvU9ma6DClMH.jpg" },
+      { id: "th3_d2_26", nom: "Le Siège Vide",                       rarete: "commune",     image: "/cartes/th3/drop 2/6a45978b-16c1-4c36-bb6a-dd0a2b7f2369.jpg" },
+      { id: "th3_d2_27", nom: "Le Miroir Social",                    rarete: "epique",      image: "/cartes/th3/drop 2/93b9f0fd-c858-4f12-87b5-0af3ca2f7e3d.jpg" },
     ],
   },
 ];

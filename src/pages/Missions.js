@@ -8,6 +8,7 @@ const COLORS = {
 };
 const MISSION_ENGINE_VERSION = "strict-v5-2026-04-21";
 const MISSION_XP_MULTIPLIER = 1.35;
+const MISSION_XP_MIN = { quotidienne: 200, hebdomadaire: 300, mensuelle: 500 };
 
 const getDateJour = () => {
   const today = new Date();
@@ -33,6 +34,12 @@ const missionDejaFaite = (profil, missionId, type) => {
   if (type === "hebdomadaire") return entree.semaine === String(getNumSemaine());
   if (type === "mensuelle") return entree.mois === getMois();
   return false;
+};
+
+const getMissionXPBase = (mission) => {
+  const xpSource = Number(mission?.xp) || 0;
+  const minimum = MISSION_XP_MIN[mission?.type] || 0;
+  return Math.max(xpSource, minimum);
 };
 
 const normalizeTexte = (texte = "") => String(texte)
@@ -408,7 +415,7 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
       const user = auth.currentUser;
       const userDoc = await getDoc(doc(db, "users", user.uid));
       const userData = userDoc.data();
-      const xpBase = Number(mission.xp) || 0;
+      const xpBase = getMissionXPBase(mission);
       const xpMissionBoostee = Math.round(xpBase * MISSION_XP_MULTIPLIER);
       const xpGagne = resultFinal.triche_detectee ? 0 : Math.round((resultFinal.score / 10) * xpMissionBoostee);
       const newXP = (userData.xp || 0) + xpGagne;
@@ -438,7 +445,7 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
             {typeLabels[mission.type]}
           </span>
           <span style={{ background: couleur + "15", color: couleur, fontFamily: "'Fredoka One', cursive", padding: "4px 16px", borderRadius: "100px", fontSize: "0.85rem", border: `1px solid ${couleur}30` }}>
-            +{mission.xp} XP
+            +{Math.round(getMissionXPBase(mission) * MISSION_XP_MULTIPLIER)} XP
           </span>
           {dejaFaite && !correction && (
             <span style={{ background: COLORS.G + "15", color: COLORS.G, fontFamily: "'Fredoka One', cursive", padding: "4px 16px", borderRadius: "100px", fontSize: "0.85rem", border: `1px solid ${COLORS.G}30` }}>
