@@ -111,10 +111,10 @@ const scoreMaxLocal = (mission, reponseEleve) => {
 
   const motsClesTrouves = compterMotsClesTrouves(mission, reponseEleve);
 
-  if (communCorrection === 0 && communQuestion <= 1 && motsClesTrouves === 0) return 2;
-  if (communCorrection <= 1 && motsClesTrouves === 0) return 3;
-  if (communCorrection <= 2 && motsClesTrouves <= 1) return 4;
-  if (communCorrection <= 4 && motsClesTrouves <= 1) return 6;
+  if (communCorrection === 0 && communQuestion === 0 && motsClesTrouves === 0) return 2;
+  if (communCorrection <= 1 && motsClesTrouves === 0) return 4;
+  if (communCorrection <= 2 && motsClesTrouves <= 1) return 6;
+  if (communCorrection <= 4 && motsClesTrouves <= 1) return 8;
   return 10;
 };
 
@@ -132,8 +132,20 @@ const contientFragmentNormalise = (source = "", fragment = "") => {
   return f.length >= 4 && s.includes(f);
 };
 
+const preuveSemantiquementLiee = (source = "", fragment = "") => {
+  const sourceTokens = new Set(extraireTokens(source));
+  const fragTokens = extraireTokens(fragment);
+  if (!sourceTokens.size || !fragTokens.length) return false;
+  let communs = 0;
+  for (const t of new Set(fragTokens)) {
+    if (sourceTokens.has(t)) communs++;
+  }
+  return communs >= 2;
+};
+
 const preuvesValides = (preuves, source) => Array.isArray(preuves)
-  && preuves.some(p => typeof p === "string" && contientFragmentNormalise(source, p));
+  && preuves.some((p) => typeof p === "string"
+    && (contientFragmentNormalise(source, p) || preuveSemantiquementLiee(source, p)));
 
 const calculerScoreLocal = (mission, reponseEleve) => {
   const propre = normalizeTexte(reponseEleve);
@@ -253,8 +265,8 @@ BARÈME DE CORRECTION :
 RÈGLES IMPORTANTES :
 1. Base-toi UNIQUEMENT sur la correction de référence pour évaluer — c'est la référence du prof
 2. Si la réponse élève est hors sujet ou sans lien clair avec la correction => score maximum 2/10 et hors_sujet=true
-3. Tu dois fournir des preuves textuelles exactes de la réponse élève ET de la correction
-4. Si tu ne peux pas citer au moins une preuve exacte côté élève, alors hors_sujet=true et score <= 2
+3. Tu dois fournir des indices de comparaison tirés de la réponse élève ET de la correction (citations ou reformulations fidèles)
+4. Une bonne réponse reformulée doit être acceptée même si elle n'utilise pas exactement les mêmes mots que la correction
 5. Si la réponse semble générée par une IA (style trop soutenu, "Il convient de noter", "En outre") => score = 0, triche_detectee = true
 6. Feedback PERSONNALISÉ : explique précisément ce qui correspond/ne correspond pas à la correction
 
@@ -331,7 +343,7 @@ Format JSON exact :
   const preuvesCorrectionOk = preuvesValides(preuvesCorrection, mission.correction || "");
   if (!preuvesEleveOk || !preuvesCorrectionOk) {
     // On reste prudent mais on n'écrase pas une bonne réponse.
-    resultat.score = Math.min(resultat.score, 7);
+    resultat.score = Math.min(resultat.score, 8);
     if (!resultat.feedback || contientTexteTemplate(resultat.feedback)) {
       resultat.feedback = "Correction reçue sans preuves textuelles détaillées, évaluation prudente appliquée.";
       resultat.points_forts = "Tu as soumis une réponse structurée.";
@@ -363,7 +375,8 @@ Format JSON exact :
   }
 
   const { ratio, motsCommuns } = evaluerPertinenceLocale(mission, reponseEleve);
-  if (ratio < 0.06 || motsCommuns < 2) {
+  const motsClesTrouves = compterMotsClesTrouves(mission, reponseEleve);
+  if (ratio < 0.025 && motsCommuns < 1 && motsClesTrouves === 0) {
     resultat.score = Math.min(resultat.score, 4);
     resultat.feedback = "Ta réponse semble hors sujet par rapport à la correction de référence du professeur.";
     resultat.points_forts = "Tu as soumis une réponse.";
