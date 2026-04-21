@@ -448,6 +448,11 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
         <span style={{ fontSize: "2.5rem", flexShrink: 0 }}>{mission.emoji || "🎯"}</span>
         <div>
           <h3 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.3rem", color: "#1A1A2E", marginBottom: "4px" }}>{mission.titre}</h3>
+          {(mission.theme || mission.chapitre) && (
+            <p style={{ color: "#6B7280", fontSize: "0.82rem", marginBottom: "4px" }}>
+              {mission.theme ? `Thème : ${mission.theme}` : ""}{mission.theme && mission.chapitre ? " · " : ""}{mission.chapitre ? `Chapitre : ${mission.chapitre}` : ""}
+            </p>
+          )}
           <p style={{ color: "#6B7280", fontSize: "0.9rem", lineHeight: 1.6 }}>{mission.contexte}</p>
         </div>
       </div>
@@ -554,7 +559,8 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
 export default function Missions({ profil, onXPGagne }) {
   const niveauxAccessibles = profil?.classe === "terminale" ? ["premiere", "terminale"] : ["premiere"];
   const [niveauSelectionne, setNiveauSelectionne] = useState(profil?.classe === "terminale" ? "terminale" : "premiere");
-  const [matiereSelectionnee, setMatiereSelectionnee] = useState("Toutes");
+  const [matiereSelectionnee, setMatiereSelectionnee] = useState("");
+  const [themeSelectionne, setThemeSelectionne] = useState("");
   const [xpGagne, setXpGagne] = useState(0);
   const [showNotif, setShowNotif] = useState(false);
   const [missions, setMissions] = useState([]);
@@ -592,16 +598,45 @@ export default function Missions({ profil, onXPGagne }) {
     if (onXPGagne) onXPGagne();
   };
 
-  const matieresDisponibles = ["Toutes", ...Array.from(new Set(
+  const matieresDisponibles = Array.from(new Set(
     missions
       .filter(m => (m.niveau || "premiere").toLowerCase() === niveauSelectionne)
       .map(m => m.matiere)
       .filter(Boolean)
-  )).sort()];
+  )).sort();
+
+  const themesDisponibles = Array.from(new Set(
+    missions
+      .filter(m => (m.niveau || "premiere").toLowerCase() === niveauSelectionne)
+      .filter(m => !matiereSelectionnee || m.matiere === matiereSelectionnee)
+      .map(m => m.theme)
+      .filter(Boolean)
+  )).sort();
+
+  useEffect(() => {
+    if (!matieresDisponibles.length) {
+      setMatiereSelectionnee("");
+      return;
+    }
+    if (!matiereSelectionnee || !matieresDisponibles.includes(matiereSelectionnee)) {
+      setMatiereSelectionnee(matieresDisponibles[0]);
+    }
+  }, [niveauSelectionne, missions, matieresDisponibles, matiereSelectionnee]);
+
+  useEffect(() => {
+    if (!themesDisponibles.length) {
+      setThemeSelectionne("");
+      return;
+    }
+    if (!themeSelectionne || !themesDisponibles.includes(themeSelectionne)) {
+      setThemeSelectionne(themesDisponibles[0]);
+    }
+  }, [niveauSelectionne, matiereSelectionnee, missions, themesDisponibles, themeSelectionne]);
 
   const missionsFiltrees = missions.filter(m =>
     (m.niveau || "premiere").toLowerCase() === niveauSelectionne &&
-    (matiereSelectionnee === "Toutes" || m.matiere === matiereSelectionnee)
+    (!matiereSelectionnee || m.matiere === matiereSelectionnee) &&
+    (!themeSelectionne || m.theme === themeSelectionne)
   );
 
   const missionsCompletes = missionsFiltrees.filter(m => missionDejaFaite(profil, m.id)).length;
@@ -644,34 +679,83 @@ export default function Missions({ profil, onXPGagne }) {
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: "8px", marginBottom: "16px", flexWrap: "wrap" }}>
-          {niveauxAccessibles.map(nv => (
-            <button key={nv} onClick={() => setNiveauSelectionne(nv)}
-              style={{
-                background: niveauSelectionne === nv ? (nv === "terminale" ? COLORS.T : COLORS.S) : "white",
-                color: niveauSelectionne === nv ? "white" : (nv === "terminale" ? COLORS.T : COLORS.S),
-                border: `2px solid ${nv === "terminale" ? COLORS.T : COLORS.S}`,
-                fontFamily: "'Fredoka One', cursive", fontSize: "1rem",
-                padding: "10px 20px", borderRadius: "14px", cursor: "pointer",
-              }}>
-              {nv === "terminale" ? "📘 Terminale" : "📗 Première"}
-            </button>
-          ))}
-        </div>
-
-        <div style={{ display: "flex", gap: "8px", marginBottom: "24px", flexWrap: "wrap" }}>
-          {matieresDisponibles.map(mat => (
-            <button key={mat} onClick={() => setMatiereSelectionnee(mat)}
-              style={{
-                background: matiereSelectionnee === mat ? COLORS.U : "white",
-                color: matiereSelectionnee === mat ? "white" : COLORS.U,
-                border: `2px solid ${COLORS.U}`,
-                fontFamily: "'Fredoka One', cursive", fontSize: "0.92rem",
-                padding: "8px 16px", borderRadius: "14px", cursor: "pointer",
-              }}>
-              {mat}
-            </button>
-          ))}
+        <div style={{ background: "white", borderRadius: "16px", border: "2px solid #E5E7EB", padding: "14px", marginBottom: "20px" }}>
+          <p style={{ fontFamily: "'Fredoka One', cursive", color: "#111827", fontSize: "0.9rem", margin: "0 0 10px" }}>
+            Filtres des missions
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "10px" }}>
+            <div style={{ borderRadius: "12px", border: `2px solid ${COLORS.S}30`, padding: "10px 12px" }}>
+              <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.S, fontSize: "0.78rem", margin: "0 0 6px" }}>
+                Niveau
+              </p>
+              <select
+                value={niveauSelectionne}
+                onChange={(e) => setNiveauSelectionne(e.target.value)}
+                style={{
+                  width: "100%",
+                  border: `2px solid ${COLORS.S}35`,
+                  borderRadius: "10px",
+                  padding: "8px 10px",
+                  fontFamily: "'Nunito', sans-serif",
+                  fontWeight: 700,
+                  color: "#1F2937",
+                  background: "white",
+                }}
+              >
+                {niveauxAccessibles.map(nv => (
+                  <option key={nv} value={nv}>
+                    {nv === "terminale" ? "Terminale" : "Première"}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div style={{ borderRadius: "12px", border: `2px solid ${COLORS.U}30`, padding: "10px 12px" }}>
+              <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.U, fontSize: "0.78rem", margin: "0 0 6px" }}>
+                Matière
+              </p>
+              <select
+                value={matiereSelectionnee}
+                onChange={(e) => setMatiereSelectionnee(e.target.value)}
+                style={{
+                  width: "100%",
+                  border: `2px solid ${COLORS.U}35`,
+                  borderRadius: "10px",
+                  padding: "8px 10px",
+                  fontFamily: "'Nunito', sans-serif",
+                  fontWeight: 700,
+                  color: "#1F2937",
+                  background: "white",
+                }}
+              >
+                {matieresDisponibles.map(mat => (
+                  <option key={mat} value={mat}>{mat}</option>
+                ))}
+              </select>
+            </div>
+            <div style={{ borderRadius: "12px", border: `2px solid ${COLORS.G}30`, padding: "10px 12px" }}>
+              <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.G, fontSize: "0.78rem", margin: "0 0 6px" }}>
+                Thème
+              </p>
+              <select
+                value={themeSelectionne}
+                onChange={(e) => setThemeSelectionne(e.target.value)}
+                style={{
+                  width: "100%",
+                  border: `2px solid ${COLORS.G}35`,
+                  borderRadius: "10px",
+                  padding: "8px 10px",
+                  fontFamily: "'Nunito', sans-serif",
+                  fontWeight: 700,
+                  color: "#1F2937",
+                  background: "white",
+                }}
+              >
+                {themesDisponibles.map(theme => (
+                  <option key={theme} value={theme}>{theme}</option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
 
         {chargement ? (

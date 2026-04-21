@@ -246,10 +246,16 @@ export default function Admin() {
             if (!id || !titre) { erreurs++; continue; }
             const matiere = String(col(row, "matiere", "Matière", "Matiere")).trim();
             const correction = String(col(row, "correction", "Correction", "correction_reference", "Correction référence", "Correction de référence")).trim();
+            const theme = String(col(row, "theme", "Theme", "thème", "Thème")).trim();
+            const chapitre = String(col(row, "chapitre", "Chapitre")).trim();
+            const ordre = parseInt(col(row, "ordre", "Ordre")) || 0;
             const motsClesRaw = col(row, "mots_cles", "mots-clés", "Mots-clés", "mots cles", "Mots clés");
             await setDoc(doc(db, "missions", id), {
               id, type, niveau, difficulte, matiere,
               emoji: EMOJI_PAR_MATIERE[matiere] || "🎯",
+              theme,
+              chapitre,
+              ordre,
               titre,
               contexte: String(col(row, "contexte", "Contexte")).trim(),
               question: String(col(row, "question", "Question")).trim(),
@@ -496,7 +502,7 @@ export default function Admin() {
         <div style={{ background: "white", borderRadius: "24px", padding: "28px", marginBottom: "24px", border: `2px solid ${COLORS.T}20` }}>
           <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: COLORS.T, marginBottom: "8px" }}>🎯 Importer les missions</h2>
           <p style={{ color: "#9CA3AF", fontSize: "0.8rem", marginBottom: "20px" }}>
-            Colonnes : <strong>id</strong>, <strong>niveau</strong>, <strong>difficulte</strong>, <strong>matiere</strong>, <strong>titre</strong>, <strong>contexte</strong>, <strong>question</strong>, <strong>mots_cles</strong>, <strong>correction</strong>, <strong>xp</strong> (ancienne colonne <strong>type</strong> acceptée en compatibilité)
+            Colonnes : <strong>id</strong>, <strong>niveau</strong>, <strong>difficulte</strong>, <strong>matiere</strong>, <strong>theme</strong>, <strong>chapitre</strong>, <strong>ordre</strong>, <strong>titre</strong>, <strong>contexte</strong>, <strong>question</strong>, <strong>mots_cles</strong>, <strong>correction</strong>, <strong>xp</strong> (ancienne colonne <strong>type</strong> acceptée en compatibilité)
           </p>
           <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
             <input type="file" accept=".xlsx" onChange={e => setFichierMissions(e.target.files[0])}
