@@ -144,23 +144,23 @@ const questions = [
     { texte: "Je cherche des infos que personne n'a trouvées", famille: "Explorateur" },
     { texte: "Je gère la communication et l'ambiance", famille: "Influenceur" },
   ]},
-  { question: "Quel type de jeu vidéo tu préfères ?", reponses: [
-    { texte: "Stratégie et réflexion (Civilization, Chess)", famille: "Architecte" },
-    { texte: "Créatif et artistique (Minecraft, Sims)", famille: "Visionnaire" },
+  { question: "Quel type de jeu vidéo préfères-tu ?", reponses: [
+    { texte: "Stratégie et réflexion (Civilization, échecs)", famille: "Architecte" },
+    { texte: "Créatif et artistique (Minecraft, Les Sims)", famille: "Visionnaire" },
     { texte: "Combat et compétition (FIFA, Fortnite)", famille: "Challenger" },
     { texte: "Aventure et exploration (Zelda, Skyrim)", famille: "Explorateur" },
     { texte: "Multijoueur et social (Among Us, Rocket League)", famille: "Influenceur" },
   ]},
-  { question: "On te donne 1000€ libres. Tu fais quoi ?", reponses: [
+  { question: "On te donne 1000 € libres. Tu fais quoi ?", reponses: [
     { texte: "Je les investis ou je les épargne intelligemment", famille: "Architecte" },
     { texte: "Je finance un projet créatif personnel", famille: "Visionnaire" },
-    { texte: "Je m'achète du matériel pour progresser dans mon sport/hobby", famille: "Challenger" },
+    { texte: "J'achète du matériel pour progresser dans mon sport/hobby", famille: "Challenger" },
     { texte: "Je pars en voyage découvrir un endroit inconnu", famille: "Explorateur" },
     { texte: "Je les dépense avec mes amis pour créer des souvenirs", famille: "Influenceur" },
   ]},
-  { question: "Quelle matière scolaire tu préfères ?", reponses: [
-    { texte: "Maths ou Sciences — j'aime résoudre des problèmes", famille: "Architecte" },
-    { texte: "Arts plastiques ou Musique — j'aime créer", famille: "Visionnaire" },
+  { question: "Quelle matière scolaire préfères-tu ?", reponses: [
+    { texte: "Maths ou sciences — j'aime résoudre des problèmes", famille: "Architecte" },
+    { texte: "Arts plastiques ou musique — j'aime créer", famille: "Visionnaire" },
     { texte: "EPS — j'aime me dépasser physiquement", famille: "Challenger" },
     { texte: "Histoire-Géo — j'aime comprendre le monde", famille: "Explorateur" },
     { texte: "Français — j'aime m'exprimer et convaincre", famille: "Influenceur" },
@@ -182,7 +182,7 @@ const questions = [
   { question: "Un entrepreneur dit : 'Échoue vite pour réussir plus vite'. Tu réagis comment ?", reponses: [
     { texte: "Je préfère bien préparer pour éviter les erreurs", famille: "Architecte" },
     { texte: "Ça m'inspire — l'échec fait partie du processus créatif", famille: "Visionnaire" },
-    { texte: "Je suis d'accord — faut oser !", famille: "Challenger" },
+    { texte: "Je suis d'accord — il faut oser !", famille: "Challenger" },
     { texte: "Intéressant — j'analyse les échecs des autres pour apprendre", famille: "Explorateur" },
     { texte: "Je partage cette citation à tous mes amis !", famille: "Influenceur" },
   ]},
@@ -214,7 +214,7 @@ const questions = [
     { texte: "Je cherche des solutions qu'il n'a pas envisagées", famille: "Explorateur" },
     { texte: "Je l'écoute et je lui remonte le moral", famille: "Influenceur" },
   ]},
-  { question: "Quel film/série tu préfères ?", reponses: [
+  { question: "Quel film ou quelle série préfères-tu ?", reponses: [
     { texte: "Thriller ou polar — j'aime les intrigues complexes", famille: "Architecte" },
     { texte: "Film d'animation ou fantastique — j'aime l'imaginaire", famille: "Visionnaire" },
     { texte: "Film de sport ou d'action — j'aime la montée d'adrénaline", famille: "Challenger" },
@@ -228,14 +228,14 @@ const questions = [
     { texte: "Les sources du droit et leur évolution historique", famille: "Explorateur" },
     { texte: "Le droit du travail et la protection des salariés", famille: "Influenceur" },
   ]},
-  { question: "Comment tu apprends le mieux ?", reponses: [
+  { question: "Comment apprends-tu le mieux ?", reponses: [
     { texte: "Avec des schémas, des plans, des fiches structurées", famille: "Architecte" },
     { texte: "En créant quelque chose — dessin, carte mentale", famille: "Visionnaire" },
     { texte: "En me fixant des défis et des objectifs", famille: "Challenger" },
     { texte: "En lisant et en cherchant des exemples concrets", famille: "Explorateur" },
     { texte: "En discutant et en expliquant aux autres", famille: "Influenceur" },
   ]},
-  { question: "Dans 10 ans, tu te vois comment ?", reponses: [
+  { question: "Dans 10 ans, comment te vois-tu ?", reponses: [
     { texte: "Directeur financier ou consultant stratégique", famille: "Architecte" },
     { texte: "Entrepreneur créatif ou directeur artistique", famille: "Visionnaire" },
     { texte: "Chef d'entreprise ou sportif de haut niveau", famille: "Challenger" },
