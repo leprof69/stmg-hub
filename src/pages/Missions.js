@@ -7,6 +7,7 @@ const COLORS = {
   G: "#10B981", H: "#EF4444", U: "#F59E0B", B: "#06B6D4",
 };
 const MISSION_ENGINE_VERSION = "strict-v5-2026-04-21";
+const MISSION_XP_MULTIPLIER = 1.35;
 
 const getDateJour = () => {
   const today = new Date();
@@ -407,7 +408,9 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
       const user = auth.currentUser;
       const userDoc = await getDoc(doc(db, "users", user.uid));
       const userData = userDoc.data();
-      const xpGagne = resultFinal.triche_detectee ? 0 : Math.round((resultFinal.score / 10) * mission.xp);
+      const xpBase = Number(mission.xp) || 0;
+      const xpMissionBoostee = Math.round(xpBase * MISSION_XP_MULTIPLIER);
+      const xpGagne = resultFinal.triche_detectee ? 0 : Math.round((resultFinal.score / 10) * xpMissionBoostee);
       const newXP = (userData.xp || 0) + xpGagne;
       const historique = userData.missionsHistorique || {};
       historique[mission.id] = {

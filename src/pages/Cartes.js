@@ -14,19 +14,19 @@ const RARETE_CONFIG = {
 
 const PACKS = [
   {
-    id: "basique", nom: "Pack Basique", emoji: "🎴", cout: 30, nbCartes: 3,
+    id: "basique", nom: "Pack Basique", emoji: "🎴", cout: 20, nbCartes: 3,
     couleur: "#6B7280", gradient: "linear-gradient(135deg, #6B7280, #374151)",
     description: "3 cartes • 80% communes • 20% peu communes",
     prob: { commune: 0.79, peu_commune: 0.20, rare: 0, epique: 0, legendaire: 0, ultra_rare: 0.01 }
   },
   {
-    id: "avance", nom: "Pack Avancé", emoji: "✨", cout: 75, nbCartes: 3,
+    id: "avance", nom: "Pack Avancé", emoji: "✨", cout: 55, nbCartes: 3,
     couleur: "#3B82F6", gradient: "linear-gradient(135deg, #3B82F6, #1D4ED8)",
     description: "3 cartes • Chance d'obtenir des rares !",
     prob: { commune: 0.59, peu_commune: 0.30, rare: 0.10, epique: 0, legendaire: 0, ultra_rare: 0.01 }
   },
   {
-    id: "legendaire", nom: "Pack Légendaire", emoji: "👑", cout: 200, nbCartes: 3,
+    id: "legendaire", nom: "Pack Légendaire", emoji: "👑", cout: 140, nbCartes: 3,
     couleur: "#F59E0B", gradient: "linear-gradient(135deg, #F59E0B, #B45309)",
     description: "3 cartes • Épiques et légendaires possibles !",
     prob: { commune: 0.39, peu_commune: 0.40, rare: 0.15, epique: 0.04, legendaire: 0.01, ultra_rare: 0.01 }
