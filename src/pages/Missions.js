@@ -6,7 +6,7 @@ const COLORS = {
   S: "#3B82F6", T: "#7C3AED", M: "#F97316",
   G: "#10B981", H: "#EF4444", U: "#F59E0B", B: "#06B6D4",
 };
-const MISSION_ENGINE_VERSION = "strict-v4-2026-04-20";
+const MISSION_ENGINE_VERSION = "strict-v5-2026-04-21";
 
 const getDateJour = () => {
   const today = new Date();
@@ -142,6 +142,80 @@ const contientFragmentNormalise = (source = "", fragment = "") => {
 const preuvesValides = (preuves, source) => Array.isArray(preuves)
   && preuves.some(p => typeof p === "string" && contientFragmentNormalise(source, p));
 
+const calculerScoreLocal = (mission, reponseEleve) => {
+  const propre = normalizeTexte(reponseEleve);
+  if (!propre || detecterReponseBrouillon(reponseEleve)) {
+    return {
+      score: 0,
+      feedback: "Ta réponse est trop courte ou hors sujet pour être évaluée correctement.",
+      points_forts: "Tu as tenté de répondre.",
+      a_ameliorer: "Ajoute les notions du cours et un raisonnement clair.",
+      triche_detectee: false,
+    };
+  }
+
+  const { ratio, motsCommuns } = evaluerPertinenceLocale(mission, reponseEleve);
+  const motsClesTrouves = compterMotsClesTrouves(mission, reponseEleve);
+  const base = Math.round((ratio * 10) + Math.min(2, motsClesTrouves * 0.5) + Math.min(2, motsCommuns * 0.2));
+  const score = Math.max(1, Math.min(10, base));
+  const scoreAjuste = score <= 2 ? 2 : score;
+
+  return {
+    score: scoreAjuste,
+    feedback: "Correction locale appliquée : comparaison avec la correction de référence effectuée même sans IA.",
+    points_forts: "Tu as soumis une réponse exploitable.",
+    a_ameliorer: "Rends ta réponse plus précise et connectée aux notions attendues.",
+    triche_detectee: false,
+  };
+};
+
+const pause = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+const appelerGroqAvecRetry = async (apiKey, prompt) => {
+  const essaisMax = 3;
+  for (let tentative = 1; tentative <= essaisMax; tentative++) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 22000);
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: "llama-3.3-70b-versatile",
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.1,
+          max_tokens: 550,
+        }),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+
+      const data = await response.json();
+      if (!response.ok) {
+        const estRetriable = response.status === 429 || response.status >= 500;
+        const erreurApi = data?.error?.message || "Erreur API Groq.";
+        if (estRetriable && tentative < essaisMax) {
+          await pause(500 * tentative);
+          continue;
+        }
+        throw new Error(erreurApi);
+      }
+      return data;
+    } catch (err) {
+      const estDernierEssai = tentative >= essaisMax;
+      if (!estDernierEssai) {
+        await pause(500 * tentative);
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw new Error("Impossible de joindre Groq après plusieurs essais.");
+};
+
 // ✅ CORRECTION BASÉE SUR LA CORRECTION DE RÉFÉRENCE DU PROF
 const corrigerAvecGroq = async (mission, reponseEleve) => {
   const aCorrection = mission.correction && mission.correction.trim().length > 10;
@@ -198,24 +272,11 @@ Format JSON exact :
     throw new Error("Clé Groq manquante (REACT_APP_GROQ_API_KEY).");
   }
 
-  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: "llama-3.3-70b-versatile",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.1,
-      max_tokens: 500,
-    }),
-  });
-
-  const data = await response.json();
-  if (!response.ok) {
-    const erreurApi = data?.error?.message || "Erreur API Groq.";
-    throw new Error(erreurApi);
+  let data = null;
+  try {
+    data = await appelerGroqAvecRetry(apiKey, prompt);
+  } catch {
+    return calculerScoreLocal(mission, reponseEleve);
   }
 
   const content = data?.choices?.[0]?.message?.content || "";
@@ -274,14 +335,17 @@ Format JSON exact :
   const preuvesEleveOk = preuvesValides(preuvesEleve, reponseEleve);
   const preuvesCorrectionOk = preuvesValides(preuvesCorrection, mission.correction || "");
   if (!preuvesEleveOk || !preuvesCorrectionOk) {
-    resultat.score = Math.min(resultat.score, 2);
-    resultat.feedback = "La correction IA n'a pas fourni de preuves textuelles fiables entre ta réponse et la correction du professeur.";
-    resultat.points_forts = "Tu as soumis ta réponse.";
-    resultat.a_ameliorer = "Réponds en reprenant les notions de la question pour permettre une comparaison claire.";
+    // On reste prudent mais on n'écrase pas une bonne réponse.
+    resultat.score = Math.min(resultat.score, 7);
+    if (!resultat.feedback || contientTexteTemplate(resultat.feedback)) {
+      resultat.feedback = "Correction reçue sans preuves textuelles détaillées, évaluation prudente appliquée.";
+      resultat.points_forts = "Tu as soumis une réponse structurée.";
+      resultat.a_ameliorer = "Ajoute des éléments explicites de la correction pour sécuriser la note maximale.";
+    }
   }
 
   if (Boolean(correction?.hors_sujet)) {
-    resultat.score = Math.min(resultat.score, 2);
+    resultat.score = Math.min(resultat.score, 3);
   }
 
   if (detecterReponseBrouillon(reponseEleve)) {
@@ -305,7 +369,7 @@ Format JSON exact :
 
   const { ratio, motsCommuns } = evaluerPertinenceLocale(mission, reponseEleve);
   if (ratio < 0.06 || motsCommuns < 2) {
-    resultat.score = Math.min(resultat.score, 2);
+    resultat.score = Math.min(resultat.score, 4);
     resultat.feedback = "Ta réponse semble hors sujet par rapport à la correction de référence du professeur.";
     resultat.points_forts = "Tu as soumis une réponse.";
     resultat.a_ameliorer = "Reprends les notions et mots-clés attendus dans la mission.";
