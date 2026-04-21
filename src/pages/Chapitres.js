@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { db } from "../firebase";
-import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
+import { auth, db } from "../firebase";
+import { collection, query, where, getDocs, orderBy, doc, getDoc, updateDoc } from "firebase/firestore";
 
 const matieres = [
   { nom: "Management", emoji: "🏢" },
@@ -12,12 +12,14 @@ const matieres = [
   { nom: "Gestion Finance", emoji: "💰" },
 ];
 
-export default function Chapitres({ profil }) {
+export default function Chapitres({ profil, onXPGagne }) {
+  const XP_PAR_ACTION = { application: 12, fiche: 8 };
   const [matiereSelectionnee, setMatiereSelectionnee] = useState("Management");
   const [classeSelectionnee, setClasseSelectionnee] = useState(profil.classe);
   const [chapitres, setChapitres] = useState([]);
   const [chargement, setChargement] = useState(false);
   const [chapitreOuvert, setChapitreOuvert] = useState(null);
+  const [notifXP, setNotifXP] = useState(null);
 
   useEffect(() => {
     const chargerChapitres = async () => {
@@ -41,10 +43,36 @@ export default function Chapitres({ profil }) {
     chargerChapitres();
   }, [matiereSelectionnee, classeSelectionnee]);
 
-  const ouvrirApp = (url) => { if (url) window.open(url, "_blank"); };
+  const ouvrirAppEtGagnerXP = async (url, actionType) => {
+    if (!url) return;
+    window.open(url, "_blank");
+
+    try {
+      const user = auth.currentUser;
+      if (!user) return;
+      const xpGain = XP_PAR_ACTION[actionType] || 5;
+      const userRef = doc(db, "users", user.uid);
+      const snap = await getDoc(userRef);
+      if (!snap.exists()) return;
+      const data = snap.data();
+      await updateDoc(userRef, { xp: (data.xp || 0) + xpGain });
+      setNotifXP(`⚡ +${xpGain} XP gagnés !`);
+      if (onXPGagne) onXPGagne();
+      setTimeout(() => setNotifXP(null), 2200);
+    } catch (err) {
+      console.error(err);
+      setNotifXP("❌ Ressource ouverte, mais XP non attribués.");
+      setTimeout(() => setNotifXP(null), 2200);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-4">
+      {notifXP && (
+        <div className="fixed top-20 right-6 z-50 bg-amber-500 text-white font-bold px-5 py-3 rounded-xl shadow-xl">
+          {notifXP}
+        </div>
+      )}
       <div className="max-w-4xl mx-auto">
 
         <div className="mb-6">
@@ -162,16 +190,16 @@ export default function Chapitres({ profil }) {
                       {/* Boutons */}
                       <div className="flex gap-3 mt-4">
                         <button
-                          onClick={() => ouvrirApp(chapitre.url_app)}
+                          onClick={() => ouvrirAppEtGagnerXP(chapitre.url_app, "application")}
                           className={`flex-1 font-bold py-3 px-4 rounded-lg transition-all ${chapitre.url_app ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-gray-700 text-gray-500 cursor-not-allowed"}`}
                         >
-                          🎮 {chapitre.url_app ? "Lancer l'application" : "Bientôt disponible"}
+                          🎮 {chapitre.url_app ? "Lancer l'application (+12 XP)" : "Bientôt disponible"}
                         </button>
                         <button
-                          onClick={() => ouvrirApp(chapitre.url_fiche)}
+                          onClick={() => ouvrirAppEtGagnerXP(chapitre.url_fiche, "fiche")}
                           className={`flex-1 font-bold py-3 px-4 rounded-lg transition-all ${chapitre.url_fiche ? "bg-purple-600 hover:bg-purple-700 text-white" : "bg-gray-700 text-gray-500 cursor-not-allowed"}`}
                         >
-                          📄 {chapitre.url_fiche ? "Fiche de révision" : "Bientôt disponible"}
+                          📄 {chapitre.url_fiche ? "Carte mentale / fiche (+8 XP)" : "Bientôt disponible"}
                         </button>
                       </div>
                     </div>

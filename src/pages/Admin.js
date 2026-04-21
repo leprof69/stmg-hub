@@ -55,6 +55,9 @@ const splitMotsCles = (valeur) => {
     .filter(Boolean);
 };
 
+const compterCartesTotal = (cartes = {}) => Object.values(cartes).reduce((sum, n) => sum + (Number(n) || 0), 0);
+const compterCartesUniques = (cartes = {}) => Object.values(cartes).filter(n => (Number(n) || 0) > 0).length;
+
 export default function Admin() {
   const [fichierChapitres, setFichierChapitres] = useState(null);
   const [importChapitres, setImportChapitres] = useState({ loading: false, succes: 0, erreurs: 0, message: "" });
@@ -80,7 +83,7 @@ export default function Admin() {
     try {
       const snapshot = await getDocs(collection(db, "users"));
       const users = snapshot.docs.map(d => ({ id: d.id, ...d.data() }))
-        .filter(u => u.prenom && u.xp !== undefined)
+        .filter(u => u.prenom)
         .sort((a, b) => (b.xp || 0) - (a.xp || 0));
       setEleves(users);
       const famillesMap = {};
@@ -277,15 +280,29 @@ export default function Admin() {
             </Btn>
           ) : (
             <div>
+              <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "16px" }}>
+                <div style={{ background: COLORS.U + "15", border: `1px solid ${COLORS.U}30`, borderRadius: "12px", padding: "8px 14px" }}>
+                  <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.U, margin: 0, fontSize: "0.85rem" }}>👥 Élèves inscrits : {eleves.length}</p>
+                </div>
+                <div style={{ background: COLORS.S + "15", border: `1px solid ${COLORS.S}30`, borderRadius: "12px", padding: "8px 14px" }}>
+                  <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.S, margin: 0, fontSize: "0.85rem" }}>
+                    ⚡ XP total classe : {eleves.reduce((sum, e) => sum + (e.xp || 0), 0).toLocaleString()}
+                  </p>
+                </div>
+                <Btn onClick={chargerEleves} color={COLORS.G} small>🔄 Actualiser les élèves</Btn>
+              </div>
+
               <div style={{ marginBottom: "28px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "8px" }}>
-                  <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1.1rem", margin: 0 }}>👤 Classement individuel</p>
+                  <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1.1rem", margin: 0 }}>👤 Élèves (XP + cartes)</p>
                   <Btn onClick={distribuerTopIndividuel} color={COLORS.U} disabled={recompenseEnCours} small>🚀 Distribuer Top 5</Btn>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                  {eleves.slice(0, 10).map((eleve, i) => {
+                  {eleves.map((eleve, i) => {
                     const recompense = RECOMPENSES_INDIVIDUEL[i];
                     const couleurFamille = familleColors[eleve.famille] || COLORS.S;
+                    const cartesTotal = compterCartesTotal(eleve.cartes || {});
+                    const cartesUniques = compterCartesUniques(eleve.cartes || {});
                     return (
                       <div key={eleve.id} style={{ background: i < 3 ? COLORS.U + "08" : "#F8FAFC", borderRadius: "16px", padding: "14px 16px", border: i < 3 ? `2px solid ${COLORS.U}30` : "2px solid #E5E7EB", display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
                         <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: i < 3 ? "1.6rem" : "1rem", width: "40px", textAlign: "center" }}>
@@ -298,7 +315,9 @@ export default function Admin() {
                               {familleEmojis[eleve.famille]} {eleve.famille}
                             </span>
                           </div>
-                          <p style={{ color: "#9CA3AF", fontSize: "0.8rem", margin: "2px 0 0" }}>{(eleve.xp || 0).toLocaleString()} XP</p>
+                          <p style={{ color: "#9CA3AF", fontSize: "0.8rem", margin: "2px 0 0" }}>
+                            {(eleve.xp || 0).toLocaleString()} XP · 🃏 {cartesTotal} cartes ({cartesUniques} uniques)
+                          </p>
                         </div>
                         <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                           <input type="number" value={xpCustom[eleve.id] ?? (recompense?.xp || 0)} onChange={e => setXpCustom(prev => ({ ...prev, [eleve.id]: parseInt(e.target.value) || 0 }))}
