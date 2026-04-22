@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { getPetMoodLabel, normalizePet } from "../utils/familiar";
@@ -30,6 +30,9 @@ export default function FamiliarCompanion({ profil }) {
   const [position, setPosition] = useState({ x: 28, y: 140 });
   const [velocity, setVelocity] = useState({ vx: 1, vy: 1 });
   const [expression, setExpression] = useState("😌");
+  const [isDragging, setIsDragging] = useState(false);
+  const dragRef = useRef({ active: false, pointerId: null, startX: 0, startY: 0, moved: false, offsetX: 0, offsetY: 0 });
+  const preventClickRef = useRef(false);
   const pet = useMemo(() => normalizePet(profil?.pet, profil), [profil]);
   const usePremium3D = pet.id === "phoenix";
 
@@ -43,7 +46,7 @@ export default function FamiliarCompanion({ profil }) {
   }, [pet.pendingEvent, pet.introSeen]);
 
   useEffect(() => {
-    if (!pet.isRoaming) return undefined;
+    if (!pet.isRoaming || isDragging) return undefined;
     const id = setInterval(() => {
       setPosition((prev) => {
         const width = Math.max(320, window.innerWidth);
@@ -66,7 +69,7 @@ export default function FamiliarCompanion({ profil }) {
       });
     }, 900);
     return () => clearInterval(id);
-  }, [pet.isRoaming, velocity.vx, velocity.vy]);
+  }, [pet.isRoaming, velocity.vx, velocity.vy, isDragging]);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -85,6 +88,71 @@ export default function FamiliarCompanion({ profil }) {
     const nextPet = { ...pet, introSeen: true, pendingEvent: null };
     setEventOpen(false);
     await updatePetInDb(nextPet);
+  };
+
+  const clampPosition = (x, y) => {
+    const width = Math.max(320, window.innerWidth);
+    const height = Math.max(420, window.innerHeight);
+    return {
+      x: Math.max(8, Math.min(width - (usePremium3D ? 130 : 120), x)),
+      y: Math.max(70, Math.min(height - 130, y)),
+    };
+  };
+
+  const handlePointerDown = (e) => {
+    if (!usePremium3D) return;
+    const pointerX = e.clientX ?? e.touches?.[0]?.clientX;
+    const pointerY = e.clientY ?? e.touches?.[0]?.clientY;
+    if (typeof pointerX !== "number" || typeof pointerY !== "number") return;
+    if (!pet.isRoaming) {
+      updatePetInDb({ ...pet, isRoaming: true });
+    }
+    const start = clampPosition(position.x, position.y);
+    setPosition(start);
+    dragRef.current = {
+      active: true,
+      pointerId: e.pointerId ?? null,
+      startX: pointerX,
+      startY: pointerY,
+      moved: false,
+      offsetX: pointerX - start.x,
+      offsetY: pointerY - start.y,
+    };
+    setIsDragging(true);
+    if (typeof e.currentTarget.setPointerCapture === "function" && typeof e.pointerId === "number") {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    }
+  };
+
+  const handlePointerMove = (e) => {
+    if (!usePremium3D || !dragRef.current.active) return;
+    const pointerX = e.clientX ?? e.touches?.[0]?.clientX;
+    const pointerY = e.clientY ?? e.touches?.[0]?.clientY;
+    if (typeof pointerX !== "number" || typeof pointerY !== "number") return;
+    const next = clampPosition(pointerX - dragRef.current.offsetX, pointerY - dragRef.current.offsetY);
+    const movedDist = Math.hypot(pointerX - dragRef.current.startX, pointerY - dragRef.current.startY);
+    if (movedDist > 6) dragRef.current.moved = true;
+    setPosition(next);
+  };
+
+  const handlePointerUp = (e) => {
+    if (!usePremium3D || !dragRef.current.active) return;
+    if (dragRef.current.moved) {
+      preventClickRef.current = true;
+    }
+    dragRef.current.active = false;
+    if (typeof e.currentTarget.releasePointerCapture === "function" && typeof dragRef.current.pointerId === "number") {
+      e.currentTarget.releasePointerCapture(dragRef.current.pointerId);
+    }
+    setIsDragging(false);
+  };
+
+  const handleOpenNursery = () => {
+    if (preventClickRef.current) {
+      preventClickRef.current = false;
+      return;
+    }
+    setNurseryOpen((v) => !v);
   };
 
   return (
@@ -125,29 +193,33 @@ export default function FamiliarCompanion({ profil }) {
         style={{
           position: "fixed",
           zIndex: 1900,
-          left: pet.isRoaming ? `${position.x}px` : "20px",
-          bottom: pet.isRoaming ? "auto" : "20px",
-          top: pet.isRoaming ? `${position.y}px` : "auto",
-          transition: "left 0.7s linear, top 0.7s linear",
+          left: usePremium3D || pet.isRoaming ? `${position.x}px` : "20px",
+          bottom: usePremium3D || pet.isRoaming ? "auto" : "20px",
+          top: usePremium3D || pet.isRoaming ? `${position.y}px` : "auto",
+          transition: isDragging ? "none" : "left 0.7s linear, top 0.7s linear",
         }}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
       >
         <button
-          onClick={() => setNurseryOpen((v) => !v)}
+          onClick={handleOpenNursery}
           style={{
-            border: "none",
+            border: usePremium3D ? "none" : "none",
             borderRadius: "20px",
-            background: "linear-gradient(135deg, #111827, #374151)",
-            color: "white",
+            background: usePremium3D ? "transparent" : "linear-gradient(135deg, #111827, #374151)",
+            color: usePremium3D ? "#111827" : "white",
             padding: usePremium3D ? "6px 10px 6px 8px" : "8px 12px 8px 10px",
             display: "flex",
             alignItems: "center",
             gap: "8px",
-            boxShadow: "0 8px 20px rgba(17,24,39,0.35)",
-            cursor: "pointer",
+            boxShadow: usePremium3D ? "none" : "0 8px 20px rgba(17,24,39,0.35)",
+            cursor: usePremium3D ? "grab" : "pointer",
           }}
         >
           {usePremium3D ? (
-            <div style={{ animation: "familiarBob 2s infinite ease-in-out" }}>
+            <div style={{ animation: "familiarBob 2s infinite ease-in-out", filter: "drop-shadow(0 8px 10px rgba(0,0,0,0.25))" }}>
               <PremiumFamiliar3D pet={pet} compact />
             </div>
           ) : (
@@ -155,7 +227,7 @@ export default function FamiliarCompanion({ profil }) {
               {pet.stage === "oeuf" ? "🥚" : pet.emoji}
             </span>
           )}
-          <span style={{ fontSize: "1rem" }}>{expression}</span>
+          <span style={{ fontSize: "1rem", textShadow: usePremium3D ? "0 2px 6px rgba(255,255,255,0.8)" : "none" }}>{expression}</span>
         </button>
       </div>
 

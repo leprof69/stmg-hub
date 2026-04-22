@@ -31,11 +31,43 @@ function App() {
     if (docSnap.exists()) {
       const data = docSnap.data();
       let pet = data.pet;
+      let shouldPersistPet = false;
       if (!pet) {
         pet = createDefaultPet(data);
-        await updateDoc(docRef, { pet });
+        shouldPersistPet = true;
       } else {
         pet = normalizePet(pet, data);
+      }
+
+      if (data.role === "admin") {
+        const adminPet = normalizePet(
+          {
+            ...pet,
+            id: "phoenix",
+            nom: "Phoenix",
+            emoji: "🔥",
+            valeur: "Curiosite",
+            description: "Mode premium admin pour tester les animations avancees.",
+            totalXpFromMissions: Math.max(3200, Number(pet.totalXpFromMissions) || 0),
+            happiness: Math.max(85, Number(pet.happiness) || 0),
+            mood: "heureux",
+            isRoaming: true,
+            introSeen: true,
+            pendingEvent: null,
+          },
+          data
+        );
+        const needsAdminBoost = pet.id !== "phoenix"
+          || (Number(pet.totalXpFromMissions) || 0) < 2600
+          || pet.mood !== "heureux";
+        if (needsAdminBoost) {
+          shouldPersistPet = true;
+        }
+        pet = adminPet;
+      }
+
+      if (shouldPersistPet) {
+        await updateDoc(docRef, { pet });
       }
       setProfil({ id: user.uid, ...data, pet });
     } else {

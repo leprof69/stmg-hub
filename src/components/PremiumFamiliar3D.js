@@ -19,6 +19,10 @@ function PhoenixKawaii({ mood = "neutre", stage = "bebe", roaming = false }) {
   const rightWing = useRef(null);
   const eyeLeft = useRef(null);
   const eyeRight = useRef(null);
+  const browLeft = useRef(null);
+  const browRight = useRef(null);
+  const mouth = useRef(null);
+  const lookTarget = useRef({ x: 0, y: 0 });
 
   const scalesByStage = useMemo(
     () => ({
@@ -30,9 +34,11 @@ function PhoenixKawaii({ mood = "neutre", stage = "bebe", roaming = false }) {
     []
   );
 
-  useFrame(({ clock }) => {
+  useFrame(({ clock, pointer }) => {
     const t = clock.getElapsedTime();
     const stageScale = scalesByStage[stage] || 1;
+    lookTarget.current.x = pointer.x || 0;
+    lookTarget.current.y = pointer.y || 0;
 
     if (!root.current) return;
     if (stage === "oeuf") {
@@ -51,8 +57,10 @@ function PhoenixKawaii({ mood = "neutre", stage = "bebe", roaming = false }) {
 
     if (head.current) {
       const headSwing = Math.sin(t * 1.35) * 0.35;
-      head.current.rotation.y = mood === "triste" ? headSwing * 0.45 : headSwing;
-      head.current.rotation.x = mood === "triste" ? 0.22 : mood === "colere" ? -0.1 : 0.03;
+      const lookX = lookTarget.current.x * 0.35;
+      const lookY = lookTarget.current.y * 0.2;
+      head.current.rotation.y = (mood === "triste" ? headSwing * 0.45 : headSwing * 0.7) + lookX;
+      head.current.rotation.x = (mood === "triste" ? 0.22 : mood === "colere" ? -0.1 : 0.03) - lookY;
     }
 
     if (leftWing.current && rightWing.current) {
@@ -66,6 +74,31 @@ function PhoenixKawaii({ mood = "neutre", stage = "bebe", roaming = false }) {
       const blink = Math.abs(Math.sin(t * 2.7)) < 0.06 ? 0.12 : 1;
       eyeLeft.current.scale.y = blink;
       eyeRight.current.scale.y = blink;
+    }
+
+    if (browLeft.current && browRight.current) {
+      if (mood === "colere") {
+        browLeft.current.rotation.z = -0.5;
+        browRight.current.rotation.z = 0.5;
+      } else if (mood === "triste") {
+        browLeft.current.rotation.z = 0.22;
+        browRight.current.rotation.z = -0.22;
+      } else {
+        browLeft.current.rotation.z = -0.1 + Math.sin(t * 1.8) * 0.04;
+        browRight.current.rotation.z = 0.1 - Math.sin(t * 1.8) * 0.04;
+      }
+    }
+
+    if (mouth.current) {
+      if (mood === "heureux") {
+        mouth.current.scale.set(1.25, 1.2, 1);
+      } else if (mood === "triste") {
+        mouth.current.scale.set(1, 0.7, 1);
+      } else if (mood === "colere") {
+        mouth.current.scale.set(0.8, 1.4, 1);
+      } else {
+        mouth.current.scale.set(1, 1, 1);
+      }
     }
   });
 
@@ -131,6 +164,18 @@ function PhoenixKawaii({ mood = "neutre", stage = "bebe", roaming = false }) {
           <sphereGeometry args={[0.05, 12, 12]} />
           <meshStandardMaterial color={eyeColor} />
         </mesh>
+        <mesh ref={browLeft} position={[-0.14, 0.16, 0.33]}>
+          <boxGeometry args={[0.11, 0.02, 0.02]} />
+          <meshStandardMaterial color={COLORS.eye} />
+        </mesh>
+        <mesh ref={browRight} position={[0.14, 0.16, 0.33]}>
+          <boxGeometry args={[0.11, 0.02, 0.02]} />
+          <meshStandardMaterial color={COLORS.eye} />
+        </mesh>
+        <mesh ref={mouth} position={[0, -0.11, 0.35]}>
+          <torusGeometry args={[0.06, 0.012, 8, 24, Math.PI]} />
+          <meshStandardMaterial color={mood === "colere" ? COLORS.angry : "#111827"} />
+        </mesh>
       </group>
 
       <mesh position={[0, -0.57, 0.07]} rotation={[Math.PI / 2, 0, 0]}>
@@ -150,16 +195,19 @@ export default function PremiumFamiliar3D({
   const cameraPos = compact ? [0, 0.65, 3.1] : [0, 0.8, 3.6];
 
   return (
-    <div style={{ width: `${width}px`, height: `${height}px`, borderRadius: compact ? "16px" : "18px", overflow: "hidden", background: "radial-gradient(circle at 35% 20%, #FEF3C7, #FDBA74 65%, #FB923C)", pointerEvents: "none" }}>
-      <Canvas shadows camera={{ position: cameraPos, fov: 42 }}>
+    <div style={{ width: `${width}px`, height: `${height}px`, borderRadius: compact ? "16px" : "18px", overflow: "hidden", background: "transparent", pointerEvents: "auto" }}>
+      <Canvas
+        shadows
+        camera={{ position: cameraPos, fov: 42 }}
+        gl={{ alpha: true, antialias: true }}
+        onCreated={({ gl }) => {
+          gl.setClearColor(0x000000, 0);
+        }}
+      >
         <ambientLight intensity={0.75} />
         <directionalLight intensity={1.15} position={[3, 4, 2]} castShadow />
         <pointLight intensity={0.45} position={[-2, 1.5, 3]} />
         <PhoenixKawaii mood={pet?.mood} stage={pet?.stage} roaming={Boolean(pet?.isRoaming)} />
-        <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.05, 0]} receiveShadow>
-          <circleGeometry args={[2.3, 32]} />
-          <meshStandardMaterial color="#FEF3C7" roughness={0.8} />
-        </mesh>
       </Canvas>
     </div>
   );
