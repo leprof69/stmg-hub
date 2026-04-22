@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { auth, db } from "../firebase";
 import { doc, setDoc } from "firebase/firestore";
+import { createDefaultPet } from "../utils/familiar";
 
 const CGU_TEXTE = `CONDITIONS GÉNÉRALES D'UTILISATION — STMG HUB
 Dernière mise à jour : avril 2025
@@ -367,6 +368,7 @@ export default function Onboarding({ onTermine }) {
       missionsCompletes: [],
       connexions_consecutives: 1,
       evenements: [],
+      pet: createDefaultPet({ famille }),
       createdAt: new Date(),
     });
     setChargement(false);

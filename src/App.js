@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { auth, db } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import Login from "./pages/Login";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
@@ -13,6 +13,8 @@ import Accueil from "./pages/Accueil";
 import Missions from "./pages/Missions";
 import Classement from "./pages/Classement";
 import Cartes from "./pages/Cartes";
+import FamiliarCompanion from "./components/FamiliarCompanion";
+import { createDefaultPet, normalizePet } from "./utils/familiar";
 
 function App() {
   const [utilisateur, setUtilisateur] = useState(null);
@@ -27,7 +29,15 @@ function App() {
     const docRef = doc(db, "users", user.uid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      setProfil({ id: user.uid, ...docSnap.data() });
+      const data = docSnap.data();
+      let pet = data.pet;
+      if (!pet) {
+        pet = createDefaultPet(data);
+        await updateDoc(docRef, { pet });
+      } else {
+        pet = normalizePet(pet, data);
+      }
+      setProfil({ id: user.uid, ...data, pet });
     } else {
       setProfil(null);
     }
@@ -89,6 +99,7 @@ function App() {
           onInscription={() => setAfficherAccueil(false)}
           estConnecte={true}
         />
+        <FamiliarCompanion profil={profil} />
       </>
     );
   }
@@ -152,6 +163,7 @@ function App() {
         />
       )}
       {page === "admin" && <Admin />}
+      <FamiliarCompanion profil={profil} />
     </div>
   );
 }

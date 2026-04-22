@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { auth, db } from "../firebase";
 import { doc, updateDoc, getDoc, collection, getDocs } from "firebase/firestore";
+import { computePetAfterMission, getPetXpMultiplier, normalizePet } from "../utils/familiar";
 
 const COLORS = {
   S: "#3B82F6", T: "#7C3AED", M: "#F97316",
@@ -503,13 +504,14 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
   const [correction, setCorrection] = useState(null);
   const [chargement, setChargement] = useState(false);
   const [dejaFaite] = useState(missionDejaFaite(profil, mission.id));
+  const longueurReponse = reponse.trim().length;
   const difficulte = Math.max(1, Math.min(5, Number(mission.difficulte) || 1));
   const niveau = (mission.niveau || "premiere").toLowerCase();
   const couleur = difficulte >= 4 ? COLORS.H : difficulte >= 3 ? COLORS.U : COLORS.S;
   const niveauLabel = niveau === "terminale" ? "📘 Terminale" : "📗 Première";
 
   const soumettre = async () => {
-    if (!reponse.trim() || reponse.length < 20) return;
+    if (!reponse.trim() || longueurReponse < 20) return;
     setChargement(true);
     try {
       const result = await corrigerAvecGroq(mission, reponse);
@@ -524,11 +526,16 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
         }
         : result;
       const user = auth.currentUser;
+      if (!user) throw new Error("Utilisateur non connecté.");
       const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (!userDoc.exists()) throw new Error("Profil utilisateur introuvable.");
       const userData = userDoc.data();
+      const petActuel = normalizePet(userData.pet, userData);
       const xpBase = getMissionXPBase(mission);
       const xpMissionBoostee = Math.round(xpBase * MISSION_XP_MULTIPLIER);
-      const xpGagne = (dejaFaite || resultFinal.triche_detectee) ? 0 : Math.round((resultFinal.score / 10) * xpMissionBoostee);
+      const multiplicateurPet = getPetXpMultiplier(petActuel);
+      const xpBrut = (dejaFaite || resultFinal.triche_detectee) ? 0 : Math.round((resultFinal.score / 10) * xpMissionBoostee);
+      const xpGagne = xpBrut <= 0 ? 0 : Math.max(0, Math.round(xpBrut * multiplicateurPet));
       const newXP = (userData.xp || 0) + xpGagne;
       const historique = userData.missionsHistorique || {};
       historique[mission.id] = {
@@ -536,14 +543,18 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
         score: resultFinal.score,
         xpGagne,
       };
-      await updateDoc(doc(db, "users", user.uid), { xp: newXP, missionsHistorique: historique });
-      setCorrection({ ...resultFinal, xpGagne });
+      const petMisAJour = computePetAfterMission(petActuel, xpGagne);
+      await updateDoc(doc(db, "users", user.uid), { xp: newXP, missionsHistorique: historique, pet: petMisAJour });
+      const bonusPct = Math.round((multiplicateurPet - 1) * 100);
+      const xpDetail = bonusPct === 0 ? "Modificateur familier: 0%" : `Modificateur familier: ${bonusPct > 0 ? "+" : ""}${bonusPct}%`;
+      setCorrection({ ...resultFinal, xpGagne, xpDetail });
       onMissionComplete(xpGagne);
     } catch (err) {
       console.error(err);
       setCorrection({ score: 0, feedback: "Erreur de connexion à l'IA. Réessaie !", points_forts: "", a_ameliorer: "", triche_detectee: false, xpGagne: 0 });
+    } finally {
+      setChargement(false);
     }
-    setChargement(false);
   };
 
   return (
@@ -613,14 +624,14 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
           <p style={{ color: "#9CA3AF", fontSize: "0.8rem", marginTop: "8px" }}>
             ⚠️ Réponds avec tes propres mots — l'IA détecte les réponses copiées !
           </p>
-          <button onClick={soumettre} disabled={chargement || reponse.length < 20}
+          <button onClick={soumettre} disabled={chargement || longueurReponse < 20}
             style={{
               marginTop: "12px", width: "100%",
-              background: reponse.length >= 20 ? couleur : "#E5E7EB",
-              color: reponse.length >= 20 ? "white" : "#9CA3AF",
+              background: longueurReponse >= 20 ? couleur : "#E5E7EB",
+              color: longueurReponse >= 20 ? "white" : "#9CA3AF",
               border: "none", fontFamily: "'Fredoka One', cursive",
               fontSize: "1.1rem", padding: "14px",
-              borderRadius: "16px", cursor: reponse.length >= 20 ? "pointer" : "not-allowed",
+              borderRadius: "16px", cursor: longueurReponse >= 20 ? "pointer" : "not-allowed",
               transition: "all 0.2s",
             }}>
             {chargement ? "⏳ L'IA corrige ta réponse..." : "🚀 Soumettre ma réponse"}
@@ -667,6 +678,9 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
                 <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.U, fontSize: "1.3rem" }}>
                   🌟 +{correction.xpGagne} XP gagnés !
                 </p>
+                <p style={{ color: "#6B7280", fontSize: "0.78rem", marginTop: "6px" }}>
+                  🐾 {correction.xpDetail || "Modificateur familier: 0%"}
+                </p>
                 <p style={{ color: "#9CA3AF", fontSize: "0.75rem", marginTop: "6px" }}>
                   Moteur de correction : {MISSION_ENGINE_VERSION}
                 </p>
@@ -681,7 +695,10 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
 
 // ===== COMPOSANT PRINCIPAL =====
 export default function Missions({ profil, onXPGagne }) {
-  const niveauxAccessibles = profil?.classe === "terminale" ? ["premiere", "terminale"] : ["premiere"];
+  const niveauxAccessibles = useMemo(
+    () => (profil?.classe === "terminale" ? ["premiere", "terminale"] : ["premiere"]),
+    [profil?.classe]
+  );
   const [niveauSelectionne, setNiveauSelectionne] = useState(profil?.classe === "terminale" ? "terminale" : "premiere");
   const [matiereSelectionnee, setMatiereSelectionnee] = useState("");
   const [themeSelectionne, setThemeSelectionne] = useState("");
@@ -696,14 +713,23 @@ export default function Missions({ profil, onXPGagne }) {
     link.rel = "stylesheet";
     document.head.appendChild(link);
     chargerMissions();
+    return () => {
+      if (document.head.contains(link)) document.head.removeChild(link);
+    };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const niveauParDefaut = profil?.classe === "terminale" ? "terminale" : "premiere";
+    if (!niveauxAccessibles.includes(niveauSelectionne)) {
+      setNiveauSelectionne(niveauParDefaut);
+    }
+  }, [profil?.classe, niveauxAccessibles, niveauSelectionne]);
 
   const chargerMissions = async () => {
     try {
       const snapshot = await getDocs(collection(db, "missions"));
       const toutes = snapshot.docs
         .map(d => ({ id: d.id, ...d.data() }))
-        .filter(m => niveauxAccessibles.includes(String(m.niveau || "").toLowerCase()))
         .sort((a, b) => {
           const diffA = Number(a.difficulte) || 1;
           const diffB = Number(b.difficulte) || 1;
@@ -758,6 +784,7 @@ export default function Missions({ profil, onXPGagne }) {
   }, [niveauSelectionne, matiereSelectionnee, missions, themesDisponibles, themeSelectionne]);
 
   const missionsFiltrees = missions.filter(m =>
+    niveauxAccessibles.includes((m.niveau || "premiere").toLowerCase()) &&
     (m.niveau || "premiere").toLowerCase() === niveauSelectionne &&
     (!matiereSelectionnee || m.matiere === matiereSelectionnee) &&
     (!themeSelectionne || m.theme === themeSelectionne)
