@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { getPetMoodLabel, normalizePet } from "../utils/familiar";
+import PremiumFamiliar3D from "./PremiumFamiliar3D";
 
 const MOOD_EMOJI = {
   heureux: "😊",
@@ -30,6 +31,7 @@ export default function FamiliarCompanion({ profil }) {
   const [velocity, setVelocity] = useState({ vx: 1, vy: 1 });
   const [expression, setExpression] = useState("😌");
   const pet = useMemo(() => normalizePet(profil?.pet, profil), [profil]);
+  const usePremium3D = pet.id === "phoenix";
 
   useEffect(() => {
     setExpression(MOOD_EMOJI[pet.mood] || "😌");
@@ -136,7 +138,7 @@ export default function FamiliarCompanion({ profil }) {
             borderRadius: "20px",
             background: "linear-gradient(135deg, #111827, #374151)",
             color: "white",
-            padding: "8px 12px 8px 10px",
+            padding: usePremium3D ? "6px 10px 6px 8px" : "8px 12px 8px 10px",
             display: "flex",
             alignItems: "center",
             gap: "8px",
@@ -144,9 +146,15 @@ export default function FamiliarCompanion({ profil }) {
             cursor: "pointer",
           }}
         >
-          <span style={{ fontSize: "2rem", animation: "familiarBob 2s infinite ease-in-out" }}>
-            {pet.stage === "oeuf" ? "🥚" : pet.emoji}
-          </span>
+          {usePremium3D ? (
+            <div style={{ animation: "familiarBob 2s infinite ease-in-out" }}>
+              <PremiumFamiliar3D pet={pet} compact />
+            </div>
+          ) : (
+            <span style={{ fontSize: "2rem", animation: "familiarBob 2s infinite ease-in-out" }}>
+              {pet.stage === "oeuf" ? "🥚" : pet.emoji}
+            </span>
+          )}
           <span style={{ fontSize: "1rem" }}>{expression}</span>
         </button>
       </div>
@@ -161,6 +169,11 @@ export default function FamiliarCompanion({ profil }) {
             <button onClick={() => setNurseryOpen(false)} style={{ border: "none", background: "transparent", color: "white", fontSize: "1.2rem", cursor: "pointer" }}>×</button>
           </div>
           <div style={{ padding: "14px 16px", display: "grid", gap: "10px" }}>
+            {usePremium3D && (
+              <div style={{ background: "#F9FAFB", borderRadius: "12px", padding: "10px", border: "1px solid #E5E7EB", display: "flex", justifyContent: "center" }}>
+                <PremiumFamiliar3D pet={pet} />
+              </div>
+            )}
             <div style={{ background: "#F9FAFB", borderRadius: "12px", padding: "10px 12px", border: "1px solid #E5E7EB" }}>
               <p style={{ margin: "0 0 3px", color: "#6B7280", fontSize: "0.75rem" }}>Stade</p>
               <p style={{ margin: 0, fontWeight: 800, color: "#111827" }}>{STAGE_LABEL[pet.stage]} · {getPetMoodLabel(pet.mood)}</p>
