@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { auth, db } from "../firebase";
 import { doc, updateDoc, getDoc, collection, getDocs } from "firebase/firestore";
-import { computePetAfterMission, getPetXpMultiplier, normalizePet } from "../utils/familiar";
 
 const COLORS = {
   S: "#3B82F6", T: "#7C3AED", M: "#F97316",
@@ -530,12 +529,10 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (!userDoc.exists()) throw new Error("Profil utilisateur introuvable.");
       const userData = userDoc.data();
-      const petActuel = normalizePet(userData.pet, userData);
       const xpBase = getMissionXPBase(mission);
       const xpMissionBoostee = Math.round(xpBase * MISSION_XP_MULTIPLIER);
-      const multiplicateurPet = getPetXpMultiplier(petActuel);
       const xpBrut = (dejaFaite || resultFinal.triche_detectee) ? 0 : Math.round((resultFinal.score / 10) * xpMissionBoostee);
-      const xpGagne = xpBrut <= 0 ? 0 : Math.max(0, Math.round(xpBrut * multiplicateurPet));
+      const xpGagne = Math.max(0, xpBrut);
       const newXP = (userData.xp || 0) + xpGagne;
       const historique = userData.missionsHistorique || {};
       historique[mission.id] = {
@@ -543,10 +540,8 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
         score: resultFinal.score,
         xpGagne,
       };
-      const petMisAJour = computePetAfterMission(petActuel, xpGagne);
-      await updateDoc(doc(db, "users", user.uid), { xp: newXP, missionsHistorique: historique, pet: petMisAJour });
-      const bonusPct = Math.round((multiplicateurPet - 1) * 100);
-      const xpDetail = bonusPct === 0 ? "Modificateur familier: 0%" : `Modificateur familier: ${bonusPct > 0 ? "+" : ""}${bonusPct}%`;
+      await updateDoc(doc(db, "users", user.uid), { xp: newXP, missionsHistorique: historique });
+      const xpDetail = "Modificateur familier: desactive";
       setCorrection({ ...resultFinal, xpGagne, xpDetail });
       onMissionComplete(xpGagne);
     } catch (err) {

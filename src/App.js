@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { auth, db } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import Login from "./pages/Login";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
@@ -13,8 +13,6 @@ import Accueil from "./pages/Accueil";
 import Missions from "./pages/Missions";
 import Classement from "./pages/Classement";
 import Cartes from "./pages/Cartes";
-import FamiliarCompanion from "./components/FamiliarCompanion";
-import { createDefaultPet, normalizePet } from "./utils/familiar";
 
 function App() {
   const [utilisateur, setUtilisateur] = useState(null);
@@ -30,46 +28,7 @@ function App() {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
-      let pet = data.pet;
-      let shouldPersistPet = false;
-      if (!pet) {
-        pet = createDefaultPet(data);
-        shouldPersistPet = true;
-      } else {
-        pet = normalizePet(pet, data);
-      }
-
-      if (data.role === "admin") {
-        const adminPet = normalizePet(
-          {
-            ...pet,
-            id: "phoenix",
-            nom: "Phoenix",
-            emoji: "🔥",
-            valeur: "Curiosite",
-            description: "Mode premium admin pour tester les animations avancees.",
-            totalXpFromMissions: Math.max(3200, Number(pet.totalXpFromMissions) || 0),
-            happiness: Math.max(85, Number(pet.happiness) || 0),
-            mood: "heureux",
-            isRoaming: true,
-            introSeen: true,
-            pendingEvent: null,
-          },
-          data
-        );
-        const needsAdminBoost = pet.id !== "phoenix"
-          || (Number(pet.totalXpFromMissions) || 0) < 2600
-          || pet.mood !== "heureux";
-        if (needsAdminBoost) {
-          shouldPersistPet = true;
-        }
-        pet = adminPet;
-      }
-
-      if (shouldPersistPet) {
-        await updateDoc(docRef, { pet });
-      }
-      setProfil({ id: user.uid, ...data, pet });
+      setProfil({ id: user.uid, ...data });
     } else {
       setProfil(null);
     }
@@ -131,7 +90,6 @@ function App() {
           onInscription={() => setAfficherAccueil(false)}
           estConnecte={true}
         />
-        <FamiliarCompanion profil={profil} />
       </>
     );
   }
@@ -195,7 +153,6 @@ function App() {
         />
       )}
       {page === "admin" && <Admin />}
-      <FamiliarCompanion profil={profil} />
     </div>
   );
 }
