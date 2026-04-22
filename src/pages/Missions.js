@@ -6,7 +6,7 @@ const COLORS = {
   S: "#3B82F6", T: "#7C3AED", M: "#F97316",
   G: "#10B981", H: "#EF4444", U: "#F59E0B", B: "#06B6D4",
 };
-const MISSION_ENGINE_VERSION = "strict-v5-2026-04-21";
+const MISSION_ENGINE_VERSION = "strict-v7-2026-04-22";
 const MISSION_XP_MULTIPLIER = 1.35;
 const MISSION_XP_MIN = { quotidienne: 200, hebdomadaire: 300, mensuelle: 500 };
 
@@ -174,7 +174,82 @@ const calculerScoreLocal = (mission, reponseEleve) => {
   };
 };
 
+const normaliserTexteCourt = (texte = "", max = 180) => {
+  const brut = String(texte || "").replace(/\s+/g, " ").trim();
+  if (brut.length <= max) return brut;
+  return `${brut.slice(0, max - 1)}…`;
+};
+
+const construireFallbackLocal = (mission, reponseEleve, raison = "") => {
+  const local = calculerScoreLocal(mission, reponseEleve);
+  return {
+    ...local,
+    feedback: raison
+      ? `Mode secours activé (${raison}) : ${local.feedback}`
+      : `Mode secours activé : ${local.feedback}`,
+    points_forts: local.points_forts || "Tu as soumis une réponse exploitable.",
+    a_ameliorer: local.a_ameliorer || "Rends ta réponse plus précise sur les notions attendues.",
+  };
+};
+
+const extraireCorrectionJson = (content = "") => {
+  if (!content) return null;
+  const contenuSansFence = String(content).replace(/```json|```/gi, "").trim();
+  const debut = contenuSansFence.indexOf("{");
+  const fin = contenuSansFence.lastIndexOf("}");
+  if (debut === -1 || fin === -1 || fin <= debut) return null;
+  try {
+    return JSON.parse(contenuSansFence.slice(debut, fin + 1));
+  } catch {
+    return null;
+  }
+};
+
 const pause = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+const appelerGeminiAvecRetry = async (apiKey, prompt) => {
+  const essaisMax = 3;
+  for (let tentative = 1; tentative <= essaisMax; tentative++) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 22000);
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.1,
+            maxOutputTokens: 650,
+            responseMimeType: "application/json",
+          },
+        }),
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+
+      const data = await response.json();
+      if (!response.ok) {
+        const estRetriable = response.status === 429 || response.status >= 500;
+        const erreurApi = data?.error?.message || "Erreur API Gemini.";
+        if (estRetriable && tentative < essaisMax) {
+          await pause(500 * tentative);
+          continue;
+        }
+        throw new Error(erreurApi);
+      }
+      return data;
+    } catch (err) {
+      const estDernierEssai = tentative >= essaisMax;
+      if (!estDernierEssai) {
+        await pause(500 * tentative);
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw new Error("Impossible de joindre Gemini après plusieurs essais.");
+};
 
 const appelerGroqAvecRetry = async (apiKey, prompt) => {
   const essaisMax = 3;
@@ -219,6 +294,43 @@ const appelerGroqAvecRetry = async (apiKey, prompt) => {
     }
   }
   throw new Error("Impossible de joindre Groq après plusieurs essais.");
+};
+
+const extraireTexteGemini = (data) => {
+  const parts = data?.candidates?.[0]?.content?.parts;
+  if (!Array.isArray(parts)) return "";
+  return parts.map((p) => (typeof p?.text === "string" ? p.text : "")).join("\n").trim();
+};
+
+const reparerJsonCorrection = async ({ geminiKey, groqKey, contenuBrut }) => {
+  const prompt = `Tu transformes une correction brute en JSON strict.
+Tu dois retourner UNIQUEMENT un objet JSON valide avec ces clés exactes :
+{"score": number, "feedback": string, "points_forts": string, "a_ameliorer": string, "triche_detectee": boolean, "hors_sujet": boolean, "preuves_eleve": string[], "preuves_correction": string[]}
+
+Règles :
+- score entre 0 et 10 (entier)
+- si un champ manque, complète avec une valeur prudente et utile
+- ne mets aucun texte hors JSON
+
+Correction brute à convertir :
+${normaliserTexteCourt(contenuBrut, 3500)}`;
+
+  if (geminiKey) {
+    try {
+      const dataGemini = await appelerGeminiAvecRetry(geminiKey, prompt);
+      const jsonGemini = extraireCorrectionJson(extraireTexteGemini(dataGemini));
+      if (jsonGemini) return jsonGemini;
+    } catch {
+      // ignore and fallback to groq if available
+    }
+  }
+
+  if (groqKey) {
+    const dataGroq = await appelerGroqAvecRetry(groqKey, prompt);
+    return extraireCorrectionJson(dataGroq?.choices?.[0]?.message?.content || "");
+  }
+
+  return null;
 };
 
 // ✅ CORRECTION BASÉE SUR LA CORRECTION DE RÉFÉRENCE DU PROF
@@ -274,47 +386,45 @@ Réponds UNIQUEMENT en JSON sans aucun texte avant ou après.
 Format JSON exact :
 {"score": number, "feedback": "Texte personnalisé", "points_forts": "Texte personnalisé", "a_ameliorer": "Texte personnalisé", "triche_detectee": boolean, "hors_sujet": boolean, "preuves_eleve": ["citation exacte élève"], "preuves_correction": ["citation exacte correction"]}`;
 
-  const apiKey = process.env.REACT_APP_GROQ_API_KEY;
-  if (!apiKey) {
-    throw new Error("Clé Groq manquante (REACT_APP_GROQ_API_KEY).");
+  const geminiKey = process.env.REACT_APP_GEMINI_API_KEY;
+  const groqKey = process.env.REACT_APP_GROQ_API_KEY;
+  if (!geminiKey && !groqKey) {
+    return construireFallbackLocal(mission, reponseEleve, "aucune clé IA configurée");
   }
 
-  let data = null;
-  try {
-    data = await appelerGroqAvecRetry(apiKey, prompt);
-  } catch {
-    return calculerScoreLocal(mission, reponseEleve);
+  let content = "";
+  if (geminiKey) {
+    try {
+      const geminiData = await appelerGeminiAvecRetry(geminiKey, prompt);
+      content = extraireTexteGemini(geminiData);
+    } catch {
+      content = "";
+    }
   }
 
-  const content = data?.choices?.[0]?.message?.content || "";
+  if (!content && groqKey) {
+    try {
+      const groqData = await appelerGroqAvecRetry(groqKey, prompt);
+      content = groqData?.choices?.[0]?.message?.content || "";
+    } catch {
+      content = "";
+    }
+  }
+
   if (!content) {
-    throw new Error("Réponse vide du modèle.");
+    return construireFallbackLocal(mission, reponseEleve, "IA indisponible");
   }
 
-  const contenuSansFence = content.replace(/```json|```/gi, "").trim();
-  const debut = contenuSansFence.indexOf("{");
-  const fin = contenuSansFence.lastIndexOf("}");
-  if (debut === -1 || fin === -1 || fin <= debut) {
-    return {
-      score: 1,
-      feedback: "Je ne peux pas corriger précisément pour l'instant : réponse IA invalide.",
-      points_forts: "Tu as essayé de répondre.",
-      a_ameliorer: "Réessaie dans quelques secondes.",
-      triche_detectee: false,
-    };
+  let correction = extraireCorrectionJson(content);
+  if (!correction) {
+    try {
+      correction = await reparerJsonCorrection({ geminiKey, groqKey, contenuBrut: content });
+    } catch {
+      correction = null;
+    }
   }
-
-  let correction = null;
-  try {
-    correction = JSON.parse(contenuSansFence.slice(debut, fin + 1));
-  } catch {
-    return {
-      score: 1,
-      feedback: "Je n'ai pas pu lire la correction IA (format invalide).",
-      points_forts: "Tu as répondu à la mission.",
-      a_ameliorer: "Réessaie pour obtenir une correction fiable.",
-      triche_detectee: false,
-    };
+  if (!correction) {
+    return construireFallbackLocal(mission, reponseEleve, "format IA invalide");
   }
 
   const scoreBrut = Number(correction?.score);
@@ -329,14 +439,15 @@ Format JSON exact :
     triche_detectee: Boolean(correction?.triche_detectee),
   };
 
+  const scoreLocalSecours = calculerScoreLocal(mission, reponseEleve);
   const champsGeneriques = contientTexteTemplate(resultat.feedback)
     || contientTexteTemplate(resultat.points_forts)
     || contientTexteTemplate(resultat.a_ameliorer);
   if (champsGeneriques) {
-    resultat.score = Math.min(resultat.score, 2);
-    resultat.feedback = "La correction IA reçue est trop générique pour être fiable.";
-    resultat.points_forts = "Tu as soumis ta réponse.";
-    resultat.a_ameliorer = "Réessaie avec une réponse structurée liée aux notions du chapitre.";
+    resultat.score = Math.min(resultat.score, scoreLocalSecours.score);
+    resultat.feedback = `Correction IA trop générique : ${scoreLocalSecours.feedback}`;
+    resultat.points_forts = scoreLocalSecours.points_forts;
+    resultat.a_ameliorer = scoreLocalSecours.a_ameliorer;
   }
 
   const preuvesEleveOk = preuvesValides(preuvesEleve, reponseEleve);
