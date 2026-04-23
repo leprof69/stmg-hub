@@ -92,7 +92,7 @@ const compterMotsClesTrouves = (mission, reponseEleve) => {
 
 const scoreMaxLocal = (mission, reponseEleve) => {
   const repTokens = new Set(extraireTokens(reponseEleve));
-  if (repTokens.size < 5) return 2;
+  if (repTokens.size < 5) return 3;
 
   const motsCles = Array.isArray(mission.mots_cles) ? mission.mots_cles.join(" ") : (mission.mots_cles || "");
   const referenceGlobale = `${mission.correction || ""} ${mission.question || ""} ${mission.contexte || ""} ${motsCles}`;
@@ -111,11 +111,50 @@ const scoreMaxLocal = (mission, reponseEleve) => {
 
   const motsClesTrouves = compterMotsClesTrouves(mission, reponseEleve);
 
-  if (communCorrection === 0 && communQuestion === 0 && motsClesTrouves === 0) return 2;
-  if (communCorrection <= 1 && motsClesTrouves === 0) return 4;
-  if (communCorrection <= 2 && motsClesTrouves <= 1) return 6;
-  if (communCorrection <= 4 && motsClesTrouves <= 1) return 8;
+  if (communCorrection === 0 && communQuestion === 0 && motsClesTrouves === 0) return 3;
+  if (communCorrection <= 1 && motsClesTrouves === 0) return 5;
+  if (communCorrection <= 2 && motsClesTrouves <= 1) return 7;
+  if (communCorrection <= 4 && motsClesTrouves <= 1) return 9;
   return 10;
+};
+
+const equilibrerScore = ({ scoreIA, scoreLocal, maxLocal }) => {
+  const ia = Number(scoreIA);
+  const local = Number(scoreLocal);
+  if (!Number.isFinite(ia) && !Number.isFinite(local)) return 2;
+  if (!Number.isFinite(ia)) return Math.max(2, Math.min(maxLocal, local));
+  if (!Number.isFinite(local)) return Math.max(2, Math.min(maxLocal, ia));
+
+  let score = Math.round((ia * 0.65) + (local * 0.35));
+  if (Math.abs(ia - local) >= 4) {
+    score = Math.round((ia + local) / 2);
+  }
+
+  return Math.max(2, Math.min(maxLocal, score));
+};
+
+const extraireElementsCorrection = (mission, limite = 3) => {
+  const texte = String(mission?.correction || "").replace(/\s+/g, " ").trim();
+  const elements = [];
+
+  if (Array.isArray(mission?.mots_cles) && mission.mots_cles.length) {
+    elements.push(`Notions a mobiliser : ${mission.mots_cles.slice(0, 5).join(", ")}.`);
+  } else if (typeof mission?.mots_cles === "string" && mission.mots_cles.trim()) {
+    elements.push(`Notions a mobiliser : ${mission.mots_cles.split(",").map(m => m.trim()).filter(Boolean).slice(0, 5).join(", ")}.`);
+  }
+
+  if (texte) {
+    const phrases = texte
+      .split(/(?<=[.!?])\s+/)
+      .map(p => p.trim())
+      .filter(p => p.length >= 40 && p.length <= 220);
+    for (const phrase of phrases) {
+      if (elements.length >= limite) break;
+      if (!elements.includes(phrase)) elements.push(phrase);
+    }
+  }
+
+  return elements.slice(0, limite);
 };
 
 const feedbackSembleHallucine = (feedback, reponseEleve) => {
@@ -476,7 +515,11 @@ Format JSON exact :
   }
 
   const maxLocal = scoreMaxLocal(mission, reponseEleve);
-  resultat.score = Math.min(resultat.score, maxLocal);
+  resultat.score = equilibrerScore({
+    scoreIA: resultat.score,
+    scoreLocal: scoreLocalSecours.score,
+    maxLocal,
+  });
 
   if (feedbackSembleHallucine(resultat.feedback, reponseEleve)) {
     resultat.score = Math.min(resultat.score, 2);
@@ -488,7 +531,7 @@ Format JSON exact :
   const { ratio, motsCommuns } = evaluerPertinenceLocale(mission, reponseEleve);
   const motsClesTrouves = compterMotsClesTrouves(mission, reponseEleve);
   if (ratio < 0.025 && motsCommuns < 1 && motsClesTrouves === 0) {
-    resultat.score = Math.min(resultat.score, 4);
+    resultat.score = Math.min(resultat.score, 5);
     resultat.feedback = "Ta réponse semble hors sujet par rapport à la correction de référence du professeur.";
     resultat.points_forts = "Tu as soumis une réponse.";
     resultat.a_ameliorer = "Reprends les notions et mots-clés attendus dans la mission.";
@@ -542,11 +585,12 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
       };
       await updateDoc(doc(db, "users", user.uid), { xp: newXP, missionsHistorique: historique });
       const xpDetail = "Modificateur familier: desactive";
-      setCorrection({ ...resultFinal, xpGagne, xpDetail });
+      const elementsCorrection = extraireElementsCorrection(mission);
+      setCorrection({ ...resultFinal, xpGagne, xpDetail, elementsCorrection });
       onMissionComplete(xpGagne);
     } catch (err) {
       console.error(err);
-      setCorrection({ score: 0, feedback: "Erreur de connexion à l'IA. Réessaie !", points_forts: "", a_ameliorer: "", triche_detectee: false, xpGagne: 0 });
+      setCorrection({ score: 0, feedback: "Erreur de connexion à l'IA. Réessaie !", points_forts: "", a_ameliorer: "", triche_detectee: false, xpGagne: 0, elementsCorrection: [] });
     } finally {
       setChargement(false);
     }
@@ -668,6 +712,18 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
                   <p style={{ fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "0.9rem", marginBottom: "4px" }}>💬 Feedback général</p>
                   <p style={{ color: "#374151", fontSize: "0.9rem", lineHeight: 1.6 }}>{correction.feedback}</p>
                 </div>
+                {Array.isArray(correction.elementsCorrection) && correction.elementsCorrection.length > 0 && (
+                  <div style={{ background: "#EFF6FF", borderRadius: "12px", padding: "14px", border: "1px solid #BFDBFE" }}>
+                    <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1D4ED8", fontSize: "0.9rem", marginBottom: "6px" }}>
+                      🔎 Éléments de correction (repères)
+                    </p>
+                    <ul style={{ margin: 0, paddingLeft: "18px", color: "#1F2937", fontSize: "0.88rem", lineHeight: 1.6 }}>
+                      {correction.elementsCorrection.map((element, index) => (
+                        <li key={`${index}-${element}`}>{element}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
               <div style={{ textAlign: "center", marginTop: "16px", padding: "16px", background: "white", borderRadius: "12px", border: "1px solid #E5E7EB" }}>
                 <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.U, fontSize: "1.3rem" }}>
