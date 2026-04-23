@@ -16,6 +16,19 @@ const COLORS = {
   muted: "#9CA3AF",
 };
 
+const SECTION_CARD = {
+  background: "linear-gradient(180deg, #111827 0%, #0B1220 100%)",
+  border: `1px solid ${COLORS.border}`,
+  borderRadius: 18,
+  boxShadow: "0 10px 26px rgba(2, 6, 23, 0.35)",
+};
+
+const TWO_COL_GRID = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+  gap: 14,
+};
+
 const METHODO_RULES = {
   faire: [
     "Analyser d'abord la consigne : verbe d'action (presenter, analyser, montrer, justifier).",
@@ -225,6 +238,93 @@ const DEFIS_FLASH = [
   },
 ];
 
+const ORGA_CRITERES = [
+  "Type d'organisation (entreprise privee, publique, OBNL...)",
+  "Taille justifiee (effectif ou CA, avec classification explicite)",
+  "Statut / forme juridique",
+  "Champ d'action (geographique + secteur / metier)",
+  "Ressources (humaines, materielle, immaterielle, financiere)",
+  "Finalite (economique, sociale, sociétale, service public...)",
+  "Objectifs quantifies et dates",
+];
+
+const DECISION_TRAINER = [
+  {
+    cas: "La direction decide de lancer une nouvelle gamme et d'entrer sur un nouveau marche europeen.",
+    correct: "strategique",
+    explication: "Long terme, risque eleve, impact global et engagement de ressources majeures.",
+  },
+  {
+    cas: "Le responsable RH planifie une campagne de recrutement sur 6 mois pour soutenir la croissance.",
+    correct: "tactique",
+    explication: "Moyen terme, allocation de ressources sur une fonction de l'entreprise.",
+  },
+  {
+    cas: "Le chef d'equipe reorganise le planning de la semaine pour absorber un pic de commandes.",
+    correct: "operationnelle",
+    explication: "Gestion courante, court terme, decision reversible et locale.",
+  },
+  {
+    cas: "Le comite executif valide le rachat d'un concurrent regional.",
+    correct: "strategique",
+    explication: "Decision de direction generale, irreversible, qui engage l'avenir global.",
+  },
+  {
+    cas: "Le service logistique choisit un nouveau logiciel interne pour reduire les retards de livraison.",
+    correct: "tactique",
+    explication: "Decision fonctionnelle de moyen terme qui optimise les ressources.",
+  },
+];
+
+const PLAN_8_SEMAINES = [
+  { semaine: "S1", focus: "Verbes directeurs et lecture des consignes", mission: "20 consignes classees + 1 mini quiz/jour." },
+  { semaine: "S2", focus: "Caracteriser une organisation", mission: "3 cas complets avec grille type bac." },
+  { semaine: "S3", focus: "Decisions, styles de direction, parties prenantes", mission: "2 etudes de cas + argumentation courte." },
+  { semaine: "S4", focus: "Diagnostic strategique interne/externe", mission: "2 SWOT + 1 justification de strategie." },
+  { semaine: "S5", focus: "Performance et indicateurs", mission: "Calculs + commentaires managériaux chronometrés." },
+  { semaine: "S6", focus: "Question longue 15 lignes", mission: "4 productions avec methode LEGO." },
+  { semaine: "S7", focus: "Sujet type bac en condition reelle", mission: "Simulation 4h + correction guidee." },
+  { semaine: "S8", focus: "Remediation ciblee et memorisation active", mission: "Reprise des erreurs + fiches ultra-courtes." },
+];
+
+const NOTIONS_FLASH = [
+  "Diagnostic interne = forces/faiblesses ; externe = opportunites/menaces.",
+  "Avantage concurrentiel : produit, marche ou technologie (toujours temporaire).",
+  "Style de direction (Likert) : autoritaire, paternaliste, consultatif, participatif.",
+  "Probleme de management : le nommer clairement puis expliquer ses consequences.",
+  "Performance globale : economique, sociale, environnementale, financiere.",
+];
+
+const AUTOEVAL_ITEMS = [
+  { id: "q1", section: "Prise en main du sujet", text: "Je lis d'abord la presentation de l'organisation et la question de management principale." },
+  { id: "q2", section: "Prise en main du sujet", text: "Je lis toutes les questions des 3 dossiers avant de commencer a rediger." },
+  { id: "q3", section: "Preparation dossier", text: "Avant les documents, j'entoure les verbes directeurs et je surligne les notions visees." },
+  { id: "q4", section: "Preparation dossier", text: "Avant les documents, je note au brouillon les mots-cles de cours utiles." },
+  { id: "q5", section: "Exploitation documents", text: "Je fais une lecture active (surlignage par question + annotations en marge)." },
+  { id: "q6", section: "Redaction", text: "Pour les verbes d'analyse, je reponds en AEI (Argument - Explication - Illustration)." },
+  { id: "q7", section: "Redaction", text: "Pour la question en 15 lignes, je fais au moins 3 arguments + intro + conclusion." },
+  { id: "q8", section: "Calculs", text: "Je pose formule + application numerique + resultat + interpretation." },
+  { id: "q9", section: "Presentation copie", text: "J'indique clairement dossier, numero de question, et j'aere ma copie." },
+  { id: "q10", section: "Presentation copie", text: "Je me relis a la fin (fautes, oublis, hors-sujet)." },
+];
+
+const PROTOCOLE_JOUR_J = [
+  { id: "step1", timing: "0-10 min", action: "Lire la situation globale + surligner la question de management centrale." },
+  { id: "step2", timing: "10-20 min", action: "Lire toutes les questions, entourer les verbes directeurs, repérer notions." },
+  { id: "step3", timing: "20-35 min", action: "Classer les documents par dossier et noter au brouillon les mots-cles de cours." },
+  { id: "step4", timing: "35-200 min", action: "Traiter les questions dans l'ordre avec AEI + preuve documentaire." },
+  { id: "step5", timing: "200-225 min", action: "Faire les calculs complets (formule, resultat, interpretation)." },
+  { id: "step6", timing: "225-240 min", action: "Relecture finale ciblee: verbes, notion, preuve, conclusion, orthographe." },
+];
+
+const EXAM_PHASES = [
+  { label: "Lecture globale", durationMin: 20, color: "#2563EB" },
+  { label: "Preparation brouillon", durationMin: 15, color: "#7C3AED" },
+  { label: "Traitement des dossiers", durationMin: 175, color: "#059669" },
+  { label: "Calculs + verification", durationMin: 25, color: "#D97706" },
+  { label: "Relecture finale", durationMin: 5, color: "#DC2626" },
+];
+
 const getTodayKey = () => {
   const now = new Date();
   return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
@@ -240,13 +340,164 @@ const getConseilIndexDuJour = (uid = "invite") => {
   return Math.abs(hash) % CONSEILS_DU_JOUR.length;
 };
 
-function ExerciseCard({ exercise, status, onClaimXP }) {
+const formatSeconds = (totalSec) => {
+  const safe = Math.max(0, Number(totalSec) || 0);
+  const h = Math.floor(safe / 3600);
+  const m = Math.floor((safe % 3600) / 60);
+  const s = safe % 60;
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+};
+
+const REFERENTIEL_METHODO = [
+  "Toujours repondre au verbe directeur demande.",
+  "S'appuyer sur les notions de cours et sur des preuves issues des documents.",
+  "Structurer la reponse clairement (idee, explication, illustration).",
+  "Pour les calculs: formule, application numerique, resultat, interpretation.",
+  "Conclure les questions longues avec une prise de position claire.",
+];
+
+const normalizeText = (text = "") => String(text)
+  .toLowerCase()
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .replace(/[^a-z0-9\s]/g, " ")
+  .replace(/\s+/g, " ")
+  .trim();
+
+const getTokens = (text = "") => normalizeText(text).split(" ").filter((t) => t.length >= 4);
+
+const buildExpectedTokenSet = (exercise) => {
+  const source = `${exercise.consigne || ""} ${exercise.attendus?.join(" ") || ""} ${exercise.correction || ""}`;
+  return new Set(getTokens(source));
+};
+
+const extractReferenceHints = (exercise, limit = 3) => {
+  const hints = [];
+  if (Array.isArray(exercise.attendus) && exercise.attendus.length) {
+    for (const attendu of exercise.attendus.slice(0, limit)) {
+      hints.push(attendu);
+    }
+  }
+  if (hints.length < limit && exercise.correction) {
+    const sentences = exercise.correction.split(/(?<=[.!?])\s+/).map((s) => s.trim()).filter(Boolean);
+    for (const sentence of sentences) {
+      if (hints.length >= limit) break;
+      if (!hints.includes(sentence)) hints.push(sentence);
+    }
+  }
+  return hints.slice(0, limit);
+};
+
+const evaluateLocally = (exercise, answer) => {
+  const trimmed = String(answer || "").trim();
+  if (!trimmed) {
+    return {
+      score: 0,
+      feedback: "Reponse vide: impossible a corriger.",
+      points_forts: "Aucun element exploitable pour l'instant.",
+      a_ameliorer: "Commence par une reponse courte mais structuree.",
+      elements_reperes: extractReferenceHints(exercise),
+      source: "local",
+    };
+  }
+
+  const minChars = Math.max(80, Number(exercise.minChars || 120));
+  const lengthRatio = Math.min(1, trimmed.length / minChars);
+  const expected = buildExpectedTokenSet(exercise);
+  const answerTokens = new Set(getTokens(trimmed));
+  let overlap = 0;
+  for (const token of answerTokens) {
+    if (expected.has(token)) overlap += 1;
+  }
+  const tokenRatio = expected.size ? overlap / Math.max(8, Math.min(30, expected.size)) : 0;
+
+  const hasStructure = /(\n|^-|•|1\.)/m.test(trimmed);
+  const hasJustification = /(par exemple|car |en effet|document|dossier|chiffre|%|€)/i.test(trimmed);
+  const hasConclusion = /(donc|en conclusion|on peut conclure|ainsi)/i.test(trimmed);
+
+  let score = 2
+    + (lengthRatio * 3.2)
+    + (Math.min(1, tokenRatio) * 3.5)
+    + (hasStructure ? 0.8 : 0)
+    + (hasJustification ? 0.8 : 0)
+    + (hasConclusion ? 0.7 : 0);
+
+  score = Math.max(0, Math.min(10, Math.round(score)));
+
+  return {
+    score,
+    feedback: "Evaluation locale basee sur structure, notions attendues et qualite argumentative.",
+    points_forts: hasJustification
+      ? "Tu mobilises deja des justifications, ce qui est central au bac."
+      : "Ta reponse est amorcee et exploitable.",
+    a_ameliorer: hasStructure
+      ? "Ajoute encore plus de precision documentaire et de vocabulaire de cours."
+      : "Structure davantage en blocs (idee, explication, illustration) pour gagner des points.",
+    elements_reperes: extractReferenceHints(exercise),
+    source: "local",
+  };
+};
+
+const parseCorrectionJson = (raw = "") => {
+  const clean = String(raw).replace(/```json|```/gi, "").trim();
+  const start = clean.indexOf("{");
+  const end = clean.lastIndexOf("}");
+  if (start === -1 || end === -1 || end <= start) return null;
+  try {
+    return JSON.parse(clean.slice(start, end + 1));
+  } catch {
+    return null;
+  }
+};
+
+const callGeminiCorrection = async (prompt) => {
+  const key = process.env.REACT_APP_GEMINI_API_KEY;
+  if (!key) return null;
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.1, maxOutputTokens: 700, responseMimeType: "application/json" },
+    }),
+  });
+  if (!response.ok) return null;
+  const data = await response.json();
+  const text = data?.candidates?.[0]?.content?.parts?.map((p) => p?.text || "").join("\n") || "";
+  return parseCorrectionJson(text);
+};
+
+const callGroqCorrection = async (prompt) => {
+  const key = process.env.REACT_APP_GROQ_API_KEY;
+  if (!key) return null;
+  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${key}`,
+    },
+    body: JSON.stringify({
+      model: "llama-3.3-70b-versatile",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.1,
+      max_tokens: 650,
+    }),
+  });
+  if (!response.ok) return null;
+  const data = await response.json();
+  return parseCorrectionJson(data?.choices?.[0]?.message?.content || "");
+};
+
+function ExerciseCard({ exercise, status, onClaimXP, onEvaluateResponse }) {
   const [draft, setDraft] = useState("");
   const [showCorrection, setShowCorrection] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isEvaluating, setIsEvaluating] = useState(false);
+  const [evaluation, setEvaluation] = useState(null);
   const responseLength = draft.trim().length;
   const alreadyClaimedToday = status?.lastClaimDate === getTodayKey();
   const canClaim = responseLength >= exercise.minChars && !alreadyClaimedToday && !loading;
+  const canEvaluate = responseLength >= Math.max(80, Math.floor(exercise.minChars * 0.6)) && !isEvaluating;
 
   const handleClaim = async () => {
     if (!canClaim) return;
@@ -255,6 +506,17 @@ function ExerciseCard({ exercise, status, onClaimXP }) {
       await onClaimXP(exercise.id, exercise.xp);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleEvaluate = async () => {
+    if (!canEvaluate) return;
+    setIsEvaluating(true);
+    try {
+      const result = await onEvaluateResponse(exercise, draft);
+      setEvaluation(result);
+    } finally {
+      setIsEvaluating(false);
     }
   };
 
@@ -348,6 +610,21 @@ function ExerciseCard({ exercise, status, onClaimXP }) {
 
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
         <button
+          onClick={handleEvaluate}
+          disabled={!canEvaluate}
+          style={{
+            border: "none",
+            borderRadius: 10,
+            padding: "10px 14px",
+            background: canEvaluate ? "#7C3AED" : "#374151",
+            color: canEvaluate ? "white" : "#9CA3AF",
+            fontWeight: 700,
+            cursor: canEvaluate ? "pointer" : "not-allowed",
+          }}
+        >
+          {isEvaluating ? "Correction en cours..." : "Corriger ma reponse (IA + bareme)"}
+        </button>
+        <button
           onClick={handleClaim}
           disabled={!canClaim}
           style={{
@@ -377,6 +654,38 @@ function ExerciseCard({ exercise, status, onClaimXP }) {
           {showCorrection ? "Masquer la correction guidee" : "Afficher la correction guidee"}
         </button>
       </div>
+      {evaluation && (
+        <div style={{ background: "#0B1E34", border: "1px solid #2563EB", borderRadius: 14, padding: 14 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+            <p style={{ margin: 0, color: "#93C5FD", fontWeight: 800 }}>Resultat correction</p>
+            <span style={{ background: evaluation.score >= 7 ? "#059669" : evaluation.score >= 5 ? "#D97706" : "#DC2626", color: "white", borderRadius: 999, padding: "5px 12px", fontWeight: 800 }}>
+              {evaluation.score}/10
+            </span>
+          </div>
+          <p style={{ margin: "8px 0 0", color: "#DBEAFE", lineHeight: 1.5 }}>
+            <strong>Feedback :</strong> {evaluation.feedback}
+          </p>
+          <p style={{ margin: "6px 0 0", color: "#86EFAC", lineHeight: 1.5 }}>
+            <strong>Points forts :</strong> {evaluation.points_forts}
+          </p>
+          <p style={{ margin: "6px 0 0", color: "#FDE68A", lineHeight: 1.5 }}>
+            <strong>A ameliorer :</strong> {evaluation.a_ameliorer}
+          </p>
+          {Array.isArray(evaluation.elements_reperes) && evaluation.elements_reperes.length > 0 && (
+            <div style={{ marginTop: 8 }}>
+              <p style={{ margin: "0 0 4px", color: "#BFDBFE", fontWeight: 700 }}>Elements attendus (partiels)</p>
+              <ul style={{ margin: 0, paddingLeft: 18, color: "#E5E7EB", lineHeight: 1.6 }}>
+                {evaluation.elements_reperes.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          <p style={{ margin: "8px 0 0", color: "#9CA3AF", fontSize: 12 }}>
+            Moteur: {evaluation.source === "ai" ? "IA + garde-fous locaux" : "Evaluation locale (mode secours)"}
+          </p>
+        </div>
+      )}
       {alreadyClaimedToday && (
         <p style={{ margin: 0, color: "#86EFAC", fontSize: 12 }}>
           Bonus de cet exercice deja recupere aujourd'hui. Tu peux continuer a t'entrainer.
@@ -411,6 +720,20 @@ export default function ObjectifBac({ profil, onXPGagne }) {
     notionsCours: false,
     miniConclusion: false,
   });
+  const [orgaChecklist, setOrgaChecklist] = useState(() =>
+    ORGA_CRITERES.reduce((acc, _, index) => ({ ...acc, [index]: false }), {})
+  );
+  const [decisionIndex, setDecisionIndex] = useState(0);
+  const [decisionChoice, setDecisionChoice] = useState(null);
+  const [decisionFeedback, setDecisionFeedback] = useState(null);
+  const [decisionScore, setDecisionScore] = useState({ ok: 0, total: 0 });
+  const [semainesValidees, setSemainesValidees] = useState({});
+  const [autoEvalAnswers, setAutoEvalAnswers] = useState({});
+  const [jourJState, setJourJState] = useState(() =>
+    PROTOCOLE_JOUR_J.reduce((acc, step) => ({ ...acc, [step.id]: false }), {})
+  );
+  const [modeExamRunning, setModeExamRunning] = useState(false);
+  const [examRemainingSec, setExamRemainingSec] = useState(4 * 60 * 60);
 
   const types = useMemo(() => ["Tous", ...new Set(EXERCISES.map((exercise) => exercise.type))], []);
   const filteredExercises = useMemo(
@@ -429,6 +752,12 @@ export default function ObjectifBac({ profil, onXPGagne }) {
         const progress = snap.data().objectifBacProgress || {};
         const claims = progress.claims || {};
         setClaimState(claims);
+        if (progress.autoEvalAnswers) setAutoEvalAnswers(progress.autoEvalAnswers);
+        if (progress.jourJState) setJourJState(progress.jourJState);
+        if (progress.semainesValidees) setSemainesValidees(progress.semainesValidees);
+        if (progress.check15Lignes) setCheck15Lignes(progress.check15Lignes);
+        if (progress.orgaChecklist) setOrgaChecklist(progress.orgaChecklist);
+        if (typeof progress.examRemainingSec === "number") setExamRemainingSec(progress.examRemainingSec);
       } catch (error) {
         console.error("Impossible de charger la progression Objectif Bac", error);
       }
@@ -442,6 +771,43 @@ export default function ObjectifBac({ profil, onXPGagne }) {
     setConseilDuJour(CONSEILS_DU_JOUR[index]);
     setCoffreOuvert(false);
   }, []);
+
+  useEffect(() => {
+    if (!modeExamRunning) return undefined;
+    const interval = setInterval(() => {
+      setExamRemainingSec((prev) => {
+        if (prev <= 1) {
+          setModeExamRunning(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [modeExamRunning]);
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (!user) return undefined;
+    const timeout = setTimeout(async () => {
+      try {
+        await updateDoc(doc(db, "users", user.uid), {
+          objectifBacProgress: {
+            claims: claimState,
+            autoEvalAnswers,
+            jourJState,
+            semainesValidees,
+            check15Lignes,
+            orgaChecklist,
+            examRemainingSec,
+          },
+        });
+      } catch (error) {
+        console.error("Sauvegarde progression Objectif Bac impossible", error);
+      }
+    }, 900);
+    return () => clearTimeout(timeout);
+  }, [claimState, autoEvalAnswers, jourJState, semainesValidees, check15Lignes, orgaChecklist, examRemainingSec]);
 
   const handleClaimXP = async (exerciseId, xpAmount) => {
     const user = auth.currentUser;
@@ -480,6 +846,54 @@ export default function ObjectifBac({ profil, onXPGagne }) {
     if (onXPGagne) onXPGagne();
   };
 
+  const handleEvaluateResponse = async (exercise, answer) => {
+    const local = evaluateLocally(exercise, answer);
+    const prompt = `Tu es correcteur bac STMG MSGN.
+Retourne UNIQUEMENT un JSON valide:
+{"score":number,"feedback":string,"points_forts":string,"a_ameliorer":string,"elements_reperes":string[]}
+
+Contexte de correction:
+- Exercice: ${exercise.title}
+- Consigne: ${exercise.consigne}
+- Attendus: ${exercise.attendus.join(" | ")}
+- Correction guidee de reference: ${exercise.correction}
+- Referentiel methodologique: ${REFERENTIEL_METHODO.join(" | ")}
+
+Reponse eleve:
+${answer}
+
+Contraintes:
+- score entier entre 0 et 10
+- elements_reperes: 2 ou 3 elements courts maximum
+- pas de texte hors JSON`;
+
+    let ai = null;
+    try {
+      ai = await callGeminiCorrection(prompt);
+      if (!ai) ai = await callGroqCorrection(prompt);
+    } catch {
+      ai = null;
+    }
+
+    if (!ai) return local;
+
+    const aiScore = Number(ai.score);
+    const score = Number.isFinite(aiScore)
+      ? Math.max(0, Math.min(10, Math.round((aiScore * 0.65) + (local.score * 0.35))))
+      : local.score;
+
+    return {
+      score,
+      feedback: String(ai.feedback || local.feedback),
+      points_forts: String(ai.points_forts || local.points_forts),
+      a_ameliorer: String(ai.a_ameliorer || local.a_ameliorer),
+      elements_reperes: Array.isArray(ai.elements_reperes) && ai.elements_reperes.length
+        ? ai.elements_reperes.slice(0, 3)
+        : local.elements_reperes,
+      source: "ai",
+    };
+  };
+
   const currentQuiz = VERBE_QUIZ[quizIndex];
 
   const validerQuiz = () => {
@@ -500,9 +914,100 @@ export default function ObjectifBac({ profil, onXPGagne }) {
     setDefiActuel(DEFIS_FLASH[index]);
   };
 
+  const currentDecision = DECISION_TRAINER[decisionIndex];
+  const orgaProgress = Object.values(orgaChecklist).filter(Boolean).length;
+  const orgaTotal = ORGA_CRITERES.length;
+  const jourJProgress = Object.values(jourJState).filter(Boolean).length;
+  const examElapsedSec = (4 * 60 * 60) - examRemainingSec;
+  const examPhaseIndex = useMemo(() => {
+    let cumulative = 0;
+    for (let i = 0; i < EXAM_PHASES.length; i++) {
+      cumulative += EXAM_PHASES[i].durationMin * 60;
+      if (examElapsedSec < cumulative) return i;
+    }
+    return EXAM_PHASES.length - 1;
+  }, [examElapsedSec]);
+  const examProgressPercent = Math.max(0, Math.min(100, Math.round((examElapsedSec / (4 * 60 * 60)) * 100)));
+
+  const autoEvalStats = useMemo(() => {
+    const base = { toujours: 0, pas_toujours: 0, jamais: 0 };
+    for (const id of Object.keys(autoEvalAnswers)) {
+      const value = autoEvalAnswers[id];
+      if (value && Object.hasOwn(base, value)) base[value] += 1;
+    }
+    return base;
+  }, [autoEvalAnswers]);
+  const autoEvalTotal = AUTOEVAL_ITEMS.length;
+  const autoEvalDone = Object.keys(autoEvalAnswers).length === autoEvalTotal;
+
+  const autoEvalDiagnostic = useMemo(() => {
+    if (!autoEvalDone) return null;
+    if (autoEvalStats.toujours >= autoEvalStats.pas_toujours && autoEvalStats.toujours >= autoEvalStats.jamais) {
+      return {
+        niveau: "BRAVO",
+        color: "#86EFAC",
+        text: "Methodologie globalement acquise. Continue a automatiser les etapes de brouillon + relecture.",
+      };
+    }
+    if (autoEvalStats.pas_toujours >= autoEvalStats.jamais) {
+      return {
+        niveau: "CA VA LE FAIRE",
+        color: "#FCD34D",
+        text: "Tu as les bases mais pas encore les automatismes. Fais 1 sujet complet chrono par semaine.",
+      };
+    }
+    return {
+      niveau: "PLAN DE SAUVETAGE",
+      color: "#FCA5A5",
+      text: "Tu dois ritualiser les etapes. Objectif: appliquer le protocole jour J sur chaque entrainement ecrit.",
+    };
+  }, [autoEvalDone, autoEvalStats]);
+
+  const recommandationsPrioritaires = useMemo(() => {
+    const tips = [];
+    const answers = autoEvalAnswers;
+    const get = (id) => answers[id];
+    if (get("q3") === "jamais" || get("q4") === "jamais") {
+      tips.push("Avant chaque dossier: entoure les verbes directeurs et note 4-5 notions de cours au brouillon.");
+    }
+    if (get("q6") !== "toujours") {
+      tips.push("Passe tes reponses d'analyse en mode AEI: Argument, Explication, Illustration.");
+    }
+    if (get("q8") !== "toujours") {
+      tips.push("Pour chaque calcul: formule, application numerique, resultat puis interpretation.");
+    }
+    if (get("q10") !== "toujours") {
+      tips.push("Garde 10 minutes obligatoires de relecture finale pour verifier verbes, notions et hors-sujet.");
+    }
+    if (!tips.length) {
+      tips.push("Tu es sur une bonne dynamique: fais 1 sujet complet chrono/semaine pour maintenir le niveau.");
+    }
+    return tips.slice(0, 4);
+  }, [autoEvalAnswers]);
+
+  const validerDecision = () => {
+    if (!decisionChoice) return;
+    const isGood = decisionChoice === currentDecision.correct;
+    setDecisionFeedback(isGood ? "Bonne qualification." : "Qualification a corriger.");
+    setDecisionScore((prev) => ({ ok: prev.ok + (isGood ? 1 : 0), total: prev.total + 1 }));
+  };
+
+  const prochainDecisionCas = () => {
+    setDecisionIndex((prev) => (prev + 1) % DECISION_TRAINER.length);
+    setDecisionChoice(null);
+    setDecisionFeedback(null);
+  };
+
   return (
-    <div style={{ minHeight: "100vh", background: COLORS.dark, color: "white", padding: "24px 16px" }}>
-      <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", flexDirection: "column", gap: 18 }}>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "radial-gradient(circle at top, #1E1B4B 0%, #0F172A 45%, #020617 100%)",
+        color: "white",
+        padding: "24px 16px 34px",
+      }}
+    >
+      <div style={{ maxWidth: 1120, margin: "0 auto", display: "flex", flexDirection: "column", gap: 20 }}>
         {banner && (
           <div
             style={{
@@ -512,6 +1017,7 @@ export default function ObjectifBac({ profil, onXPGagne }) {
               border: `1px solid ${banner.type === "success" ? "#16A34A" : "#DC2626"}`,
               color: "white",
               fontWeight: 700,
+              boxShadow: "0 8px 22px rgba(0,0,0,0.35)",
             }}
           >
             {banner.text}
@@ -521,8 +1027,9 @@ export default function ObjectifBac({ profil, onXPGagne }) {
           style={{
             borderRadius: 24,
             padding: "28px 24px",
-            background: "linear-gradient(135deg, #1E3A8A 0%, #312E81 55%, #581C87 100%)",
-            border: "1px solid #4338CA",
+            background: "linear-gradient(135deg, #1E3A8A 0%, #312E81 45%, #581C87 100%)",
+            border: "1px solid #6366F1",
+            boxShadow: "0 16px 34px rgba(49, 46, 129, 0.45)",
           }}
         >
           <h1 style={{ margin: "0 0 8px", fontSize: "2rem" }}>Objectif Bac - MSDGN (Methodologie)</h1>
@@ -540,7 +1047,64 @@ export default function ObjectifBac({ profil, onXPGagne }) {
           </div>
         </section>
 
-        <section style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 18, padding: 18 }}>
+        <section style={{ ...SECTION_CARD, padding: 18 }}>
+          <p style={{ margin: "0 0 10px", color: "#93C5FD", fontWeight: 800 }}>Mode Examen 4h (simulation reelle)</p>
+          <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+            <div>
+              <p style={{ margin: 0, color: "#BFDBFE", fontSize: 13, fontWeight: 700 }}>
+                Phase actuelle: {EXAM_PHASES[examPhaseIndex].label}
+              </p>
+              <p style={{ margin: "3px 0 0", color: "white", fontSize: 28, fontWeight: 800 }}>
+                {formatSeconds(examRemainingSec)}
+              </p>
+            </div>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <button
+                onClick={() => setModeExamRunning((v) => !v)}
+                style={{ border: "none", borderRadius: 10, padding: "9px 12px", background: modeExamRunning ? "#DC2626" : "#2563EB", color: "white", fontWeight: 700, cursor: "pointer" }}
+              >
+                {modeExamRunning ? "Pause" : "Demarrer"}
+              </button>
+              <button
+                onClick={() => {
+                  setModeExamRunning(false);
+                  setExamRemainingSec(4 * 60 * 60);
+                }}
+                style={{ border: "none", borderRadius: 10, padding: "9px 12px", background: "#374151", color: "white", fontWeight: 700, cursor: "pointer" }}
+              >
+                Reinitialiser
+              </button>
+            </div>
+          </div>
+          <div style={{ marginTop: 10, height: 10, borderRadius: 999, background: "#1F2937", overflow: "hidden" }}>
+            <div
+              style={{
+                height: "100%",
+                width: `${examProgressPercent}%`,
+                borderRadius: 999,
+                background: `linear-gradient(90deg, #2563EB, ${EXAM_PHASES[examPhaseIndex].color})`,
+                transition: "width 0.4s ease",
+              }}
+            />
+          </div>
+          <p style={{ margin: "7px 0 0", color: "#9CA3AF", fontSize: 12 }}>
+            Progression simulation: {examProgressPercent}% du temps epreuve.
+          </p>
+        </section>
+
+        <section style={{ ...SECTION_CARD, padding: 18 }}>
+          <p style={{ margin: "0 0 10px", color: "#A7F3D0", fontWeight: 800 }}>Priorites personnalisees</p>
+          <p style={{ margin: "0 0 10px", color: COLORS.text }}>
+            Recommandations automatiques basees sur tes reponses d'autoevaluation.
+          </p>
+          <ul style={{ margin: 0, paddingLeft: 18, color: "#DCFCE7", lineHeight: 1.65 }}>
+            {recommandationsPrioritaires.map((tip) => (
+              <li key={tip}>{tip}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section style={{ ...SECTION_CARD, padding: 18 }}>
           <p style={{ margin: "0 0 10px", color: "#FDE68A", fontWeight: 800 }}>Coffre-fort Methodo du jour</p>
           <div style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
             <button
@@ -571,8 +1135,8 @@ export default function ObjectifBac({ profil, onXPGagne }) {
           )}
         </section>
 
-        <section style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-          <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 18, padding: 16 }}>
+        <section style={TWO_COL_GRID}>
+          <div style={{ ...SECTION_CARD, padding: 16 }}>
             <p style={{ margin: "0 0 10px", color: "#93C5FD", fontWeight: 800 }}>Quiz verbes directeurs</p>
             <p style={{ margin: "0 0 10px", color: COLORS.text, lineHeight: 1.5 }}>
               <strong>{currentQuiz.verbe}</strong> - {currentQuiz.question}
@@ -627,7 +1191,7 @@ export default function ObjectifBac({ profil, onXPGagne }) {
             </p>
           </div>
 
-          <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 18, padding: 16 }}>
+          <div style={{ ...SECTION_CARD, padding: 16 }}>
             <p style={{ margin: "0 0 10px", color: "#F9A8D4", fontWeight: 800 }}>Carte defi express</p>
             <p style={{ margin: "0 0 10px", color: COLORS.text, lineHeight: 1.5 }}>
               Inspire des cartes revision STMG: tire un defi rapide pour t'entrainer en 3-5 minutes.
@@ -650,7 +1214,7 @@ export default function ObjectifBac({ profil, onXPGagne }) {
           </div>
         </section>
 
-        <section style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 18, padding: 16 }}>
+        <section style={{ ...SECTION_CARD, padding: 16 }}>
           <p style={{ margin: "0 0 10px", color: "#C4B5FD", fontWeight: 800 }}>Checklist interactive - question en 15 lignes</p>
           <p style={{ margin: "0 0 10px", color: COLORS.text }}>
             Coche les etapes avant de rendre une question longue (methode "15 lignes").
@@ -679,8 +1243,241 @@ export default function ObjectifBac({ profil, onXPGagne }) {
           </p>
         </section>
 
-        <section style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-          <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 18, padding: 16 }}>
+        <section style={TWO_COL_GRID}>
+          <div style={{ ...SECTION_CARD, padding: 16 }}>
+            <p style={{ margin: "0 0 10px", color: "#FCA5A5", fontWeight: 800 }}>Simulateur - Caracteriser une organisation</p>
+            <p style={{ margin: "0 0 10px", color: COLORS.text, lineHeight: 1.55 }}>
+              Mode bac : coche les elements indispensables avant de rediger. Ton objectif est d'eviter les oublis qui font perdre des points faciles.
+            </p>
+            <div style={{ display: "grid", gap: 8 }}>
+              {ORGA_CRITERES.map((critere, index) => (
+                <label
+                  key={critere}
+                  style={{
+                    background: COLORS.panel,
+                    border: `1px solid ${COLORS.border}`,
+                    borderRadius: 10,
+                    padding: "10px 12px",
+                    color: "white",
+                    display: "flex",
+                    gap: 8,
+                    alignItems: "flex-start",
+                    cursor: "pointer",
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={orgaChecklist[index]}
+                    onChange={(event) => setOrgaChecklist((prev) => ({ ...prev, [index]: event.target.checked }))}
+                    style={{ marginTop: 2 }}
+                  />
+                  <span>{critere}</span>
+                </label>
+              ))}
+            </div>
+            <p style={{ margin: "10px 0 0", color: orgaProgress === orgaTotal ? "#86EFAC" : "#FCD34D", fontWeight: 700 }}>
+              Grille complete: {orgaProgress}/{orgaTotal}
+            </p>
+          </div>
+
+          <div style={{ ...SECTION_CARD, padding: 16 }}>
+            <p style={{ margin: "0 0 10px", color: "#FDE68A", fontWeight: 800 }}>Classificateur de decisions</p>
+            <p style={{ margin: "0 0 10px", color: COLORS.text, lineHeight: 1.55 }}>{currentDecision.cas}</p>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {[
+                { id: "strategique", label: "Strategique" },
+                { id: "tactique", label: "Tactique" },
+                { id: "operationnelle", label: "Operationnelle" },
+              ].map((option) => (
+                <button
+                  key={option.id}
+                  onClick={() => setDecisionChoice(option.id)}
+                  style={{
+                    border: "none",
+                    borderRadius: 999,
+                    padding: "8px 12px",
+                    cursor: "pointer",
+                    fontWeight: 700,
+                    background: decisionChoice === option.id ? "#1D4ED8" : "#374151",
+                    color: "white",
+                  }}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+            <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+              <button
+                onClick={validerDecision}
+                disabled={!decisionChoice}
+                style={{
+                  border: "none",
+                  borderRadius: 10,
+                  padding: "8px 12px",
+                  cursor: decisionChoice ? "pointer" : "not-allowed",
+                  background: decisionChoice ? "#2563EB" : "#374151",
+                  color: "white",
+                  fontWeight: 700,
+                }}
+              >
+                Valider
+              </button>
+              <button
+                onClick={prochainDecisionCas}
+                style={{ border: "none", borderRadius: 10, padding: "8px 12px", background: "#7C3AED", color: "white", fontWeight: 700, cursor: "pointer" }}
+              >
+                Cas suivant
+              </button>
+            </div>
+            <p style={{ margin: "10px 0 0", color: decisionFeedback === "Bonne qualification." ? "#86EFAC" : "#FCA5A5", minHeight: 20 }}>
+              {decisionFeedback ? `${decisionFeedback} ${currentDecision.explication}` : ""}
+            </p>
+            <p style={{ margin: 0, color: COLORS.muted, fontSize: 13 }}>
+              Score session: {decisionScore.ok}/{decisionScore.total}
+            </p>
+          </div>
+        </section>
+
+        <section style={{ ...SECTION_CARD, padding: 16 }}>
+          <p style={{ margin: "0 0 10px", color: "#93C5FD", fontWeight: 800 }}>Plan d'attaque 8 semaines (mode prepa intensive)</p>
+          <p style={{ margin: "0 0 10px", color: COLORS.text }}>
+            Coche chaque semaine validee pour piloter ta progression jusqu'au jour J.
+          </p>
+          <div style={{ display: "grid", gap: 8 }}>
+            {PLAN_8_SEMAINES.map((step) => (
+              <label
+                key={step.semaine}
+                style={{
+                  background: COLORS.panel,
+                  border: `1px solid ${COLORS.border}`,
+                  borderRadius: 10,
+                  padding: "10px 12px",
+                  color: "white",
+                  display: "flex",
+                  gap: 10,
+                  alignItems: "flex-start",
+                  cursor: "pointer",
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={Boolean(semainesValidees[step.semaine])}
+                  onChange={(event) => setSemainesValidees((prev) => ({ ...prev, [step.semaine]: event.target.checked }))}
+                  style={{ marginTop: 2 }}
+                />
+                <div>
+                  <p style={{ margin: 0, fontWeight: 800, color: "#BFDBFE" }}>{step.semaine} - {step.focus}</p>
+                  <p style={{ margin: "2px 0 0", color: "#D1D5DB", fontSize: 14 }}>{step.mission}</p>
+                </div>
+              </label>
+            ))}
+          </div>
+          <p style={{ margin: "10px 0 0", color: "#A7F3D0", fontWeight: 700 }}>
+            Semaines validees: {Object.values(semainesValidees).filter(Boolean).length}/{PLAN_8_SEMAINES.length}
+          </p>
+        </section>
+
+        <section style={{ ...SECTION_CARD, padding: 16 }}>
+          <p style={{ margin: "0 0 10px", color: "#FCD34D", fontWeight: 800 }}>Notions flash a memoriser</p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10 }}>
+            {NOTIONS_FLASH.map((notion) => (
+              <div key={notion} style={{ background: COLORS.panel, border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: 12, color: "#E5E7EB", lineHeight: 1.5 }}>
+                {notion}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section style={{ ...SECTION_CARD, padding: 16 }}>
+          <p style={{ margin: "0 0 10px", color: "#FDE68A", fontWeight: 800 }}>Autoevaluation methodo (outil ultime)</p>
+          <p style={{ margin: "0 0 12px", color: COLORS.text }}>
+            Evalue ta pratique reelle devant une copie: <strong>Toujours</strong>, <strong>Pas toujours</strong>, <strong>Jamais</strong>.
+          </p>
+          <div style={{ display: "grid", gap: 10 }}>
+            {AUTOEVAL_ITEMS.map((item) => (
+              <div key={item.id} style={{ background: COLORS.panel, border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: 12 }}>
+                <p style={{ margin: "0 0 4px", color: "#BFDBFE", fontSize: 13, fontWeight: 700 }}>{item.section}</p>
+                <p style={{ margin: "0 0 8px", color: "white", lineHeight: 1.5 }}>{item.text}</p>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  {[
+                    { id: "toujours", label: "Toujours", color: "#059669" },
+                    { id: "pas_toujours", label: "Pas toujours", color: "#D97706" },
+                    { id: "jamais", label: "Jamais", color: "#DC2626" },
+                  ].map((choice) => (
+                    <button
+                      key={choice.id}
+                      onClick={() => setAutoEvalAnswers((prev) => ({ ...prev, [item.id]: choice.id }))}
+                      style={{
+                        border: "none",
+                        borderRadius: 999,
+                        padding: "7px 12px",
+                        cursor: "pointer",
+                        fontWeight: 700,
+                        background: autoEvalAnswers[item.id] === choice.id ? choice.color : "#374151",
+                        color: "white",
+                      }}
+                    >
+                      {choice.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          <p style={{ margin: "12px 0 0", color: "#C4B5FD", fontWeight: 700 }}>
+            Rempli: {Object.keys(autoEvalAnswers).length}/{autoEvalTotal} · Toujours: {autoEvalStats.toujours} · Pas toujours: {autoEvalStats.pas_toujours} · Jamais: {autoEvalStats.jamais}
+          </p>
+          {autoEvalDiagnostic && (
+            <div style={{ marginTop: 10, background: "#111827", border: `1px solid ${autoEvalDiagnostic.color}`, borderRadius: 10, padding: 12 }}>
+              <p style={{ margin: "0 0 4px", color: autoEvalDiagnostic.color, fontWeight: 800 }}>
+                Diagnostic: {autoEvalDiagnostic.niveau}
+              </p>
+              <p style={{ margin: 0, color: "#E5E7EB" }}>{autoEvalDiagnostic.text}</p>
+            </div>
+          )}
+        </section>
+
+        <section style={{ ...SECTION_CARD, padding: 16 }}>
+          <p style={{ margin: "0 0 10px", color: "#93C5FD", fontWeight: 800 }}>Protocole Jour J (anti-oublis devant la copie)</p>
+          <p style={{ margin: "0 0 10px", color: COLORS.text }}>
+            A suivre dans l'ordre pendant l'epreuve. Coche chaque etape quand elle est faite.
+          </p>
+          <div style={{ display: "grid", gap: 8 }}>
+            {PROTOCOLE_JOUR_J.map((step) => (
+              <label
+                key={step.id}
+                style={{
+                  background: COLORS.panel,
+                  border: `1px solid ${COLORS.border}`,
+                  borderRadius: 10,
+                  padding: "10px 12px",
+                  color: "white",
+                  display: "flex",
+                  gap: 10,
+                  alignItems: "flex-start",
+                  cursor: "pointer",
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={jourJState[step.id]}
+                  onChange={(event) => setJourJState((prev) => ({ ...prev, [step.id]: event.target.checked }))}
+                  style={{ marginTop: 2 }}
+                />
+                <div>
+                  <p style={{ margin: 0, fontWeight: 800, color: "#BFDBFE" }}>{step.timing}</p>
+                  <p style={{ margin: "2px 0 0", color: "#D1D5DB", fontSize: 14 }}>{step.action}</p>
+                </div>
+              </label>
+            ))}
+          </div>
+          <p style={{ margin: "10px 0 0", color: jourJProgress === PROTOCOLE_JOUR_J.length ? "#86EFAC" : "#FCD34D", fontWeight: 700 }}>
+            Protocole complete: {jourJProgress}/{PROTOCOLE_JOUR_J.length}
+          </p>
+        </section>
+
+        <section style={TWO_COL_GRID}>
+          <div style={{ ...SECTION_CARD, padding: 16 }}>
             <p style={{ margin: "0 0 10px", color: "#86EFAC", fontWeight: 800 }}>A faire</p>
             <ul style={{ margin: 0, paddingLeft: 18, color: COLORS.text, lineHeight: 1.7 }}>
               {METHODO_RULES.faire.map((rule) => (
@@ -688,7 +1485,7 @@ export default function ObjectifBac({ profil, onXPGagne }) {
               ))}
             </ul>
           </div>
-          <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 18, padding: 16 }}>
+          <div style={{ ...SECTION_CARD, padding: 16 }}>
             <p style={{ margin: "0 0 10px", color: "#FCA5A5", fontWeight: 800 }}>A eviter</p>
             <ul style={{ margin: 0, paddingLeft: 18, color: COLORS.text, lineHeight: 1.7 }}>
               {METHODO_RULES.eviter.map((rule) => (
@@ -698,7 +1495,7 @@ export default function ObjectifBac({ profil, onXPGagne }) {
           </div>
         </section>
 
-        <section style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 18, padding: 16 }}>
+        <section style={{ ...SECTION_CARD, padding: 16 }}>
           <p style={{ margin: "0 0 10px", color: "#BFDBFE", fontWeight: 800 }}>Gestion du temps - simulation 4h</p>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 10 }}>
             {STUDY_PLAN.map((step) => (
@@ -738,11 +1535,12 @@ export default function ObjectifBac({ profil, onXPGagne }) {
               exercise={exercise}
               status={claimState[exercise.id]}
               onClaimXP={handleClaimXP}
+              onEvaluateResponse={handleEvaluateResponse}
             />
           ))}
         </section>
 
-        <section style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 18, padding: 16 }}>
+        <section style={{ ...SECTION_CARD, padding: 16 }}>
           <p style={{ margin: "0 0 10px", color: "#C4B5FD", fontWeight: 800 }}>Base annales / corriges utilises</p>
           <ul style={{ margin: 0, paddingLeft: 18, color: COLORS.text, lineHeight: 1.7 }}>
             {SOURCES.map((source) => (
