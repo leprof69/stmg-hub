@@ -146,7 +146,7 @@ function App() {
       {page === "dashboard" && <Dashboard profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "chapitres" && <Chapitres profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "missions" && <Missions profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
-      {page === "objectif-bac" && <ObjectifBac />}
+      {page === "objectif-bac" && <ObjectifBac profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "classement" && <Classement profil={profil} />}
       {page === "cartes" && <Cartes profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "badges" && <Badges profil={profil} />}

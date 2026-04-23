@@ -1,4 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
 
 const COLORS = {
   dark: "#0F172A",
@@ -44,6 +46,8 @@ const EXERCISES = [
     id: "exo-1",
     type: "Lecture de dossier",
     difficulty: "Fondamental",
+    xp: 220,
+    minChars: 120,
     title: "Identifier la question de gestion derriere un cas",
     context:
       "Cas type STMG : une entreprise se differencie par un modele e-commerce, une promesse RSE et une croissance rapide.",
@@ -61,6 +65,8 @@ const EXERCISES = [
     id: "exo-2",
     type: "Argumentation",
     difficulty: "Intermediaire",
+    xp: 280,
+    minChars: 180,
     title: "Repondre a 'Montrer que...'",
     context:
       "Le sujet demande : 'Montrer que la decision de diversification releve du management strategique.'",
@@ -78,6 +84,8 @@ const EXERCISES = [
     id: "exo-3",
     type: "Calcul + interpretation",
     difficulty: "Intermediaire",
+    xp: 280,
+    minChars: 110,
     title: "FRNG, BFR, tresorerie nette sans perte de points",
     context:
       "Donnees d'un cas reel STMG : ressources stables 1 880 922 ; emplois stables 403 726 ; actif circulant 3 124 251 ; passif circulant 3 205 666.",
@@ -95,6 +103,8 @@ const EXERCISES = [
     id: "exo-4",
     type: "Synthese",
     difficulty: "Exigeant",
+    xp: 360,
+    minChars: 260,
     title: "Question longue type RSE (15 lignes)",
     context:
       "Sujet type : 'Montrer que la mise en place d'une demarche RSE est creatrice de valeurs.'",
@@ -118,9 +128,28 @@ const SOURCES = [
   { label: "L'Etudiant - Sujet/corrige 2025", url: "https://www.letudiant.fr/bac/corriges-du-bac/article/sujets-corriges-stmg-management-sciences-de-gestion-et-numerique-bac-2025.html" },
 ];
 
-function ExerciseCard({ exercise }) {
+const getTodayKey = () => {
+  const now = new Date();
+  return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+};
+
+function ExerciseCard({ exercise, status, onClaimXP }) {
   const [draft, setDraft] = useState("");
   const [showCorrection, setShowCorrection] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const responseLength = draft.trim().length;
+  const alreadyClaimedToday = status?.lastClaimDate === getTodayKey();
+  const canClaim = responseLength >= exercise.minChars && !alreadyClaimedToday && !loading;
+
+  const handleClaim = async () => {
+    if (!canClaim) return;
+    setLoading(true);
+    try {
+      await onClaimXP(exercise.id, exercise.xp);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div
@@ -146,6 +175,18 @@ function ExerciseCard({ exercise }) {
           }}
         >
           {exercise.type}
+        </span>
+        <span
+          style={{
+            background: "#14532D",
+            color: "#DCFCE7",
+            padding: "4px 10px",
+            borderRadius: 999,
+            fontSize: 12,
+            fontWeight: 700,
+          }}
+        >
+          +{exercise.xp} XP
         </span>
         <span
           style={{
@@ -194,8 +235,26 @@ function ExerciseCard({ exercise }) {
           boxSizing: "border-box",
         }}
       />
+      <p style={{ margin: "-4px 0 0", color: COLORS.muted, fontSize: 12 }}>
+        Minimum recommande pour validation XP : {exercise.minChars} caracteres.
+      </p>
 
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+        <button
+          onClick={handleClaim}
+          disabled={!canClaim}
+          style={{
+            border: "none",
+            borderRadius: 10,
+            padding: "10px 14px",
+            background: canClaim ? "#2563EB" : "#374151",
+            color: canClaim ? "white" : "#9CA3AF",
+            fontWeight: 700,
+            cursor: canClaim ? "pointer" : "not-allowed",
+          }}
+        >
+          {loading ? "Validation..." : alreadyClaimedToday ? "XP deja gagne aujourd'hui" : `Valider et gagner ${exercise.xp} XP`}
+        </button>
         <button
           onClick={() => setShowCorrection((value) => !value)}
           style={{
@@ -211,6 +270,11 @@ function ExerciseCard({ exercise }) {
           {showCorrection ? "Masquer la correction guidee" : "Afficher la correction guidee"}
         </button>
       </div>
+      {alreadyClaimedToday && (
+        <p style={{ margin: 0, color: "#86EFAC", fontSize: 12 }}>
+          Bonus de cet exercice deja recupere aujourd'hui. Tu peux continuer a t'entrainer.
+        </p>
+      )}
 
       {showCorrection && (
         <div style={{ background: "#052E16", border: "1px solid #166534", borderRadius: 14, padding: 14 }}>
@@ -222,18 +286,89 @@ function ExerciseCard({ exercise }) {
   );
 }
 
-export default function ObjectifBac() {
+export default function ObjectifBac({ profil, onXPGagne }) {
   const [selectedType, setSelectedType] = useState("Tous");
+  const [claimState, setClaimState] = useState({});
+  const [banner, setBanner] = useState(null);
 
   const types = useMemo(() => ["Tous", ...new Set(EXERCISES.map((exercise) => exercise.type))], []);
   const filteredExercises = useMemo(
     () => EXERCISES.filter((exercise) => selectedType === "Tous" || exercise.type === selectedType),
     [selectedType]
   );
+  const potentialXp = useMemo(() => EXERCISES.reduce((sum, exercise) => sum + exercise.xp, 0), []);
+
+  useEffect(() => {
+    const loadProgress = async () => {
+      const user = auth.currentUser;
+      if (!user) return;
+      try {
+        const snap = await getDoc(doc(db, "users", user.uid));
+        if (!snap.exists()) return;
+        const progress = snap.data().objectifBacProgress || {};
+        const claims = progress.claims || {};
+        setClaimState(claims);
+      } catch (error) {
+        console.error("Impossible de charger la progression Objectif Bac", error);
+      }
+    };
+    loadProgress();
+  }, []);
+
+  const handleClaimXP = async (exerciseId, xpAmount) => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const today = getTodayKey();
+    const userRef = doc(db, "users", user.uid);
+    const snap = await getDoc(userRef);
+    if (!snap.exists()) return;
+
+    const data = snap.data();
+    const previousClaims = data.objectifBacProgress?.claims || {};
+    if (previousClaims?.[exerciseId]?.lastClaimDate === today) {
+      setBanner({ type: "error", text: "XP deja gagne pour cet exercice aujourd'hui." });
+      return;
+    }
+
+    const nextXp = (data.xp || 0) + xpAmount;
+    const nextClaims = {
+      ...previousClaims,
+      [exerciseId]: {
+        lastClaimDate: today,
+        totalClaims: (previousClaims?.[exerciseId]?.totalClaims || 0) + 1,
+      },
+    };
+
+    await updateDoc(userRef, {
+      xp: nextXp,
+      objectifBacProgress: {
+        claims: nextClaims,
+      },
+    });
+
+    setClaimState(nextClaims);
+    setBanner({ type: "success", text: `+${xpAmount} XP ajoutes !` });
+    if (onXPGagne) onXPGagne();
+  };
 
   return (
     <div style={{ minHeight: "100vh", background: COLORS.dark, color: "white", padding: "24px 16px" }}>
       <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", flexDirection: "column", gap: 18 }}>
+        {banner && (
+          <div
+            style={{
+              borderRadius: 12,
+              padding: "10px 14px",
+              background: banner.type === "success" ? "#14532D" : "#7F1D1D",
+              border: `1px solid ${banner.type === "success" ? "#16A34A" : "#DC2626"}`,
+              color: "white",
+              fontWeight: 700,
+            }}
+          >
+            {banner.text}
+          </div>
+        )}
         <section
           style={{
             borderRadius: 24,
@@ -247,6 +382,14 @@ export default function ObjectifBac() {
             Entrainement 100% oriente methode de l'epreuve : comprendre la consigne, exploiter les documents, mobiliser les notions
             de cours, puis justifier proprement comme attendu au bac.
           </p>
+          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 14 }}>
+            <span style={{ background: "rgba(255,255,255,0.2)", borderRadius: 999, padding: "6px 12px", fontWeight: 700 }}>
+              XP actuel : {profil?.xp || 0}
+            </span>
+            <span style={{ background: "rgba(22,163,74,0.25)", borderRadius: 999, padding: "6px 12px", fontWeight: 700 }}>
+              Potentiel / jour : +{potentialXp} XP
+            </span>
+          </div>
         </section>
 
         <section style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
@@ -303,7 +446,12 @@ export default function ObjectifBac() {
 
         <section style={{ display: "grid", gridTemplateColumns: "1fr", gap: 14 }}>
           {filteredExercises.map((exercise) => (
-            <ExerciseCard key={exercise.id} exercise={exercise} />
+            <ExerciseCard
+              key={exercise.id}
+              exercise={exercise}
+              status={claimState[exercise.id]}
+              onClaimXP={handleClaimXP}
+            />
           ))}
         </section>
 
