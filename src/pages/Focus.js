@@ -140,6 +140,71 @@ const EXERCISES = [
     expectedKeywords: ["comparaison", "temps", "hausse", "baisse", "part", "rentabilite", "globale", "analyse"],
     expectedNumbers: [40000],
   },
+  {
+    id: "focus-13-9",
+    difficulty: 11,
+    type: "Calcul",
+    xp: 150,
+    title: "Profitabilité année N",
+    consigne:
+      "Une organisation réalise un résultat net de 28 000 € pour un chiffre d’affaires de 350 000 €. Calcule la profitabilité (en %) puis analyse ce que cela indique.",
+    correction:
+      "Profitabilité = résultat net / chiffre d’affaires = 28 000 / 350 000 = 0,08 soit 8 %. L’activité transforme 8 % de son CA en résultat net.",
+    expectedKeywords: ["profitabilite", "resultat", "chiffre", "affaires", "analyse", "activite", "pourcentage"],
+    expectedNumbers: [8],
+  },
+  {
+    id: "focus-13-10",
+    difficulty: 12,
+    type: "Calcul",
+    xp: 160,
+    title: "Rentabilité année N",
+    consigne:
+      "Bénéfice net = 54 000 €, capitaux propres = 300 000 €. Calcule la rentabilité (en %) puis interprète le résultat pour les investisseurs.",
+    correction:
+      "Rentabilité = 54 000 / 300 000 = 0,18 soit 18 %. Les capitaux propres dégagent 18 % de bénéfice sur la période.",
+    expectedKeywords: ["rentabilite", "benefice", "capitaux", "investisseurs", "interprete", "analyse", "pourcentage"],
+    expectedNumbers: [18],
+  },
+  {
+    id: "focus-13-11",
+    difficulty: 13,
+    type: "Comparaison",
+    xp: 170,
+    title: "Comparer 2 entreprises",
+    consigne:
+      "Entreprise A : bénéfice 40 000 €, capitaux 200 000 €, CA 800 000 €. Entreprise B : bénéfice 45 000 €, capitaux 300 000 €, CA 600 000 €. Compare rentabilité et profitabilité puis conclus.",
+    correction:
+      "A : rentabilité 20 %, profitabilité 5 %. B : rentabilité 15 %, profitabilité 7,5 %. A rémunère mieux les capitaux, B transforme mieux son activité en profit.",
+    expectedKeywords: ["comparer", "rentabilite", "profitabilite", "conclusion", "capitaux", "activite", "analyse"],
+    expectedNumbers: [20, 5, 15, 7.5],
+  },
+  {
+    id: "focus-13-12",
+    difficulty: 14,
+    type: "Calcul",
+    xp: 180,
+    title: "Évolution de la rentabilité",
+    consigne:
+      "Rentabilité N = 10 % et rentabilité N+1 = 13 %. Calcule l’évolution en points et en pourcentage, puis explique le sens managérial.",
+    correction:
+      "Évolution en points = +3 points. Évolution relative = 3 / 10 = +30 %. L’organisation améliore sa capacité à rémunérer les capitaux investis.",
+    expectedKeywords: ["evolution", "points", "pourcentage", "rentabilite", "analyse", "managerial"],
+    expectedNumbers: [3, 30],
+  },
+  {
+    id: "focus-13-13",
+    difficulty: 15,
+    type: "Tableau de bord",
+    xp: 200,
+    title: "Tableau de bord final chap 13",
+    consigne:
+      "Conçois un tableau de bord final (au moins 6 indicateurs) pour piloter performance commerciale ET financière, avec périodicité et seuil d’alerte.",
+    correction:
+      "Exemples attendus : CA, évolution CA, part de marché, taux de fidélité, rentabilité, profitabilité. Ajouter unité, fréquence (mensuel/trimestriel) et seuil d’alerte.",
+    expectedKeywords: ["tableau", "bord", "indicateurs", "commerciale", "financiere", "periodicite", "seuil", "alerte"],
+    expectedNumbers: [6],
+  },
 ];
 
 const normalize = (v = "") =>
@@ -216,7 +281,6 @@ const evaluate = (exercise, answer) => {
 function FocusCard({ exercise, claim, onClaimXP }) {
   const [answer, setAnswer] = useState("");
   const [result, setResult] = useState(null);
-  const [showCorrection, setShowCorrection] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const canEvaluate = answer.trim().length >= 40;
@@ -301,20 +365,6 @@ function FocusCard({ exercise, claim, onClaimXP }) {
         >
           {alreadyClaimed ? "XP déjà gagné aujourd’hui" : loading ? "Validation..." : `Valider +${exercise.xp} XP`}
         </button>
-        <button
-          onClick={() => setShowCorrection((v) => !v)}
-          style={{
-            border: "none",
-            borderRadius: 10,
-            padding: "8px 11px",
-            fontWeight: 700,
-            cursor: "pointer",
-            background: COLORS.orange,
-            color: "white",
-          }}
-        >
-          {showCorrection ? "Masquer correction" : "Afficher correction"}
-        </button>
       </div>
 
       {result && (
@@ -322,12 +372,12 @@ function FocusCard({ exercise, claim, onClaimXP }) {
           <p style={{ margin: 0, color: "#1E3A8A", fontWeight: 800 }}>Score: {result.score}/10 — {result.mention}</p>
           <p style={{ margin: "6px 0 0", color: "#166534" }}><strong>Points forts:</strong> {result.pointsForts}</p>
           <p style={{ margin: "6px 0 0", color: "#9A3412" }}><strong>À améliorer:</strong> {result.aAmeliorer}</p>
-        </div>
-      )}
-
-      {showCorrection && (
-        <div style={{ marginTop: 10, borderRadius: 10, border: "1px solid #FCD34D", background: "#FFFBEB", padding: 10 }}>
-          <p style={{ margin: 0, color: "#92400E" }}><strong>Correction attendue:</strong> {exercise.correction}</p>
+          <div style={{ marginTop: 8, borderRadius: 10, border: "1px solid #FCD34D", background: "#FFFBEB", padding: 10 }}>
+            <p style={{ margin: 0, color: "#92400E" }}><strong>Correction attendue:</strong> {exercise.correction}</p>
+            <p style={{ margin: "6px 0 0", color: "#7C2D12", fontSize: 13 }}>
+              <strong>Explication simple:</strong> compare toujours ton résultat à la question posée, puis termine par une phrase d’interprétation ("ce que cela veut dire pour l’organisation").
+            </p>
+          </div>
         </div>
       )}
     </div>
@@ -405,7 +455,7 @@ export default function Focus({ profil, onXPGagne }) {
           <div style={{ marginTop: 10, display: "flex", gap: 8, flexWrap: "wrap" }}>
             <span style={{ background: "#DBEAFE", color: "#1D4ED8", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>Notions: performance, rentabilité, profitabilité, indicateurs</span>
             <span style={{ background: "#DCFCE7", color: "#166534", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>XP potentiel/jour: +{xpPotential}</span>
-            <span style={{ background: "#FEF3C7", color: "#92400E", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>10 exercices progressifs</span>
+            <span style={{ background: "#FEF3C7", color: "#92400E", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>15 exercices progressifs</span>
           </div>
         </section>
 
