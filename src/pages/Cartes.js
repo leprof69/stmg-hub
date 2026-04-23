@@ -1,7 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { db, auth } from "../firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { COLLECTIONS } from "../data/collections";
+
+const getCollectionMatiere = (collection) => collection.matiere || "SDGN";
+const getCollectionTheme = (collection) => collection.theme || "Sans thème";
 
 const RARETE_CONFIG = {
   commune:     { label: "Commune",     couleur: "#9CA3AF", bg: "#F3F4F6", emoji: "⚪", bonus: 0 },
@@ -231,6 +234,8 @@ const RecapRegles = () => {
 // ===== COMPOSANT PRINCIPAL =====
 export default function Cartes({ profil, onXPGagne }) {
   const [onglet, setOnglet] = useState("boutique");
+  const [matiereSelectionnee, setMatiereSelectionnee] = useState("Toutes");
+  const [themeSelectionne, setThemeSelectionne] = useState("Tous");
   const [collectionOuverte, setCollectionOuverte] = useState(null);
   const [cartesAnimation, setCartesAnimation] = useState(null);
   const [maCollection, setMaCollection] = useState({});
@@ -361,6 +366,32 @@ export default function Cartes({ profil, onXPGagne }) {
   const bonusTotal = COLLECTIONS.flatMap(c => c.cartes).filter(c => maCollection[c.id] > 0).reduce((sum, c) => sum + (RARETE_CONFIG[c.rarete]?.bonus || 0), 0);
   const progGlobal = Math.round((totalUniques / totalDispo) * 100);
 
+  const matieresDisponibles = useMemo(
+    () => ["Toutes", ...Array.from(new Set(COLLECTIONS.map(c => getCollectionMatiere(c))))],
+    []
+  );
+  const collectionsParMatiere = useMemo(
+    () => COLLECTIONS.filter(c => matiereSelectionnee === "Toutes" || getCollectionMatiere(c) === matiereSelectionnee),
+    [matiereSelectionnee]
+  );
+  const themesDisponibles = useMemo(
+    () => ["Tous", ...Array.from(new Set(collectionsParMatiere.map(c => getCollectionTheme(c))))],
+    [collectionsParMatiere]
+  );
+  const collectionsFiltrees = useMemo(
+    () => COLLECTIONS.filter(c =>
+      (matiereSelectionnee === "Toutes" || getCollectionMatiere(c) === matiereSelectionnee) &&
+      (themeSelectionne === "Tous" || getCollectionTheme(c) === themeSelectionne)
+    ),
+    [matiereSelectionnee, themeSelectionne]
+  );
+
+  useEffect(() => {
+    if (!themesDisponibles.includes(themeSelectionne)) {
+      setThemeSelectionne("Tous");
+    }
+  }, [matiereSelectionnee, themeSelectionne, themesDisponibles]);
+
   return (
     <div style={{ minHeight: "100vh", background: "#F1F5F9", fontFamily: "'Nunito', sans-serif" }}>
 
@@ -438,7 +469,13 @@ export default function Cartes({ profil, onXPGagne }) {
               <p style={{ fontFamily: "'Fredoka One', cursive", color: "white", fontSize: "1.2rem", margin: 0 }}>🎲 Pack Mystère disponible !</p>
               <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "0.85rem", margin: "4px 0 0" }}>Ton pack gratuit de la semaine t'attend — probabilités inconnues !</p>
             </div>
-            <button onClick={() => ouvrirPack(PACKS[3], COLLECTIONS[Math.floor(Math.random() * COLLECTIONS.length)])} style={{ background: "white", color: "#EC4899", border: "none", fontFamily: "'Fredoka One', cursive", fontSize: "1rem", padding: "12px 24px", borderRadius: "14px", cursor: "pointer" }}>
+            <button
+              onClick={() => {
+                const base = collectionsFiltrees.length ? collectionsFiltrees : COLLECTIONS;
+                ouvrirPack(PACKS[3], base[Math.floor(Math.random() * base.length)]);
+              }}
+              style={{ background: "white", color: "#EC4899", border: "none", fontFamily: "'Fredoka One', cursive", fontSize: "1rem", padding: "12px 24px", borderRadius: "14px", cursor: "pointer" }}
+            >
               🎲 Ouvrir !
             </button>
           </div>
@@ -460,16 +497,78 @@ export default function Cartes({ profil, onXPGagne }) {
           ))}
         </div>
 
+        <div style={{ background: "white", borderRadius: "16px", border: "2px solid #E5E7EB", padding: "14px", marginBottom: "20px" }}>
+          <p style={{ fontFamily: "'Fredoka One', cursive", color: "#111827", fontSize: "0.9rem", margin: "0 0 10px" }}>
+            Filtres des drops
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+            <div style={{ borderRadius: "12px", border: "2px solid #7C3AED30", padding: "10px 12px" }}>
+              <p style={{ fontFamily: "'Fredoka One', cursive", color: "#7C3AED", fontSize: "0.78rem", margin: "0 0 6px" }}>
+                Matière
+              </p>
+              <select
+                value={matiereSelectionnee}
+                onChange={(e) => setMatiereSelectionnee(e.target.value)}
+                style={{
+                  width: "100%",
+                  border: "2px solid #7C3AED35",
+                  borderRadius: "10px",
+                  padding: "8px 10px",
+                  fontFamily: "'Nunito', sans-serif",
+                  fontWeight: 700,
+                  color: "#1F2937",
+                  background: "white",
+                }}
+              >
+                {matieresDisponibles.map((matiere) => (
+                  <option key={matiere} value={matiere}>{matiere}</option>
+                ))}
+              </select>
+            </div>
+
+            <div style={{ borderRadius: "12px", border: "2px solid #3B82F630", padding: "10px 12px" }}>
+              <p style={{ fontFamily: "'Fredoka One', cursive", color: "#3B82F6", fontSize: "0.78rem", margin: "0 0 6px" }}>
+                Thème
+              </p>
+              <select
+                value={themeSelectionne}
+                onChange={(e) => setThemeSelectionne(e.target.value)}
+                style={{
+                  width: "100%",
+                  border: "2px solid #3B82F635",
+                  borderRadius: "10px",
+                  padding: "8px 10px",
+                  fontFamily: "'Nunito', sans-serif",
+                  fontWeight: 700,
+                  color: "#1F2937",
+                  background: "white",
+                }}
+              >
+                {themesDisponibles.map((theme) => (
+                  <option key={theme} value={theme}>{theme}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+
         {onglet === "boutique" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-            {COLLECTIONS.map(col => {
+            {collectionsFiltrees.length === 0 && (
+              <div style={{ textAlign: "center", padding: "50px 20px", background: "white", borderRadius: "20px", color: "#9CA3AF", fontFamily: "'Fredoka One', cursive" }}>
+                Aucun drop disponible avec ces filtres.
+              </div>
+            )}
+            {collectionsFiltrees.map(col => {
               const obtenues = col.cartes.filter(c => maCollection[c.id] > 0).length;
               return (
                 <div key={col.id} style={{ background: "white", borderRadius: "24px", overflow: "hidden", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
                   <div style={{ background: col.gradient || "linear-gradient(135deg, #1A1A2E, #2D1B69)", padding: "20px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
                     <div>
                       <p style={{ fontFamily: "'Fredoka One', cursive", color: "white", fontSize: "1.3rem", margin: 0 }}>{col.emoji || "🃏"} {col.nom}</p>
-                      <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "0.82rem", margin: "2px 0 0" }}>{col.description || ""}</p>
+                      <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "0.82rem", margin: "2px 0 0" }}>
+                        {getCollectionMatiere(col)} · {getCollectionTheme(col)} · {col.description || ""}
+                      </p>
                     </div>
                     <span style={{ background: "rgba(255,255,255,0.2)", color: "white", fontFamily: "'Fredoka One', cursive", padding: "6px 16px", borderRadius: "100px", fontSize: "0.85rem" }}>
                       {obtenues}/{col.cartes.length} obtenues
@@ -499,7 +598,12 @@ export default function Cartes({ profil, onXPGagne }) {
 
         {onglet === "collection" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-            {COLLECTIONS.map(col => {
+            {collectionsFiltrees.length === 0 && (
+              <div style={{ textAlign: "center", padding: "50px 20px", background: "white", borderRadius: "20px", color: "#9CA3AF", fontFamily: "'Fredoka One', cursive" }}>
+                Aucune collection avec ces filtres.
+              </div>
+            )}
+            {collectionsFiltrees.map(col => {
               const cartesPossedees = col.cartes.filter(c => maCollection[c.id] > 0);
               const prog = Math.round((cartesPossedees.length / col.cartes.length) * 100);
               const ouverte = collectionOuverte === col.id;
@@ -514,7 +618,9 @@ export default function Cartes({ profil, onXPGagne }) {
                         <div style={{ width: "48px", height: "48px", borderRadius: "14px", background: ouverte ? "rgba(255,255,255,0.2)" : (col.couleur || "#7C3AED") + "15", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.6rem" }}>{col.emoji || "🃏"}</div>
                         <div>
                           <p style={{ fontFamily: "'Fredoka One', cursive", color: ouverte ? "white" : (col.couleur || "#7C3AED"), fontSize: "1.2rem", margin: 0 }}>{col.nom}</p>
-                          <p style={{ color: ouverte ? "rgba(255,255,255,0.7)" : "#9CA3AF", fontSize: "0.8rem", margin: "2px 0 0" }}>{cartesPossedees.length} / {col.cartes.length} cartes</p>
+                          <p style={{ color: ouverte ? "rgba(255,255,255,0.7)" : "#9CA3AF", fontSize: "0.8rem", margin: "2px 0 0" }}>
+                            {getCollectionMatiere(col)} · {getCollectionTheme(col)} · {cartesPossedees.length} / {col.cartes.length} cartes
+                          </p>
                         </div>
                       </div>
                       <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>

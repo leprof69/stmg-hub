@@ -128,9 +128,116 @@ const SOURCES = [
   { label: "L'Etudiant - Sujet/corrige 2025", url: "https://www.letudiant.fr/bac/corriges-du-bac/article/sujets-corriges-stmg-management-sciences-de-gestion-et-numerique-bac-2025.html" },
 ];
 
+const CONSEILS_DU_JOUR = [
+  "Commence chaque question en reformulant la consigne avec le verbe attendu (presenter, analyser, justifier).",
+  "Vise la structure 3 blocs : idee cle, preuve issue du document, lien avec une notion du cours.",
+  "Pour chaque chiffre cite, ajoute une interpretation managériale en une phrase.",
+  "Sur un 'montrer que', prends position des la 1re phrase puis demontre avec 2-3 arguments.",
+  "Ne laisse aucune question vide : une reponse courte mais ciblee rapporte toujours des points.",
+  "Pour les calculs, ecris formule + calcul + unite + commentaire : c'est la sequence qui securise les points.",
+  "Utilise le vocabulaire STMG precis (finalites, parties prenantes, performance globale, RSE, avantage concurrentiel).",
+  "Relis chaque reponse avec ce filtre : est-ce que je reponds vraiment au verbe de la consigne ?",
+  "Quand tu cites un document, mentionne explicitement le fait utilise (donnee, tendance, citation courte).",
+  "Conclue les longues reponses par une mini phrase de synthese qui repond directement a la problematique.",
+];
+
+const VERBE_QUIZ = [
+  {
+    verbe: "Analyser",
+    question: "Quand la consigne demande 'Analyser', qu'attend surtout le correcteur ?",
+    options: [
+      "Recopier les documents en changeant quelques mots",
+      "Decomposer la situation en elements cles puis expliquer leurs liens",
+      "Donner uniquement son opinion personnelle",
+      "Lister des notions sans explication",
+    ],
+    correctIndex: 1,
+    astuce: "Analyser = decomposer + expliquer les relations entre les faits.",
+  },
+  {
+    verbe: "Justifier",
+    question: "Pour bien 'Justifier' une reponse, il faut surtout :",
+    options: [
+      "Donner des raisons et des preuves (documents + cours)",
+      "Ecrire une phrase tres longue",
+      "Repondre par oui/non",
+      "Citer une definition hors sujet",
+    ],
+    correctIndex: 0,
+    astuce: "Justifier = argument + preuve concrete.",
+  },
+  {
+    verbe: "Comparer",
+    question: "La consigne 'Comparer' implique de :",
+    options: [
+      "Parler d'un seul element en detail",
+      "Dire uniquement les points communs",
+      "Montrer ressemblances et differences de facon structuree",
+      "Faire un calcul",
+    ],
+    correctIndex: 2,
+    astuce: "Comparer = ressemblances ET differences.",
+  },
+  {
+    verbe: "Montrer",
+    question: "Si la consigne dit 'Montrer que...', la meilleure approche est :",
+    options: [
+      "Prendre position puis la prouver avec 2-3 arguments",
+      "Rester neutre sans conclure",
+      "Donner un exemple sans expliquer",
+      "Reecrire l'enonce",
+    ],
+    correctIndex: 0,
+    astuce: "Montrer = demontrer une these, pas decrire vaguement.",
+  },
+];
+
+const DEFIS_FLASH = [
+  {
+    theme: "Management",
+    type: "Defi",
+    consigne: "En 5 lignes, explique en quoi une decision releve du management strategique.",
+    repere: "Long terme + engagement de ressources + impact sur le positionnement.",
+  },
+  {
+    theme: "Droit",
+    type: "Defi",
+    consigne: "Distingue en 4 lignes une obligation de moyen et une obligation de resultat.",
+    repere: "Moyen = moyens raisonnables ; resultat = objectif atteint obligatoire.",
+  },
+  {
+    theme: "SDGN",
+    type: "Action",
+    consigne: "Donne un indicateur de performance et propose une interpretation utile pour un manager.",
+    repere: "Exemple : taux de marge, delai moyen, satisfaction client.",
+  },
+  {
+    theme: "Economie",
+    type: "Defi",
+    consigne: "En 4 lignes, relie inflation et pouvoir d'achat d'un menage.",
+    repere: "Si les prix augmentent plus vite que le revenu reel, pouvoir d'achat diminue.",
+  },
+  {
+    theme: "Methode 15 lignes",
+    type: "Action",
+    consigne: "Propose un mini-plan en 2 parties pour traiter une question longue.",
+    repere: "Partie 1 constat/causes ; Partie 2 solutions/limites.",
+  },
+];
+
 const getTodayKey = () => {
   const now = new Date();
   return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+};
+
+const getConseilIndexDuJour = (uid = "invite") => {
+  const seed = `${getTodayKey()}-${uid}`;
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = ((hash << 5) - hash) + seed.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash) % CONSEILS_DU_JOUR.length;
 };
 
 function ExerciseCard({ exercise, status, onClaimXP }) {
@@ -290,6 +397,20 @@ export default function ObjectifBac({ profil, onXPGagne }) {
   const [selectedType, setSelectedType] = useState("Tous");
   const [claimState, setClaimState] = useState({});
   const [banner, setBanner] = useState(null);
+  const [conseilDuJour, setConseilDuJour] = useState("");
+  const [coffreOuvert, setCoffreOuvert] = useState(false);
+  const [quizIndex, setQuizIndex] = useState(0);
+  const [quizChoice, setQuizChoice] = useState(null);
+  const [quizFeedback, setQuizFeedback] = useState(null);
+  const [quizScore, setQuizScore] = useState({ ok: 0, total: 0 });
+  const [defiActuel, setDefiActuel] = useState(null);
+  const [check15Lignes, setCheck15Lignes] = useState({
+    reformulation: false,
+    planVisible: false,
+    preuvesDocs: false,
+    notionsCours: false,
+    miniConclusion: false,
+  });
 
   const types = useMemo(() => ["Tous", ...new Set(EXERCISES.map((exercise) => exercise.type))], []);
   const filteredExercises = useMemo(
@@ -313,6 +434,13 @@ export default function ObjectifBac({ profil, onXPGagne }) {
       }
     };
     loadProgress();
+  }, []);
+
+  useEffect(() => {
+    const uid = auth.currentUser?.uid || "invite";
+    const index = getConseilIndexDuJour(uid);
+    setConseilDuJour(CONSEILS_DU_JOUR[index]);
+    setCoffreOuvert(false);
   }, []);
 
   const handleClaimXP = async (exerciseId, xpAmount) => {
@@ -350,6 +478,26 @@ export default function ObjectifBac({ profil, onXPGagne }) {
     setClaimState(nextClaims);
     setBanner({ type: "success", text: `+${xpAmount} XP ajoutes !` });
     if (onXPGagne) onXPGagne();
+  };
+
+  const currentQuiz = VERBE_QUIZ[quizIndex];
+
+  const validerQuiz = () => {
+    if (quizChoice === null) return;
+    const isGood = quizChoice === currentQuiz.correctIndex;
+    setQuizFeedback(isGood ? "Bonne reponse." : "Pas encore.");
+    setQuizScore((prev) => ({ ok: prev.ok + (isGood ? 1 : 0), total: prev.total + 1 }));
+  };
+
+  const questionSuivanteQuiz = () => {
+    setQuizIndex((prev) => (prev + 1) % VERBE_QUIZ.length);
+    setQuizChoice(null);
+    setQuizFeedback(null);
+  };
+
+  const tirerDefi = () => {
+    const index = Math.floor(Math.random() * DEFIS_FLASH.length);
+    setDefiActuel(DEFIS_FLASH[index]);
   };
 
   return (
@@ -390,6 +538,145 @@ export default function ObjectifBac({ profil, onXPGagne }) {
               Potentiel / jour : +{potentialXp} XP
             </span>
           </div>
+        </section>
+
+        <section style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 18, padding: 18 }}>
+          <p style={{ margin: "0 0 10px", color: "#FDE68A", fontWeight: 800 }}>Coffre-fort Methodo du jour</p>
+          <div style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
+            <button
+              onClick={() => setCoffreOuvert((value) => !value)}
+              style={{
+                border: "none",
+                borderRadius: 16,
+                cursor: "pointer",
+                padding: "14px 18px",
+                background: coffreOuvert ? "linear-gradient(135deg, #065F46, #047857)" : "linear-gradient(135deg, #92400E, #B45309)",
+                color: "white",
+                fontWeight: 800,
+                minWidth: 190,
+                boxShadow: coffreOuvert ? "0 8px 24px rgba(6,95,70,0.45)" : "0 8px 24px rgba(146,64,14,0.45)",
+              }}
+            >
+              {coffreOuvert ? "🔓 Coffre ouvert" : "🔐 Ouvrir le coffre"}
+            </button>
+            <p style={{ margin: 0, color: COLORS.muted, fontSize: 13 }}>
+              1 conseil stable par jour pour mieux memoriser la methode.
+            </p>
+          </div>
+          {coffreOuvert && (
+            <div style={{ marginTop: 12, background: "#1E293B", border: "1px solid #334155", borderRadius: 12, padding: 14 }}>
+              <p style={{ margin: "0 0 6px", color: "#FCD34D", fontWeight: 700 }}>💡 Conseil du jour</p>
+              <p style={{ margin: 0, color: "#E2E8F0", lineHeight: 1.6 }}>{conseilDuJour}</p>
+            </div>
+          )}
+        </section>
+
+        <section style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+          <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 18, padding: 16 }}>
+            <p style={{ margin: "0 0 10px", color: "#93C5FD", fontWeight: 800 }}>Quiz verbes directeurs</p>
+            <p style={{ margin: "0 0 10px", color: COLORS.text, lineHeight: 1.5 }}>
+              <strong>{currentQuiz.verbe}</strong> - {currentQuiz.question}
+            </p>
+            <div style={{ display: "grid", gap: 8 }}>
+              {currentQuiz.options.map((option, index) => (
+                <button
+                  key={option}
+                  onClick={() => setQuizChoice(index)}
+                  style={{
+                    border: `1px solid ${quizChoice === index ? "#60A5FA" : COLORS.border}`,
+                    background: quizChoice === index ? "#1E3A8A" : COLORS.panel,
+                    color: "white",
+                    borderRadius: 10,
+                    padding: "10px 12px",
+                    textAlign: "left",
+                    cursor: "pointer",
+                  }}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+            <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
+              <button
+                onClick={validerQuiz}
+                disabled={quizChoice === null}
+                style={{
+                  border: "none",
+                  borderRadius: 10,
+                  padding: "8px 12px",
+                  cursor: quizChoice === null ? "not-allowed" : "pointer",
+                  background: quizChoice === null ? "#374151" : "#2563EB",
+                  color: "white",
+                  fontWeight: 700,
+                }}
+              >
+                Valider
+              </button>
+              <button
+                onClick={questionSuivanteQuiz}
+                style={{ border: "none", borderRadius: 10, padding: "8px 12px", background: "#7C3AED", color: "white", fontWeight: 700, cursor: "pointer" }}
+              >
+                Question suivante
+              </button>
+            </div>
+            <p style={{ margin: "10px 0 0", color: quizFeedback === "Bonne reponse." ? "#86EFAC" : "#FCA5A5", minHeight: 20 }}>
+              {quizFeedback ? `${quizFeedback} ${currentQuiz.astuce}` : ""}
+            </p>
+            <p style={{ margin: 0, color: COLORS.muted, fontSize: 13 }}>
+              Score session: {quizScore.ok}/{quizScore.total}
+            </p>
+          </div>
+
+          <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 18, padding: 16 }}>
+            <p style={{ margin: "0 0 10px", color: "#F9A8D4", fontWeight: 800 }}>Carte defi express</p>
+            <p style={{ margin: "0 0 10px", color: COLORS.text, lineHeight: 1.5 }}>
+              Inspire des cartes revision STMG: tire un defi rapide pour t'entrainer en 3-5 minutes.
+            </p>
+            <button
+              onClick={tirerDefi}
+              style={{ border: "none", borderRadius: 10, padding: "10px 12px", background: "#DB2777", color: "white", fontWeight: 700, cursor: "pointer" }}
+            >
+              Tirer une carte
+            </button>
+            {defiActuel && (
+              <div style={{ marginTop: 10, background: "#3F1D2E", border: "1px solid #9D174D", borderRadius: 10, padding: 12 }}>
+                <p style={{ margin: "0 0 6px", color: "#FBCFE8", fontWeight: 700 }}>
+                  {defiActuel.type} - {defiActuel.theme}
+                </p>
+                <p style={{ margin: "0 0 6px", color: "#FCE7F3", lineHeight: 1.5 }}>{defiActuel.consigne}</p>
+                <p style={{ margin: 0, color: "#F9A8D4", fontSize: 13 }}>Repere attendu: {defiActuel.repere}</p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 18, padding: 16 }}>
+          <p style={{ margin: "0 0 10px", color: "#C4B5FD", fontWeight: 800 }}>Checklist interactive - question en 15 lignes</p>
+          <p style={{ margin: "0 0 10px", color: COLORS.text }}>
+            Coche les etapes avant de rendre une question longue (methode "15 lignes").
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: 8 }}>
+            {Object.entries({
+              reformulation: "Je reformule clairement la problematique.",
+              planVisible: "Mon plan est visible (2 parties ou 2-3 paragraphes logiques).",
+              preuvesDocs: "J'appuie mes idees avec des preuves des documents.",
+              notionsCours: "Je mobilise explicitement des notions du cours.",
+              miniConclusion: "Je termine par une mini conclusion argumentee.",
+            }).map(([key, label]) => (
+              <label key={key} style={{ background: COLORS.panel, border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: "10px 12px", color: "white", display: "flex", gap: 8, alignItems: "flex-start", cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  checked={check15Lignes[key]}
+                  onChange={(event) => setCheck15Lignes((prev) => ({ ...prev, [key]: event.target.checked }))}
+                  style={{ marginTop: 2 }}
+                />
+                <span>{label}</span>
+              </label>
+            ))}
+          </div>
+          <p style={{ margin: "10px 0 0", color: "#A5B4FC", fontWeight: 700 }}>
+            Progression: {Object.values(check15Lignes).filter(Boolean).length}/5 cases cochees
+          </p>
         </section>
 
         <section style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
