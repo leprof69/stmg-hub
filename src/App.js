@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { auth, db } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, serverTimestamp, increment } from "firebase/firestore";
 import Login from "./pages/Login";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
@@ -23,6 +23,8 @@ function App() {
   const [afficherLogin, setAfficherLogin] = useState(false);
   const [afficherAccueil, setAfficherAccueil] = useState(false);
   const [modeLogin, setModeLogin] = useState("connexion");
+  const sessionConnexionMarquee = useRef(false);
+  const dernierePageTrackee = useRef("");
 
   const chargerProfil = async (user) => {
     const docRef = doc(db, "users", user.uid);
@@ -54,6 +56,46 @@ function App() {
     const interval = setInterval(() => chargerProfil(utilisateur), 30000);
     return () => clearInterval(interval);
   }, [utilisateur]);
+
+  useEffect(() => {
+    if (!utilisateur || !profil || sessionConnexionMarquee.current) return;
+    const marquerConnexion = async () => {
+      try {
+        const today = new Date();
+        const dayKey = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+        await updateDoc(doc(db, "users", utilisateur.uid), {
+          lastConnectionAt: serverTimestamp(),
+          lastConnectionDay: dayKey,
+          connexionCount: increment(1),
+          lastActionType: "connexion",
+          lastActionPage: "dashboard",
+          lastActionAt: serverTimestamp(),
+        });
+      } catch (err) {
+        console.error("Tracking connexion impossible", err);
+      }
+    };
+    marquerConnexion();
+    sessionConnexionMarquee.current = true;
+  }, [utilisateur, profil]);
+
+  useEffect(() => {
+    if (!utilisateur || !profil || page === dernierePageTrackee.current) return;
+    const marquerNavigation = async () => {
+      try {
+        await updateDoc(doc(db, "users", utilisateur.uid), {
+          lastActionType: "navigation",
+          lastActionPage: page,
+          lastActionAt: serverTimestamp(),
+          [`activityCounters.${page}`]: increment(1),
+        });
+      } catch (err) {
+        console.error("Tracking navigation impossible", err);
+      }
+    };
+    marquerNavigation();
+    dernierePageTrackee.current = page;
+  }, [page, utilisateur, profil]);
 
   if (chargement) {
     return (
