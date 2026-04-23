@@ -301,7 +301,7 @@ function FocusCard({ exercise, claim, onClaimXP }) {
   };
 
   return (
-    <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 16, padding: 16 }}>
+    <div className="focus-card" style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 16, padding: 16 }}>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 8 }}>
         <span style={{ borderRadius: 999, padding: "4px 10px", background: "#DBEAFE", color: "#1D4ED8", fontWeight: 700, fontSize: 12 }}>
           Niveau {exercise.difficulty}
@@ -314,7 +314,7 @@ function FocusCard({ exercise, claim, onClaimXP }) {
         </span>
       </div>
 
-      <h3 style={{ margin: "0 0 6px", color: COLORS.text }}>{exercise.title}</h3>
+      <h3 className="focus-title" style={{ margin: "0 0 6px", color: COLORS.text }}>{exercise.title}</h3>
       <p style={{ margin: 0, color: COLORS.muted, lineHeight: 1.5 }}>{exercise.consigne}</p>
 
       <textarea
@@ -334,8 +334,9 @@ function FocusCard({ exercise, claim, onClaimXP }) {
         }}
       />
 
-      <div style={{ display: "flex", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
+      <div className="focus-actions" style={{ display: "flex", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
         <button
+          className="focus-btn"
           onClick={validate}
           disabled={!canEvaluate}
           style={{
@@ -351,6 +352,7 @@ function FocusCard({ exercise, claim, onClaimXP }) {
           Corriger ma réponse
         </button>
         <button
+          className="focus-btn"
           onClick={claimXp}
           disabled={!canClaim || loading}
           style={{
@@ -440,6 +442,27 @@ export default function Focus({ profil, onXPGagne }) {
 
   return (
     <div style={{ minHeight: "100vh", background: COLORS.page, padding: "20px 14px 28px", color: COLORS.text }}>
+      <style>
+        {`
+          .focus-card { padding: 16px; }
+          .focus-title { font-size: 1.12rem; line-height: 1.35; }
+          .focus-actions .focus-btn { min-height: 42px; }
+          @media (max-width: 640px) {
+            .focus-card { padding: 13px; border-radius: 14px; }
+            .focus-title { font-size: 1rem; }
+            .focus-hero { padding: 14px; border-radius: 14px; }
+            .focus-hero-title { font-size: 1.25rem; line-height: 1.3; }
+            .focus-hero-text { font-size: 0.92rem; }
+            .focus-badges span { width: 100%; text-align: center; }
+            .focus-actions { width: 100%; }
+            .focus-actions .focus-btn { width: 100%; }
+          }
+          @media (max-width: 420px) {
+            .focus-title { font-size: 0.96rem; }
+            .focus-hero-title { font-size: 1.12rem; }
+          }
+        `}
+      </style>
       <div style={{ maxWidth: 980, margin: "0 auto", display: "flex", flexDirection: "column", gap: 14 }}>
         {banner && (
           <div style={{ background: banner.type === "success" ? "#DCFCE7" : "#FEE2E2", color: banner.type === "success" ? "#166534" : COLORS.red, border: `1px solid ${banner.type === "success" ? "#86EFAC" : "#FECACA"}`, borderRadius: 12, padding: "9px 12px", fontWeight: 700 }}>
@@ -447,12 +470,12 @@ export default function Focus({ profil, onXPGagne }) {
           </div>
         )}
 
-        <section style={{ background: "#FFFFFF", border: `1px solid ${COLORS.border}`, borderRadius: 18, padding: 18 }}>
-          <h1 style={{ margin: "0 0 6px", color: "#1E3A8A" }}>🎯 Focus — SDGN 1ère · Chapitre 13</h1>
-          <p style={{ margin: 0, color: COLORS.muted, lineHeight: 1.55 }}>
+        <section className="focus-hero" style={{ background: "#FFFFFF", border: `1px solid ${COLORS.border}`, borderRadius: 18, padding: 18 }}>
+          <h1 className="focus-hero-title" style={{ margin: "0 0 6px", color: "#1E3A8A" }}>🎯 Focus — SDGN 1ère · Chapitre 13</h1>
+          <p className="focus-hero-text" style={{ margin: 0, color: COLORS.muted, lineHeight: 1.55 }}>
             Révision ciblée sur l’analyse des performances commerciale et financière. Progression en difficulté croissante: définitions, analyses, calculs et tableau de bord.
           </p>
-          <div style={{ marginTop: 10, display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <div className="focus-badges" style={{ marginTop: 10, display: "flex", gap: 8, flexWrap: "wrap" }}>
             <span style={{ background: "#DBEAFE", color: "#1D4ED8", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>Notions: performance, rentabilité, profitabilité, indicateurs</span>
             <span style={{ background: "#DCFCE7", color: "#166534", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>XP potentiel/jour: +{xpPotential}</span>
             <span style={{ background: "#FEF3C7", color: "#92400E", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>15 exercices progressifs</span>
