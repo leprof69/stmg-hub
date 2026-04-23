@@ -13,6 +13,7 @@ import Accueil from "./pages/Accueil";
 import Missions from "./pages/Missions";
 import Classement from "./pages/Classement";
 import Cartes from "./pages/Cartes";
+import ObjectifBac from "./pages/ObjectifBac";
 
 function App() {
   const [utilisateur, setUtilisateur] = useState(null);
@@ -114,6 +115,10 @@ function App() {
           className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "missions" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}>
           🎯 Missions
         </button>
+        <button onClick={() => setPage("objectif-bac")}
+          className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "objectif-bac" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}>
+          🎓 Objectif Bac
+        </button>
         <button onClick={() => setPage("classement")}
           className={`text-sm font-semibold px-3 py-1 rounded-lg transition-all whitespace-nowrap ${page === "classement" ? "bg-blue-600 text-white" : "text-gray-400 hover:text-white"}`}>
           🏆 Classement
@@ -141,6 +146,7 @@ function App() {
       {page === "dashboard" && <Dashboard profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "chapitres" && <Chapitres profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "missions" && <Missions profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
+      {page === "objectif-bac" && <ObjectifBac />}
       {page === "classement" && <Classement profil={profil} />}
       {page === "cartes" && <Cartes profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "badges" && <Badges profil={profil} />}
