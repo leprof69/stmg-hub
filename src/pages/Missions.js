@@ -51,6 +51,43 @@ const detecterReponseBrouillon = (texte = "") => {
   return uniques <= Math.max(2, Math.floor(tokens.length * 0.3));
 };
 
+const detecterStyleArtificiel = (texte = "") => {
+  const t = normalizeTexte(texte);
+  if (!t) return { suspect: false, score: 0, raisons: [] };
+  const patrons = [
+    "il convient de noter",
+    "en outre",
+    "par ailleurs",
+    "dans un premier temps",
+    "dans un second temps",
+    "force est de constater",
+    "au regard de",
+    "il ressort que",
+    "de ce fait",
+    "en definitive",
+  ];
+  let score = 0;
+  const raisons = [];
+  for (const p of patrons) {
+    if (t.includes(p)) {
+      score += 1;
+      raisons.push(`Formulation stéréotypée: "${p}"`);
+    }
+  }
+  const mots = t.split(" ").filter(Boolean);
+  const longueurMoyenne = mots.length ? mots.reduce((s, m) => s + m.length, 0) / mots.length : 0;
+  if (longueurMoyenne > 6.3) {
+    score += 1;
+    raisons.push("Vocabulaire anormalement soutenu.");
+  }
+  const ponct = (texte.match(/[;:]/g) || []).length;
+  if (ponct >= 5) {
+    score += 1;
+    raisons.push("Ponctuation académique très dense.");
+  }
+  return { suspect: score >= 3, score, raisons };
+};
+
 const evaluerPertinenceLocale = (mission, reponseEleve) => {
   const reponseTokens = extraireTokens(reponseEleve);
   if (reponseTokens.length === 0) return { ratio: 0, motsCommuns: 0 };
@@ -545,6 +582,10 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
   const [reponse, setReponse] = useState("");
   const [correction, setCorrection] = useState(null);
   const [chargement, setChargement] = useState(false);
+  const [sortieEcranDetectee, setSortieEcranDetectee] = useState(false);
+  const [attemptStartedAt, setAttemptStartedAt] = useState(null);
+  const [pasteEvents, setPasteEvents] = useState(0);
+  const [pastedChars, setPastedChars] = useState(0);
   const [dejaFaite] = useState(missionDejaFaite(profil, mission.id));
   const longueurReponse = reponse.trim().length;
   const difficulte = Math.max(1, Math.min(5, Number(mission.difficulte) || 1));
@@ -552,12 +593,28 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
   const couleur = difficulte >= 4 ? COLORS.H : difficulte >= 3 ? COLORS.U : COLORS.S;
   const niveauLabel = niveau === "terminale" ? "📘 Terminale" : "📗 Première";
 
+  useEffect(() => {
+    if (correction || chargement) return undefined;
+    const surveillerSortie = () => {
+      if (longueurReponse >= 20) setSortieEcranDetectee(true);
+    };
+    const onVisibility = () => {
+      if (document.hidden) surveillerSortie();
+    };
+    window.addEventListener("blur", surveillerSortie);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      window.removeEventListener("blur", surveillerSortie);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [correction, chargement, longueurReponse]);
+
   const soumettre = async () => {
     if (!reponse.trim() || longueurReponse < 20) return;
     setChargement(true);
     try {
       const result = await corrigerAvecGroq(mission, reponse);
-      const resultFinal = detecterReponseBrouillon(reponse)
+      let resultFinal = detecterReponseBrouillon(reponse)
         ? {
           ...result,
           score: 0,
@@ -567,6 +624,40 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
           triche_detectee: false,
         }
         : result;
+
+      const elapsedSec = attemptStartedAt ? Math.max(1, Math.round((Date.now() - attemptStartedAt) / 1000)) : 1;
+      const collageMassif = pastedChars >= 140 || (pasteEvents >= 2 && pastedChars >= 90);
+      const tempsIrrealiste = reponse.trim().length >= 400 && elapsedSec <= 15;
+      const styleArtificiel = detecterStyleArtificiel(reponse);
+
+      if (sortieEcranDetectee) {
+        resultFinal = {
+          ...resultFinal,
+          triche_detectee: true,
+          score: 0,
+          feedback: "Sortie de l’onglet détectée pendant la rédaction.",
+          points_forts: "Tu as soumis une réponse.",
+          a_ameliorer: "Reste sur l’onglet Missions pendant toute la tentative pour débloquer l’XP.",
+        };
+      }
+      if (!sortieEcranDetectee && (collageMassif || tempsIrrealiste)) {
+        resultFinal = {
+          ...resultFinal,
+          triche_detectee: true,
+          score: 0,
+          feedback: `${collageMassif ? "Collage massif détecté." : ""} ${tempsIrrealiste ? "Temps de rédaction irréaliste pour la longueur soumise." : ""}`.trim(),
+          points_forts: "Tu as soumis une réponse.",
+          a_ameliorer: "Rédige progressivement avec tes propres mots pour débloquer l'XP.",
+        };
+      }
+      if (!resultFinal.triche_detectee && styleArtificiel.suspect) {
+        resultFinal = {
+          ...resultFinal,
+          score: Math.min(resultFinal.score || 0, 4),
+          feedback: "Style artificiel détecté. Réécris de façon plus simple et personnelle.",
+          a_ameliorer: `Simplifie la formulation et ancre ta réponse dans le cas. ${styleArtificiel.raisons.slice(0, 2).join(" ")}`,
+        };
+      }
       const user = auth.currentUser;
       if (!user) throw new Error("Utilisateur non connecté.");
       const userDoc = await getDoc(doc(db, "users", user.uid));
@@ -575,7 +666,8 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
       const xpBase = getMissionXPBase(mission);
       const xpMissionBoostee = Math.round(xpBase * MISSION_XP_MULTIPLIER);
       const xpBrut = (dejaFaite || resultFinal.triche_detectee) ? 0 : Math.round((resultFinal.score / 10) * xpMissionBoostee);
-      const xpGagne = Math.max(0, xpBrut);
+      const xpCapStyle = styleArtificiel.suspect ? Math.round(xpMissionBoostee * 0.2) : xpMissionBoostee;
+      const xpGagne = Math.max(0, Math.min(xpBrut, xpCapStyle));
       const newXP = (userData.xp || 0) + xpGagne;
       const historique = userData.missionsHistorique || {};
       historique[mission.id] = {
@@ -640,7 +732,16 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
         <div>
           <textarea
             value={reponse}
-            onChange={e => setReponse(e.target.value)}
+            onChange={e => {
+              if (!attemptStartedAt) setAttemptStartedAt(Date.now());
+              setReponse(e.target.value);
+            }}
+            onPaste={e => {
+              if (!attemptStartedAt) setAttemptStartedAt(Date.now());
+              const pasted = e.clipboardData?.getData("text") || "";
+              setPasteEvents(v => v + 1);
+              setPastedChars(v => v + pasted.length);
+            }}
             placeholder="Écris ta réponse ici avec tes propres mots... (minimum 20 caractères)"
             style={{
               width: "100%", minHeight: "140px", padding: "16px",
@@ -657,6 +758,20 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
             <div style={{ background: COLORS.G + "10", borderRadius: "12px", padding: "12px 16px", marginTop: "8px", border: `1px solid ${COLORS.G}30` }}>
               <p style={{ color: COLORS.G, fontSize: "0.85rem", fontFamily: "'Fredoka One', cursive", margin: 0 }}>
                 ✅ Tu as déjà complété cette mission ! Tu peux la refaire pour t'entraîner mais tu ne gagneras plus d'XP.
+              </p>
+            </div>
+          )}
+          {sortieEcranDetectee && (
+            <div style={{ background: COLORS.H + "10", borderRadius: "12px", padding: "12px 16px", marginTop: "8px", border: `1px solid ${COLORS.H}35` }}>
+              <p style={{ color: COLORS.H, fontSize: "0.83rem", fontFamily: "'Fredoka One', cursive", margin: 0 }}>
+                ⚠️ Sortie d'écran détectée: cette tentative sera notée mais ne donnera pas d'XP.
+              </p>
+            </div>
+          )}
+          {(pasteEvents > 0 || pastedChars > 0) && (
+            <div style={{ background: COLORS.U + "10", borderRadius: "12px", padding: "10px 14px", marginTop: "8px", border: `1px solid ${COLORS.U}30` }}>
+              <p style={{ color: "#92400E", fontSize: "0.8rem", fontFamily: "'Fredoka One', cursive", margin: 0 }}>
+                📋 Collage détecté ({pasteEvents} fois, {pastedChars} caractères). Un collage massif peut annuler l'XP.
               </p>
             </div>
           )}
