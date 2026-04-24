@@ -65,8 +65,7 @@ const familleColors = {
 const toutesCartes = COLLECTIONS.flatMap(c => c.cartes);
 const cartesRares = toutesCartes.filter((c) => c.rarete === "rare");
 const cartesLegendaires = toutesCartes.filter((c) => c.rarete === "legendaire");
-const SCRATCH_TOTAL_CELLS = 180;
-const SCRATCH_REVEAL_RATIO = 0.22;
+const SCRATCH_STROKES_TO_REVEAL = 26;
 
 const getAujourdhui = () => {
   const d = new Date();
@@ -92,7 +91,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
   const canvasRef = useRef(null);
   const scratchAreaRef = useRef(null);
   const isScratchingRef = useRef(false);
-  const touchedBucketsRef = useRef(new Set());
+  const strokeCountRef = useRef(0);
 
   const jokerDisponible = !profil.jokerUtilise && !jokerUtilise;
   const couleurFamille = familleColors[profil.famille] || "#7C3AED";
@@ -117,9 +116,13 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
     if (stored && stored.date === today) {
       setTicketJour(stored);
       setRevealedTicket(Boolean(stored.claimed));
+      setScratchProgress(0);
+      strokeCountRef.current = 0;
     } else {
       setTicketJour(null);
       setRevealedTicket(false);
+      setScratchProgress(0);
+      strokeCountRef.current = 0;
     }
   };
 
@@ -177,7 +180,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
       await updateDoc(doc(db, "users", auth.currentUser.uid), { dailyScratchTicket: nextTicket });
       setTicketJour(nextTicket);
       setScratchProgress(0);
-      touchedBucketsRef.current = new Set();
+      strokeCountRef.current = 0;
       setRevealedTicket(false);
       afficherMessage("🎟️ Ticket du jour ajouté !");
     } catch (err) {
@@ -241,18 +244,13 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
     ctx.arc(x, y, 22, 0, Math.PI * 2);
     ctx.fill();
 
-    const bucketX = Math.floor((x / rect.width) * 18);
-    const bucketY = Math.floor((y / rect.height) * 10);
-    const key = `${bucketX}-${bucketY}`;
-    if (!touchedBucketsRef.current.has(key)) {
-      touchedBucketsRef.current.add(key);
-      setScratchProgress(Math.min(1, touchedBucketsRef.current.size / SCRATCH_TOTAL_CELLS));
-    }
+    strokeCountRef.current += 1;
+    setScratchProgress(Math.min(1, strokeCountRef.current / SCRATCH_STROKES_TO_REVEAL));
   };
 
   useEffect(() => {
     if (!ticketJour || revealedTicket || ticketJour.claimed) return;
-    if (scratchProgress >= SCRATCH_REVEAL_RATIO) {
+    if (scratchProgress >= 1) {
       revelerTicket();
     }
   }, [scratchProgress, ticketJour, revealedTicket]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -457,21 +455,6 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
               <div
                 className="gold-ticket"
                 ref={scratchAreaRef}
-                onMouseDown={(e) => { isScratchingRef.current = true; drawScratch(e.clientX, e.clientY); }}
-                onMouseMove={(e) => { if (isScratchingRef.current) drawScratch(e.clientX, e.clientY); }}
-                onMouseUp={() => { isScratchingRef.current = false; }}
-                onMouseLeave={() => { isScratchingRef.current = false; }}
-                onTouchStart={(e) => {
-                  isScratchingRef.current = true;
-                  const t = e.touches[0];
-                  if (t) drawScratch(t.clientX, t.clientY);
-                }}
-                onTouchMove={(e) => {
-                  if (!isScratchingRef.current) return;
-                  const t = e.touches[0];
-                  if (t) drawScratch(t.clientX, t.clientY);
-                }}
-                onTouchEnd={() => { isScratchingRef.current = false; }}
                 style={{
                   position: "relative",
                   borderRadius: "16px",
@@ -504,33 +487,44 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
                     <canvas
                       ref={canvasRef}
                       className="scratch-canvas"
-                      onMouseDown={(e) => { isScratchingRef.current = true; drawScratch(e.clientX, e.clientY); }}
-                      onMouseMove={(e) => { if (isScratchingRef.current) drawScratch(e.clientX, e.clientY); }}
-                      onMouseUp={() => { isScratchingRef.current = false; }}
-                      onMouseLeave={() => { isScratchingRef.current = false; }}
-                      onTouchStart={(e) => {
+                      onPointerDown={(e) => {
                         e.preventDefault();
                         isScratchingRef.current = true;
-                        const t = e.touches[0];
-                        if (t) drawScratch(t.clientX, t.clientY);
+                        e.currentTarget.setPointerCapture?.(e.pointerId);
+                        drawScratch(e.clientX, e.clientY);
                       }}
-                      onTouchMove={(e) => {
-                        e.preventDefault();
+                      onPointerMove={(e) => {
                         if (!isScratchingRef.current) return;
-                        const t = e.touches[0];
-                        if (t) drawScratch(t.clientX, t.clientY);
+                        drawScratch(e.clientX, e.clientY);
                       }}
-                      onTouchEnd={(e) => {
-                        e.preventDefault();
-                        isScratchingRef.current = false;
-                      }}
+                      onPointerUp={() => { isScratchingRef.current = false; }}
+                      onPointerCancel={() => { isScratchingRef.current = false; }}
                     />
                   )}
                 </div>
               </div>
               <p className="gold-pill" style={{ borderRadius: 999, padding: "6px 10px", color: "#6B7280", fontSize: "0.75rem", margin: "10px auto 0", textAlign: "center", width: "fit-content", fontFamily: "'Fredoka One', cursive" }}>
-                Progression grattage: {scratchedPercent}% · Révélation à {Math.round(SCRATCH_REVEAL_RATIO * 100)}%
+                Progression grattage: {scratchedPercent}% · Révélation à 100%
               </p>
+              {!(revealedTicket || ticketJour?.claimed) && (
+                <button
+                  onClick={revelerTicket}
+                  style={{
+                    width: "100%",
+                    marginTop: "10px",
+                    background: "rgba(17,24,39,0.82)",
+                    color: "white",
+                    border: "none",
+                    fontFamily: "'Fredoka One', cursive",
+                    fontSize: "0.85rem",
+                    padding: "10px 12px",
+                    borderRadius: "10px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Débloquer maintenant (secours)
+                </button>
+              )}
             </div>
           )}
         </div>
