@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { auth, db } from "../firebase";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { COLLECTIONS } from "../data/collections";
@@ -65,7 +65,7 @@ const familleColors = {
 const toutesCartes = COLLECTIONS.flatMap(c => c.cartes);
 const cartesRares = toutesCartes.filter((c) => c.rarete === "rare");
 const cartesLegendaires = toutesCartes.filter((c) => c.rarete === "legendaire");
-const SCRATCH_TOTAL_CELLS = 48;
+const SCRATCH_TOTAL_CELLS = 180;
 const SCRATCH_REVEAL_RATIO = 0.45;
 
 const getAujourdhui = () => {
@@ -86,10 +86,13 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
   const [modeChoixVitrine, setModeChoixVitrine] = useState(null); // index slot en cours
   const [message, setMessage] = useState(null);
   const [ticketJour, setTicketJour] = useState(null);
-  const [scratchCells, setScratchCells] = useState(() => Array.from({ length: SCRATCH_TOTAL_CELLS }, () => false));
   const [revealedTicket, setRevealedTicket] = useState(false);
-  const [isScratching, setIsScratching] = useState(false);
   const [loadingTicket, setLoadingTicket] = useState(false);
+  const [scratchProgress, setScratchProgress] = useState(0);
+  const canvasRef = useRef(null);
+  const scratchAreaRef = useRef(null);
+  const isScratchingRef = useRef(false);
+  const touchedBucketsRef = useRef(new Set());
 
   const jokerDisponible = !profil.jokerUtilise && !jokerUtilise;
   const couleurFamille = familleColors[profil.famille] || "#7C3AED";
@@ -126,8 +129,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
   };
 
   const cartesPossedees = toutesCartes.filter(c => (maCollection[c.id] || 0) > 0);
-  const scratchedCount = scratchCells.filter(Boolean).length;
-  const scratchedPercent = Math.round((scratchedCount / SCRATCH_TOTAL_CELLS) * 100);
+  const scratchedPercent = Math.round(scratchProgress * 100);
   const ticketDisponible = !ticketJour;
 
   const getTicketRewardLabel = (reward) => {
@@ -174,7 +176,8 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
       const nextTicket = { date: today, reward, claimed: false };
       await updateDoc(doc(db, "users", auth.currentUser.uid), { dailyScratchTicket: nextTicket });
       setTicketJour(nextTicket);
-      setScratchCells(Array.from({ length: SCRATCH_TOTAL_CELLS }, () => false));
+      setScratchProgress(0);
+      touchedBucketsRef.current = new Set();
       setRevealedTicket(false);
       afficherMessage("🎟️ Ticket du jour ajouté !");
     } catch (err) {
@@ -225,23 +228,59 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
     }
   };
 
-  const scratchCell = (index) => {
-    if (!ticketJour || revealedTicket || ticketJour.claimed) return;
-    setScratchCells((prev) => {
-      if (prev[index]) return prev;
-      const next = [...prev];
-      next[index] = true;
-      return next;
-    });
+  const drawScratch = (clientX, clientY) => {
+    if (!canvasRef.current || !scratchAreaRef.current || !ticketJour || revealedTicket || ticketJour.claimed) return;
+    const rect = scratchAreaRef.current.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    if (x < 0 || y < 0 || x > rect.width || y > rect.height) return;
+
+    const ctx = canvasRef.current.getContext("2d");
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.beginPath();
+    ctx.arc(x, y, 14, 0, Math.PI * 2);
+    ctx.fill();
+
+    const bucketX = Math.floor((x / rect.width) * 18);
+    const bucketY = Math.floor((y / rect.height) * 10);
+    const key = `${bucketX}-${bucketY}`;
+    if (!touchedBucketsRef.current.has(key)) {
+      touchedBucketsRef.current.add(key);
+      setScratchProgress(Math.min(1, touchedBucketsRef.current.size / SCRATCH_TOTAL_CELLS));
+    }
   };
 
   useEffect(() => {
     if (!ticketJour || revealedTicket || ticketJour.claimed) return;
-    const ratio = scratchedCount / SCRATCH_TOTAL_CELLS;
-    if (ratio >= SCRATCH_REVEAL_RATIO) {
+    if (scratchProgress >= SCRATCH_REVEAL_RATIO) {
       revelerTicket();
     }
-  }, [scratchedCount, ticketJour, revealedTicket]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [scratchProgress, ticketJour, revealedTicket]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!canvasRef.current || !ticketJour || revealedTicket || ticketJour.claimed) return;
+    const canvas = canvasRef.current;
+    const rect = scratchAreaRef.current?.getBoundingClientRect();
+    const width = Math.max(280, Math.floor(rect?.width || 600));
+    const height = Math.max(100, Math.floor(rect?.height || 160));
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d");
+    const gradient = ctx.createLinearGradient(0, 0, width, height);
+    gradient.addColorStop(0, "#D1D5DB");
+    gradient.addColorStop(0.5, "#9CA3AF");
+    gradient.addColorStop(1, "#6B7280");
+    ctx.globalCompositeOperation = "source-over";
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, width, height);
+    for (let i = 0; i < 420; i++) {
+      const px = Math.random() * width;
+      const py = Math.random() * height;
+      const alpha = 0.08 + (Math.random() * 0.22);
+      ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+      ctx.fillRect(px, py, 1.8, 1.8);
+    }
+  }, [ticketJour, revealedTicket]);
 
   const choisirCarteVitrine = async (carte) => {
     if (modeChoixVitrine === null) return;
@@ -380,6 +419,14 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
                 border: 1px solid #B45309;
                 box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
               }
+              .scratch-canvas {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+                cursor: crosshair;
+              }
             `}
           </style>
           <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1.2rem", margin: "0 0 6px" }}>🎟️ Ticket à gratter quotidien</p>
@@ -409,9 +456,22 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
             <div>
               <div
                 className="gold-ticket"
-                onMouseDown={() => setIsScratching(true)}
-                onMouseUp={() => setIsScratching(false)}
-                onMouseLeave={() => setIsScratching(false)}
+                ref={scratchAreaRef}
+                onMouseDown={(e) => { isScratchingRef.current = true; drawScratch(e.clientX, e.clientY); }}
+                onMouseMove={(e) => { if (isScratchingRef.current) drawScratch(e.clientX, e.clientY); }}
+                onMouseUp={() => { isScratchingRef.current = false; }}
+                onMouseLeave={() => { isScratchingRef.current = false; }}
+                onTouchStart={(e) => {
+                  isScratchingRef.current = true;
+                  const t = e.touches[0];
+                  if (t) drawScratch(t.clientX, t.clientY);
+                }}
+                onTouchMove={(e) => {
+                  if (!isScratchingRef.current) return;
+                  const t = e.touches[0];
+                  if (t) drawScratch(t.clientX, t.clientY);
+                }}
+                onTouchEnd={() => { isScratchingRef.current = false; }}
                 style={{
                   position: "relative",
                   borderRadius: "16px",
@@ -431,32 +491,18 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
 
                 <div
                   style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(8, 1fr)",
-                    gap: "3px",
                     marginTop: "10px",
-                    opacity: revealedTicket || ticketJour?.claimed ? 0 : 1,
-                    transition: "opacity 0.25s ease",
+                    borderRadius: "10px",
+                    overflow: "hidden",
+                    height: "115px",
                     position: "relative",
                     zIndex: 2,
+                    border: "1px dashed rgba(255,255,255,0.35)",
                   }}
                 >
-                  {scratchCells.map((isScratched, idx) => (
-                    <button
-                      key={idx}
-                      onMouseEnter={() => { if (isScratching) scratchCell(idx); }}
-                      onMouseDown={() => scratchCell(idx)}
-                      onTouchStart={() => scratchCell(idx)}
-                      style={{
-                        border: "none",
-                        borderRadius: "4px",
-                        height: "16px",
-                        cursor: "pointer",
-                        background: isScratched ? "transparent" : "linear-gradient(135deg, #9CA3AF, #6B7280)",
-                        boxShadow: isScratched ? "none" : "inset 0 1px 0 rgba(255,255,255,0.35)",
-                      }}
-                    />
-                  ))}
+                  {!(revealedTicket || ticketJour?.claimed) && (
+                    <canvas ref={canvasRef} className="scratch-canvas" />
+                  )}
                 </div>
               </div>
               <p className="gold-pill" style={{ borderRadius: 999, padding: "6px 10px", color: "#6B7280", fontSize: "0.75rem", margin: "10px auto 0", textAlign: "center", width: "fit-content", fontFamily: "'Fredoka One', cursive" }}>
