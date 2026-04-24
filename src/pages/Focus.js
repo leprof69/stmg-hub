@@ -14,6 +14,8 @@ const COLORS = {
   red: "#DC2626",
 };
 
+const FOCUS_PROGRESS_VERSION = 2;
+
 const EXERCISES = [
   {
     id: "focus-13-1",
@@ -216,6 +218,30 @@ const normalize = (v = "") =>
     .replace(/\s+/g, " ")
     .trim();
 
+const SYNONYM_GROUPS = [
+  ["definir", "fixer", "determiner", "etablir", "preciser"],
+  ["objectif", "objectifs", "but", "cible", "finalite"],
+  ["resultat", "resultats", "issue", "issues"],
+  ["atteinte", "realisation", "accomplissement"],
+  ["analyse", "analyser", "interprete", "interpreter", "interpretation", "conclure", "conclusion"],
+  ["chiffre", "ca", "chiffre affaires", "chiffre d affaires"],
+  ["rentabilite", "rendement"],
+  ["profitabilite", "marge nette"],
+  ["indicateur", "indicateurs", "kpi", "kpis"],
+];
+
+const canonicalize = (text = "") => {
+  let out = normalize(text);
+  SYNONYM_GROUPS.forEach((group) => {
+    const canonical = group[0];
+    group.forEach((variant) => {
+      const escaped = normalize(variant).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      out = out.replace(new RegExp(`\\b${escaped}\\b`, "g"), canonical);
+    });
+  });
+  return out;
+};
+
 const getTodayKey = () => {
   const d = new Date();
   return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
@@ -227,7 +253,7 @@ const extractNumbers = (text = "") => {
 };
 
 const evaluate = (exercise, answer) => {
-  const clean = normalize(answer);
+  const clean = canonicalize(answer);
   if (!clean) {
     return {
       score: 0,
@@ -238,8 +264,9 @@ const evaluate = (exercise, answer) => {
     };
   }
 
-  const foundKeywords = exercise.expectedKeywords.filter((k) => clean.includes(normalize(k)));
-  const keywordRatio = exercise.expectedKeywords.length ? foundKeywords.length / exercise.expectedKeywords.length : 0;
+  const expectedNormalized = exercise.expectedKeywords.map((k) => canonicalize(k));
+  const foundKeywords = expectedNormalized.filter((k) => clean.includes(k));
+  const keywordRatio = expectedNormalized.length ? foundKeywords.length / expectedNormalized.length : 0;
 
   let numberRatio = 1;
   let missingNumbers = [];
@@ -252,14 +279,17 @@ const evaluate = (exercise, answer) => {
     missingNumbers = exercise.expectedNumbers.filter((n) => !matched.includes(n));
   }
 
-  const hasAnalysis = /(analyse|interpre|cela signifie|on peut conclure|donc|ce resultat)/i.test(clean);
-  const structureBonus = answer.length >= 120 ? 1 : 0.4;
-  const analysisBonus = exercise.type === "Calcul" ? (hasAnalysis ? 1 : 0) : 0.5;
-  const rawScore = (keywordRatio * 5.5) + (numberRatio * 3) + structureBonus + analysisBonus;
-  const score = Math.max(0, Math.min(10, Math.round(rawScore * 10) / 10));
+  const hasAnalysis = /(analyse|interpre|cela signifie|on peut conclure|donc|ce resultat|impact|montre que|indique que)/i.test(clean);
+  const structureBonus = answer.length >= 120 ? 1.2 : answer.length >= 80 ? 0.9 : answer.length >= 40 ? 0.6 : 0.3;
+  const analysisBonus = exercise.type === "Calcul" ? (hasAnalysis ? 1.2 : 0.5) : hasAnalysis ? 0.8 : 0.5;
+  const rawScore = (keywordRatio * 5.2) + (numberRatio * 2.8) + structureBonus + analysisBonus;
+  const tentativeFloor = answer.trim().length >= 35 ? 2 : 0;
+  const partialCoverage = Math.max(keywordRatio, numberRatio);
+  const partialFloor = partialCoverage >= 0.66 ? 6 : partialCoverage >= 0.33 ? 4 : 0;
+  const score = Math.max(tentativeFloor, partialFloor, Math.min(10, Math.round(rawScore * 10) / 10));
 
   const mention = score >= 8 ? "Très bien" : score >= 6 ? "Bon travail" : score >= 4 ? "Passable" : "À travailler";
-  const missingKeywords = exercise.expectedKeywords.filter((k) => !foundKeywords.includes(k)).slice(0, 4);
+  const missingKeywords = expectedNormalized.filter((k) => !foundKeywords.includes(k)).slice(0, 4);
 
   return {
     score,
@@ -282,19 +312,31 @@ function FocusCard({ exercise, claim, onClaimXP }) {
   const [answer, setAnswer] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [localInfo, setLocalInfo] = useState("");
 
-  const canEvaluate = answer.trim().length >= 40;
+  const canEvaluate = answer.trim().length >= 25;
   const today = getTodayKey();
   const alreadyClaimed = claim?.lastClaimDate === today;
   const canClaim = !alreadyClaimed && result && result.score >= 5;
+  const claimHint = alreadyClaimed
+    ? "XP déjà validés aujourd’hui pour cet exercice."
+    : !result
+      ? "Corrige d’abord ta réponse."
+      : result.score < 5
+        ? "Score minimum requis : 5/10 pour valider l’XP."
+        : "";
 
   const validate = () => setResult(evaluate(exercise, answer));
 
   const claimXp = async () => {
-    if (!canClaim) return;
+    if (!canClaim) {
+      setLocalInfo(claimHint || "Validation impossible pour le moment.");
+      return;
+    }
     setLoading(true);
     try {
-      await onClaimXP(exercise.id, exercise.xp);
+      const ok = await onClaimXP(exercise.id, exercise.xp);
+      if (!ok) setLocalInfo("Échec de validation. Vérifie la connexion et réessaie.");
     } finally {
       setLoading(false);
     }
@@ -320,6 +362,18 @@ function FocusCard({ exercise, claim, onClaimXP }) {
       <textarea
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
+        onPaste={(e) => e.preventDefault()}
+        onCopy={(e) => e.preventDefault()}
+        onCut={(e) => e.preventDefault()}
+        onDrop={(e) => e.preventDefault()}
+        onContextMenu={(e) => e.preventDefault()}
+        onKeyDown={(e) => {
+          const key = String(e.key || "").toLowerCase();
+          if ((e.ctrlKey || e.metaKey) && (key === "v" || key === "c" || key === "x" || key === "insert")) {
+            e.preventDefault();
+          }
+          if (e.shiftKey && key === "insert") e.preventDefault();
+        }}
         placeholder="Rédige ta réponse..."
         style={{
           width: "100%",
@@ -333,6 +387,9 @@ function FocusCard({ exercise, claim, onClaimXP }) {
           boxSizing: "border-box",
         }}
       />
+      <p style={{ margin: "6px 0 0", color: "#64748B", fontSize: 12 }}>
+        Copier/coller désactivé sur cette zone de réponse.
+      </p>
 
       <div className="focus-actions" style={{ display: "flex", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
         <button
@@ -368,6 +425,11 @@ function FocusCard({ exercise, claim, onClaimXP }) {
           {alreadyClaimed ? "XP déjà gagné aujourd’hui" : loading ? "Validation..." : `Valider +${exercise.xp} XP`}
         </button>
       </div>
+      {(claimHint || localInfo) && (
+        <p style={{ margin: "6px 0 0", color: "#64748B", fontSize: 12 }}>
+          {localInfo || claimHint}
+        </p>
+      )}
 
       {result && (
         <div style={{ marginTop: 10, borderRadius: 10, border: "1px solid #BFDBFE", background: "#EFF6FF", padding: 10 }}>
@@ -399,7 +461,9 @@ export default function Focus({ profil, onXPGagne }) {
       try {
         const snap = await getDoc(doc(db, "users", user.uid));
         if (!snap.exists()) return;
-        setClaims(snap.data()?.focusProgress?.claims || {});
+        const progress = snap.data()?.focusProgress || {};
+        const isCurrent = progress?.version === FOCUS_PROGRESS_VERSION;
+        setClaims(isCurrent ? progress.claims || {} : {});
       } catch (err) {
         console.error("Chargement focus impossible", err);
       }
@@ -409,35 +473,53 @@ export default function Focus({ profil, onXPGagne }) {
 
   const handleClaimXP = async (exerciseId, xp) => {
     const user = auth.currentUser;
-    if (!user) return;
-    const today = getTodayKey();
-    const ref = doc(db, "users", user.uid);
-    const snap = await getDoc(ref);
-    if (!snap.exists()) return;
-    const data = snap.data();
-    const prevClaims = data.focusProgress?.claims || {};
-    if (prevClaims[exerciseId]?.lastClaimDate === today) return;
+    if (!user) {
+      setBanner({ type: "error", text: "Session expirée. Reconnecte-toi pour valider l’XP." });
+      return false;
+    }
+    try {
+      const today = getTodayKey();
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) {
+        setBanner({ type: "error", text: "Profil introuvable. Recharge la page." });
+        return false;
+      }
+      const data = snap.data();
+      const storedProgress = data.focusProgress || {};
+      const prevClaims = storedProgress?.version === FOCUS_PROGRESS_VERSION ? (storedProgress.claims || {}) : {};
+      if (prevClaims[exerciseId]?.lastClaimDate === today) {
+        setBanner({ type: "error", text: "XP déjà validés aujourd’hui pour cet exercice." });
+        return false;
+      }
 
-    const nextClaims = {
-      ...prevClaims,
-      [exerciseId]: {
-        lastClaimDate: today,
-        totalClaims: (prevClaims[exerciseId]?.totalClaims || 0) + 1,
-      },
-    };
+      const nextClaims = {
+        ...prevClaims,
+        [exerciseId]: {
+          lastClaimDate: today,
+          totalClaims: (prevClaims[exerciseId]?.totalClaims || 0) + 1,
+        },
+      };
 
-    await updateDoc(ref, {
-      xp: (data.xp || 0) + xp,
-      focusProgress: {
-        ...(data.focusProgress || {}),
-        chapter: "SDGN 1ère - Chapitre 13",
-        claims: nextClaims,
-      },
-    });
+      await updateDoc(ref, {
+        xp: (data.xp || 0) + xp,
+        focusProgress: {
+          ...(storedProgress || {}),
+          version: FOCUS_PROGRESS_VERSION,
+          chapter: "SDGN 1ère - Chapitre 13",
+          claims: nextClaims,
+        },
+      });
 
-    setClaims(nextClaims);
-    setBanner({ type: "success", text: `+${xp} XP gagnés sur Focus.` });
-    if (onXPGagne) onXPGagne();
+      setClaims(nextClaims);
+      setBanner({ type: "success", text: `+${xp} XP gagnés sur Focus.` });
+      if (onXPGagne) onXPGagne();
+      return true;
+    } catch (err) {
+      console.error("Validation XP Focus impossible", err);
+      setBanner({ type: "error", text: "Validation impossible pour le moment. Vérifie la connexion puis réessaie." });
+      return false;
+    }
   };
 
   return (
@@ -479,6 +561,7 @@ export default function Focus({ profil, onXPGagne }) {
             <span style={{ background: "#DBEAFE", color: "#1D4ED8", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>Notions: performance, rentabilité, profitabilité, indicateurs</span>
             <span style={{ background: "#DCFCE7", color: "#166534", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>XP potentiel/jour: +{xpPotential}</span>
             <span style={{ background: "#FEF3C7", color: "#92400E", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>15 exercices progressifs</span>
+            <span style={{ background: "#FFE4E6", color: "#9F1239", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>Mode correction équilibré v{FOCUS_PROGRESS_VERSION}</span>
           </div>
         </section>
 

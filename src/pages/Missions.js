@@ -584,8 +584,6 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
   const [chargement, setChargement] = useState(false);
   const [sortieEcranDetectee, setSortieEcranDetectee] = useState(false);
   const [attemptStartedAt, setAttemptStartedAt] = useState(null);
-  const [pasteEvents, setPasteEvents] = useState(0);
-  const [pastedChars, setPastedChars] = useState(0);
   const [dejaFaite] = useState(missionDejaFaite(profil, mission.id));
   const longueurReponse = reponse.trim().length;
   const difficulte = Math.max(1, Math.min(5, Number(mission.difficulte) || 1));
@@ -626,7 +624,7 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
         : result;
 
       const elapsedSec = attemptStartedAt ? Math.max(1, Math.round((Date.now() - attemptStartedAt) / 1000)) : 1;
-      const collageMassif = pastedChars >= 140 || (pasteEvents >= 2 && pastedChars >= 90);
+      const collageMassif = false;
       const tempsIrrealiste = reponse.trim().length >= 400 && elapsedSec <= 15;
       const styleArtificiel = detecterStyleArtificiel(reponse);
 
@@ -745,11 +743,17 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
               if (!attemptStartedAt) setAttemptStartedAt(Date.now());
               setReponse(e.target.value);
             }}
-            onPaste={e => {
-              if (!attemptStartedAt) setAttemptStartedAt(Date.now());
-              const pasted = e.clipboardData?.getData("text") || "";
-              setPasteEvents(v => v + 1);
-              setPastedChars(v => v + pasted.length);
+            onPaste={(e) => e.preventDefault()}
+            onCopy={(e) => e.preventDefault()}
+            onCut={(e) => e.preventDefault()}
+            onDrop={(e) => e.preventDefault()}
+            onContextMenu={(e) => e.preventDefault()}
+            onKeyDown={(e) => {
+              const key = String(e.key || "").toLowerCase();
+              if ((e.ctrlKey || e.metaKey) && (key === "v" || key === "c" || key === "x" || key === "insert")) {
+                e.preventDefault();
+              }
+              if (e.shiftKey && key === "insert") e.preventDefault();
             }}
             placeholder="Écris ta réponse ici avec tes propres mots... (minimum 20 caractères)"
             style={{
@@ -777,15 +781,8 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
               </p>
             </div>
           )}
-          {(pasteEvents > 0 || pastedChars > 0) && (
-            <div style={{ background: COLORS.U + "10", borderRadius: "12px", padding: "10px 14px", marginTop: "8px", border: `1px solid ${COLORS.U}30` }}>
-              <p style={{ color: "#92400E", fontSize: "0.8rem", fontFamily: "'Fredoka One', cursive", margin: 0 }}>
-                📋 Collage détecté ({pasteEvents} fois, {pastedChars} caractères). Un collage massif peut annuler l'XP.
-              </p>
-            </div>
-          )}
           <p style={{ color: "#9CA3AF", fontSize: "0.8rem", marginTop: "8px" }}>
-            ⚠️ Réponds avec tes propres mots — l'IA détecte les réponses copiées !
+            ⚠️ Copier/coller désactivé sur cette zone : réponse personnelle obligatoire.
           </p>
           <button onClick={soumettre} disabled={chargement || longueurReponse < 20}
             style={{

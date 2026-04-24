@@ -426,17 +426,27 @@ function ExerciseCard({ exercise, status, onClaimXP, onEvaluateResponse }) {
   const [loadingXP, setLoadingXP] = useState(false);
   const [loadingEval, setLoadingEval] = useState(false);
   const [evalResult, setEvalResult] = useState(null);
+  const [localInfo, setLocalInfo] = useState("");
 
   const length = answer.trim().length;
   const alreadyClaimed = status?.lastClaimDate === getTodayKey();
   const canClaim = length >= exercise.minChars && !alreadyClaimed && !loadingXP;
   const canEval = length >= Math.max(80, Math.floor(exercise.minChars * 0.6)) && !loadingEval;
+  const claimHint = alreadyClaimed
+    ? "XP déjà validés aujourd’hui pour cet exercice."
+    : length < exercise.minChars
+      ? `Réponse trop courte pour valider l’XP (${exercise.minChars} caractères mini).`
+      : "";
 
   const claimXP = async () => {
-    if (!canClaim) return;
+    if (!canClaim) {
+      setLocalInfo(claimHint || "Validation impossible pour le moment.");
+      return;
+    }
     setLoadingXP(true);
     try {
-      await onClaimXP(exercise.id, exercise.xp);
+      const ok = await onClaimXP(exercise.id, exercise.xp);
+      if (!ok) setLocalInfo("Échec de validation. Vérifie la connexion et réessaie.");
     } finally {
       setLoadingXP(false);
     }
@@ -477,6 +487,18 @@ function ExerciseCard({ exercise, status, onClaimXP, onEvaluateResponse }) {
       <textarea
         value={answer}
         onChange={(e) => setAnswer(e.target.value)}
+        onPaste={(e) => e.preventDefault()}
+        onCopy={(e) => e.preventDefault()}
+        onCut={(e) => e.preventDefault()}
+        onDrop={(e) => e.preventDefault()}
+        onContextMenu={(e) => e.preventDefault()}
+        onKeyDown={(e) => {
+          const key = String(e.key || "").toLowerCase();
+          if ((e.ctrlKey || e.metaKey) && (key === "v" || key === "c" || key === "x" || key === "insert")) {
+            e.preventDefault();
+          }
+          if (e.shiftKey && key === "insert") e.preventDefault();
+        }}
         placeholder="Rédige ta réponse ici..."
         style={{
           width: "100%",
@@ -492,6 +514,9 @@ function ExerciseCard({ exercise, status, onClaimXP, onEvaluateResponse }) {
           boxSizing: "border-box",
         }}
       />
+      <p style={{ margin: "6px 0 0", color: "#64748B", fontSize: 12 }}>
+        Copier/coller désactivé sur cette zone de réponse.
+      </p>
       <p style={{ margin: "6px 0 0", color: "#64748B", fontSize: 12 }}>
         Longueur recommandée pour validation XP : {exercise.minChars} caractères minimum.
       </p>
@@ -518,6 +543,11 @@ function ExerciseCard({ exercise, status, onClaimXP, onEvaluateResponse }) {
           {showCorrection ? "Masquer correction partielle" : "Afficher correction partielle"}
         </button>
       </div>
+      {(claimHint || localInfo) && (
+        <p style={{ margin: "6px 0 0", color: "#64748B", fontSize: 12 }}>
+          {localInfo || claimHint}
+        </p>
+      )}
 
       {evalResult && (
         <div style={{ marginTop: 10, background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 12, padding: 12 }}>
@@ -716,34 +746,47 @@ export default function ObjectifBac({ profil, onXPGagne }) {
 
   const handleClaimXP = async (exerciseId, xpAmount) => {
     const user = auth.currentUser;
-    if (!user) return;
-    const today = getTodayKey();
-    const ref = doc(db, "users", user.uid);
-    const snap = await getDoc(ref);
-    if (!snap.exists()) return;
-    const data = snap.data();
-    const claims = data.objectifBacProgress?.claims || {};
-    if (claims?.[exerciseId]?.lastClaimDate === today) {
-      setBanner({ type: "error", text: "XP déjà gagné pour cet exercice aujourd’hui." });
-      return;
+    if (!user) {
+      setBanner({ type: "error", text: "Session expirée. Reconnecte-toi pour valider l’XP." });
+      return false;
     }
-    const nextClaims = {
-      ...claims,
-      [exerciseId]: {
-        lastClaimDate: today,
-        totalClaims: (claims?.[exerciseId]?.totalClaims || 0) + 1,
-      },
-    };
-    await updateDoc(ref, {
-      xp: (data.xp || 0) + xpAmount,
-      objectifBacProgress: {
-        ...(data.objectifBacProgress || {}),
-        claims: nextClaims,
-      },
-    });
-    setClaimState(nextClaims);
-    setBanner({ type: "success", text: `+${xpAmount} XP ajoutés !` });
-    if (onXPGagne) onXPGagne();
+    try {
+      const today = getTodayKey();
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) {
+        setBanner({ type: "error", text: "Profil introuvable. Recharge la page." });
+        return false;
+      }
+      const data = snap.data();
+      const claims = data.objectifBacProgress?.claims || {};
+      if (claims?.[exerciseId]?.lastClaimDate === today) {
+        setBanner({ type: "error", text: "XP déjà gagnés aujourd’hui pour cet exercice." });
+        return false;
+      }
+      const nextClaims = {
+        ...claims,
+        [exerciseId]: {
+          lastClaimDate: today,
+          totalClaims: (claims?.[exerciseId]?.totalClaims || 0) + 1,
+        },
+      };
+      await updateDoc(ref, {
+        xp: (data.xp || 0) + xpAmount,
+        objectifBacProgress: {
+          ...(data.objectifBacProgress || {}),
+          claims: nextClaims,
+        },
+      });
+      setClaimState(nextClaims);
+      setBanner({ type: "success", text: `+${xpAmount} XP ajoutés !` });
+      if (onXPGagne) onXPGagne();
+      return true;
+    } catch (err) {
+      console.error("Validation XP Objectif Bac impossible", err);
+      setBanner({ type: "error", text: "Validation impossible pour le moment. Vérifie la connexion puis réessaie." });
+      return false;
+    }
   };
 
   const handleEvaluateResponse = async (exercise, answer) => {
