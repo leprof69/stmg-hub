@@ -1,5 +1,107 @@
+:root {
+  --bg-page: #f6f8fc;
+  --surface: #ffffff;
+  --surface-soft: #eef4ff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --line: #dbe3ef;
+  --brand: #2563eb;
+  --brand-strong: #1d4ed8;
+  --accent: #0ea5e9;
+  --warm: #f97316;
+  --success: #16a34a;
+  --danger: #dc2626;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+body {
+  background:
+    radial-gradient(circle at 10% 0%, rgba(37, 99, 235, 0.08), transparent 40%),
+    radial-gradient(circle at 95% 20%, rgba(14, 165, 233, 0.07), transparent 35%),
+    var(--bg-page);
+  color: var(--text-main);
+  font-family: "Nunito", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  overflow-x: auto;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+}
+
+.top-nav::-webkit-scrollbar {
+  height: 6px;
+}
+
+.top-nav::-webkit-scrollbar-thumb {
+  background: #c7d2e3;
+  border-radius: 999px;
+}
+
+.nav-brand {
+  border: 1px solid #bfdbfe;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.84rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #eff6ff, #ecfeff);
+  color: #1d4ed8;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.nav-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--line);
+  margin: 0 2px;
+}
+
+.nav-btn {
+  border: 1px solid #d6deea;
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #334155;
+  background: #ffffff;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.nav-btn:hover {
+  border-color: #93c5fd;
+  color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.nav-btn.active {
+  border-color: var(--brand);
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--brand), var(--brand-strong));
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
+}
+
+.nav-btn.admin.active {
+  border-color: var(--danger);
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  box-shadow: 0 8px 18px rgba(220, 38, 38, 0.25);
 }
