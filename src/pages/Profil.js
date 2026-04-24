@@ -241,7 +241,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
     const ctx = canvasRef.current.getContext("2d");
     ctx.globalCompositeOperation = "destination-out";
     ctx.beginPath();
-    ctx.arc(x, y, 18, 0, Math.PI * 2);
+    ctx.arc(x, y, 30, 0, Math.PI * 2);
     ctx.fill();
 
     const bucketX = Math.floor((x / rect.width) * SCRATCH_GRID_X);
