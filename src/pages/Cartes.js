@@ -42,6 +42,23 @@ const PACKS = [
   },
 ];
 
+const PACK_SPECIAL_1STMG2 = {
+  id: "special_1stmg2",
+  nom: "Pack 1STMG2",
+  emoji: "🔥",
+  cout: 300,
+  nbCartes: 3,
+  couleur: "#DB2777",
+  gradient: "linear-gradient(135deg, #DB2777, #7C3AED)",
+  description: "Édition spéciale 1STMG2 • 3 cartes • 300 XP",
+  prob: { commune: 0.88, peu_commune: 0.10, rare: 0.02, epique: 0, legendaire: 0, ultra_rare: 0 },
+};
+
+const getPacksForCollection = (collection) => {
+  if (collection?.id === "special_drop1") return [PACK_SPECIAL_1STMG2];
+  return PACKS.filter((p) => p.id !== "mystere");
+};
+
 const tirerCarte = (pack, collection) => {
   const rand = Math.random();
   let cumul = 0;
@@ -575,7 +592,7 @@ export default function Cartes({ profil, onXPGagne }) {
                     </span>
                   </div>
                   <div style={{ padding: "20px 24px", display: "flex", gap: "14px", flexWrap: "wrap" }}>
-                    {PACKS.filter(p => p.id !== "mystere").map(pack => {
+                    {getPacksForCollection(col).map(pack => {
                       const peutOuvrir = (profil?.xp || 0) >= pack.cout;
                       return (
                         <div key={pack.id} style={{ flex: 1, minWidth: "150px", background: peutOuvrir ? "#FAFAFA" : "#F9FAFB", border: `2px solid ${peutOuvrir ? pack.couleur + "40" : "#E5E7EB"}`, borderRadius: "18px", padding: "18px 16px", textAlign: "center" }}>

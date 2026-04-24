@@ -190,7 +190,7 @@ export const COLLECTIONS = [
     ],
   },
   {
-    id: "special_drop1", nom: "Édition Spéciale", theme: "SPECIAL", matiere: "Spéciale", drop: 1,
+    id: "special_drop1", nom: "Édition Spéciale 1STMG2", theme: "SPECIAL", matiere: "Spéciale", drop: 1,
     emoji: "✨", couleur: "#8B5CF6", gradient: "linear-gradient(135deg, #8B5CF6, #DB2777)",
     xpBonus: 0,
     cartes: [
