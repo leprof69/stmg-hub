@@ -171,6 +171,25 @@ export default function Admin() {
     setRecompenseEnCours(false);
   };
 
+  const retirerXPIndividuel = async (userId, xp, prenom) => {
+    if (!xp || xp <= 0) return;
+    if (!window.confirm(`Retirer ${xp} XP à ${prenom || "cet élève"} ?`)) return;
+    setRecompenseEnCours(true);
+    try {
+      const snap = await getDocs(collection(db, "users"));
+      const user = snap.docs.find(d => d.id === userId);
+      if (!user) return;
+      const xpActuel = user.data().xp || 0;
+      const nouveauXP = Math.max(0, xpActuel - xp);
+      await updateDoc(doc(db, "users", userId), { xp: nouveauXP });
+      setMessagesRecompense(prev => [...prev, `⚠️ -${xp} XP → ${prenom || "Élève"} (${xpActuel} → ${nouveauXP})`]);
+      await chargerEleves();
+    } catch {
+      setMessagesRecompense(prev => [...prev, `❌ Erreur retrait XP pour ${prenom || "Élève"}`]);
+    }
+    setRecompenseEnCours(false);
+  };
+
   const distribuerXPFamille = async (famille, xpParMembre) => {
     if (!xpParMembre || xpParMembre <= 0) return;
     setRecompenseEnCours(true);
@@ -652,6 +671,7 @@ export default function Admin() {
                       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                         <input type="number" value={xpCustom[eleve.id] ?? (recompense?.xp || 0)} onChange={e => setXpCustom(prev => ({ ...prev, [eleve.id]: parseInt(e.target.value) || 0 }))} style={{ width: "80px", padding: "6px 10px", borderRadius: "10px", border: `2px solid ${COLORS.U}30`, fontFamily: "'Fredoka One', cursive", fontSize: "0.9rem", textAlign: "center", outline: "none" }} />
                         <Btn onClick={() => distribuerXPIndividuel(eleve.id, xpCustom[eleve.id] ?? recompense?.xp, eleve.prenom)} color={recompense ? recompense.couleur : COLORS.S} disabled={recompenseEnCours} small>{recompense ? recompense.label : "+XP"}</Btn>
+                        <Btn onClick={() => retirerXPIndividuel(eleve.id, xpCustom[eleve.id] ?? recompense?.xp, eleve.prenom)} color={COLORS.H} disabled={recompenseEnCours} small>Retirer</Btn>
                       </div>
                     </div>
                   );

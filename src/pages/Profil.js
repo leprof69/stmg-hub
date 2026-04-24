@@ -65,7 +65,7 @@ const familleColors = {
 const toutesCartes = COLLECTIONS.flatMap(c => c.cartes);
 const cartesLegendaires = toutesCartes.filter((c) => c.rarete === "legendaire");
 const cartesPrismatiques = toutesCartes.filter((c) => c.rarete === "ultra_rare");
-const DAILY_TICKET_VERSION = 3;
+const DAILY_TICKET_VERSION = 4;
 const SCRATCH_GRID_X = 20;
 const SCRATCH_GRID_Y = 10;
 const SCRATCH_TOTAL_CELLS = SCRATCH_GRID_X * SCRATCH_GRID_Y;
