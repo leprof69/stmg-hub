@@ -95,6 +95,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
 
   const jokerDisponible = !profil.jokerUtilise && !jokerUtilise;
   const couleurFamille = familleColors[profil.famille] || "#7C3AED";
+  const isAdmin = profil.role === "admin";
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -133,7 +134,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
 
   const cartesPossedees = toutesCartes.filter(c => (maCollection[c.id] || 0) > 0);
   const scratchedPercent = Math.round(scratchProgress * 100);
-  const ticketDisponible = !ticketJour;
+  const ticketDisponible = !ticketJour || isAdmin;
 
   const getTicketRewardLabel = (reward) => {
     if (!reward) return "";
@@ -161,7 +162,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
   };
 
   const creerTicketDuJour = async () => {
-    if (!auth.currentUser || loadingTicket || ticketJour) return;
+    if (!auth.currentUser || loadingTicket || (ticketJour && !isAdmin)) return;
     setLoadingTicket(true);
     try {
       const today = getAujourdhui();
@@ -169,7 +170,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
       if (!snap.exists()) return;
       const data = snap.data();
       const stored = data.dailyScratchTicket;
-      if (stored && stored.date === today) {
+      if (!isAdmin && stored && stored.date === today) {
         setTicketJour(stored);
         setRevealedTicket(Boolean(stored.claimed));
         afficherMessage("🎟️ Ticket déjà disponible aujourd’hui.");
@@ -182,7 +183,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
       setScratchProgress(0);
       strokeCountRef.current = 0;
       setRevealedTicket(false);
-      afficherMessage("🎟️ Ticket du jour ajouté !");
+      afficherMessage(isAdmin ? "🎟️ Ticket admin généré." : "🎟️ Ticket du jour ajouté !");
     } catch (err) {
       afficherMessage("Erreur lors de la création du ticket.", "error");
     } finally {
@@ -429,7 +430,9 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
           </style>
           <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1.2rem", margin: "0 0 6px" }}>🎟️ Ticket à gratter quotidien</p>
           <p style={{ color: "#9CA3AF", fontSize: "0.82rem", margin: "0 0 14px" }}>
-            1 ticket offert par jour. Récompense possible: XP, carte Rare ou carte Légendaire.
+            {isAdmin
+              ? "Mode admin: tickets illimités pour test. Récompense possible: XP, carte Rare ou carte Légendaire."
+              : "1 ticket offert par jour. Récompense possible: XP, carte Rare ou carte Légendaire."}
           </p>
 
           {ticketDisponible ? (
@@ -448,7 +451,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
                 cursor: loadingTicket ? "not-allowed" : "pointer",
               }}
             >
-              {loadingTicket ? "⏳ Création..." : "🎟️ Récupérer mon ticket du jour"}
+              {loadingTicket ? "⏳ Création..." : isAdmin ? "🎟️ Générer un ticket (admin)" : "🎟️ Récupérer mon ticket du jour"}
             </button>
           ) : (
             <div>
