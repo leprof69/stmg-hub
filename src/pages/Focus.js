@@ -313,8 +313,9 @@ function FocusCard({ exercise, claim, onClaimXP }) {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [localInfo, setLocalInfo] = useState("");
+  const [answerLocked, setAnswerLocked] = useState(false);
 
-  const canEvaluate = answer.trim().length >= 25;
+  const canEvaluate = answer.trim().length >= 25 && !answerLocked;
   const today = getTodayKey();
   const alreadyClaimed = claim?.lastClaimDate === today;
   const canClaim = !alreadyClaimed && result && result.score >= 5;
@@ -326,7 +327,11 @@ function FocusCard({ exercise, claim, onClaimXP }) {
         ? "Score minimum requis : 5/10 pour valider l’XP."
         : "";
 
-  const validate = () => setResult(evaluate(exercise, answer));
+  const validate = () => {
+    const next = evaluate(exercise, answer);
+    setResult(next);
+    setAnswerLocked(true);
+  };
 
   const claimXp = async () => {
     if (!canClaim) {
@@ -361,7 +366,11 @@ function FocusCard({ exercise, claim, onClaimXP }) {
 
       <textarea
         value={answer}
-        onChange={(e) => setAnswer(e.target.value)}
+        onChange={(e) => {
+          if (answerLocked) return;
+          setAnswer(e.target.value);
+        }}
+        readOnly={answerLocked}
         onPaste={(e) => e.preventDefault()}
         onCopy={(e) => e.preventDefault()}
         onCut={(e) => e.preventDefault()}
@@ -390,6 +399,11 @@ function FocusCard({ exercise, claim, onClaimXP }) {
       <p style={{ margin: "6px 0 0", color: "#64748B", fontSize: 12 }}>
         Copier/coller désactivé sur cette zone de réponse.
       </p>
+      {answerLocked && (
+        <p style={{ margin: "6px 0 0", color: "#9F1239", fontSize: 12, fontWeight: 700 }}>
+          Réponse verrouillée après correction : modification impossible.
+        </p>
+      )}
 
       <div className="focus-actions" style={{ display: "flex", gap: 8, marginTop: 8, flexWrap: "wrap" }}>
         <button

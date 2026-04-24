@@ -427,11 +427,12 @@ function ExerciseCard({ exercise, status, onClaimXP, onEvaluateResponse }) {
   const [loadingEval, setLoadingEval] = useState(false);
   const [evalResult, setEvalResult] = useState(null);
   const [localInfo, setLocalInfo] = useState("");
+  const [answerLocked, setAnswerLocked] = useState(false);
 
   const length = answer.trim().length;
   const alreadyClaimed = status?.lastClaimDate === getTodayKey();
   const canClaim = length >= exercise.minChars && !alreadyClaimed && !loadingXP;
-  const canEval = length >= Math.max(80, Math.floor(exercise.minChars * 0.6)) && !loadingEval;
+  const canEval = length >= Math.max(80, Math.floor(exercise.minChars * 0.6)) && !loadingEval && !answerLocked;
   const claimHint = alreadyClaimed
     ? "XP déjà validés aujourd’hui pour cet exercice."
     : length < exercise.minChars
@@ -458,6 +459,7 @@ function ExerciseCard({ exercise, status, onClaimXP, onEvaluateResponse }) {
     try {
       const result = await onEvaluateResponse(exercise, answer);
       setEvalResult(result);
+      if (result) setAnswerLocked(true);
     } finally {
       setLoadingEval(false);
     }
@@ -486,7 +488,11 @@ function ExerciseCard({ exercise, status, onClaimXP, onEvaluateResponse }) {
 
       <textarea
         value={answer}
-        onChange={(e) => setAnswer(e.target.value)}
+        onChange={(e) => {
+          if (answerLocked) return;
+          setAnswer(e.target.value);
+        }}
+        readOnly={answerLocked}
         onPaste={(e) => e.preventDefault()}
         onCopy={(e) => e.preventDefault()}
         onCut={(e) => e.preventDefault()}
@@ -517,6 +523,11 @@ function ExerciseCard({ exercise, status, onClaimXP, onEvaluateResponse }) {
       <p style={{ margin: "6px 0 0", color: "#64748B", fontSize: 12 }}>
         Copier/coller désactivé sur cette zone de réponse.
       </p>
+      {answerLocked && (
+        <p style={{ margin: "6px 0 0", color: "#9F1239", fontSize: 12, fontWeight: 700 }}>
+          Réponse verrouillée après correction : modification impossible.
+        </p>
+      )}
       <p style={{ margin: "6px 0 0", color: "#64748B", fontSize: 12 }}>
         Longueur recommandée pour validation XP : {exercise.minChars} caractères minimum.
       </p>
