@@ -64,11 +64,11 @@ const familleColors = {
 
 const toutesCartes = COLLECTIONS.flatMap(c => c.cartes);
 const cartesLegendaires = toutesCartes.filter((c) => c.rarete === "legendaire");
-const DAILY_TICKET_VERSION = 2;
-const SCRATCH_GRID_X = 28;
-const SCRATCH_GRID_Y = 14;
+const DAILY_TICKET_VERSION = 3;
+const SCRATCH_GRID_X = 20;
+const SCRATCH_GRID_Y = 10;
 const SCRATCH_TOTAL_CELLS = SCRATCH_GRID_X * SCRATCH_GRID_Y;
-const SCRATCH_REVEAL_RATIO = 0.94;
+const SCRATCH_REVEAL_RATIO = 0.68;
 
 const getAujourdhui = () => {
   const d = new Date();
@@ -241,7 +241,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
     const ctx = canvasRef.current.getContext("2d");
     ctx.globalCompositeOperation = "destination-out";
     ctx.beginPath();
-    ctx.arc(x, y, 10, 0, Math.PI * 2);
+    ctx.arc(x, y, 18, 0, Math.PI * 2);
     ctx.fill();
 
     const bucketX = Math.floor((x / rect.width) * SCRATCH_GRID_X);
