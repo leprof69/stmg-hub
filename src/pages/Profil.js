@@ -63,6 +63,17 @@ const familleColors = {
 };
 
 const toutesCartes = COLLECTIONS.flatMap(c => c.cartes);
+const cartesRares = toutesCartes.filter((c) => c.rarete === "rare");
+const cartesLegendaires = toutesCartes.filter((c) => c.rarete === "legendaire");
+const SCRATCH_TOTAL_CELLS = 48;
+const SCRATCH_REVEAL_RATIO = 0.45;
+
+const getAujourdhui = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+};
+
+const randomItem = (arr = []) => arr[Math.floor(Math.random() * arr.length)];
 
 export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }) {
   const [showCGU, setShowCGU] = useState(false);
@@ -74,6 +85,11 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
   const [vitrine, setVitrine] = useState([null, null, null]);
   const [modeChoixVitrine, setModeChoixVitrine] = useState(null); // index slot en cours
   const [message, setMessage] = useState(null);
+  const [ticketJour, setTicketJour] = useState(null);
+  const [scratchCells, setScratchCells] = useState(() => Array.from({ length: SCRATCH_TOTAL_CELLS }, () => false));
+  const [revealedTicket, setRevealedTicket] = useState(false);
+  const [isScratching, setIsScratching] = useState(false);
+  const [loadingTicket, setLoadingTicket] = useState(false);
 
   const jokerDisponible = !profil.jokerUtilise && !jokerUtilise;
   const couleurFamille = familleColors[profil.famille] || "#7C3AED";
@@ -93,6 +109,15 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
     const data = snap.data();
     setMaCollection(data.cartes || {});
     setVitrine(data.vitrine || [null, null, null]);
+    const today = getAujourdhui();
+    const stored = data.dailyScratchTicket || null;
+    if (stored && stored.date === today) {
+      setTicketJour(stored);
+      setRevealedTicket(Boolean(stored.claimed));
+    } else {
+      setTicketJour(null);
+      setRevealedTicket(false);
+    }
   };
 
   const afficherMessage = (texte, type = "success") => {
@@ -101,6 +126,122 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
   };
 
   const cartesPossedees = toutesCartes.filter(c => (maCollection[c.id] || 0) > 0);
+  const scratchedCount = scratchCells.filter(Boolean).length;
+  const scratchedPercent = Math.round((scratchedCount / SCRATCH_TOTAL_CELLS) * 100);
+  const ticketDisponible = !ticketJour;
+
+  const getTicketRewardLabel = (reward) => {
+    if (!reward) return "";
+    if (reward.type === "xp") return `⚡ ${reward.xp} XP`;
+    const carte = toutesCartes.find((c) => c.id === reward.cardId);
+    if (!carte) return "🃏 Carte bonus";
+    const rarete = RARETE_CONFIG[carte.rarete];
+    return `${rarete?.emoji || "🃏"} ${carte.nom} (${rarete?.label || carte.rarete})`;
+  };
+
+  const genererRewardTicket = () => {
+    const roll = Math.random();
+    if (roll < 0.6) {
+      const xpPool = [40, 60, 80, 100, 120, 150, 180];
+      return { type: "xp", xp: randomItem(xpPool) };
+    }
+    if (roll < 0.9) {
+      const carteRare = randomItem(cartesRares);
+      if (carteRare) return { type: "card", cardId: carteRare.id };
+      return { type: "xp", xp: 90 };
+    }
+    const carteLegendaire = randomItem(cartesLegendaires);
+    if (carteLegendaire) return { type: "card", cardId: carteLegendaire.id };
+    return { type: "xp", xp: 140 };
+  };
+
+  const creerTicketDuJour = async () => {
+    if (!auth.currentUser || loadingTicket || ticketJour) return;
+    setLoadingTicket(true);
+    try {
+      const today = getAujourdhui();
+      const snap = await getDoc(doc(db, "users", auth.currentUser.uid));
+      if (!snap.exists()) return;
+      const data = snap.data();
+      const stored = data.dailyScratchTicket;
+      if (stored && stored.date === today) {
+        setTicketJour(stored);
+        setRevealedTicket(Boolean(stored.claimed));
+        afficherMessage("🎟️ Ticket déjà disponible aujourd’hui.");
+        return;
+      }
+      const reward = genererRewardTicket();
+      const nextTicket = { date: today, reward, claimed: false };
+      await updateDoc(doc(db, "users", auth.currentUser.uid), { dailyScratchTicket: nextTicket });
+      setTicketJour(nextTicket);
+      setScratchCells(Array.from({ length: SCRATCH_TOTAL_CELLS }, () => false));
+      setRevealedTicket(false);
+      afficherMessage("🎟️ Ticket du jour ajouté !");
+    } catch (err) {
+      afficherMessage("Erreur lors de la création du ticket.", "error");
+    } finally {
+      setLoadingTicket(false);
+    }
+  };
+
+  const revelerTicket = async () => {
+    if (!ticketJour || ticketJour.claimed || !auth.currentUser) return;
+    setLoadingTicket(true);
+    try {
+      const ref = doc(db, "users", auth.currentUser.uid);
+      const snap = await getDoc(ref);
+      if (!snap.exists()) return;
+      const data = snap.data();
+      const currentTicket = data.dailyScratchTicket;
+      if (!currentTicket || currentTicket.date !== getAujourdhui() || currentTicket.claimed) {
+        setTicketJour(currentTicket || null);
+        setRevealedTicket(Boolean(currentTicket?.claimed));
+        return;
+      }
+
+      const reward = currentTicket.reward;
+      const updates = {
+        dailyScratchTicket: { ...currentTicket, claimed: true },
+      };
+
+      if (reward?.type === "xp") {
+        updates.xp = (data.xp || 0) + (reward.xp || 0);
+      } else if (reward?.type === "card") {
+        const cartes = { ...(data.cartes || {}) };
+        cartes[reward.cardId] = (cartes[reward.cardId] || 0) + 1;
+        updates.cartes = cartes;
+        setMaCollection(cartes);
+      }
+
+      await updateDoc(ref, updates);
+      setTicketJour({ ...currentTicket, claimed: true });
+      setRevealedTicket(true);
+      afficherMessage(`🎉 Récompense débloquée: ${getTicketRewardLabel(reward)}`);
+      if (onMiseAJour) onMiseAJour();
+    } catch (err) {
+      afficherMessage("Erreur lors de l'ouverture du ticket.", "error");
+    } finally {
+      setLoadingTicket(false);
+    }
+  };
+
+  const scratchCell = (index) => {
+    if (!ticketJour || revealedTicket || ticketJour.claimed) return;
+    setScratchCells((prev) => {
+      if (prev[index]) return prev;
+      const next = [...prev];
+      next[index] = true;
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    if (!ticketJour || revealedTicket || ticketJour.claimed) return;
+    const ratio = scratchedCount / SCRATCH_TOTAL_CELLS;
+    if (ratio >= SCRATCH_REVEAL_RATIO) {
+      revelerTicket();
+    }
+  }, [scratchedCount, ticketJour, revealedTicket]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const choisirCarteVitrine = async (carte) => {
     if (modeChoixVitrine === null) return;
@@ -204,6 +345,125 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
           <p style={{ color: "#9CA3AF", fontSize: "0.75rem", textAlign: "center", margin: "12px 0 0" }}>
             Clique sur un slot pour changer la carte
           </p>
+        </div>
+
+        {/* TICKET À GRATTER DU JOUR */}
+        <div style={{ background: "white", borderRadius: "24px", padding: "24px", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
+          <style>
+            {`
+              .gold-ticket {
+                position: relative;
+                background: linear-gradient(135deg, #FEF3C7 0%, #F59E0B 40%, #B45309 100%);
+                border: 2px solid #B45309;
+                box-shadow: 0 10px 30px rgba(180, 83, 9, 0.35), inset 0 2px 0 rgba(255,255,255,0.45);
+                overflow: hidden;
+              }
+              .gold-ticket::before {
+                content: "";
+                position: absolute;
+                top: -50%;
+                left: -30%;
+                width: 60%;
+                height: 220%;
+                background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.45), rgba(255,255,255,0));
+                transform: rotate(22deg);
+                animation: shineTicket 3.2s linear infinite;
+                pointer-events: none;
+              }
+              @keyframes shineTicket {
+                0% { left: -45%; }
+                100% { left: 120%; }
+              }
+              .gold-pill {
+                background: linear-gradient(135deg, #FDE68A, #F59E0B);
+                color: #7C2D12;
+                border: 1px solid #B45309;
+                box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+              }
+            `}
+          </style>
+          <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1.2rem", margin: "0 0 6px" }}>🎟️ Ticket à gratter quotidien</p>
+          <p style={{ color: "#9CA3AF", fontSize: "0.82rem", margin: "0 0 14px" }}>
+            1 ticket offert par jour. Récompense possible: XP, carte Rare ou carte Légendaire.
+          </p>
+
+          {ticketDisponible ? (
+            <button
+              onClick={creerTicketDuJour}
+              disabled={loadingTicket}
+              style={{
+                width: "100%",
+                background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
+                color: "white",
+                border: "none",
+                fontFamily: "'Fredoka One', cursive",
+                fontSize: "0.95rem",
+                padding: "12px 16px",
+                borderRadius: "12px",
+                cursor: loadingTicket ? "not-allowed" : "pointer",
+              }}
+            >
+              {loadingTicket ? "⏳ Création..." : "🎟️ Récupérer mon ticket du jour"}
+            </button>
+          ) : (
+            <div>
+              <div
+                className="gold-ticket"
+                onMouseDown={() => setIsScratching(true)}
+                onMouseUp={() => setIsScratching(false)}
+                onMouseLeave={() => setIsScratching(false)}
+                style={{
+                  position: "relative",
+                  borderRadius: "16px",
+                  overflow: "hidden",
+                  padding: "14px",
+                  minHeight: "170px",
+                }}
+              >
+                <div style={{ textAlign: "center", marginBottom: 8 }}>
+                  <p style={{ color: "#7C2D12", fontFamily: "'Fredoka One', cursive", margin: 0, fontSize: "0.85rem", position: "relative", zIndex: 2 }}>
+                    {revealedTicket || ticketJour?.claimed ? "Récompense du jour" : "Gratte le ticket"}
+                  </p>
+                  <p style={{ color: "#1F2937", fontFamily: "'Fredoka One', cursive", margin: "5px 0 0", fontSize: "1.08rem", position: "relative", zIndex: 2 }}>
+                    {revealedTicket || ticketJour?.claimed ? getTicketRewardLabel(ticketJour?.reward) : "?????"}
+                  </p>
+                </div>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(8, 1fr)",
+                    gap: "3px",
+                    marginTop: "10px",
+                    opacity: revealedTicket || ticketJour?.claimed ? 0 : 1,
+                    transition: "opacity 0.25s ease",
+                    position: "relative",
+                    zIndex: 2,
+                  }}
+                >
+                  {scratchCells.map((isScratched, idx) => (
+                    <button
+                      key={idx}
+                      onMouseEnter={() => { if (isScratching) scratchCell(idx); }}
+                      onMouseDown={() => scratchCell(idx)}
+                      onTouchStart={() => scratchCell(idx)}
+                      style={{
+                        border: "none",
+                        borderRadius: "4px",
+                        height: "16px",
+                        cursor: "pointer",
+                        background: isScratched ? "transparent" : "linear-gradient(135deg, #9CA3AF, #6B7280)",
+                        boxShadow: isScratched ? "none" : "inset 0 1px 0 rgba(255,255,255,0.35)",
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+              <p className="gold-pill" style={{ borderRadius: 999, padding: "6px 10px", color: "#6B7280", fontSize: "0.75rem", margin: "10px auto 0", textAlign: "center", width: "fit-content", fontFamily: "'Fredoka One', cursive" }}>
+                Progression grattage: {scratchedPercent}% · Révélation à {Math.round(SCRATCH_REVEAL_RATIO * 100)}%
+              </p>
+            </div>
+          )}
         </div>
 
         {/* INFOS */}
