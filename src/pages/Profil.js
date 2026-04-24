@@ -66,7 +66,7 @@ const toutesCartes = COLLECTIONS.flatMap(c => c.cartes);
 const cartesRares = toutesCartes.filter((c) => c.rarete === "rare");
 const cartesLegendaires = toutesCartes.filter((c) => c.rarete === "legendaire");
 const SCRATCH_TOTAL_CELLS = 180;
-const SCRATCH_REVEAL_RATIO = 0.45;
+const SCRATCH_REVEAL_RATIO = 0.22;
 
 const getAujourdhui = () => {
   const d = new Date();
@@ -238,7 +238,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
     const ctx = canvasRef.current.getContext("2d");
     ctx.globalCompositeOperation = "destination-out";
     ctx.beginPath();
-    ctx.arc(x, y, 14, 0, Math.PI * 2);
+    ctx.arc(x, y, 22, 0, Math.PI * 2);
     ctx.fill();
 
     const bucketX = Math.floor((x / rect.width) * 18);
@@ -501,7 +501,30 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
                   }}
                 >
                   {!(revealedTicket || ticketJour?.claimed) && (
-                    <canvas ref={canvasRef} className="scratch-canvas" />
+                    <canvas
+                      ref={canvasRef}
+                      className="scratch-canvas"
+                      onMouseDown={(e) => { isScratchingRef.current = true; drawScratch(e.clientX, e.clientY); }}
+                      onMouseMove={(e) => { if (isScratchingRef.current) drawScratch(e.clientX, e.clientY); }}
+                      onMouseUp={() => { isScratchingRef.current = false; }}
+                      onMouseLeave={() => { isScratchingRef.current = false; }}
+                      onTouchStart={(e) => {
+                        e.preventDefault();
+                        isScratchingRef.current = true;
+                        const t = e.touches[0];
+                        if (t) drawScratch(t.clientX, t.clientY);
+                      }}
+                      onTouchMove={(e) => {
+                        e.preventDefault();
+                        if (!isScratchingRef.current) return;
+                        const t = e.touches[0];
+                        if (t) drawScratch(t.clientX, t.clientY);
+                      }}
+                      onTouchEnd={(e) => {
+                        e.preventDefault();
+                        isScratchingRef.current = false;
+                      }}
+                    />
                   )}
                 </div>
               </div>
