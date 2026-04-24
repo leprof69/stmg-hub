@@ -95,7 +95,6 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
 
   const jokerDisponible = !profil.jokerUtilise && !jokerUtilise;
   const couleurFamille = familleColors[profil.famille] || "#7C3AED";
-  const isAdmin = profil.role === "admin";
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -134,7 +133,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
 
   const cartesPossedees = toutesCartes.filter(c => (maCollection[c.id] || 0) > 0);
   const scratchedPercent = Math.round(scratchProgress * 100);
-  const ticketDisponible = !ticketJour || isAdmin;
+  const ticketDisponible = !ticketJour;
 
   const getTicketRewardLabel = (reward) => {
     if (!reward) return "";
@@ -162,7 +161,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
   };
 
   const creerTicketDuJour = async () => {
-    if (!auth.currentUser || loadingTicket || (ticketJour && !isAdmin)) return;
+    if (!auth.currentUser || loadingTicket || ticketJour) return;
     setLoadingTicket(true);
     try {
       const today = getAujourdhui();
@@ -170,7 +169,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
       if (!snap.exists()) return;
       const data = snap.data();
       const stored = data.dailyScratchTicket;
-      if (!isAdmin && stored && stored.date === today) {
+      if (stored && stored.date === today) {
         setTicketJour(stored);
         setRevealedTicket(Boolean(stored.claimed));
         afficherMessage("🎟️ Ticket déjà disponible aujourd’hui.");
@@ -183,7 +182,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
       setScratchProgress(0);
       strokeCountRef.current = 0;
       setRevealedTicket(false);
-      afficherMessage(isAdmin ? "🎟️ Ticket admin généré." : "🎟️ Ticket du jour ajouté !");
+      afficherMessage("🎟️ Ticket du jour ajouté !");
     } catch (err) {
       afficherMessage("Erreur lors de la création du ticket.", "error");
     } finally {
@@ -430,9 +429,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
           </style>
           <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1.2rem", margin: "0 0 6px" }}>🎟️ Ticket à gratter quotidien</p>
           <p style={{ color: "#9CA3AF", fontSize: "0.82rem", margin: "0 0 14px" }}>
-            {isAdmin
-              ? "Mode admin: tickets illimités pour test. Récompense possible: XP, carte Rare ou carte Légendaire."
-              : "1 ticket offert par jour. Récompense possible: XP, carte Rare ou carte Légendaire."}
+            1 ticket offert par jour. Récompense possible: XP, carte Rare ou carte Légendaire.
           </p>
 
           {ticketDisponible ? (
@@ -451,7 +448,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
                 cursor: loadingTicket ? "not-allowed" : "pointer",
               }}
             >
-              {loadingTicket ? "⏳ Création..." : isAdmin ? "🎟️ Générer un ticket (admin)" : "🎟️ Récupérer mon ticket du jour"}
+              {loadingTicket ? "⏳ Création..." : "🎟️ Récupérer mon ticket du jour"}
             </button>
           ) : (
             <div>
@@ -509,25 +506,6 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
               <p className="gold-pill" style={{ borderRadius: 999, padding: "6px 10px", color: "#6B7280", fontSize: "0.75rem", margin: "10px auto 0", textAlign: "center", width: "fit-content", fontFamily: "'Fredoka One', cursive" }}>
                 Progression grattage: {scratchedPercent}% · Révélation à 100%
               </p>
-              {!(revealedTicket || ticketJour?.claimed) && (
-                <button
-                  onClick={revelerTicket}
-                  style={{
-                    width: "100%",
-                    marginTop: "10px",
-                    background: "rgba(17,24,39,0.82)",
-                    color: "white",
-                    border: "none",
-                    fontFamily: "'Fredoka One', cursive",
-                    fontSize: "0.85rem",
-                    padding: "10px 12px",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                  }}
-                >
-                  Débloquer maintenant (secours)
-                </button>
-              )}
             </div>
           )}
         </div>
