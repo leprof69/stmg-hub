@@ -64,6 +64,7 @@ const familleColors = {
 
 const toutesCartes = COLLECTIONS.flatMap(c => c.cartes);
 const cartesLegendaires = toutesCartes.filter((c) => c.rarete === "legendaire");
+const cartesPrismatiques = toutesCartes.filter((c) => c.rarete === "ultra_rare");
 const DAILY_TICKET_VERSION = 3;
 const SCRATCH_GRID_X = 20;
 const SCRATCH_GRID_Y = 10;
@@ -149,14 +150,18 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
 
   const genererRewardTicket = () => {
     const roll = Math.random();
-    if (roll < 0.6) {
+    if (roll < 0.55) {
       const xpPool = [1000, 1200, 1500, 1800, 2200, 3000];
       return { type: "xp", xp: randomItem(xpPool) };
     }
-    if (roll < 0.3) {
+    if (roll < 0.95) {
+      const carteLegendaire = randomItem(cartesLegendaires);
+      if (carteLegendaire) return { type: "card", cardId: carteLegendaire.id };
+    }
+    const cartePrismatique = randomItem(cartesPrismatiques);
+    if (cartePrismatique) return { type: "card", cardId: cartePrismatique.id };
     const carteLegendaire = randomItem(cartesLegendaires);
     if (carteLegendaire) return { type: "card", cardId: carteLegendaire.id };
-    }
     return { type: "xp", xp: 1500 };
   };
 
@@ -241,7 +246,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
     const ctx = canvasRef.current.getContext("2d");
     ctx.globalCompositeOperation = "destination-out";
     ctx.beginPath();
-    ctx.arc(x, y, 30, 0, Math.PI * 2);
+    ctx.arc(x, y, 38, 0, Math.PI * 2);
     ctx.fill();
 
     const bucketX = Math.floor((x / rect.width) * SCRATCH_GRID_X);
@@ -434,7 +439,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
           </style>
           <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1.2rem", margin: "0 0 6px" }}>🎟️ Ticket à gratter quotidien</p>
           <p style={{ color: "#9CA3AF", fontSize: "0.82rem", margin: "0 0 14px" }}>
-            1 ticket offert par jour. Récompense possible: gros XP (1000+) ou carte Légendaire.
+            1 ticket offert par jour. Récompense possible: gros XP (1000+), carte Légendaire (fréquent) ou Prismatique (très rare).
           </p>
 
           {ticketDisponible ? (
