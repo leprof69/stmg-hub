@@ -234,6 +234,8 @@ export default function Admin() {
       const missionsHistorique = eleve.missionsHistorique || {};
       const missionEntries = Object.values(missionsHistorique);
       const missionsToday = missionEntries.filter((m) => m?.date === todayKey).length;
+      const antiCheatEvents = missionEntries.filter((m) => m?.antiCheatFlags?.tricheDetectee);
+      const antiCheatToday = missionEntries.filter((m) => m?.date === todayKey && m?.antiCheatFlags?.tricheDetectee).length;
       const lastMissionDate = missionEntries
         .map((m) => parseDayKey(m?.date))
         .filter(Boolean)
@@ -277,6 +279,8 @@ export default function Admin() {
         cartesUniques,
         missionsToday,
         missionsTotal: missionEntries.length,
+        antiCheatEvents: antiCheatEvents.length,
+        antiCheatToday,
         objectifToday,
         objectifTotal,
         lastActivity,
@@ -312,8 +316,14 @@ export default function Admin() {
     const actifs7j = reportingRows.filter((e) => e.joursSansActivite !== null && e.joursSansActivite <= 7).length;
     const inactifs7j = reportingRows.filter((e) => e.joursSansActivite !== null && e.joursSansActivite > 7).length;
     const actionsToday = reportingRows.reduce((sum, e) => sum + e.missionsToday + e.objectifToday + (e.lastVisit === todayKey ? 1 : 0), 0);
-    return { total, actifsAujourdhui, actifs7j, inactifs7j, actionsToday };
+    const suspicions = reportingRows.reduce((sum, e) => sum + (e.antiCheatEvents || 0), 0);
+    return { total, actifsAujourdhui, actifs7j, inactifs7j, actionsToday, suspicions };
   }, [reportingRows, todayKey]);
+
+  const elevesSuspects = useMemo(
+    () => [...reportingRows].filter((e) => (e.antiCheatEvents || 0) > 0).sort((a, b) => (b.antiCheatEvents || 0) - (a.antiCheatEvents || 0)).slice(0, 8),
+    [reportingRows]
+  );
 
   const importerChapitres = async () => {
     if (!fichierChapitres) return;
@@ -498,9 +508,25 @@ export default function Admin() {
                 <p style={{ margin: 0, color: "#D97706", fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem" }}>Actions détectées aujourd’hui</p>
                 <p style={{ margin: "4px 0 0", fontSize: "1.7rem", fontWeight: 900, color: "#0F172A" }}>{dashboardStats.actionsToday}</p>
               </div>
+              <div style={{ background: "white", borderRadius: 14, padding: 14, border: "1px solid #FCA5A5" }}>
+                <p style={{ margin: 0, color: "#BE123C", fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem" }}>Signaux anti-triche (historique)</p>
+                <p style={{ margin: "4px 0 0", fontSize: "1.7rem", fontWeight: 900, color: "#0F172A" }}>{dashboardStats.suspicions}</p>
+              </div>
             </div>
 
             <div style={{ background: "white", borderRadius: "20px", padding: "18px", marginBottom: "14px", border: "1px solid #E2E8F0" }}>
+              {elevesSuspects.length > 0 && (
+                <div style={{ marginBottom: 12, background: "#FFF1F2", border: "1px solid #FDA4AF", borderRadius: 12, padding: "10px 12px" }}>
+                  <p style={{ margin: "0 0 6px", color: "#9F1239", fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem" }}>🚨 Élèves à surveiller (missions)</p>
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                    {elevesSuspects.map((e) => (
+                      <span key={`suspect-${e.id}`} style={{ background: "#BE123C", color: "white", borderRadius: 999, padding: "4px 9px", fontSize: "0.75rem", fontWeight: 700 }}>
+                        {e.nomAffiche} · {e.antiCheatEvents} signalement(s)
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 10 }}>
                 <input
                   value={rechercheEleve}
@@ -551,6 +577,9 @@ export default function Admin() {
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 8, marginTop: 10 }}>
                       <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Dernière activité : <strong>{formatDateFr(eleve.lastActivity)}</strong></p>
                       <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Missions : <strong>{eleve.missionsTotal}</strong> (aujourd’hui {eleve.missionsToday})</p>
+                      <p style={{ margin: 0, color: (eleve.antiCheatEvents || 0) > 0 ? "#BE123C" : "#334155", fontSize: "0.8rem", fontWeight: (eleve.antiCheatEvents || 0) > 0 ? 700 : 400 }}>
+                        Anti-triche missions : <strong>{eleve.antiCheatEvents || 0}</strong> (aujourd’hui {eleve.antiCheatToday || 0})
+                      </p>
                       <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Objectif Bac : <strong>{eleve.objectifTotal}</strong> (aujourd’hui {eleve.objectifToday})</p>
                       <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Cartes : <strong>{eleve.cartesTotal}</strong> ({eleve.cartesUniques} uniques)</p>
                     </div>

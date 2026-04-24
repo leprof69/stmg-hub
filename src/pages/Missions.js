@@ -670,10 +670,19 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
       const xpGagne = Math.max(0, Math.min(xpBrut, xpCapStyle));
       const newXP = (userData.xp || 0) + xpGagne;
       const historique = userData.missionsHistorique || {};
+      const antiCheatFlags = {
+        sortieEcranDetectee: Boolean(sortieEcranDetectee),
+        collageMassif: Boolean(collageMassif),
+        tempsIrrealiste: Boolean(tempsIrrealiste),
+        styleArtificiel: Boolean(styleArtificiel.suspect),
+        tricheDetectee: Boolean(resultFinal.triche_detectee),
+        elapsedSec,
+      };
       historique[mission.id] = {
         date: getDateJour(),
         score: resultFinal.score,
         xpGagne,
+        antiCheatFlags,
       };
       await updateDoc(doc(db, "users", user.uid), { xp: newXP, missionsHistorique: historique });
       const xpDetail = "Modificateur familier: desactive";
