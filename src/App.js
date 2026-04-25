@@ -142,6 +142,19 @@ function App() {
   const navBtnClass = (id, isAdmin = false) =>
     `nav-btn${page === id ? " active" : ""}${isAdmin ? " admin" : ""}`;
 
+  const NAV_ACCENTS = {
+    dashboard: "#0ea5e9",
+    chapitres: "#2563eb",
+    missions: "#f97316",
+    "objectif-bac": "#e11d48",
+    focus: "#10b981",
+    classement: "#f59e0b",
+    cartes: "#06b6d4",
+    badges: "#14b8a6",
+    profil: "#3b82f6",
+    admin: "#ef4444",
+  };
+
   return (
     <div className="app-shell">
       <nav className="top-nav">
@@ -149,35 +162,35 @@ function App() {
           🎓 STMG HUB
         </button>
         <div className="nav-divider" />
-        <button onClick={() => { setPage("dashboard"); chargerProfil(utilisateur); }} className={navBtnClass("dashboard")}>
+        <button onClick={() => { setPage("dashboard"); chargerProfil(utilisateur); }} className={navBtnClass("dashboard")} style={{ "--nav-accent": NAV_ACCENTS.dashboard }}>
           🏠 Accueil
         </button>
-        <button onClick={() => setPage("chapitres")} className={navBtnClass("chapitres")}>
+        <button onClick={() => setPage("chapitres")} className={navBtnClass("chapitres")} style={{ "--nav-accent": NAV_ACCENTS.chapitres }}>
           📚 Chapitres
         </button>
-        <button onClick={() => setPage("missions")} className={navBtnClass("missions")}>
+        <button onClick={() => setPage("missions")} className={navBtnClass("missions")} style={{ "--nav-accent": NAV_ACCENTS.missions }}>
           🎯 Missions
         </button>
-        <button onClick={() => setPage("objectif-bac")} className={navBtnClass("objectif-bac")}>
+        <button onClick={() => setPage("objectif-bac")} className={navBtnClass("objectif-bac")} style={{ "--nav-accent": NAV_ACCENTS["objectif-bac"] }}>
           🎓 Objectif Bac
         </button>
-        <button onClick={() => setPage("focus")} className={navBtnClass("focus")}>
+        <button onClick={() => setPage("focus")} className={navBtnClass("focus")} style={{ "--nav-accent": NAV_ACCENTS.focus }}>
           🎯 Focus
         </button>
-        <button onClick={() => setPage("classement")} className={navBtnClass("classement")}>
+        <button onClick={() => setPage("classement")} className={navBtnClass("classement")} style={{ "--nav-accent": NAV_ACCENTS.classement }}>
           🏆 Classement
         </button>
-        <button onClick={() => setPage("cartes")} className={navBtnClass("cartes")}>
+        <button onClick={() => setPage("cartes")} className={navBtnClass("cartes")} style={{ "--nav-accent": NAV_ACCENTS.cartes }}>
           🃏 Cartes
         </button>
-        <button onClick={() => setPage("badges")} className={navBtnClass("badges")}>
+        <button onClick={() => setPage("badges")} className={navBtnClass("badges")} style={{ "--nav-accent": NAV_ACCENTS.badges }}>
           🏅 Badges
         </button>
-        <button onClick={() => { setPage("profil"); chargerProfil(utilisateur); }} className={navBtnClass("profil")}>
+        <button onClick={() => { setPage("profil"); chargerProfil(utilisateur); }} className={navBtnClass("profil")} style={{ "--nav-accent": NAV_ACCENTS.profil }}>
           👤 Profil
         </button>
         {profil.role === "admin" && (
-          <button onClick={() => setPage("admin")} className={navBtnClass("admin", true)}>
+          <button onClick={() => setPage("admin")} className={navBtnClass("admin", true)} style={{ "--nav-accent": NAV_ACCENTS.admin }}>
             ⚙️ Admin
           </button>
         )}
