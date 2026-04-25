@@ -30,33 +30,33 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-      <div className="bg-gray-800 p-8 rounded-xl w-full max-w-md">
-        <h1 className="text-white text-3xl font-bold text-center mb-2">STMG HUB</h1>
-        <p className="text-gray-400 text-center mb-6">
+    <div className="min-h-screen flex items-center justify-center" style={{ background: "linear-gradient(180deg, #F8FAFF 0%, #F1F5F9 100%)" }}>
+      <div className="bg-white border border-slate-200 p-8 rounded-2xl w-full max-w-md shadow-xl">
+        <h1 className="text-slate-900 text-3xl font-bold text-center mb-2" style={{ fontFamily: "'Fredoka One', cursive" }}>STMG HUB</h1>
+        <p className="text-slate-500 text-center mb-6">
           {estInscription ? "Crée ton compte" : "Connecte-toi"}
         </p>
 
-        {erreur && <p className="text-red-400 text-center mb-4">{erreur}</p>}
+        {erreur && <p className="text-red-600 text-center mb-4">{erreur}</p>}
 
         <input
           type="email"
           placeholder="Ton email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full bg-gray-700 text-white p-3 rounded-lg mb-3 outline-none"
+          className="w-full bg-white border border-slate-300 text-slate-900 p-3 rounded-lg mb-3 outline-none"
         />
         <input
           type="password"
           placeholder="Ton mot de passe"
           value={motDePasse}
           onChange={(e) => setMotDePasse(e.target.value)}
-          className="w-full bg-gray-700 text-white p-3 rounded-lg mb-4 outline-none"
+          className="w-full bg-white border border-slate-300 text-slate-900 p-3 rounded-lg mb-4 outline-none"
         />
 
         <button
           onClick={handleEmailAuth}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold p-3 rounded-lg mb-3"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold p-3 rounded-lg mb-3 shadow-sm"
         >
           {estInscription ? "S'inscrire" : "Se connecter"}
         </button>
@@ -70,7 +70,7 @@ export default function Login() {
 
         <p
           onClick={() => setEstInscription(!estInscription)}
-          className="text-gray-400 text-center cursor-pointer hover:text-white"
+          className="text-slate-500 text-center cursor-pointer hover:text-slate-900"
         >
           {estInscription ? "Déjà un compte ? Connecte-toi" : "Pas de compte ? Inscris-toi"}
         </p>

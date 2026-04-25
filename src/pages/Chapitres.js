@@ -68,7 +68,7 @@ export default function Chapitres({ profil, onXPGagne }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4">
+    <div className="min-h-screen p-4" style={{ background: "linear-gradient(180deg, #F8FAFF 0%, #F1F5F9 100%)", color: "#0f172a" }}>
       {notifXP && (
         <div className="fixed top-20 right-6 z-50 bg-amber-500 text-white font-bold px-5 py-3 rounded-xl shadow-xl">
           {notifXP}
@@ -77,7 +77,7 @@ export default function Chapitres({ profil, onXPGagne }) {
       <div className="max-w-4xl mx-auto">
 
         <div className="mb-6">
-          <h1 className="text-3xl font-bold">📚 Mes Chapitres</h1>
+          <h1 className="text-3xl font-bold" style={{ fontFamily: "'Fredoka One', cursive" }}>📚 Mes Chapitres</h1>
         </div>
 
         {/* SÉLECTEUR DE CLASSE — admin + terminale (révisions première) */}
@@ -85,13 +85,13 @@ export default function Chapitres({ profil, onXPGagne }) {
           <div className="flex gap-3 mb-4">
             <button
               onClick={() => setClasseSelectionnee("premiere")}
-              className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${classeSelectionnee === "premiere" ? "bg-green-600 text-white" : "bg-gray-700 text-gray-300 hover:bg-gray-600"}`}
+              className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${classeSelectionnee === "premiere" ? "bg-green-600 text-white" : "bg-white border border-slate-300 text-slate-600 hover:bg-slate-100"}`}
             >
               📗 Première STMG
             </button>
             <button
               onClick={() => setClasseSelectionnee("terminale")}
-              className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${classeSelectionnee === "terminale" ? "bg-purple-600 text-white" : "bg-gray-700 text-gray-300 hover:bg-gray-600"}`}
+              className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${classeSelectionnee === "terminale" ? "bg-blue-600 text-white" : "bg-white border border-slate-300 text-slate-600 hover:bg-slate-100"}`}
             >
               📘 Terminale STMG
             </button>
@@ -104,7 +104,7 @@ export default function Chapitres({ profil, onXPGagne }) {
             <button
               key={matiere.nom}
               onClick={() => setMatiereSelectionnee(matiere.nom)}
-              className={`px-4 py-2 rounded-lg font-semibold transition-all ${matiereSelectionnee === matiere.nom ? "bg-blue-600 text-white" : "bg-gray-700 text-gray-300 hover:bg-gray-600"}`}
+              className={`px-4 py-2 rounded-lg font-semibold transition-all ${matiereSelectionnee === matiere.nom ? "bg-blue-600 text-white" : "bg-white border border-slate-300 text-slate-600 hover:bg-slate-100"}`}
             >
               {matiere.emoji} {matiere.nom}
             </button>
@@ -113,23 +113,23 @@ export default function Chapitres({ profil, onXPGagne }) {
 
         {/* LISTE CHAPITRES */}
         {chargement ? (
-          <p className="text-center text-gray-400 py-8">Chargement...</p>
+          <p className="text-center text-slate-500 py-8">Chargement...</p>
         ) : chapitres.length === 0 ? (
-          <div className="bg-gray-800 rounded-xl p-8 text-center">
+          <div className="bg-white border border-slate-200 rounded-xl p-8 text-center shadow-sm">
             <p className="text-4xl mb-3">🔒</p>
-            <p className="text-gray-400">Aucun chapitre disponible pour l'instant</p>
-            <p className="text-gray-500 text-sm mt-1">Le contenu arrive bientôt !</p>
+            <p className="text-slate-500">Aucun chapitre disponible pour l'instant</p>
+            <p className="text-slate-400 text-sm mt-1">Le contenu arrive bientôt !</p>
           </div>
         ) : (
           <div className="space-y-3">
             {chapitres.map((chapitre) => {
               const estOuvert = chapitreOuvert === chapitre.id;
               return (
-                <div key={chapitre.id} className="bg-gray-800 rounded-xl overflow-hidden">
+                <div key={chapitre.id} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
 
                   {/* EN-TÊTE CLIQUABLE */}
                   <div
-                    className="p-5 cursor-pointer hover:bg-gray-750 transition-all"
+                    className="p-5 cursor-pointer hover:bg-slate-50 transition-all"
                     onClick={() => setChapitreOuvert(estOuvert ? null : chapitre.id)}
                   >
                     <div className="flex items-center justify-between">
@@ -139,23 +139,23 @@ export default function Chapitres({ profil, onXPGagne }) {
                         </span>
                         <span className="text-yellow-400 text-xs font-semibold">+{chapitre.xp} XP</span>
                       </div>
-                      <span className="text-gray-400 text-lg">{estOuvert ? "▲" : "▼"}</span>
+                      <span className="text-slate-400 text-lg">{estOuvert ? "▲" : "▼"}</span>
                     </div>
-                    <h3 className="text-white font-bold text-lg mt-2">{chapitre.titre}</h3>
+                    <h3 className="text-slate-900 font-bold text-lg mt-2">{chapitre.titre}</h3>
                     {chapitre.theme && (
-                      <p className="text-blue-400 text-xs mt-1 font-semibold">{chapitre.theme}</p>
+                      <p className="text-cyan-700 text-xs mt-1 font-semibold">{chapitre.theme}</p>
                     )}
                   </div>
 
                   {/* DÉTAIL — visible si ouvert */}
                   {estOuvert && (
-                    <div className="px-5 pb-5 border-t border-gray-700 pt-4">
+                    <div className="px-5 pb-5 border-t border-slate-200 pt-4">
 
                       {/* Question de gestion */}
                       {chapitre.question && (
-                        <div className="bg-gray-700 rounded-lg p-3 mb-4">
+                        <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
                           <p className="text-yellow-400 text-xs font-bold mb-1">❓ Question de gestion</p>
-                          <p className="text-white text-sm italic">{chapitre.question}</p>
+                          <p className="text-slate-900 text-sm italic">{chapitre.question}</p>
                         </div>
                       )}
 
@@ -165,7 +165,7 @@ export default function Chapitres({ profil, onXPGagne }) {
                           <p className="text-blue-400 text-xs font-bold mb-2">📖 Notions à maîtriser ({chapitre.notions.length})</p>
                           <div className="flex flex-wrap gap-2">
                             {chapitre.notions.map((notion, i) => (
-                              <span key={i} className="bg-blue-900 text-blue-200 text-xs px-3 py-1 rounded-full border border-blue-700">
+                              <span key={i} className="bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-full border border-blue-200">
                                 {notion}
                               </span>
                             ))}
@@ -179,7 +179,7 @@ export default function Chapitres({ profil, onXPGagne }) {
                           <p className="text-green-400 text-xs font-bold mb-2">✅ Compétences visées ({chapitre.competences.length})</p>
                           <ul className="space-y-1">
                             {chapitre.competences.map((comp, i) => (
-                              <li key={i} className="flex items-start gap-2 text-sm text-gray-300">
+                              <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
                                 <span className="text-green-400 mt-0.5 shrink-0">→</span>
                                 {comp}
                               </li>
@@ -198,7 +198,7 @@ export default function Chapitres({ profil, onXPGagne }) {
                         </button>
                         <button
                           onClick={() => ouvrirAppEtGagnerXP(chapitre.url_fiche, "fiche")}
-                          className={`flex-1 font-bold py-3 px-4 rounded-lg transition-all ${chapitre.url_fiche ? "bg-purple-600 hover:bg-purple-700 text-white" : "bg-gray-700 text-gray-500 cursor-not-allowed"}`}
+                          className={`flex-1 font-bold py-3 px-4 rounded-lg transition-all ${chapitre.url_fiche ? "bg-cyan-600 hover:bg-cyan-700 text-white" : "bg-slate-200 text-slate-400 cursor-not-allowed"}`}
                         >
                           📄 {chapitre.url_fiche ? "Carte mentale / fiche (+8 XP)" : "Bientôt disponible"}
                         </button>

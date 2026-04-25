@@ -50,21 +50,21 @@ export default function Dashboard({ profil }) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4">
+    <div className="min-h-screen p-4" style={{ background: "linear-gradient(180deg, #F8FAFF 0%, #F1F5F9 100%)", color: "#0F172A" }}>
 
       {/* HEADER */}
       <div className="max-w-4xl mx-auto">
 
         {/* IDENTITE */}
-        <div className="bg-gray-800 rounded-xl p-6 mb-4">
+        <div className="rounded-2xl p-6 mb-4 border border-slate-200 shadow-sm bg-white">
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-3">
                 <span className="text-4xl">{emojis[profil.famille]}</span>
                 <div>
                   <h1 className="text-2xl font-bold">{profil.prenom}</h1>
-                  <p className="text-blue-400 font-semibold">{profil.famille}</p>
-                  <p className="text-gray-400 text-sm">
+                  <p className="font-semibold" style={{ color: "#0369A1" }}>{profil.famille}</p>
+                  <p className="text-slate-500 text-sm">
                     {profil.classe === "premiere" ? "Première STMG" : "Terminale STMG"}
                     {profil.lycee ? ` — ${profil.lycee}` : ""}
                   </p>
@@ -72,33 +72,33 @@ export default function Dashboard({ profil }) {
               </div>
             </div>
             <div className="text-right">
-              <p className="text-gray-400 text-sm">Niveau</p>
-              <p className="text-3xl font-bold text-yellow-400">{niveau}</p>
-              <p className="text-gray-400 text-sm">{profil.xp || 0} XP</p>
+              <p className="text-slate-500 text-sm">Niveau</p>
+              <p className="text-3xl font-bold" style={{ color: "#F59E0B" }}>{niveau}</p>
+              <p className="text-slate-500 text-sm">{profil.xp || 0} XP</p>
             </div>
           </div>
 
           {/* BARRE XP */}
           <div className="mt-4">
-            <div className="flex justify-between text-sm text-gray-400 mb-1">
+            <div className="flex justify-between text-sm text-slate-500 mb-1">
               <span>{profil.xp || 0} XP</span>
               <span>{xpPourNiveauSuivant} XP</span>
             </div>
-            <div className="w-full bg-gray-700 rounded-full h-3">
+            <div className="w-full bg-slate-200 rounded-full h-3">
               <div
-                className="bg-blue-500 h-3 rounded-full transition-all"
-                style={{ width: `${progression}%` }}
+                className="h-3 rounded-full transition-all"
+                style={{ background: "linear-gradient(90deg, #0EA5E9, #2563EB)", width: `${progression}%` }}
               />
             </div>
-            <p className="text-gray-400 text-sm mt-1 text-center">
+            <p className="text-slate-500 text-sm mt-1 text-center">
               Encore {xpPourNiveauSuivant - (profil.xp || 0)} XP pour le niveau {niveau + 1}
             </p>
           </div>
         </div>
 
         {/* MESSAGE MOTIVATION */}
-        <div className="bg-gradient-to-r from-blue-900 to-purple-900 rounded-xl p-4 mb-4">
-          <p className="text-center italic text-gray-200">
+        <div className="rounded-2xl p-4 mb-4 border" style={{ background: "linear-gradient(135deg, #EFF6FF, #ECFEFF)", borderColor: "#BFDBFE" }}>
+          <p className="text-center italic" style={{ color: "#0F172A" }}>
             💬 "{motivations[profil.famille]}"
           </p>
         </div>
@@ -107,91 +107,93 @@ export default function Dashboard({ profil }) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 
           {/* CLASSEMENT */}
-          <div className="bg-gray-800 rounded-xl p-4">
+          <div className="rounded-2xl p-4 border border-slate-200 shadow-sm bg-white">
             <h2 className="text-lg font-bold mb-3">🏆 Classement National</h2>
             <div className="space-y-2">
-              <div className="flex justify-between items-center bg-gray-700 rounded-lg p-3">
-                <span className="text-gray-300">👤 Ta position</span>
-                <span className="text-yellow-400 font-bold">— ème</span>
+              <div className="flex justify-between items-center bg-slate-50 border border-slate-200 rounded-lg p-3">
+                <span className="text-slate-600">👤 Ta position</span>
+                <span className="font-bold" style={{ color: "#D97706" }}>— ème</span>
               </div>
-              <div className="flex justify-between items-center bg-gray-700 rounded-lg p-3">
-                <span className="text-gray-300">🏫 Ton lycée</span>
-                <span className="text-blue-400 font-bold">— ème</span>
+              <div className="flex justify-between items-center bg-slate-50 border border-slate-200 rounded-lg p-3">
+                <span className="text-slate-600">🏫 Ton lycée</span>
+                <span className="font-bold" style={{ color: "#0284C7" }}>— ème</span>
               </div>
-              <div className="flex justify-between items-center bg-gray-700 rounded-lg p-3">
-                <span className="text-gray-300">{emojis[profil.famille]} Famille {profil.famille}</span>
-                <span className="text-green-400 font-bold">— ème</span>
+              <div className="flex justify-between items-center bg-slate-50 border border-slate-200 rounded-lg p-3">
+                <span className="text-slate-600">{emojis[profil.famille]} Famille {profil.famille}</span>
+                <span className="font-bold" style={{ color: "#16A34A" }}>— ème</span>
               </div>
             </div>
           </div>
 
           {/* MISSION ACTIVE */}
-          <div className="bg-gray-800 rounded-xl p-4">
+          <div className="rounded-2xl p-4 border border-slate-200 shadow-sm bg-white">
             <h2 className="text-lg font-bold mb-3">🎯 Mission de la semaine</h2>
-            <div className="bg-gray-700 rounded-lg p-4 text-center">
-              <p className="text-gray-400 text-sm">Aucune mission active pour l'instant</p>
-              <p className="text-gray-500 text-xs mt-1">Les missions arrivent bientôt !</p>
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-center">
+              <p className="text-slate-500 text-sm">Aucune mission active pour l'instant</p>
+              <p className="text-slate-400 text-xs mt-1">Les missions arrivent bientôt !</p>
             </div>
           </div>
         </div>
 
         {/* PROGRESSION MATIERES */}
-        <div className="bg-gray-800 rounded-xl p-4 mb-4">
+        <div className="rounded-2xl p-4 mb-4 border border-slate-200 shadow-sm bg-white">
           <h2 className="text-lg font-bold mb-3">📚 Mes Matières</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {matieres.map((matiere) => (
-              <div key={matiere.nom} className="bg-gray-700 rounded-lg p-3 text-center">
+              <div key={matiere.nom} className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center">
                 <div className="text-2xl mb-1">{matiere.emoji}</div>
-                <p className="text-xs text-gray-300 font-semibold">{matiere.nom}</p>
-                <p className="text-xs text-gray-500 mt-1">0% complété</p>
+                <p className="text-xs text-slate-700 font-semibold">{matiere.nom}</p>
+                <p className="text-xs text-slate-400 mt-1">0% complété</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* BADGES RECENTS */}
-        <div className="bg-gray-800 rounded-xl p-4 mb-4">
+        <div className="rounded-2xl p-4 mb-4 border border-slate-200 shadow-sm bg-white">
           <h2 className="text-lg font-bold mb-3">🏅 Badges Récents</h2>
           <div className="flex gap-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-gray-700 rounded-lg p-4 text-center flex-1">
+              <div key={i} className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-center flex-1">
                 <div className="text-3xl mb-1">🔒</div>
-                <p className="text-xs text-gray-500">À débloquer</p>
+                <p className="text-xs text-slate-400">À débloquer</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* CALENDRIER EVALUATIONS */}
-        <div className="bg-gray-800 rounded-xl p-4 mb-4">
+        <div className="rounded-2xl p-4 mb-4 border border-slate-200 shadow-sm bg-white">
           <div className="flex justify-between items-center mb-3">
             <h2 className="text-lg font-bold">📅 Mes Évaluations</h2>
             <button
               onClick={() => setAjoutVisible(!ajoutVisible)}
-              className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 py-1 rounded-lg"
+              className="text-white text-sm px-3 py-1 rounded-lg"
+              style={{ background: "linear-gradient(135deg, #0EA5E9, #2563EB)" }}
             >
               + Ajouter
             </button>
           </div>
 
           {ajoutVisible && (
-            <div className="bg-gray-700 rounded-lg p-3 mb-3 space-y-2">
+            <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 mb-3 space-y-2">
               <input
                 type="text"
                 placeholder="Nom de l'évaluation (ex: Contrôle Management)"
                 value={nouvelEvenement}
                 onChange={(e) => setNouvelEvenement(e.target.value)}
-                className="w-full bg-gray-600 text-white p-2 rounded-lg text-sm outline-none"
+                className="w-full bg-white border border-slate-300 text-slate-800 p-2 rounded-lg text-sm outline-none"
               />
               <input
                 type="date"
                 value={dateEvenement}
                 onChange={(e) => setDateEvenement(e.target.value)}
-                className="w-full bg-gray-600 text-white p-2 rounded-lg text-sm outline-none"
+                className="w-full bg-white border border-slate-300 text-slate-800 p-2 rounded-lg text-sm outline-none"
               />
               <button
                 onClick={ajouterEvenement}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm p-2 rounded-lg"
+                className="w-full text-white text-sm p-2 rounded-lg"
+                style={{ background: "linear-gradient(135deg, #0EA5E9, #2563EB)" }}
               >
                 Enregistrer
               </button>
@@ -203,23 +205,24 @@ export default function Dashboard({ profil }) {
               {profil.evenements
                 .sort((a, b) => new Date(a.date) - new Date(b.date))
                 .map((ev, index) => (
-                  <div key={index} className="flex justify-between items-center bg-gray-700 rounded-lg p-3">
-                    <span className="text-gray-300 text-sm">{ev.titre}</span>
-                    <span className="text-blue-400 text-sm font-semibold">
+                  <div key={index} className="flex justify-between items-center bg-slate-50 border border-slate-200 rounded-lg p-3">
+                    <span className="text-slate-700 text-sm">{ev.titre}</span>
+                    <span className="text-sm font-semibold" style={{ color: "#0369A1" }}>
                       {new Date(ev.date).toLocaleDateString("fr-FR")}
                     </span>
                   </div>
                 ))}
             </div>
           ) : (
-            <p className="text-gray-500 text-sm text-center">Aucune évaluation planifiée</p>
+            <p className="text-slate-400 text-sm text-center">Aucune évaluation planifiée</p>
           )}
         </div>
 
         {/* DECONNEXION */}
         <button
           onClick={() => auth.signOut()}
-          className="w-full bg-red-600 hover:bg-red-700 text-white font-bold p-3 rounded-lg mb-4"
+          className="w-full text-white font-bold p-3 rounded-xl mb-4 shadow-sm"
+          style={{ background: "linear-gradient(135deg, #ef4444, #b91c1c)" }}
         >
           Se déconnecter
         </button>

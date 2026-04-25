@@ -4,12 +4,12 @@ import { collection, getDocs } from "firebase/firestore";
 import { COLLECTIONS } from "../data/collections";
 
 const COLORS = {
-  S: "#3B82F6", T: "#7C3AED", M: "#F97316",
+  S: "#3B82F6", T: "#0284C7", M: "#F97316",
   G: "#10B981", H: "#EF4444", U: "#F59E0B", B: "#06B6D4",
 };
 
 const familleColors = {
-  Architecte: "#3B82F6", Visionnaire: "#7C3AED",
+  Architecte: "#3B82F6", Visionnaire: "#0EA5E9",
   Challenger: "#F97316", Explorateur: "#10B981", Influenceur: "#EF4444",
 };
 
@@ -125,7 +125,7 @@ export default function Classement({ profil }) {
 
   const onglets = [
     { id: "xp", label: "⚡ XP", couleur: COLORS.S },
-    { id: "collection", label: "🃏 Collection", couleur: "#EC4899" },
+    { id: "collection", label: "🃏 Collection", couleur: "#DB2777" },
     { id: "lycees", label: "🏫 Lycées", couleur: COLORS.M },
     { id: "familles", label: "🧬 Familles", couleur: COLORS.T },
   ];
@@ -135,11 +135,11 @@ export default function Classement({ profil }) {
       <div style={{ maxWidth: "900px", margin: "0 auto", padding: "24px 16px" }}>
 
         {/* HEADER */}
-        <div style={{ background: "linear-gradient(135deg, #1A1A2E, #2D1B69)", borderRadius: "24px", padding: "28px 32px", marginBottom: "24px" }}>
+        <div style={{ background: "linear-gradient(135deg, #0B2447, #0369A1)", borderRadius: "24px", padding: "28px 32px", marginBottom: "24px" }}>
           <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2.2rem", color: "white", margin: "0 0 4px" }}>
             🏆 Classement National
           </h1>
-          <p style={{ color: "#A78BFA", margin: 0, fontSize: "0.9rem" }}>
+          <p style={{ color: "#BAE6FD", margin: 0, fontSize: "0.9rem" }}>
             La compétition entre tous les élèves STMG de France !
           </p>
 
@@ -147,7 +147,7 @@ export default function Classement({ profil }) {
           <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "16px" }}>
             {[
               { label: "XP", rang: monRangEleve, couleur: COLORS.S },
-              { label: "Collection", rang: monRangCollection, couleur: "#EC4899" },
+              { label: "Collection", rang: monRangCollection, couleur: "#DB2777" },
               { label: "Lycée", rang: monRangLycee, couleur: COLORS.M },
               { label: "Famille", rang: monRangFamille, couleur: COLORS.T },
             ].map((r, i) => r.rang > 0 && (

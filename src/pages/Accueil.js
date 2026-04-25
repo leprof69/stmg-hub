@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 const COLORS = {
   S: "#3B82F6",
-  T: "#7C3AED",
+  T: "#0EA5E9",
   M: "#F97316",
   G: "#10B981",
   H: "#EF4444",
@@ -59,7 +59,7 @@ const Logo = ({ size = "normal" }) => {
 
 const familles = [
   { nom: "L'Architecte", emoji: "🧠", couleur: COLORS.S, bg: "#EFF6FF", description: "Analytique, structuré, stratège. Tu planifies tout avant d'agir.", traits: ["Stratégie", "Logique", "Précision"] },
-  { nom: "Le Visionnaire", emoji: "🎨", couleur: COLORS.T, bg: "#F5F3FF", description: "Créatif, intuitif, innovant. Tu imagines ce que les autres ne voient pas.", traits: ["Créativité", "Innovation", "Vision"] },
+  { nom: "Le Visionnaire", emoji: "🎨", couleur: COLORS.T, bg: "#ECFEFF", description: "Créatif, intuitif, innovant. Tu imagines ce que les autres ne voient pas.", traits: ["Créativité", "Innovation", "Vision"] },
   { nom: "Le Challenger", emoji: "⚡", couleur: COLORS.M, bg: "#FFF7ED", description: "Compétitif, déterminé, ambitieux. Tu transformes chaque obstacle en tremplin.", traits: ["Compétition", "Dépassement", "Ambition"] },
   { nom: "L'Explorateur", emoji: "🔬", couleur: COLORS.G, bg: "#ECFDF5", description: "Curieux, analytique, aventurier. Tu questionnes tout pour mieux comprendre.", traits: ["Curiosité", "Analyse", "Découverte"] },
   { nom: "L'Influenceur", emoji: "🔥", couleur: COLORS.H, bg: "#FEF2F2", description: "Charismatique, fédérateur, inspirant. Tu entraînes les autres vers le sommet.", traits: ["Leadership", "Charisme", "Impact"] },
@@ -338,7 +338,7 @@ export default function Accueil({ onConnexion, onInscription }) {
       </section>
 
       {/* ===== COMMENT ÇA MARCHE ===== */}
-      <section style={{ padding: "80px 24px", background: "linear-gradient(140deg, #0F172A, #1E1B4B)" }}>
+      <section style={{ padding: "80px 24px", background: "linear-gradient(140deg, #0F172A, #0B2447)" }}>
         <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: "56px" }}>
             <SectionTag color={COLORS.U}>⚡ Simple comme bonjour</SectionTag>
@@ -525,7 +525,7 @@ export default function Accueil({ onConnexion, onInscription }) {
       </section>
 
       {/* ===== CTA FINAL ===== */}
-      <section style={{ padding: "96px 24px", background: "linear-gradient(140deg, #111827, #1E1B4B)", textAlign: "center", position: "relative", overflow: "hidden" }}>
+      <section style={{ padding: "96px 24px", background: "linear-gradient(140deg, #111827, #0B2447)", textAlign: "center", position: "relative", overflow: "hidden" }}>
         {[
           { color: COLORS.T, top: "20px", left: "5%" },
           { color: COLORS.M, bottom: "20px", right: "5%" },

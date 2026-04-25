@@ -7,7 +7,7 @@ const RARETE_CONFIG = {
   commune:     { label: "Commune",     couleur: "#9CA3AF", emoji: "⚪" },
   peu_commune: { label: "Peu Commune", couleur: "#10B981", emoji: "🟢" },
   rare:        { label: "Rare",        couleur: "#3B82F6", emoji: "🔵" },
-  epique:      { label: "Épique",      couleur: "#7C3AED", emoji: "🟣" },
+  epique:      { label: "Épique",      couleur: "#0284C7", emoji: "🔷" },
   legendaire:  { label: "Légendaire",  couleur: "#F59E0B", emoji: "⭐" },
   ultra_rare:  { label: "Ultra Rare",  couleur: "#EF4444", emoji: "💎" },
 };
@@ -58,7 +58,7 @@ const familleEmojis = {
 };
 
 const familleColors = {
-  Architecte: "#3B82F6", Visionnaire: "#7C3AED",
+  Architecte: "#3B82F6", Visionnaire: "#0EA5E9",
   Challenger: "#F97316", Explorateur: "#10B981", Influenceur: "#EF4444",
 };
 
@@ -98,7 +98,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
   const touchedBucketsRef = useRef(new Set());
 
   const jokerDisponible = !profil.jokerUtilise && !jokerUtilise;
-  const couleurFamille = familleColors[profil.famille] || "#7C3AED";
+  const couleurFamille = familleColors[profil.famille] || "#0EA5E9";
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -331,7 +331,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
       <div style={{ maxWidth: "600px", margin: "0 auto", padding: "24px 16px", display: "flex", flexDirection: "column", gap: "16px" }}>
 
         {/* HEADER */}
-        <div style={{ background: `linear-gradient(135deg, #1A1A2E, ${couleurFamille}80)`, borderRadius: "24px", padding: "28px 24px", textAlign: "center" }}>
+        <div style={{ background: `linear-gradient(135deg, #0B2447, ${couleurFamille}80)`, borderRadius: "24px", padding: "28px 24px", textAlign: "center" }}>
           <div style={{ width: "80px", height: "80px", borderRadius: "50%", background: couleurFamille + "30", border: `3px solid ${couleurFamille}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "2.5rem", margin: "0 auto 12px" }}>
             {familleEmojis[profil.famille] || "👤"}
           </div>
@@ -649,7 +649,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
               <pre style={{ color: "#374151", fontSize: "0.75rem", whiteSpace: "pre-wrap", lineHeight: 1.8, fontFamily: "'Nunito', sans-serif" }}>{CGU_TEXTE}</pre>
             </div>
             <div style={{ padding: "16px 24px", borderTop: "1px solid #E5E7EB" }}>
-              <button onClick={() => setShowCGU(false)} style={{ width: "100%", background: "#3B82F6", color: "white", border: "none", fontFamily: "'Fredoka One', cursive", fontSize: "1rem", padding: "12px", borderRadius: "12px", cursor: "pointer" }}>Fermer</button>
+              <button onClick={() => setShowCGU(false)} style={{ width: "100%", background: "linear-gradient(135deg, #0EA5E9, #2563EB)", color: "white", border: "none", fontFamily: "'Fredoka One', cursive", fontSize: "1rem", padding: "12px", borderRadius: "12px", cursor: "pointer" }}>Fermer</button>
             </div>
           </div>
         </div>
@@ -669,7 +669,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
                 <p style={{ color: "#1A1A2E", fontWeight: "700", fontSize: "0.95rem", margin: 0 }}>{item.valeur}</p>
               </div>
             ))}
-            <button onClick={() => setShowContact(false)} style={{ width: "100%", background: "#3B82F6", color: "white", border: "none", fontFamily: "'Fredoka One', cursive", fontSize: "1rem", padding: "12px", borderRadius: "12px", cursor: "pointer", marginTop: "8px" }}>Fermer</button>
+            <button onClick={() => setShowContact(false)} style={{ width: "100%", background: "linear-gradient(135deg, #0EA5E9, #2563EB)", color: "white", border: "none", fontFamily: "'Fredoka One', cursive", fontSize: "1rem", padding: "12px", borderRadius: "12px", cursor: "pointer", marginTop: "8px" }}>Fermer</button>
           </div>
         </div>
       )}

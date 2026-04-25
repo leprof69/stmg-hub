@@ -10,7 +10,7 @@ const RARETE_CONFIG = {
   commune:     { label: "Commune",     couleur: "#9CA3AF", bg: "#F3F4F6", emoji: "⚪", bonus: 0 },
   peu_commune: { label: "Peu Commune", couleur: "#10B981", bg: "#ECFDF5", emoji: "🟢", bonus: 0 },
   rare:        { label: "Rare",        couleur: "#3B82F6", bg: "#EFF6FF", emoji: "🔵", bonus: 0.5 },
-  epique:      { label: "Épique",      couleur: "#7C3AED", bg: "#F5F3FF", emoji: "🟣", bonus: 1 },
+  epique:      { label: "Épique",      couleur: "#0284C7", bg: "#ECFEFF", emoji: "🔷", bonus: 1 },
   legendaire:  { label: "Légendaire",  couleur: "#F59E0B", bg: "#FFFBEB", emoji: "⭐", bonus: 2 },
   ultra_rare:  { label: "Ultra Rare",  couleur: "#EF4444", bg: "#FEF2F2", emoji: "💎", bonus: 3 },
 };
@@ -49,7 +49,7 @@ const PACK_SPECIAL_1STMG2 = {
   cout: 300,
   nbCartes: 3,
   couleur: "#DB2777",
-  gradient: "linear-gradient(135deg, #DB2777, #7C3AED)",
+  gradient: "linear-gradient(135deg, #DB2777, #2563EB)",
   description: "Édition spéciale 1STMG2 • 3 cartes • 300 XP",
   prob: { commune: 0.88, peu_commune: 0.10, rare: 0.02, epique: 0, legendaire: 0, ultra_rare: 0 },
 };
@@ -172,7 +172,7 @@ const AnimationOuverture = ({ cartes, onTermine }) => {
   const toutesRetournees = retournees.every(Boolean);
 
   return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 2000, background: "radial-gradient(ellipse at center, #1a0533 0%, #000000 100%)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "32px" }}>
+    <div style={{ position: "fixed", inset: 0, zIndex: 2000, background: "radial-gradient(ellipse at center, #0B2447 0%, #020617 100%)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "32px" }}>
       <div style={{ textAlign: "center" }}>
         <p style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2rem", color: "white", margin: 0, opacity: etape === "intro" ? 0 : 1, transition: "opacity 0.5s" }}>✨ Tes nouvelles cartes !</p>
         {!toutesRetournees && <p style={{ color: "#9CA3AF", fontSize: "0.9rem", margin: "8px 0 0", opacity: etape === "intro" ? 0 : 1, transition: "opacity 0.5s 0.3s" }}>Clique sur chaque carte pour la révéler</p>}
@@ -185,9 +185,9 @@ const AnimationOuverture = ({ cartes, onTermine }) => {
             <div key={i} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "12px" }}>
               <div onClick={() => retourner(i)} style={{ width: "140px", cursor: est ? "default" : "pointer", transform: etape === "intro" ? "translateY(40px)" : "translateY(0)", opacity: etape === "intro" ? 0 : 1, transition: `all 0.5s ease ${i * 0.15}s` }}>
                 {!est ? (
-                  <div style={{ width: "100%", aspectRatio: "2/3", background: "linear-gradient(135deg, #2D1B69, #7C3AED, #2D1B69)", borderRadius: "16px", border: "3px solid #7C3AED", boxShadow: "0 0 30px #7C3AED80", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "8px" }}>
+                  <div style={{ width: "100%", aspectRatio: "2/3", background: "linear-gradient(135deg, #0B2447, #0284C7, #0B2447)", borderRadius: "16px", border: "3px solid #0EA5E9", boxShadow: "0 0 30px #0EA5E980", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "8px" }}>
                     <span style={{ fontSize: "2.5rem" }}>🃏</span>
-                    <p style={{ color: "#C4B5FD", fontFamily: "'Fredoka One', cursive", fontSize: "0.8rem", margin: 0 }}>Clique !</p>
+                    <p style={{ color: "#BAE6FD", fontFamily: "'Fredoka One', cursive", fontSize: "0.8rem", margin: 0 }}>Clique !</p>
                   </div>
                 ) : (
                   <div style={{ borderRadius: "16px", overflow: "hidden", border: `3px solid ${config.couleur}`, boxShadow: `0 0 40px ${config.couleur}80` }}>
@@ -206,7 +206,7 @@ const AnimationOuverture = ({ cartes, onTermine }) => {
         })}
       </div>
       <div style={{ display: "flex", gap: "12px", opacity: etape === "intro" ? 0 : 1, transition: "opacity 0.5s 0.5s" }}>
-        {!toutesRetournees && <button onClick={() => setRetournees([true, true, true])} style={{ background: "rgba(124,58,237,0.3)", color: "#C4B5FD", border: "2px solid #7C3AED", fontFamily: "'Fredoka One', cursive", fontSize: "1rem", padding: "12px 28px", borderRadius: "14px", cursor: "pointer" }}>Tout révéler →</button>}
+        {!toutesRetournees && <button onClick={() => setRetournees([true, true, true])} style={{ background: "rgba(14,165,233,0.25)", color: "#BAE6FD", border: "2px solid #0EA5E9", fontFamily: "'Fredoka One', cursive", fontSize: "1rem", padding: "12px 28px", borderRadius: "14px", cursor: "pointer" }}>Tout révéler →</button>}
         {toutesRetournees && <button onClick={onTermine} style={{ background: "linear-gradient(135deg, #10B981, #059669)", color: "white", border: "none", fontFamily: "'Fredoka One', cursive", fontSize: "1.1rem", padding: "14px 36px", borderRadius: "16px", cursor: "pointer", boxShadow: "0 4px 20px #10B98160" }}>🎉 Voir ma collection !</button>}
       </div>
     </div>
@@ -218,15 +218,15 @@ const RecapRegles = () => {
   const [ouvert, setOuvert] = useState(false);
   return (
     <div style={{ background: "white", borderRadius: "20px", marginBottom: "20px", overflow: "hidden", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
-      <div onClick={() => setOuvert(!ouvert)} style={{ padding: "16px 24px", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", background: "linear-gradient(135deg, #1A1A2E, #2D1B69)" }}>
+      <div onClick={() => setOuvert(!ouvert)} style={{ padding: "16px 24px", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", background: "linear-gradient(135deg, #0B2447, #0369A1)" }}>
         <p style={{ fontFamily: "'Fredoka One', cursive", color: "white", fontSize: "1.1rem", margin: 0 }}>📖 Comment ça marche ?</p>
-        <span style={{ color: "#A78BFA", fontSize: "1.2rem" }}>{ouvert ? "▲" : "▼"}</span>
+        <span style={{ color: "#BAE6FD", fontSize: "1.2rem" }}>{ouvert ? "▲" : "▼"}</span>
       </div>
       {ouvert && (
         <div style={{ padding: "20px 24px", display: "flex", flexDirection: "column", gap: "12px" }}>
           {[
             { emoji: "⚡", titre: "Gagne de l'XP", texte: "Complète des chapitres et des missions pour gagner de l'XP.", couleur: "#3B82F6" },
-            { emoji: "🎴", titre: "Ouvre des packs", texte: "Utilise ton XP pour ouvrir des packs et obtenir des cartes.", couleur: "#7C3AED" },
+            { emoji: "🎴", titre: "Ouvre des packs", texte: "Utilise ton XP pour ouvrir des packs et obtenir des cartes.", couleur: "#0284C7" },
             { emoji: "🎲", titre: "Pack Mystère gratuit", texte: "Un pack mystère GRATUIT est disponible chaque semaine ! Probabilités inconnues...", couleur: "#EC4899" },
             { emoji: "🎁", titre: "Carte du lundi", texte: "Chaque lundi matin une carte aléatoire t'est offerte gratuitement !", couleur: "#10B981" },
             { emoji: "⭐", titre: "Bonus participation", texte: "Les cartes Rares et + te donnent des points de participation bonus en cours !", couleur: "#F59E0B" },
@@ -438,18 +438,18 @@ export default function Cartes({ profil, onXPGagne }) {
 
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "24px 16px" }}>
 
-        <div style={{ background: "linear-gradient(135deg, #1A1A2E, #2D1B69)", borderRadius: "24px", padding: "28px 32px", marginBottom: "24px" }}>
+        <div style={{ background: "linear-gradient(135deg, #0B2447, #0369A1)", borderRadius: "24px", padding: "28px 32px", marginBottom: "24px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px", marginBottom: "20px" }}>
             <div>
               <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2.2rem", color: "white", margin: "0 0 4px" }}>🃏 Mes Cartes</h1>
-              <p style={{ color: "#A78BFA", margin: 0, fontSize: "0.9rem" }}>Collectionne, révise, progresse !</p>
+              <p style={{ color: "#BAE6FD", margin: 0, fontSize: "0.9rem" }}>Collectionne, révise, progresse !</p>
             </div>
             <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
               <div style={{ background: "#F59E0B30", border: "1px solid #F59E0B50", borderRadius: "14px", padding: "8px 18px", fontFamily: "'Fredoka One', cursive", color: "white", fontSize: "0.95rem" }}>
                 🔥 {streak} jour{streak > 1 ? "s" : ""} de streak
               </div>
               {[
-                { label: `${totalCartes} cartes`, bg: "#7C3AED", emoji: "🃏" },
+                { label: `${totalCartes} cartes`, bg: "#0284C7", emoji: "🃏" },
                 { label: `+${bonusTotal.toFixed(1)} pts`, bg: "#F59E0B", emoji: "⭐" },
                 { label: `${profil?.xp || 0} XP`, bg: "#3B82F6", emoji: "⚡" },
               ].map((stat, i) => (
@@ -459,11 +459,11 @@ export default function Cartes({ profil, onXPGagne }) {
           </div>
           <div>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
-              <p style={{ color: "#A78BFA", fontSize: "0.85rem", margin: 0, fontFamily: "'Fredoka One', cursive" }}>📊 Collection globale</p>
+              <p style={{ color: "#BAE6FD", fontSize: "0.85rem", margin: 0, fontFamily: "'Fredoka One', cursive" }}>📊 Collection globale</p>
               <p style={{ color: "white", fontSize: "0.85rem", margin: 0, fontFamily: "'Fredoka One', cursive" }}>{totalUniques} / {totalDispo} cartes — {progGlobal}%</p>
             </div>
             <div style={{ background: "rgba(255,255,255,0.15)", borderRadius: "100px", height: "10px" }}>
-              <div style={{ height: "100%", borderRadius: "100px", background: "linear-gradient(90deg, #A78BFA, #7C3AED)", width: `${progGlobal}%`, transition: "width 0.5s ease" }} />
+              <div style={{ height: "100%", borderRadius: "100px", background: "linear-gradient(90deg, #38BDF8, #0284C7)", width: `${progGlobal}%`, transition: "width 0.5s ease" }} />
             </div>
           </div>
         </div>
@@ -503,12 +503,12 @@ export default function Cartes({ profil, onXPGagne }) {
         <div style={{ display: "flex", gap: "8px", marginBottom: "24px" }}>
           {[{ id: "boutique", label: "🛒 Boutique Packs" }, { id: "collection", label: "📚 Ma Collection" }].map(t => (
             <button key={t.id} onClick={() => setOnglet(t.id)} style={{
-              background: onglet === t.id ? "linear-gradient(135deg, #7C3AED, #4C1D95)" : "white",
-              color: onglet === t.id ? "white" : "#7C3AED",
-              border: onglet === t.id ? "none" : "2px solid #7C3AED",
+              background: onglet === t.id ? "linear-gradient(135deg, #0EA5E9, #0369A1)" : "white",
+              color: onglet === t.id ? "white" : "#0284C7",
+              border: onglet === t.id ? "none" : "2px solid #0284C7",
               fontFamily: "'Fredoka One', cursive", fontSize: "1rem",
               padding: "12px 28px", borderRadius: "14px", cursor: "pointer",
-              boxShadow: onglet === t.id ? "0 4px 15px #7C3AED50" : "none",
+              boxShadow: onglet === t.id ? "0 4px 15px #0284C750" : "none",
               transition: "all 0.2s",
             }}>{t.label}</button>
           ))}
@@ -519,8 +519,8 @@ export default function Cartes({ profil, onXPGagne }) {
             Filtres des drops
           </p>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
-            <div style={{ borderRadius: "12px", border: "2px solid #7C3AED30", padding: "10px 12px" }}>
-              <p style={{ fontFamily: "'Fredoka One', cursive", color: "#7C3AED", fontSize: "0.78rem", margin: "0 0 6px" }}>
+            <div style={{ borderRadius: "12px", border: "2px solid #0EA5E930", padding: "10px 12px" }}>
+              <p style={{ fontFamily: "'Fredoka One', cursive", color: "#0284C7", fontSize: "0.78rem", margin: "0 0 6px" }}>
                 Matière
               </p>
               <select
@@ -528,7 +528,7 @@ export default function Cartes({ profil, onXPGagne }) {
                 onChange={(e) => setMatiereSelectionnee(e.target.value)}
                 style={{
                   width: "100%",
-                  border: "2px solid #7C3AED35",
+                  border: "2px solid #0EA5E935",
                   borderRadius: "10px",
                   padding: "8px 10px",
                   fontFamily: "'Nunito', sans-serif",
@@ -580,7 +580,7 @@ export default function Cartes({ profil, onXPGagne }) {
               const obtenues = col.cartes.filter(c => maCollection[c.id] > 0).length;
               return (
                 <div key={col.id} style={{ background: "white", borderRadius: "24px", overflow: "hidden", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
-                  <div style={{ background: col.gradient || "linear-gradient(135deg, #1A1A2E, #2D1B69)", padding: "20px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
+                  <div style={{ background: col.gradient || "linear-gradient(135deg, #0B2447, #0369A1)", padding: "20px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
                     <div>
                       <p style={{ fontFamily: "'Fredoka One', cursive", color: "white", fontSize: "1.3rem", margin: 0 }}>{col.emoji || "🃏"} {col.nom}</p>
                       <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "0.82rem", margin: "2px 0 0" }}>
@@ -629,12 +629,12 @@ export default function Cartes({ profil, onXPGagne }) {
               return (
                 <div key={col.id} style={{ background: "white", borderRadius: "24px", overflow: "hidden", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
                   <div onClick={() => setCollectionOuverte(ouverte ? null : col.id)}
-                    style={{ background: ouverte ? (col.gradient || "linear-gradient(135deg, #1A1A2E, #2D1B69)") : "white", padding: "20px 24px", cursor: "pointer", borderBottom: ouverte ? "none" : "1px solid #F3F4F6", transition: "all 0.3s" }}>
+                    style={{ background: ouverte ? (col.gradient || "linear-gradient(135deg, #0B2447, #0369A1)") : "white", padding: "20px 24px", cursor: "pointer", borderBottom: ouverte ? "none" : "1px solid #F3F4F6", transition: "all 0.3s" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
                       <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-                        <div style={{ width: "48px", height: "48px", borderRadius: "14px", background: ouverte ? "rgba(255,255,255,0.2)" : (col.couleur || "#7C3AED") + "15", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.6rem" }}>{col.emoji || "🃏"}</div>
+                        <div style={{ width: "48px", height: "48px", borderRadius: "14px", background: ouverte ? "rgba(255,255,255,0.2)" : (col.couleur || "#0284C7") + "15", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.6rem" }}>{col.emoji || "🃏"}</div>
                         <div>
-                          <p style={{ fontFamily: "'Fredoka One', cursive", color: ouverte ? "white" : (col.couleur || "#7C3AED"), fontSize: "1.2rem", margin: 0 }}>{col.nom}</p>
+                          <p style={{ fontFamily: "'Fredoka One', cursive", color: ouverte ? "white" : (col.couleur || "#0284C7"), fontSize: "1.2rem", margin: 0 }}>{col.nom}</p>
                           <p style={{ color: ouverte ? "rgba(255,255,255,0.7)" : "#9CA3AF", fontSize: "0.8rem", margin: "2px 0 0" }}>
                             {getCollectionMatiere(col)} · {getCollectionTheme(col)} · {cartesPossedees.length} / {col.cartes.length} cartes
                           </p>
@@ -642,12 +642,12 @@ export default function Cartes({ profil, onXPGagne }) {
                       </div>
                       <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
                         {prog === 100 && <span style={{ fontSize: "1.4rem" }}>🏆</span>}
-                        <div style={{ background: ouverte ? "rgba(255,255,255,0.2)" : (col.couleur || "#7C3AED") + "15", borderRadius: "100px", padding: "6px 16px", fontFamily: "'Fredoka One', cursive", color: ouverte ? "white" : (col.couleur || "#7C3AED"), fontSize: "0.9rem" }}>{prog}%</div>
-                        <span style={{ color: ouverte ? "white" : (col.couleur || "#7C3AED"), fontSize: "1.2rem" }}>{ouverte ? "▲" : "▼"}</span>
+                        <div style={{ background: ouverte ? "rgba(255,255,255,0.2)" : (col.couleur || "#0284C7") + "15", borderRadius: "100px", padding: "6px 16px", fontFamily: "'Fredoka One', cursive", color: ouverte ? "white" : (col.couleur || "#0284C7"), fontSize: "0.9rem" }}>{prog}%</div>
+                        <span style={{ color: ouverte ? "white" : (col.couleur || "#0284C7"), fontSize: "1.2rem" }}>{ouverte ? "▲" : "▼"}</span>
                       </div>
                     </div>
                     <div style={{ marginTop: "14px", background: ouverte ? "rgba(255,255,255,0.2)" : "#E5E7EB", borderRadius: "100px", height: "6px" }}>
-                      <div style={{ height: "100%", borderRadius: "100px", background: ouverte ? "white" : (col.gradient || "linear-gradient(135deg, #7C3AED, #4C1D95)"), width: `${prog}%`, transition: "width 0.5s ease" }} />
+                      <div style={{ height: "100%", borderRadius: "100px", background: ouverte ? "white" : (col.gradient || "linear-gradient(135deg, #0EA5E9, #0369A1)"), width: `${prog}%`, transition: "width 0.5s ease" }} />
                     </div>
                   </div>
 
@@ -679,7 +679,7 @@ export default function Cartes({ profil, onXPGagne }) {
                                   <CarteMini carte={carte} onClick={() => setVisionneuse({ collection: col, indexDansPossedees: idx })} />
                                   {nb > 1 && (
                                     <>
-                                      <div style={{ position: "absolute", top: "-6px", right: "-6px", background: "#7C3AED", color: "white", borderRadius: "100px", width: "22px", height: "22px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: "700", boxShadow: "0 2px 8px rgba(0,0,0,0.3)" }}>x{nb}</div>
+                                      <div style={{ position: "absolute", top: "-6px", right: "-6px", background: "#0284C7", color: "white", borderRadius: "100px", width: "22px", height: "22px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.6rem", fontWeight: "700", boxShadow: "0 2px 8px rgba(0,0,0,0.3)" }}>x{nb}</div>
                                       <button onClick={(e) => { e.stopPropagation(); recyclerDoublon(carte); }} title="Recycler contre 10 XP"
                                         style={{ position: "absolute", bottom: "28px", right: "-6px", background: "#10B981", color: "white", border: "none", borderRadius: "100px", width: "22px", height: "22px", fontSize: "0.7rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 2px 8px rgba(0,0,0,0.3)" }}>♻</button>
                                     </>

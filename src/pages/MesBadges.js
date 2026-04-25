@@ -6,7 +6,7 @@ const rareteColors = {
   "Commun": "#9ca3af",
   "Peu commun": "#4ade80",
   "Rare": "#60a5fa",
-  "Épique": "#c084fc",
+  "Épique": "#0ea5e9",
   "Légendaire": "#fbbf24",
 };
 
@@ -59,23 +59,23 @@ export default function MesBadges({ profil }) {
 
   if (chargement) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <p className="text-white">Chargement des badges...</p>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "linear-gradient(180deg, #F8FAFF 0%, #F1F5F9 100%)" }}>
+        <p style={{ color: "#334155", fontFamily: "'Fredoka One', cursive" }}>Chargement des badges...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4">
+    <div className="min-h-screen p-4" style={{ background: "linear-gradient(180deg, #F8FAFF 0%, #F1F5F9 100%)", color: "#0f172a" }}>
       <div className="max-w-4xl mx-auto">
 
         <div className="mb-6">
-          <h1 className="text-3xl font-bold">🏅 Mes Badges</h1>
-          <p className="text-gray-400 mt-1">{totalDebloques} / {badges.length} badges débloqués</p>
-          <div className="w-full bg-gray-700 rounded-full h-2 mt-2">
+          <h1 className="text-3xl font-bold" style={{ fontFamily: "'Fredoka One', cursive" }}>🏅 Mes Badges</h1>
+          <p className="mt-1" style={{ color: "#64748b" }}>{totalDebloques} / {badges.length} badges débloqués</p>
+          <div className="w-full rounded-full h-2 mt-2" style={{ background: "#e2e8f0" }}>
             <div
-              className="bg-yellow-400 h-2 rounded-full transition-all"
-              style={{ width: badges.length > 0 ? `${(totalDebloques / badges.length) * 100}%` : "0%" }}
+              className="h-2 rounded-full transition-all"
+              style={{ background: "linear-gradient(90deg, #f59e0b, #f97316)", width: badges.length > 0 ? `${(totalDebloques / badges.length) * 100}%` : "0%" }}
             />
           </div>
         </div>
@@ -88,10 +88,10 @@ export default function MesBadges({ profil }) {
           const debloquesUnivers = badgesUnivers.filter(b => verifierCondition(b, profil)).length;
 
           return (
-            <div key={univers} className="bg-gray-800 rounded-xl p-5 mb-6">
+            <div key={univers} className="rounded-xl p-5 mb-6 border border-slate-200 shadow-sm bg-white">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">🐾 Univers {univers}</h2>
-                <span className="text-gray-400 text-sm">{debloquesUnivers} / {badgesUnivers.length}</span>
+                <h2 className="text-xl font-bold" style={{ fontFamily: "'Fredoka One', cursive" }}>🐾 Univers {univers}</h2>
+                <span className="text-sm" style={{ color: "#64748b" }}>{debloquesUnivers} / {badgesUnivers.length}</span>
               </div>
 
               <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
@@ -101,7 +101,8 @@ export default function MesBadges({ profil }) {
                     <div
                       key={badge.id}
                       onClick={() => setBadgeSelectionne(badge)}
-                      className="cursor-pointer text-center p-3 rounded-xl transition-all hover:bg-gray-700"
+                      className="cursor-pointer text-center p-3 rounded-xl transition-all"
+                      style={{ background: "#f8fafc" }}
                     >
                       <div className="relative w-16 h-16 mx-auto mb-2">
                         <img
@@ -119,7 +120,7 @@ export default function MesBadges({ profil }) {
                       <p className="text-xs font-bold leading-tight" style={{ color: debloque ? rareteColors[badge.rarete] : "#4b5563" }}>
                         {badge.nom}
                       </p>
-                      <p className="text-xs mt-1" style={{ color: debloque ? "#6b7280" : "#374151" }}>
+                      <p className="text-xs mt-1" style={{ color: debloque ? "#64748b" : "#94a3b8" }}>
                         {badge.rarete}
                       </p>
                     </div>
@@ -132,11 +133,13 @@ export default function MesBadges({ profil }) {
 
         {badgeSelectionne && (
           <div
-            className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 flex items-center justify-center z-50 p-4"
+            style={{ background: "rgba(2, 6, 23, 0.76)" }}
             onClick={() => setBadgeSelectionne(null)}
           >
             <div
-              className="bg-gray-800 rounded-2xl p-6 max-w-sm w-full text-center"
+              className="rounded-2xl p-6 max-w-sm w-full text-center border border-slate-200"
+              style={{ background: "#ffffff" }}
               onClick={(e) => e.stopPropagation()}
             >
               <div className="relative w-24 h-24 mx-auto mb-4">
@@ -153,32 +156,32 @@ export default function MesBadges({ profil }) {
                 )}
               </div>
 
-              <h3 className="text-xl font-bold mb-1">{badgeSelectionne.nom}</h3>
+              <h3 className="text-xl font-bold mb-1" style={{ color: "#0f172a" }}>{badgeSelectionne.nom}</h3>
               <p className="text-sm font-semibold mb-1" style={{ color: rareteColors[badgeSelectionne.rarete] }}>
                 {badgeSelectionne.rarete}
               </p>
-              <p className="text-gray-400 text-sm mb-4">Univers {badgeSelectionne.univers}</p>
+              <p className="text-sm mb-4" style={{ color: "#64748b" }}>Univers {badgeSelectionne.univers}</p>
 
               {verifierCondition(badgeSelectionne, profil) ? (
-                <div className="bg-green-900 rounded-lg p-3">
-                  <p className="text-green-400 font-bold">✅ Badge débloqué !</p>
+                <div className="rounded-lg p-3" style={{ background: "#dcfce7" }}>
+                  <p className="font-bold" style={{ color: "#15803d" }}>✅ Badge débloqué !</p>
                 </div>
               ) : (
-                <div className="bg-gray-700 rounded-lg p-3">
-                  <p className="text-gray-400 text-sm mb-1">🎯 Pour débloquer :</p>
-                  <p className="text-white font-semibold">{getConditionTexte(badgeSelectionne)}</p>
+                <div className="rounded-lg p-3 border border-slate-200" style={{ background: "#f8fafc" }}>
+                  <p className="text-sm mb-1" style={{ color: "#64748b" }}>🎯 Pour débloquer :</p>
+                  <p className="font-semibold" style={{ color: "#0f172a" }}>{getConditionTexte(badgeSelectionne)}</p>
                   {badgeSelectionne.condition_type === "xp" && (
-                    <p className="text-yellow-400 text-sm mt-2">
+                    <p className="text-sm mt-2" style={{ color: "#d97706" }}>
                       Tu as {profil.xp || 0} XP — encore {badgeSelectionne.condition_valeur - (profil.xp || 0)} XP !
                     </p>
                   )}
                   {badgeSelectionne.condition_type === "chapitres" && (
-                    <p className="text-blue-400 text-sm mt-2">
+                    <p className="text-sm mt-2" style={{ color: "#0369a1" }}>
                       Tu as complété {(profil.chapitresCompletes || []).length} chapitres — encore {badgeSelectionne.condition_valeur - (profil.chapitresCompletes || []).length} !
                     </p>
                   )}
                   {badgeSelectionne.condition_type === "missions" && (
-                    <p className="text-purple-400 text-sm mt-2">
+                    <p className="text-sm mt-2" style={{ color: "#0284c7" }}>
                       Tu as complété {(profil.missionsCompletes || []).length} missions — encore {badgeSelectionne.condition_valeur - (profil.missionsCompletes || []).length} !
                     </p>
                   )}
@@ -192,7 +195,8 @@ export default function MesBadges({ profil }) {
 
               <button
                 onClick={() => setBadgeSelectionne(null)}
-                className="mt-4 bg-gray-700 hover:bg-gray-600 text-white px-6 py-2 rounded-lg"
+                className="mt-4 text-white px-6 py-2 rounded-lg"
+                style={{ background: "linear-gradient(135deg, #0ea5e9, #2563eb)" }}
               >
                 Fermer
               </button>

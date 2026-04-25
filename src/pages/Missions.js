@@ -3,7 +3,7 @@ import { auth, db } from "../firebase";
 import { doc, updateDoc, getDoc, collection, getDocs } from "firebase/firestore";
 
 const COLORS = {
-  S: "#3B82F6", T: "#7C3AED", M: "#F97316",
+  S: "#3B82F6", T: "#0284C7", M: "#F97316",
   G: "#10B981", H: "#EF4444", U: "#F59E0B", B: "#06B6D4",
 };
 const MISSION_ENGINE_VERSION = "strict-v7-2026-04-22";
@@ -980,10 +980,10 @@ export default function Missions({ profil, onXPGagne }) {
 
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "24px 16px" }}>
 
-        <div style={{ background: "linear-gradient(135deg, #1A1A2E, #2D1B69)", borderRadius: "24px", padding: "28px 32px", marginBottom: "24px" }}>
+        <div style={{ background: "linear-gradient(135deg, #0B2447, #0369A1)", borderRadius: "24px", padding: "28px 32px", marginBottom: "24px" }}>
           <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2.2rem", color: "white", margin: "0 0 4px" }}>🎯 Mes Missions</h1>
-          <p style={{ color: "#A78BFA", margin: "0 0 20px", fontSize: "0.9rem" }}>Missions classées par niveau, matière et difficulté.</p>
-          <p style={{ color: "#C4B5FD", margin: "0 0 14px", fontSize: "0.75rem" }}>
+          <p style={{ color: "#BAE6FD", margin: "0 0 20px", fontSize: "0.9rem" }}>Missions classées par niveau, matière et difficulté.</p>
+          <p style={{ color: "#E0F2FE", margin: "0 0 14px", fontSize: "0.75rem" }}>
             Version correction : {MISSION_ENGINE_VERSION}
           </p>
           <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "center" }}>

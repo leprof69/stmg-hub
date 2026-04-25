@@ -246,18 +246,18 @@ const questions = [
 
 const couleursBoutons = {
   Architecte: "bg-blue-600 hover:bg-blue-700",
-  Visionnaire: "bg-purple-600 hover:bg-purple-700",
+  Visionnaire: "bg-cyan-600 hover:bg-cyan-700",
   Challenger: "bg-orange-600 hover:bg-orange-700",
   Explorateur: "bg-green-600 hover:bg-green-700",
   Influenceur: "bg-red-600 hover:bg-red-700",
 };
 
 const couleursTheme = {
-  Architecte: { bg: "from-blue-900 to-gray-900", accent: "text-blue-400", border: "border-blue-500", badge: "bg-blue-600" },
-  Visionnaire: { bg: "from-purple-900 to-gray-900", accent: "text-purple-400", border: "border-purple-500", badge: "bg-purple-600" },
-  Challenger: { bg: "from-orange-900 to-gray-900", accent: "text-orange-400", border: "border-orange-500", badge: "bg-orange-600" },
-  Explorateur: { bg: "from-green-900 to-gray-900", accent: "text-green-400", border: "border-green-500", badge: "bg-green-600" },
-  Influenceur: { bg: "from-red-900 to-gray-900", accent: "text-red-400", border: "border-red-500", badge: "bg-red-600" },
+  Architecte: { bg: "from-blue-50 to-slate-100", accent: "text-blue-700", border: "border-blue-300", badge: "bg-blue-600" },
+  Visionnaire: { bg: "from-cyan-50 to-slate-100", accent: "text-cyan-700", border: "border-cyan-300", badge: "bg-cyan-600" },
+  Challenger: { bg: "from-orange-50 to-slate-100", accent: "text-orange-700", border: "border-orange-300", badge: "bg-orange-600" },
+  Explorateur: { bg: "from-green-50 to-slate-100", accent: "text-green-700", border: "border-green-300", badge: "bg-green-600" },
+  Influenceur: { bg: "from-red-50 to-slate-100", accent: "text-red-700", border: "border-red-300", badge: "bg-red-600" },
 };
 
 export default function Onboarding({ onTermine }) {
@@ -378,33 +378,33 @@ export default function Onboarding({ onTermine }) {
   // ============================================
   if (etape === 1) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-blue-900 flex items-center justify-center p-4">
-        <div className="bg-gray-800 rounded-2xl p-8 max-w-md w-full shadow-2xl">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 flex items-center justify-center p-4">
+        <div className="bg-white border border-slate-200 rounded-2xl p-8 max-w-md w-full shadow-xl">
           <div className="text-center mb-8">
             <p className="text-5xl mb-3">🎓</p>
-            <h1 className="text-2xl font-bold text-white">Bienvenue sur STMG HUB !</h1>
-            <p className="text-gray-400 mt-2 text-sm">Crée ton profil pour commencer l'aventure</p>
+            <h1 className="text-2xl font-bold text-slate-900">Bienvenue sur STMG HUB !</h1>
+            <p className="text-slate-500 mt-2 text-sm">Crée ton profil pour commencer l'aventure</p>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label className="text-gray-400 text-sm">Prénom *</label>
+              <label className="text-slate-500 text-sm">Prénom *</label>
               <input type="text" value={prenom} onChange={e => setPrenom(e.target.value)}
                 placeholder="Ton prénom"
-                className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                className="w-full bg-white border border-slate-300 text-slate-900 rounded-lg px-4 py-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div>
-              <label className="text-gray-400 text-sm">Âge *</label>
+              <label className="text-slate-500 text-sm">Âge *</label>
               <input type="number" value={age} onChange={e => setAge(e.target.value)}
                 placeholder="Ton âge" min="13" max="20"
-                className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                className="w-full bg-white border border-slate-300 text-slate-900 rounded-lg px-4 py-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div>
-              <label className="text-gray-400 text-sm">Classe *</label>
+              <label className="text-slate-500 text-sm">Classe *</label>
               <select value={classe} onChange={e => setClasse(e.target.value)}
-                className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                className="w-full bg-white border border-slate-300 text-slate-900 rounded-lg px-4 py-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="">Sélectionne ta classe</option>
                 <option value="premiere">Première STMG</option>
                 <option value="terminale">Terminale STMG</option>
@@ -413,9 +413,9 @@ export default function Onboarding({ onTermine }) {
 
             {classe === "terminale" && (
               <div>
-                <label className="text-gray-400 text-sm">Spécialité *</label>
+                <label className="text-slate-500 text-sm">Spécialité *</label>
                 <select value={specialite} onChange={e => setSpecialite(e.target.value)}
-                  className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  className="w-full bg-white border border-slate-300 text-slate-900 rounded-lg px-4 py-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                   <option value="">Sélectionne ta spécialité</option>
                   <option value="Marketing">Marketing</option>
                   <option value="Ressources Humaines">Ressources Humaines</option>
@@ -426,19 +426,19 @@ export default function Onboarding({ onTermine }) {
             )}
 
             <div>
-              <label className="text-gray-400 text-sm">Nom de ton lycée *</label>
+              <label className="text-slate-500 text-sm">Nom de ton lycée *</label>
               <input
                 type="text"
                 value={rechercheLycee}
                 onChange={e => rechercherLycee(e.target.value)}
                 placeholder="Tape le nom de ta ville ou ton lycée..."
-                className="w-full bg-gray-700 text-white rounded-lg px-4 py-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-white border border-slate-300 text-slate-900 rounded-lg px-4 py-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               {chargementLycee && (
-                <p className="text-gray-400 text-xs mt-1">🔍 Recherche en cours...</p>
+                <p className="text-slate-500 text-xs mt-1">🔍 Recherche en cours...</p>
               )}
               {resultatsLycee.length > 0 && !lycee && (
-                <div className="bg-gray-700 rounded-lg mt-1 max-h-48 overflow-y-auto border border-gray-600">
+                <div className="bg-white rounded-lg mt-1 max-h-48 overflow-y-auto border border-slate-300">
                   {resultatsLycee.map((etablissement, i) => (
                     <button key={i}
                       onClick={() => {
@@ -448,10 +448,10 @@ export default function Onboarding({ onTermine }) {
                         setRechercheLycee(etablissement.nom + " — " + etablissement.ville);
                         setResultatsLycee([]);
                       }}
-                      className="w-full text-left px-4 py-3 hover:bg-gray-600 border-b border-gray-600 last:border-0 transition-all"
+                      className="w-full text-left px-4 py-3 hover:bg-slate-100 border-b border-slate-200 last:border-0 transition-all"
                     >
-                      <p className="text-white text-sm font-semibold">{etablissement.nom}</p>
-                      <p className="text-gray-400 text-xs">{etablissement.ville} ({etablissement.departement})</p>
+                      <p className="text-slate-900 text-sm font-semibold">{etablissement.nom}</p>
+                      <p className="text-slate-500 text-xs">{etablissement.ville} ({etablissement.departement})</p>
                     </button>
                   ))}
                 </div>
@@ -461,16 +461,16 @@ export default function Onboarding({ onTermine }) {
               )}
             </div>
 
-            <div className="bg-gray-700 rounded-xl p-4 space-y-3">
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-3">
               <label className="flex items-start gap-3 cursor-pointer">
                 <input type="checkbox" checked={majeur13} onChange={e => setMajeur13(e.target.checked)}
                   className="mt-1 w-4 h-4 accent-blue-500" />
-                <span className="text-gray-300 text-sm">J'ai au moins 13 ans *</span>
+                <span className="text-slate-700 text-sm">J'ai au moins 13 ans *</span>
               </label>
               <label className="flex items-start gap-3 cursor-pointer">
                 <input type="checkbox" checked={rgpd} onChange={e => setRgpd(e.target.checked)}
                   className="mt-1 w-4 h-4 accent-blue-500" />
-                <span className="text-gray-300 text-sm">
+                <span className="text-slate-700 text-sm">
                   J'accepte les{" "}
                   <button onClick={() => setShowCGU(true)} className="text-blue-400 underline hover:text-blue-300">
                     Conditions Générales d'Utilisation
@@ -495,17 +495,17 @@ export default function Onboarding({ onTermine }) {
         {/* POPUP CGU */}
         {showCGU && (
           <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-800 rounded-2xl max-w-lg w-full max-h-screen overflow-hidden flex flex-col">
-              <div className="p-5 border-b border-gray-700 flex justify-between items-center">
-                <h3 className="text-white font-bold text-lg">📋 CGU & RGPD — STMG HUB</h3>
-                <button onClick={() => setShowCGU(false)} className="text-gray-400 hover:text-white text-2xl">×</button>
+            <div className="bg-white rounded-2xl max-w-lg w-full max-h-screen overflow-hidden flex flex-col border border-slate-200">
+              <div className="p-5 border-b border-slate-200 flex justify-between items-center">
+                <h3 className="text-slate-900 font-bold text-lg">📋 CGU & RGPD — STMG HUB</h3>
+                <button onClick={() => setShowCGU(false)} className="text-slate-500 hover:text-slate-900 text-2xl">×</button>
               </div>
               <div className="p-5 overflow-y-auto flex-1">
-                <pre className="text-gray-300 text-xs whitespace-pre-wrap leading-relaxed font-sans">{CGU_TEXTE}</pre>
+                <pre className="text-slate-700 text-xs whitespace-pre-wrap leading-relaxed font-sans">{CGU_TEXTE}</pre>
               </div>
-              <div className="p-4 border-t border-gray-700 flex gap-3">
+              <div className="p-4 border-t border-slate-200 flex gap-3">
                 <button onClick={() => setShowCGU(false)}
-                  className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-xl">
+                  className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-3 rounded-xl">
                   Fermer
                 </button>
                 <button onClick={() => { setRgpd(true); setShowCGU(false); }}
@@ -527,19 +527,19 @@ export default function Onboarding({ onTermine }) {
     const q = questions[questionActuelle];
     const progression = (questionActuelle / questions.length) * 100;
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-100 flex items-center justify-center p-4">
         <div className="max-w-lg w-full">
           <div className="mb-6">
-            <div className="flex justify-between text-gray-400 text-sm mb-2">
+            <div className="flex justify-between text-slate-500 text-sm mb-2">
               <span>Question {questionActuelle + 1} / {questions.length}</span>
               <span>{Math.round(progression)}%</span>
             </div>
-            <div className="w-full bg-gray-700 rounded-full h-2">
+            <div className="w-full bg-slate-200 rounded-full h-2">
               <div className="bg-blue-500 h-2 rounded-full transition-all duration-500" style={{ width: `${progression}%` }} />
             </div>
           </div>
-          <div className="bg-gray-800 rounded-2xl p-6 shadow-2xl">
-            <p className="text-white font-bold text-xl mb-6 text-center leading-relaxed">{q.question}</p>
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xl">
+            <p className="text-slate-900 font-bold text-xl mb-6 text-center leading-relaxed">{q.question}</p>
             <div className="space-y-3">
               {q.reponses.map((rep, i) => (
                 <button key={i} onClick={() => repondre(rep.famille)}
@@ -565,9 +565,9 @@ export default function Onboarding({ onTermine }) {
         <div className={`min-h-screen bg-gradient-to-br ${theme.bg} flex items-center justify-center p-4`}>
           <div className="text-center max-w-md">
             <div className="text-8xl mb-6 animate-bounce">{donneesTotem.emoji}</div>
-            <h2 className="text-4xl font-bold text-white mb-3">Tu es...</h2>
+            <h2 className="text-4xl font-bold text-slate-900 mb-3">Tu es...</h2>
             <h1 className={`text-5xl font-bold mb-4 ${theme.accent}`}>{donneesTotem.nom} !</h1>
-            <p className="text-gray-300 text-lg mb-8 leading-relaxed">{donneesTotem.description}</p>
+            <p className="text-slate-600 text-lg mb-8 leading-relaxed">{donneesTotem.description}</p>
             <button onClick={() => setSousEtapeTotem(1)}
               className={`${theme.badge} text-white font-bold px-8 py-4 rounded-xl text-lg hover:opacity-90 transition-all`}>
               Découvrir mon Triple Totem 🔮
@@ -584,16 +584,16 @@ export default function Onboarding({ onTermine }) {
           <div className="max-w-lg w-full">
             <div className="text-center mb-6">
               <p className={`${theme.accent} font-bold text-sm mb-1`}>TOTEM 1/3</p>
-              <h2 className="text-3xl font-bold text-white">🐾 Choisis ton Animal Totem</h2>
-              <p className="text-gray-400 mt-2">Lequel te représente le mieux ?</p>
+              <h2 className="text-3xl font-bold text-slate-900">🐾 Choisis ton Animal Totem</h2>
+              <p className="text-slate-500 mt-2">Lequel te représente le mieux ?</p>
             </div>
             <div className="grid grid-cols-2 gap-3">
               {donneesTotem.animaux.map((animal, i) => (
                 <button key={i}
                   onClick={() => { setAnimalChoisi(animal); setSousEtapeTotem(2); }}
-                  className={`bg-gray-800 border-2 ${theme.border} rounded-xl p-5 text-center hover:opacity-90 transition-all hover:scale-105`}>
+                  className={`bg-white border-2 ${theme.border} rounded-xl p-5 text-center hover:opacity-90 transition-all hover:scale-105`}>
                   <div className="text-5xl mb-2">{animal.emoji}</div>
-                  <p className="text-white font-bold">{animal.nom}</p>
+                  <p className="text-slate-900 font-bold">{animal.nom}</p>
                 </button>
               ))}
             </div>
@@ -609,20 +609,20 @@ export default function Onboarding({ onTermine }) {
           <div className="max-w-lg w-full">
             <div className="text-center mb-6">
               <p className={`${theme.accent} font-bold text-sm mb-1`}>TOTEM 2/3</p>
-              <h2 className="text-3xl font-bold text-white">⚔️ Choisis ton Objet Mythique</h2>
-              <p className="text-gray-400 mt-2">Quelle est ton arme secrète ?</p>
-              <div className="mt-3 inline-flex items-center gap-2 bg-gray-800 rounded-full px-3 py-1">
+              <h2 className="text-3xl font-bold text-slate-900">⚔️ Choisis ton Objet Mythique</h2>
+              <p className="text-slate-500 mt-2">Quelle est ton arme secrète ?</p>
+              <div className="mt-3 inline-flex items-center gap-2 bg-white border border-slate-200 rounded-full px-3 py-1">
                 <span className="text-2xl">{animalChoisi?.emoji}</span>
-                <span className="text-gray-300 text-xs">{animalChoisi?.nom} ✅</span>
+                <span className="text-slate-600 text-xs">{animalChoisi?.nom} ✅</span>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
               {donneesTotem.objets.map((objet, i) => (
                 <button key={i}
                   onClick={() => { setObjetChoisi(objet); setSousEtapeTotem(3); }}
-                  className={`bg-gray-800 border-2 ${theme.border} rounded-xl p-5 text-center hover:opacity-90 transition-all hover:scale-105`}>
+                  className={`bg-white border-2 ${theme.border} rounded-xl p-5 text-center hover:opacity-90 transition-all hover:scale-105`}>
                   <div className="text-5xl mb-2">{objet.emoji}</div>
-                  <p className="text-white font-bold">{objet.nom}</p>
+                  <p className="text-slate-900 font-bold">{objet.nom}</p>
                 </button>
               ))}
             </div>
@@ -638,22 +638,22 @@ export default function Onboarding({ onTermine }) {
           <div className="max-w-lg w-full">
             <div className="text-center mb-6">
               <p className={`${theme.accent} font-bold text-sm mb-1`}>TOTEM 3/3</p>
-              <h2 className="text-3xl font-bold text-white">⭐ Choisis ta Star / Personnage</h2>
-              <p className="text-gray-400 mt-2">Qui t'inspire le plus ?</p>
-              <div className="mt-3 inline-flex items-center gap-2 bg-gray-800 rounded-full px-3 py-1">
+              <h2 className="text-3xl font-bold text-slate-900">⭐ Choisis ta Star / Personnage</h2>
+              <p className="text-slate-500 mt-2">Qui t'inspire le plus ?</p>
+              <div className="mt-3 inline-flex items-center gap-2 bg-white border border-slate-200 rounded-full px-3 py-1">
                 <span className="text-xl">{animalChoisi?.emoji}</span>
-                <span className="text-gray-300 text-xs">{animalChoisi?.nom} ✅</span>
+                <span className="text-slate-600 text-xs">{animalChoisi?.nom} ✅</span>
                 <span className="text-xl ml-1">{objetChoisi?.emoji}</span>
-                <span className="text-gray-300 text-xs">{objetChoisi?.nom} ✅</span>
+                <span className="text-slate-600 text-xs">{objetChoisi?.nom} ✅</span>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3 max-h-96 overflow-y-auto pb-2">
               {donneesTotem.stars.map((star, i) => (
                 <button key={i}
                   onClick={() => { setStarChoisie(star); setSousEtapeTotem(4); }}
-                  className={`bg-gray-800 border-2 ${theme.border} rounded-xl p-5 text-center hover:opacity-90 transition-all hover:scale-105`}>
+                  className={`bg-white border-2 ${theme.border} rounded-xl p-5 text-center hover:opacity-90 transition-all hover:scale-105`}>
                   <div className="text-5xl mb-2">{star.emoji}</div>
-                  <p className="text-white font-bold text-sm">{star.nom}</p>
+                  <p className="text-slate-900 font-bold text-sm">{star.nom}</p>
                 </button>
               ))}
             </div>
@@ -668,28 +668,28 @@ export default function Onboarding({ onTermine }) {
         <div className={`min-h-screen bg-gradient-to-br ${theme.bg} flex items-center justify-center p-4`}>
           <div className="max-w-md w-full text-center">
             <div className="text-5xl mb-4 animate-bounce">✨</div>
-            <h2 className="text-3xl font-bold text-white mb-1">Ton Triple Totem !</h2>
+            <h2 className="text-3xl font-bold text-slate-900 mb-1">Ton Triple Totem !</h2>
             <p className={`${theme.accent} font-bold text-lg mb-8`}>{donneesTotem.emoji} {donneesTotem.nom}</p>
 
             <div className="grid grid-cols-3 gap-4 mb-8">
-              <div className={`bg-gray-800 border-2 ${theme.border} rounded-xl p-4`}>
+              <div className={`bg-white border-2 ${theme.border} rounded-xl p-4`}>
                 <div className="text-4xl mb-2">{animalChoisi.emoji}</div>
-                <p className="text-gray-400 text-xs mb-1">🐾 Animal</p>
-                <p className="text-white font-bold text-sm">{animalChoisi.nom}</p>
+                <p className="text-slate-500 text-xs mb-1">🐾 Animal</p>
+                <p className="text-slate-900 font-bold text-sm">{animalChoisi.nom}</p>
               </div>
-              <div className={`bg-gray-800 border-2 ${theme.border} rounded-xl p-4`}>
+              <div className={`bg-white border-2 ${theme.border} rounded-xl p-4`}>
                 <div className="text-4xl mb-2">{objetChoisi.emoji}</div>
-                <p className="text-gray-400 text-xs mb-1">⚔️ Objet</p>
-                <p className="text-white font-bold text-sm">{objetChoisi.nom}</p>
+                <p className="text-slate-500 text-xs mb-1">⚔️ Objet</p>
+                <p className="text-slate-900 font-bold text-sm">{objetChoisi.nom}</p>
               </div>
-              <div className={`bg-gray-800 border-2 ${theme.border} rounded-xl p-4`}>
+              <div className={`bg-white border-2 ${theme.border} rounded-xl p-4`}>
                 <div className="text-4xl mb-2">{starChoisie.emoji}</div>
-                <p className="text-gray-400 text-xs mb-1">⭐ Star</p>
-                <p className="text-white font-bold text-sm">{starChoisie.nom}</p>
+                <p className="text-slate-500 text-xs mb-1">⭐ Star</p>
+                <p className="text-slate-900 font-bold text-sm">{starChoisie.nom}</p>
               </div>
             </div>
 
-            <p className="text-gray-300 mb-8 leading-relaxed">
+            <p className="text-slate-600 mb-8 leading-relaxed">
               Ton profil unique est prêt !<br />
               Commence ton aventure sur STMG HUB 🚀
             </p>
