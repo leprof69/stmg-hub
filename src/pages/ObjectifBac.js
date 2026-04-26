@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../firebase";
+import { jsPDF } from "jspdf";
 
 const COLORS = {
   page: "#F8FAFC",
@@ -289,6 +290,66 @@ const EXERCISES = [
     correctionPartielle:
       "Repères : type, taille, statut, champ d’action, ressources, finalité, objectifs. Ne pas « raconter » : justifier chaque point.",
   },
+  {
+    id: "ds13_e1",
+    type: "DS 1h - Chapitre 13",
+    niveau: "Première STMG",
+    xp: 420,
+    minChars: 420,
+    title: "Partie 1 - Questions de cours (définitions et notions)",
+    context:
+      "Chapitre 13 : analyse des performances commerciale et financière. Réponds clairement et avec vocabulaire de cours.",
+    consigne:
+      "Réponds aux 6 questions suivantes : (1) Définir la performance d’une organisation. (2) Donner les 3 étapes de la démarche de performance. (3) Expliquer la différence entre efficacité et efficience. (4) Expliquer ce qu’est un objectif mesurable + 1 exemple quantitatif + 1 exemple qualitatif. (5) Citer et définir 3 indicateurs de performance commerciale. (6) Définir rentabilité et profitabilité.",
+    grille: [
+      "Définitions exactes et vocabulaire de sciences de gestion.",
+      "Distinction claire efficacité / efficience.",
+      "Objectifs mesurables avec exemples pertinents.",
+      "Indicateurs commerciaux correctement définis (CA, part de marché, fidélité).",
+    ],
+    correctionPartielle:
+      "Repères attendus : performance = atteinte d’objectifs ; étapes = objectifs, moyens, résultats ; efficience = objectifs atteints avec ressources optimisées ; rentabilité = profit / capitaux investis ; profitabilité = profit / chiffre d’affaires.",
+  },
+  {
+    id: "ds13_e2",
+    type: "DS 1h - Chapitre 13",
+    niveau: "Première STMG",
+    xp: 520,
+    minChars: 520,
+    title: "Partie 2 - Exercice calculs (part de marché, rentabilité, profitabilité)",
+    context:
+      "Entreprise NOVA SNACK. Données : N -> CA 1 260 000 €, marché 6 000 000 €, résultat net 94 500 €, capitaux propres 540 000 €. N-1 -> CA 1 080 000 €, marché 5 700 000 €, résultat net 81 000 €, capitaux propres 500 000 €.",
+    consigne:
+      "Fais tous les calculs avec formules + application numérique + résultat : (1) taux d’évolution du CA entre N-1 et N ; (2) part de marché en N-1 puis N ; (3) profitabilité en N-1 puis N ; (4) rentabilité financière en N-1 puis N ; (5) conclusion argumentée sur l’évolution de la performance commerciale et financière.",
+    grille: [
+      "Méthode de calcul complète et lisible.",
+      "Résultats chiffrés justes ou cohérents.",
+      "Interprétation managériale des écarts entre N-1 et N.",
+      "Conclusion structurée sur performance commerciale + financière.",
+    ],
+    correctionPartielle:
+      "Repères : taux évolution CA = (1 260 000 - 1 080 000) / 1 080 000 = +16,7 % ; part de marché N-1 = 18,9 % ; N = 21,0 % ; profitabilité N-1 = 7,5 % ; N = 7,5 % ; rentabilité N-1 = 16,2 % ; N = 17,5 %.",
+  },
+  {
+    id: "ds13_e3",
+    type: "DS 1h - Chapitre 13",
+    niveau: "Première STMG",
+    xp: 460,
+    minChars: 360,
+    title: "Partie 3 - Analyse d’objectifs et performance globale",
+    context:
+      "Entreprise ECO'BAG. Objectifs N : +10 % de CA, satisfaction client 90 %, délai de livraison max 3 jours. Résultats : CA N-1 = 800 000 €, CA N = 860 000 €, satisfaction 87 %, délai moyen 3,8 jours.",
+    consigne:
+      "Calcule le taux d’évolution du CA, puis dis pour chaque objectif s’il est atteint ou non. Rédige ensuite une analyse globale de la performance (au moins 4 lignes) et propose 2 actions concrètes d’amélioration pour N+1.",
+    grille: [
+      "Calcul du taux d’évolution correct et exploité.",
+      "Vérification rigoureuse des 3 objectifs.",
+      "Analyse globale argumentée de la performance.",
+      "Actions d’amélioration réalistes et justifiées.",
+    ],
+    correctionPartielle:
+      "Repères : évolution CA = (860 000 - 800 000) / 800 000 = +7,5 % (objectif +10 % non atteint) ; satisfaction 87 % < 90 % ; délai 3,8 > 3 jours. Performance globale partiellement atteinte, avec besoin d’amélioration sur qualité de service et efficacité logistique.",
+  },
 ];
 
 const AUTOEVAL_ITEMS = [
@@ -299,6 +360,11 @@ const AUTOEVAL_ITEMS = [
   { id: "a5", text: "Je fais systématiquement formule + calcul + interprétation pour les calculs." },
   { id: "a6", text: "Je garde un temps de relecture finale obligatoire." },
 ];
+
+const DS_LOCK_TYPE = "DS 1h - Chapitre 13";
+const DS_CODE_STORAGE_KEY = "objectifBacDsUnlocked";
+const DS_ACCESS_CODE = (process.env.REACT_APP_DS_ACCESS_CODE || "").trim();
+const DS_EXAM_ID = "chapitre13_1h_2026";
 
 const normalizeText = (text = "") => String(text)
   .toLowerCase()
@@ -420,7 +486,15 @@ const callGroq = async (prompt) => {
   return parseJson(data?.choices?.[0]?.message?.content || "");
 };
 
-function ExerciseCard({ exercise, status, onClaimXP, onEvaluateResponse }) {
+function ExerciseCard({
+  exercise,
+  status,
+  onClaimXP,
+  onEvaluateResponse,
+  forceZero = false,
+  isDsExercise = false,
+  onDsSubmit,
+}) {
   const [answer, setAnswer] = useState("");
   const [showCorrection, setShowCorrection] = useState(false);
   const [loadingXP, setLoadingXP] = useState(false);
@@ -428,11 +502,13 @@ function ExerciseCard({ exercise, status, onClaimXP, onEvaluateResponse }) {
   const [evalResult, setEvalResult] = useState(null);
   const [localInfo, setLocalInfo] = useState("");
   const [answerLocked, setAnswerLocked] = useState(false);
+  const [dsSubmitted, setDsSubmitted] = useState(false);
 
   const length = answer.trim().length;
   const alreadyClaimed = status?.lastClaimDate === getTodayKey();
-  const canClaim = length >= exercise.minChars && !alreadyClaimed && !loadingXP;
-  const canEval = length >= Math.max(80, Math.floor(exercise.minChars * 0.6)) && !loadingEval && !answerLocked;
+  const isLocked = answerLocked || forceZero || dsSubmitted;
+  const canClaim = !forceZero && !isDsExercise && length >= exercise.minChars && !alreadyClaimed && !loadingXP;
+  const canEval = !forceZero && !isDsExercise && length >= Math.max(80, Math.floor(exercise.minChars * 0.6)) && !loadingEval && !answerLocked;
   const claimHint = alreadyClaimed
     ? "XP déjà validés aujourd’hui pour cet exercice."
     : length < exercise.minChars
@@ -465,6 +541,18 @@ function ExerciseCard({ exercise, status, onClaimXP, onEvaluateResponse }) {
     }
   };
 
+  const submitDsAnswer = () => {
+    if (isLocked) return;
+    const payload = String(answer || "").trim();
+    if (!payload) {
+      setLocalInfo("Réponse vide : saisis au moins un élément avant de rendre.");
+      return;
+    }
+    setDsSubmitted(true);
+    setLocalInfo("Copie rendue : réponse figée, modification impossible.");
+    if (onDsSubmit) onDsSubmit(exercise, payload);
+  };
+
   return (
     <article style={{ ...SHELL_CARD, padding: 18 }}>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 8 }}>
@@ -489,10 +577,10 @@ function ExerciseCard({ exercise, status, onClaimXP, onEvaluateResponse }) {
       <textarea
         value={answer}
         onChange={(e) => {
-          if (answerLocked) return;
+          if (isLocked) return;
           setAnswer(e.target.value);
         }}
-        readOnly={answerLocked}
+        readOnly={isLocked}
         onPaste={(e) => e.preventDefault()}
         onCopy={(e) => e.preventDefault()}
         onCut={(e) => e.preventDefault()}
@@ -528,31 +616,53 @@ function ExerciseCard({ exercise, status, onClaimXP, onEvaluateResponse }) {
           Réponse verrouillée après correction : modification impossible.
         </p>
       )}
+      {dsSubmitted && (
+        <p style={{ margin: "6px 0 0", color: "#7C2D12", fontSize: 12, fontWeight: 800 }}>
+          Copie DS rendue : la réponse est verrouillée.
+        </p>
+      )}
+      {forceZero && (
+        <p style={{ margin: "6px 0 0", color: "#991B1B", fontSize: 12, fontWeight: 800 }}>
+          Sortie de page détectée : note du DS forcée à 0.
+        </p>
+      )}
       <p style={{ margin: "6px 0 0", color: "#64748B", fontSize: 12 }}>
         Longueur recommandée pour validation XP : {exercise.minChars} caractères minimum.
       </p>
 
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
-        <button
-          onClick={evaluate}
-          disabled={!canEval}
-          style={{ border: "none", borderRadius: 10, padding: "9px 12px", cursor: canEval ? "pointer" : "not-allowed", background: canEval ? COLORS.violet : "#CBD5E1", color: "white", fontWeight: 700 }}
-        >
-          {loadingEval ? "Correction..." : "Corriger (IA + barème)"}
-        </button>
-        <button
-          onClick={claimXP}
-          disabled={!canClaim}
-          style={{ border: "none", borderRadius: 10, padding: "9px 12px", cursor: canClaim ? "pointer" : "not-allowed", background: canClaim ? COLORS.blue : "#CBD5E1", color: "white", fontWeight: 700 }}
-        >
-          {loadingXP ? "Validation..." : alreadyClaimed ? "XP déjà gagné aujourd’hui" : `Valider et gagner ${exercise.xp} XP`}
-        </button>
-        <button
-          onClick={() => setShowCorrection((v) => !v)}
-          style={{ border: "none", borderRadius: 10, padding: "9px 12px", cursor: "pointer", background: showCorrection ? COLORS.rose : COLORS.green, color: "white", fontWeight: 700 }}
-        >
-          {showCorrection ? "Masquer correction partielle" : "Afficher correction partielle"}
-        </button>
+        {isDsExercise ? (
+          <button
+            onClick={submitDsAnswer}
+            disabled={isLocked}
+            style={{ border: "none", borderRadius: 10, padding: "9px 12px", cursor: isLocked ? "not-allowed" : "pointer", background: isLocked ? "#CBD5E1" : COLORS.orange, color: "white", fontWeight: 800 }}
+          >
+            {isLocked ? "Copie déjà rendue" : "Rendre ma copie (définitif)"}
+          </button>
+        ) : (
+          <>
+            <button
+              onClick={evaluate}
+              disabled={!canEval}
+              style={{ border: "none", borderRadius: 10, padding: "9px 12px", cursor: canEval ? "pointer" : "not-allowed", background: canEval ? COLORS.violet : "#CBD5E1", color: "white", fontWeight: 700 }}
+            >
+              {loadingEval ? "Correction..." : "Corriger (IA + barème)"}
+            </button>
+            <button
+              onClick={claimXP}
+              disabled={!canClaim}
+              style={{ border: "none", borderRadius: 10, padding: "9px 12px", cursor: canClaim ? "pointer" : "not-allowed", background: canClaim ? COLORS.blue : "#CBD5E1", color: "white", fontWeight: 700 }}
+            >
+              {loadingXP ? "Validation..." : alreadyClaimed ? "XP déjà gagné aujourd’hui" : `Valider et gagner ${exercise.xp} XP`}
+            </button>
+            <button
+              onClick={() => setShowCorrection((v) => !v)}
+              style={{ border: "none", borderRadius: 10, padding: "9px 12px", cursor: "pointer", background: showCorrection ? COLORS.rose : COLORS.green, color: "white", fontWeight: 700 }}
+            >
+              {showCorrection ? "Masquer correction partielle" : "Afficher correction partielle"}
+            </button>
+          </>
+        )}
       </div>
       {(claimHint || localInfo) && (
         <p style={{ margin: "6px 0 0", color: "#64748B", fontSize: 12 }}>
@@ -560,7 +670,7 @@ function ExerciseCard({ exercise, status, onClaimXP, onEvaluateResponse }) {
         </p>
       )}
 
-      {evalResult && (
+      {!isDsExercise && evalResult && (
         <div style={{ marginTop: 10, background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 12, padding: 12 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
             <p style={{ margin: 0, color: "#1E3A8A", fontWeight: 800 }}>Résultat de correction</p>
@@ -582,7 +692,7 @@ function ExerciseCard({ exercise, status, onClaimXP, onEvaluateResponse }) {
         </div>
       )}
 
-      {showCorrection && (
+      {!isDsExercise && showCorrection && (
         <div style={{ marginTop: 10, background: "#ECFDF5", border: "1px solid #86EFAC", borderRadius: 12, padding: 12 }}>
           <p style={{ margin: "0 0 6px", color: "#166534", fontWeight: 800 }}>Correction partielle</p>
           <p style={{ margin: 0, color: "#14532D", lineHeight: 1.55 }}>{exercise.correctionPartielle}</p>
@@ -597,6 +707,11 @@ export default function ObjectifBac({ profil, onXPGagne }) {
   const [banner, setBanner] = useState(null);
   const [claimState, setClaimState] = useState({});
   const [selectedType, setSelectedType] = useState("Tous");
+  const [dsCodeInput, setDsCodeInput] = useState("");
+  const [dsUnlocked, setDsUnlocked] = useState(false);
+  const [dsAttemptStarted, setDsAttemptStarted] = useState(false);
+  const [dsForcedZero, setDsForcedZero] = useState(false);
+  const [dsSubmissions, setDsSubmissions] = useState({});
 
   const [coffreOpen, setCoffreOpen] = useState(false);
   const [quizIndex, setQuizIndex] = useState(0);
@@ -622,9 +737,15 @@ export default function ObjectifBac({ profil, onXPGagne }) {
   );
 
   const types = useMemo(() => ["Tous", ...new Set(EXERCISES.map((e) => e.type))], []);
+  const hasDsPack = useMemo(() => EXERCISES.some((e) => e.type === DS_LOCK_TYPE), []);
+  const visibleExercises = useMemo(
+    () => EXERCISES.filter((e) => dsUnlocked || e.type !== DS_LOCK_TYPE),
+    [dsUnlocked]
+  );
+  const availableTypes = useMemo(() => ["Tous", ...new Set(visibleExercises.map((e) => e.type))], [visibleExercises]);
   const filteredExercises = useMemo(
-    () => EXERCISES.filter((e) => selectedType === "Tous" || e.type === selectedType),
-    [selectedType]
+    () => visibleExercises.filter((e) => selectedType === "Tous" || e.type === selectedType),
+    [selectedType, visibleExercises]
   );
   const dailyXpPotential = useMemo(() => EXERCISES.reduce((sum, e) => sum + e.xp, 0), []);
   const todayKey = getTodayKey();
@@ -703,7 +824,9 @@ export default function ObjectifBac({ profil, onXPGagne }) {
       try {
         const snap = await getDoc(doc(db, "users", user.uid));
         if (!snap.exists()) return;
-        const p = snap.data().objectifBacProgress || {};
+        const data = snap.data();
+        const p = data.objectifBacProgress || {};
+        const dsExam = data.objectifBacDs?.[DS_EXAM_ID] || {};
         setClaimState(p.claims || {});
         if (p.activeTab) setActiveTab(p.activeTab);
         if (p.selectedType) setSelectedType(p.selectedType);
@@ -711,12 +834,55 @@ export default function ObjectifBac({ profil, onXPGagne }) {
         if (p.synthChecklist) setSynthChecklist(p.synthChecklist);
         if (p.examStepState) setExamStepState(p.examStepState);
         if (typeof p.examRemainingSec === "number") setExamRemainingSec(p.examRemainingSec);
+        if (dsExam.submissions && typeof dsExam.submissions === "object") setDsSubmissions(dsExam.submissions);
+        if (dsExam.forcedZero === true) setDsForcedZero(true);
+        if (dsExam.attemptStarted || (dsExam.submissions && Object.keys(dsExam.submissions).length > 0)) setDsAttemptStarted(true);
       } catch (e) {
         console.error("Chargement Objectif Bac impossible", e);
       }
     };
     load();
   }, []);
+
+  useEffect(() => {
+    try {
+      const unlocked = window.sessionStorage.getItem(DS_CODE_STORAGE_KEY) === "1";
+      setDsUnlocked(unlocked);
+    } catch {
+      setDsUnlocked(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!availableTypes.includes(selectedType)) {
+      setSelectedType("Tous");
+    }
+  }, [availableTypes, selectedType]);
+
+  useEffect(() => {
+    if (!dsAttemptStarted || dsForcedZero) return undefined;
+    const disqualify = () => {
+      setDsForcedZero(true);
+      setBanner({ type: "error", text: "Anti-triche DS : sortie de page détectée, note forcée à 0." });
+      const user = auth.currentUser;
+      if (user) {
+        updateDoc(doc(db, "users", user.uid), {
+          [`objectifBacDs.${DS_EXAM_ID}.forcedZero`]: true,
+          [`objectifBacDs.${DS_EXAM_ID}.forcedZeroAt`]: new Date().toISOString(),
+          [`objectifBacDs.${DS_EXAM_ID}.attemptStarted`]: true,
+        }).catch((err) => console.error("Sauvegarde anti-triche DS impossible", err));
+      }
+    };
+    const onVisibility = () => {
+      if (document.hidden) disqualify();
+    };
+    window.addEventListener("blur", disqualify);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      window.removeEventListener("blur", disqualify);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [dsAttemptStarted, dsForcedZero]);
 
   useEffect(() => {
     if (!examRunning) return undefined;
@@ -762,6 +928,11 @@ export default function ObjectifBac({ profil, onXPGagne }) {
       return false;
     }
     try {
+      const exercise = EXERCISES.find((item) => item.id === exerciseId);
+      if (exercise?.type === DS_LOCK_TYPE && dsForcedZero) {
+        setBanner({ type: "error", text: "DS disqualifié : sortie de page détectée, aucun XP validable." });
+        return false;
+      }
       const today = getTodayKey();
       const ref = doc(db, "users", user.uid);
       const snap = await getDoc(ref);
@@ -801,6 +972,19 @@ export default function ObjectifBac({ profil, onXPGagne }) {
   };
 
   const handleEvaluateResponse = async (exercise, answer) => {
+    if (exercise?.type === DS_LOCK_TYPE) {
+      setDsAttemptStarted(true);
+      if (dsForcedZero) {
+        return {
+          score: 0,
+          feedback: "Sortie de page détectée pendant le DS : copie notée 0.",
+          points_forts: "Aucun (copie disqualifiée).",
+          a_ameliorer: "Rester sur la page DS jusqu'à la fin de l'épreuve.",
+          elements_reperes: ["Anti-triche actif : perte de focus/onglet = 0"],
+          source: "local",
+        };
+      }
+    }
     const local = localCorrection(exercise, answer);
     const prompt = `Tu es correcteur Bac STMG Management.
 Retourne UNIQUEMENT un JSON:
@@ -862,6 +1046,97 @@ Règles:
     if (!decisionChoice) return;
     const ok = decisionChoice === currentDecision.correct;
     setDecisionFeedback(ok ? "Bonne qualification." : "Qualification à corriger.");
+  };
+
+  const unlockDsPack = () => {
+    const expected = DS_ACCESS_CODE;
+    if (!expected) {
+      setBanner({ type: "error", text: "Code DS non configuré. Ajoute REACT_APP_DS_ACCESS_CODE dans .env." });
+      return;
+    }
+    if (dsCodeInput.trim() !== expected) {
+      setBanner({ type: "error", text: "Code incorrect. Le sujet DS reste verrouillé." });
+      return;
+    }
+    setDsUnlocked(true);
+    setDsCodeInput("");
+    try {
+      window.sessionStorage.setItem(DS_CODE_STORAGE_KEY, "1");
+    } catch {
+      // no-op if storage unavailable
+    }
+    setBanner({ type: "success", text: "Sujet DS déverrouillé." });
+  };
+
+  const handleDsSubmit = (exercise, answer) => {
+    setDsAttemptStarted(true);
+    const payload = {
+      title: exercise.title,
+      answer,
+      submittedAt: new Date().toISOString(),
+    };
+    setDsSubmissions((prev) => ({
+      ...prev,
+      [exercise.id]: payload,
+    }));
+    const user = auth.currentUser;
+    if (user) {
+      updateDoc(doc(db, "users", user.uid), {
+        [`objectifBacDs.${DS_EXAM_ID}.examId`]: DS_EXAM_ID,
+        [`objectifBacDs.${DS_EXAM_ID}.type`]: DS_LOCK_TYPE,
+        [`objectifBacDs.${DS_EXAM_ID}.attemptStarted`]: true,
+        [`objectifBacDs.${DS_EXAM_ID}.forcedZero`]: dsForcedZero,
+        [`objectifBacDs.${DS_EXAM_ID}.submissions.${exercise.id}`]: payload,
+      }).catch((err) => console.error("Sauvegarde copie DS impossible", err));
+    }
+  };
+
+  const downloadDsPdf = () => {
+    const dsExercises = EXERCISES.filter((e) => e.type === DS_LOCK_TYPE);
+    const hasCopies = dsExercises.some((e) => Boolean(dsSubmissions[e.id]?.answer));
+    if (!hasCopies) {
+      setBanner({ type: "error", text: "Aucune copie DS disponible à exporter." });
+      return;
+    }
+
+    const studentName = `${profil?.prenom || ""} ${profil?.nom || ""}`.trim() || "Eleve";
+    const docPdf = new jsPDF({ unit: "pt", format: "a4" });
+    const left = 40;
+    const right = 555;
+    const maxWidth = right - left;
+    let y = 48;
+
+    const writeLine = (text, size = 11, bold = false, gap = 14) => {
+      docPdf.setFont("helvetica", bold ? "bold" : "normal");
+      docPdf.setFontSize(size);
+      const lines = docPdf.splitTextToSize(String(text), maxWidth);
+      if (y + lines.length * gap > 790) {
+        docPdf.addPage();
+        y = 48;
+      }
+      docPdf.text(lines, left, y);
+      y += lines.length * gap;
+    };
+
+    writeLine("STMG HUB - Copie Devoir Surveille", 15, true, 18);
+    writeLine(`Eleve : ${studentName}`, 11, true);
+    writeLine(`Classe : ${profil?.classe || "non renseignee"}`);
+    writeLine(`Date export : ${new Date().toLocaleString()}`);
+    writeLine(`Statut anti-triche : ${dsForcedZero ? "DISQUALIFIE (sortie de page -> 0)" : "Conforme"}`, 11, true);
+    y += 6;
+
+    dsExercises.forEach((exercise, idx) => {
+      const submission = dsSubmissions[exercise.id];
+      writeLine(`${idx + 1}. ${exercise.title}`, 12, true, 16);
+      writeLine(`Consigne : ${exercise.consigne}`);
+      writeLine(`Heure de rendu : ${submission?.submittedAt ? new Date(submission.submittedAt).toLocaleString() : "non rendu"}`);
+      writeLine("Reponse de l'eleve :", 11, true);
+      writeLine(submission?.answer || "(aucune reponse)");
+      y += 8;
+    });
+
+    const safeName = studentName.replace(/[^a-zA-Z0-9-_ ]/g, "").trim().replace(/\s+/g, "_") || "Eleve";
+    docPdf.save(`copie-ds-${safeName}.pdf`);
   };
 
   return (
@@ -1052,10 +1327,70 @@ Règles:
 
         {activeTab === "entrainements" && (
           <>
+            {hasDsPack && !dsUnlocked && (
+              <section style={{ ...SHELL_CARD, padding: 16, border: "1px solid #F59E0B", background: "#FFFBEB" }}>
+                <p style={{ margin: "0 0 8px", color: "#92400E", fontWeight: 800 }}>🔐 Sujet DS verrouillé</p>
+                <p style={{ margin: "0 0 10px", color: "#78350F", lineHeight: 1.55 }}>
+                  Le pack « {DS_LOCK_TYPE} » est caché tant que le code d’accès n’est pas saisi.
+                </p>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                  <input
+                    type="password"
+                    value={dsCodeInput}
+                    onChange={(e) => setDsCodeInput(e.target.value)}
+                    placeholder="Entrer le code DS"
+                    style={{
+                      flex: "1 1 240px",
+                      borderRadius: 10,
+                      border: `1px solid ${COLORS.border}`,
+                      padding: "9px 11px",
+                      fontSize: 14,
+                      background: "white",
+                    }}
+                  />
+                  <button
+                    className="ob-btn"
+                    onClick={unlockDsPack}
+                    style={{ border: "none", borderRadius: 10, padding: "9px 12px", cursor: "pointer", fontWeight: 700, background: COLORS.orange, color: "white" }}
+                  >
+                    Déverrouiller le DS
+                  </button>
+                </div>
+              </section>
+            )}
+            {hasDsPack && dsUnlocked && !dsForcedZero && (
+              <section style={{ ...SHELL_CARD, padding: 12, border: "1px solid #F59E0B", background: "#FFFBEB" }}>
+                <p style={{ margin: 0, color: "#92400E", fontWeight: 800 }}>
+                  🛡️ Règle DS : quitter l’onglet/la page (perte de focus) entraîne directement la note 0.
+                </p>
+              </section>
+            )}
+            {dsForcedZero && (
+              <section style={{ ...SHELL_CARD, padding: 12, border: "1px solid #FCA5A5", background: "#FEF2F2" }}>
+                <p style={{ margin: 0, color: "#991B1B", fontWeight: 800 }}>
+                  ❌ DS disqualifié : sortie de page détectée, note forcée à 0.
+                </p>
+              </section>
+            )}
+            {hasDsPack && dsUnlocked && profil?.role === "admin" && (
+              <section style={{ ...SHELL_CARD, padding: 12, border: "1px solid #93C5FD", background: "#EFF6FF", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                <p style={{ margin: 0, color: "#1E3A8A", fontWeight: 700 }}>
+                  Export enseignant : télécharger la copie DS de cet élève en PDF.
+                </p>
+                <button
+                  className="ob-btn"
+                  onClick={downloadDsPdf}
+                  style={{ border: "none", borderRadius: 10, padding: "9px 12px", cursor: "pointer", fontWeight: 700, background: COLORS.blue, color: "white" }}
+                >
+                  Télécharger la copie PDF
+                </button>
+              </section>
+            )}
+
             <section style={{ ...SHELL_CARD, padding: 16 }}>
               <p style={{ margin: "0 0 8px", color: "#1D4ED8", fontWeight: 800 }}>Filtrer les exercices</p>
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                {types.map((type) => (
+                {availableTypes.map((type) => (
                   <button
                     className="ob-btn"
                     key={type}
@@ -1076,6 +1411,9 @@ Règles:
                   status={claimState[exercise.id]}
                   onClaimXP={handleClaimXP}
                   onEvaluateResponse={handleEvaluateResponse}
+                  forceZero={exercise.type === DS_LOCK_TYPE && dsForcedZero}
+                  isDsExercise={exercise.type === DS_LOCK_TYPE}
+                  onDsSubmit={handleDsSubmit}
                 />
               ))}
             </section>

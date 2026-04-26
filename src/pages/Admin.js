@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { db, auth } from "../firebase";
 import { doc, setDoc, collection, getDocs, deleteDoc, updateDoc } from "firebase/firestore";
 import * as XLSX from "xlsx";
+import { jsPDF } from "jspdf";
 
 const COLORS = {
   S: "#3B82F6", T: "#7C3AED", M: "#F97316",
@@ -46,6 +47,8 @@ const ONGLET_ADMIN = [
   { id: "imports", label: "📥 Imports & maintenance" },
   { id: "infos", label: "💡 Infos" },
 ];
+const DS_EXAM_ID = "chapitre13_1h_2026";
+const DS_LOCK_TYPE = "DS 1h - Chapitre 13";
 
 const col = (row, ...keys) => {
   for (const k of keys) {
@@ -98,6 +101,16 @@ const joursEcoules = (date) => {
 const formatDateFr = (date) => {
   if (!date) return "Jamais";
   return date.toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
+};
+
+const formatDuration = (seconds = 0) => {
+  const total = Math.max(0, Math.floor(Number(seconds) || 0));
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = total % 60;
+  if (h > 0) return `${h}h ${String(m).padStart(2, "0")}m`;
+  if (m > 0) return `${m}m ${String(s).padStart(2, "0")}s`;
+  return `${s}s`;
 };
 
 export default function Admin() {
@@ -290,6 +303,10 @@ export default function Admin() {
       if (!actionsToday.length) actionsToday.push("Aucune action détectée");
 
       const nom = eleve.prenom || eleve.nom || eleve.email || `Élève ${eleve.id.slice(0, 6)}`;
+      const sessionTotalSec = Number(eleve.sessionTimeTotalSec) || 0;
+      const sessionTodaySec = Number(eleve.sessionTimeToday?.[todayKey]) || 0;
+      const sessionCount = Number(eleve.sessionCount) || 0;
+      const lastSessionDurationSec = Number(eleve.lastSessionDurationSec) || 0;
 
       return {
         ...eleve,
@@ -306,6 +323,10 @@ export default function Admin() {
         joursSansActivite,
         actionsToday,
         estActifAujourdhui: actionsToday[0] !== "Aucune action détectée",
+        sessionTotalSec,
+        sessionTodaySec,
+        sessionCount,
+        lastSessionDurationSec,
       };
     });
   }, [eleves, todayKey]);
@@ -336,8 +357,77 @@ export default function Admin() {
     const inactifs7j = reportingRows.filter((e) => e.joursSansActivite !== null && e.joursSansActivite > 7).length;
     const actionsToday = reportingRows.reduce((sum, e) => sum + e.missionsToday + e.objectifToday + (e.lastVisit === todayKey ? 1 : 0), 0);
     const suspicions = reportingRows.reduce((sum, e) => sum + (e.antiCheatEvents || 0), 0);
-    return { total, actifsAujourdhui, actifs7j, inactifs7j, actionsToday, suspicions };
+    const sessionTodaySec = reportingRows.reduce((sum, e) => sum + (e.sessionTodaySec || 0), 0);
+    return { total, actifsAujourdhui, actifs7j, inactifs7j, actionsToday, suspicions, sessionTodaySec };
   }, [reportingRows, todayKey]);
+
+  const dsCopiesRows = useMemo(() => {
+    return reportingFiltres
+      .map((eleve) => {
+        const exam = eleve.objectifBacDs?.[DS_EXAM_ID];
+        if (!exam) return null;
+        const submissions = exam.submissions || {};
+        const answersCount = Object.values(submissions).filter((item) => item?.answer).length;
+        return {
+          ...eleve,
+          dsExam: exam,
+          answersCount,
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => (a.nomAffiche || "").localeCompare(b.nomAffiche || "", "fr"));
+  }, [reportingFiltres]);
+
+  const exportAllDsCopiesPdf = () => {
+    if (!dsCopiesRows.length) {
+      alert("Aucune copie DS trouvée avec les filtres actuels.");
+      return;
+    }
+    const docPdf = new jsPDF({ unit: "pt", format: "a4" });
+    const left = 38;
+    const right = 560;
+    const maxWidth = right - left;
+    let y = 46;
+
+    const writeBlock = (text, size = 11, bold = false, lineHeight = 14) => {
+      docPdf.setFont("helvetica", bold ? "bold" : "normal");
+      docPdf.setFontSize(size);
+      const lines = docPdf.splitTextToSize(String(text), maxWidth);
+      if (y + lines.length * lineHeight > 795) {
+        docPdf.addPage();
+        y = 46;
+      }
+      docPdf.text(lines, left, y);
+      y += lines.length * lineHeight;
+    };
+
+    writeBlock("STMG HUB - Export global copies DS", 15, true, 18);
+    writeBlock(`Sujet : ${DS_LOCK_TYPE}`, 11, true);
+    writeBlock(`Date export : ${new Date().toLocaleString("fr-FR")}`);
+    writeBlock(`Nombre d'eleves exportes : ${dsCopiesRows.length}`);
+    y += 8;
+
+    dsCopiesRows.forEach((row, idx) => {
+      const submissions = row.dsExam?.submissions || {};
+      const submissionEntries = Object.entries(submissions).sort(([a], [b]) => a.localeCompare(b, "fr"));
+      writeBlock(`${idx + 1}. ${row.nomAffiche} (${row.classe || "-"} | ${row.lycee || "-"})`, 12, true, 16);
+      writeBlock(`Email : ${row.email || "non renseigne"}`);
+      writeBlock(`Statut anti-triche : ${row.dsExam?.forcedZero ? "DISQUALIFIE (sortie de page -> 0)" : "Conforme"}`, 11, true);
+      writeBlock(`Nombre de reponses rendues : ${submissionEntries.length}/3`);
+      if (!submissionEntries.length) {
+        writeBlock("Aucune reponse enregistree.");
+      } else {
+        submissionEntries.forEach(([, submission], sIdx) => {
+          writeBlock(`Exercice ${sIdx + 1} : ${submission?.title || "Sans titre"}`, 11, true);
+          writeBlock(`Heure de rendu : ${submission?.submittedAt ? new Date(submission.submittedAt).toLocaleString("fr-FR") : "non renseignee"}`);
+          writeBlock(`Reponse : ${submission?.answer || "(vide)"}`);
+        });
+      }
+      y += 8;
+    });
+
+    docPdf.save(`copies-ds-${DS_EXAM_ID}.pdf`);
+  };
 
   const elevesSuspects = useMemo(
     () => [...reportingRows].filter((e) => (e.antiCheatEvents || 0) > 0).sort((a, b) => (b.antiCheatEvents || 0) - (a.antiCheatEvents || 0)).slice(0, 8),
@@ -531,9 +621,25 @@ export default function Admin() {
                 <p style={{ margin: 0, color: "#BE123C", fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem" }}>Signaux anti-triche (historique)</p>
                 <p style={{ margin: "4px 0 0", fontSize: "1.7rem", fontWeight: 900, color: "#0F172A" }}>{dashboardStats.suspicions}</p>
               </div>
+              <div style={{ background: "white", borderRadius: 14, padding: 14, border: "1px solid #BAE6FD" }}>
+                <p style={{ margin: 0, color: "#0369A1", fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem" }}>Temps connecté aujourd’hui</p>
+                <p style={{ margin: "4px 0 0", fontSize: "1.7rem", fontWeight: 900, color: "#0F172A" }}>{formatDuration(dashboardStats.sessionTodaySec)}</p>
+              </div>
             </div>
 
             <div style={{ background: "white", borderRadius: "20px", padding: "18px", marginBottom: "14px", border: "1px solid #E2E8F0" }}>
+              <div style={{ marginBottom: 12, background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 12, padding: "10px 12px", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                <div>
+                  <p style={{ margin: 0, color: "#1E3A8A", fontFamily: "'Fredoka One', cursive", fontSize: "0.88rem" }}>📝 Copies DS disponibles</p>
+                  <p style={{ margin: "2px 0 0", color: "#1E40AF", fontSize: "0.8rem" }}>
+                    {dsCopiesRows.length} élève(s) avec copie enregistrée pour « {DS_LOCK_TYPE} ».
+                  </p>
+                </div>
+                <Btn onClick={exportAllDsCopiesPdf} color={COLORS.S} small disabled={!dsCopiesRows.length}>
+                  📄 Exporter toutes les copies DS (PDF)
+                </Btn>
+              </div>
+
               {elevesSuspects.length > 0 && (
                 <div style={{ marginBottom: 12, background: "#FFF1F2", border: "1px solid #FDA4AF", borderRadius: 12, padding: "10px 12px" }}>
                   <p style={{ margin: "0 0 6px", color: "#9F1239", fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem" }}>🚨 Élèves à surveiller (missions)</p>
@@ -601,6 +707,9 @@ export default function Admin() {
                       </p>
                       <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Objectif Bac : <strong>{eleve.objectifTotal}</strong> (aujourd’hui {eleve.objectifToday})</p>
                       <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Cartes : <strong>{eleve.cartesTotal}</strong> ({eleve.cartesUniques} uniques)</p>
+                      <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Connexion aujourd’hui : <strong>{formatDuration(eleve.sessionTodaySec)}</strong></p>
+                      <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Temps cumulé : <strong>{formatDuration(eleve.sessionTotalSec)}</strong> ({eleve.sessionCount || 0} session(s))</p>
+                      <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Dernière session : <strong>{formatDuration(eleve.lastSessionDurationSec)}</strong></p>
                     </div>
                   </div>
                 ))}
