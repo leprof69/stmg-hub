@@ -736,7 +736,6 @@ export default function ObjectifBac({ profil, onXPGagne }) {
     EXAM_STEPS.reduce((acc, step) => ({ ...acc, [step.id]: false }), {})
   );
 
-  const types = useMemo(() => ["Tous", ...new Set(EXERCISES.map((e) => e.type))], []);
   const hasDsPack = useMemo(() => EXERCISES.some((e) => e.type === DS_LOCK_TYPE), []);
   const visibleExercises = useMemo(
     () => EXERCISES.filter((e) => dsUnlocked || e.type !== DS_LOCK_TYPE),

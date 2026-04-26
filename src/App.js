@@ -27,6 +27,9 @@ function App() {
   const [modeLogin, setModeLogin] = useState("connexion");
   const sessionConnexionMarquee = useRef(false);
   const dernierePageTrackee = useRef("");
+  const sessionActive = useRef(false);
+  const sessionStartMs = useRef(0);
+  const lastSessionFlushMs = useRef(0);
 
   const chargerProfil = async (user) => {
     const docRef = doc(db, "users", user.uid);
@@ -79,6 +82,90 @@ function App() {
     };
     marquerConnexion();
     sessionConnexionMarquee.current = true;
+  }, [utilisateur, profil]);
+
+  useEffect(() => {
+    if (!utilisateur || !profil || sessionActive.current) return;
+
+    const userId = utilisateur.uid;
+    const demarrerSession = async () => {
+      try {
+        const now = Date.now();
+        const today = new Date();
+        const dayKey = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+        await updateDoc(doc(db, "users", userId), {
+          sessionCount: increment(1),
+          lastSessionStartAt: serverTimestamp(),
+          lastSessionDay: dayKey,
+        });
+        sessionActive.current = true;
+        sessionStartMs.current = now;
+        lastSessionFlushMs.current = now;
+      } catch (err) {
+        console.error("Démarrage session tracking impossible", err);
+      }
+    };
+
+    const flusherSession = async (force = false) => {
+      if (!sessionActive.current) return;
+      const now = Date.now();
+      const deltaMs = Math.max(0, now - (lastSessionFlushMs.current || now));
+      const deltaSec = Math.floor(deltaMs / 1000);
+      if (!force && deltaSec < 30) return;
+      if (deltaSec <= 0) return;
+
+      const today = new Date();
+      const dayKey = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+      lastSessionFlushMs.current = now;
+      try {
+        await updateDoc(doc(db, "users", userId), {
+          sessionTimeTotalSec: increment(deltaSec),
+          [`sessionTimeToday.${dayKey}`]: increment(deltaSec),
+          lastSessionSeenAt: serverTimestamp(),
+        });
+      } catch (err) {
+        console.error("Flush session tracking impossible", err);
+      }
+    };
+
+    const terminerSession = async () => {
+      if (!sessionActive.current) return;
+      await flusherSession(true);
+      const totalDurationSec = Math.floor((Date.now() - sessionStartMs.current) / 1000);
+      try {
+        await updateDoc(doc(db, "users", userId), {
+          lastSessionDurationSec: Math.max(0, totalDurationSec),
+          lastSessionEndAt: serverTimestamp(),
+        });
+      } catch (err) {
+        console.error("Fin session tracking impossible", err);
+      }
+      sessionActive.current = false;
+      sessionStartMs.current = 0;
+      lastSessionFlushMs.current = 0;
+    };
+
+    const handleVisibility = () => {
+      if (document.hidden) {
+        flusherSession(true);
+      } else {
+        lastSessionFlushMs.current = Date.now();
+      }
+    };
+
+    demarrerSession();
+    const interval = setInterval(() => {
+      if (!document.hidden) flusherSession(false);
+    }, 30000);
+    document.addEventListener("visibilitychange", handleVisibility);
+    window.addEventListener("beforeunload", handleVisibility);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibility);
+      window.removeEventListener("beforeunload", handleVisibility);
+      terminerSession();
+    };
   }, [utilisateur, profil]);
 
   useEffect(() => {
