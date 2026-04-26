@@ -363,8 +363,9 @@ const AUTOEVAL_ITEMS = [
 
 const DS_LOCK_TYPE = "DS 1h - Chapitre 13";
 const DS_CODE_STORAGE_KEY = "objectifBacDsUnlocked";
-const DS_ACCESS_CODE = (process.env.REACT_APP_DS_ACCESS_CODE || "").trim();
+const DS_ACCESS_CODE = (process.env.REACT_APP_DS_ACCESS_CODE || "STMG13").trim();
 const DS_EXAM_ID = "chapitre13_1h_2026";
+const normalizeAccessCode = (value = "") => String(value).trim().toUpperCase();
 
 const normalizeText = (text = "") => String(text)
   .toLowerCase()
@@ -1053,7 +1054,7 @@ Règles:
       setBanner({ type: "error", text: "Code DS non configuré. Ajoute REACT_APP_DS_ACCESS_CODE dans .env." });
       return;
     }
-    if (dsCodeInput.trim() !== expected) {
+    if (normalizeAccessCode(dsCodeInput) !== normalizeAccessCode(expected)) {
       setBanner({ type: "error", text: "Code incorrect. Le sujet DS reste verrouillé." });
       return;
     }
