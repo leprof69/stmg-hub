@@ -20,7 +20,6 @@ export default function DevoirSurveille({ profil }) {
   const [forcedZero, setForcedZero] = useState(false);
   const [finalizedAt, setFinalizedAt] = useState("");
   const [drafts, setDrafts] = useState({});
-  const [attemptStarted, setAttemptStarted] = useState(false);
   const [banner, setBanner] = useState(null);
 
   useEffect(() => {
@@ -61,7 +60,6 @@ export default function DevoirSurveille({ profil }) {
           // ignore
         }
       }
-      if (exam.attemptStarted || exam.submissions) setAttemptStarted(true);
     };
     load();
   }, []);
@@ -120,7 +118,6 @@ export default function DevoirSurveille({ profil }) {
 
   const updateDraft = (exerciseId, questionId, value) => {
     if (forcedZero || finalizedAt) return;
-    setAttemptStarted(true);
     setDrafts((prev) => ({
       ...prev,
       [exerciseId]: {
@@ -179,7 +176,6 @@ export default function DevoirSurveille({ profil }) {
       setForcedZero(false);
       setFinalizedAt("");
       setDrafts({});
-      setAttemptStarted(false);
       try {
         window.sessionStorage.removeItem(DS_FORCED_ZERO_STORAGE_KEY);
       } catch {
