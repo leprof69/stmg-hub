@@ -309,6 +309,11 @@ const EXERCISES = [
     ],
     correctionPartielle:
       "Repères attendus : performance = atteinte d’objectifs ; étapes = objectifs, moyens, résultats ; efficience = objectifs atteints avec ressources optimisées ; rentabilité = profit / capitaux investis ; profitabilité = profit / chiffre d’affaires.",
+    dsQuestions: [
+      { id: "q1", label: "Q1", prompt: "Définis la performance d’une organisation et donne les 3 étapes de la démarche de performance.", minChars: 180 },
+      { id: "q2", label: "Q2", prompt: "Explique clairement la différence entre efficacité et efficience avec un exemple.", minChars: 160 },
+      { id: "q3", label: "Q3", prompt: "Définis rentabilité et profitabilité, puis cite 3 indicateurs de performance commerciale.", minChars: 180 },
+    ],
   },
   {
     id: "ds13_e2",
@@ -329,6 +334,11 @@ const EXERCISES = [
     ],
     correctionPartielle:
       "Repères : taux évolution CA = (1 260 000 - 1 080 000) / 1 080 000 = +16,7 % ; part de marché N-1 = 18,9 % ; N = 21,0 % ; profitabilité N-1 = 7,5 % ; N = 7,5 % ; rentabilité N-1 = 16,2 % ; N = 17,5 %.",
+    dsQuestions: [
+      { id: "q1", label: "Q1", prompt: "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule + calcul + résultat).", minChars: 140 },
+      { id: "q2", label: "Q2", prompt: "Calcule la part de marché en N-1 puis en N, puis compare les deux résultats.", minChars: 160 },
+      { id: "q3", label: "Q3", prompt: "Calcule profitabilité et rentabilité en N-1 puis en N, puis rédige ton analyse de performance.", minChars: 220 },
+    ],
   },
   {
     id: "ds13_e3",
@@ -349,6 +359,11 @@ const EXERCISES = [
     ],
     correctionPartielle:
       "Repères : évolution CA = (860 000 - 800 000) / 800 000 = +7,5 % (objectif +10 % non atteint) ; satisfaction 87 % < 90 % ; délai 3,8 > 3 jours. Performance globale partiellement atteinte, avec besoin d’amélioration sur qualité de service et efficacité logistique.",
+    dsQuestions: [
+      { id: "q1", label: "Q1", prompt: "Calcule l’évolution du CA entre N-1 et N et indique si l’objectif +10 % est atteint.", minChars: 140 },
+      { id: "q2", label: "Q2", prompt: "Vérifie les objectifs satisfaction (90 %) et délai (3 jours). Justifie chaque conclusion.", minChars: 140 },
+      { id: "q3", label: "Q3", prompt: "Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes.", minChars: 220 },
+    ],
   },
 ];
 
@@ -703,6 +718,100 @@ function ExerciseCard({
   );
 }
 
+function DsExerciseCard({
+  exercise,
+  forceZero = false,
+  copyFinalized = false,
+  answerDrafts = {},
+  lockedQuestions = {},
+  onDraftChange,
+  onValidateQuestion,
+}) {
+  const questions = Array.isArray(exercise.dsQuestions) && exercise.dsQuestions.length
+    ? exercise.dsQuestions
+    : [{ id: "q1", label: "Q1", prompt: exercise.consigne, minChars: Math.max(60, Math.floor((exercise.minChars || 120) / 2)) }];
+
+  return (
+    <article style={{ ...SHELL_CARD, padding: 18 }}>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 8 }}>
+        <span style={{ background: "#DBEAFE", color: "#1D4ED8", borderRadius: 999, padding: "4px 10px", fontWeight: 700, fontSize: 12 }}>{exercise.type}</span>
+        <span style={{ background: "#FEF3C7", color: "#92400E", borderRadius: 999, padding: "4px 10px", fontWeight: 700, fontSize: 12 }}>{exercise.niveau}</span>
+      </div>
+      <h3 style={{ margin: "0 0 6px", color: COLORS.text }}>{exercise.title}</h3>
+      <p style={{ margin: "0 0 8px", color: COLORS.muted, lineHeight: 1.55 }}>{exercise.context}</p>
+      <div style={{ background: "#F8FAFC", border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: 12, marginBottom: 10 }}>
+        <p style={{ margin: "0 0 6px", color: "#0C4A6E", fontWeight: 800 }}>Critères de réussite</p>
+        <ul style={{ margin: 0, paddingLeft: 18, color: "#334155", lineHeight: 1.55 }}>
+          {exercise.grille.map((line) => <li key={line}>{line}</li>)}
+        </ul>
+      </div>
+
+      <div style={{ display: "grid", gap: 12 }}>
+        {questions.map((question, index) => {
+          const value = String(answerDrafts[question.id] || "");
+          const isQuestionLocked = Boolean(lockedQuestions[question.id]) || forceZero || copyFinalized;
+          const minChars = Number(question.minChars) || 80;
+          return (
+            <section key={`${exercise.id}-${question.id}`} style={{ border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: 12, background: "#FFFFFF" }}>
+              <p style={{ margin: "0 0 6px", color: "#1E3A8A", fontWeight: 800 }}>
+                {question.label || `Q${index + 1}`}
+              </p>
+              <p style={{ margin: "0 0 8px", color: "#1F2937", lineHeight: 1.55 }}>{question.prompt}</p>
+              <textarea
+                value={value}
+                onChange={(e) => onDraftChange(exercise.id, question.id, e.target.value)}
+                readOnly={isQuestionLocked}
+                onPaste={(e) => e.preventDefault()}
+                onCopy={(e) => e.preventDefault()}
+                onCut={(e) => e.preventDefault()}
+                onDrop={(e) => e.preventDefault()}
+                onContextMenu={(e) => e.preventDefault()}
+                onKeyDown={(e) => {
+                  const key = String(e.key || "").toLowerCase();
+                  if ((e.ctrlKey || e.metaKey) && (key === "v" || key === "c" || key === "x" || key === "insert")) e.preventDefault();
+                  if (e.shiftKey && key === "insert") e.preventDefault();
+                }}
+                placeholder="Réponse attendue..."
+                style={{
+                  width: "100%",
+                  minHeight: 120,
+                  borderRadius: 10,
+                  border: `1px solid ${COLORS.border}`,
+                  padding: 10,
+                  fontSize: 14,
+                  lineHeight: 1.5,
+                  resize: "vertical",
+                  boxSizing: "border-box",
+                }}
+              />
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, flexWrap: "wrap", marginTop: 8 }}>
+                <p style={{ margin: 0, color: "#64748B", fontSize: 12 }}>
+                  {value.trim().length} caractères · minimum conseillé {minChars}
+                </p>
+                <button
+                  onClick={() => onValidateQuestion(exercise, question)}
+                  disabled={isQuestionLocked || value.trim().length < minChars}
+                  style={{
+                    border: "none",
+                    borderRadius: 10,
+                    padding: "8px 11px",
+                    cursor: isQuestionLocked || value.trim().length < minChars ? "not-allowed" : "pointer",
+                    background: isQuestionLocked ? "#CBD5E1" : COLORS.orange,
+                    color: "white",
+                    fontWeight: 800,
+                  }}
+                >
+                  {isQuestionLocked ? "Réponse validée" : "Valider la réponse"}
+                </button>
+              </div>
+            </section>
+          );
+        })}
+      </div>
+    </article>
+  );
+}
+
 export default function ObjectifBac({ profil, onXPGagne }) {
   const [activeTab, setActiveTab] = useState("vue");
   const [banner, setBanner] = useState(null);
@@ -713,6 +822,8 @@ export default function ObjectifBac({ profil, onXPGagne }) {
   const [dsAttemptStarted, setDsAttemptStarted] = useState(false);
   const [dsForcedZero, setDsForcedZero] = useState(false);
   const [dsSubmissions, setDsSubmissions] = useState({});
+  const [dsFinalizedAt, setDsFinalizedAt] = useState("");
+  const [dsDraftAnswers, setDsDraftAnswers] = useState({});
 
   const [coffreOpen, setCoffreOpen] = useState(false);
   const [quizIndex, setQuizIndex] = useState(0);
@@ -836,6 +947,7 @@ export default function ObjectifBac({ profil, onXPGagne }) {
         if (typeof p.examRemainingSec === "number") setExamRemainingSec(p.examRemainingSec);
         if (dsExam.submissions && typeof dsExam.submissions === "object") setDsSubmissions(dsExam.submissions);
         if (dsExam.forcedZero === true) setDsForcedZero(true);
+        if (typeof dsExam.finalizedAt === "string") setDsFinalizedAt(dsExam.finalizedAt);
         if (dsExam.attemptStarted || (dsExam.submissions && Object.keys(dsExam.submissions).length > 0)) setDsAttemptStarted(true);
       } catch (e) {
         console.error("Chargement Objectif Bac impossible", e);
@@ -1068,16 +1180,38 @@ Règles:
     setBanner({ type: "success", text: "Sujet DS déverrouillé." });
   };
 
-  const handleDsSubmit = (exercise, answer) => {
+  const handleDsDraftChange = (exerciseId, questionId, value) => {
+    setDsDraftAnswers((prev) => ({
+      ...prev,
+      [exerciseId]: {
+        ...(prev[exerciseId] || {}),
+        [questionId]: value,
+      },
+    }));
+  };
+
+  const handleDsValidateQuestion = (exercise, question) => {
+    if (dsForcedZero || dsFinalizedAt) return;
+    const answer = String(dsDraftAnswers?.[exercise.id]?.[question.id] || "").trim();
+    const minChars = Number(question.minChars) || 80;
+    if (answer.length < minChars) {
+      setBanner({ type: "error", text: `Réponse trop courte pour ${question.label || question.id}.` });
+      return;
+    }
+
     setDsAttemptStarted(true);
-    const payload = {
-      title: exercise.title,
-      answer,
-      submittedAt: new Date().toISOString(),
-    };
+    const nowIso = new Date().toISOString();
+    const payload = { prompt: question.prompt, answer, validatedAt: nowIso };
     setDsSubmissions((prev) => ({
       ...prev,
-      [exercise.id]: payload,
+      [exercise.id]: {
+        ...(prev[exercise.id] || {}),
+        title: exercise.title,
+        questions: {
+          ...((prev[exercise.id] && prev[exercise.id].questions) || {}),
+          [question.id]: payload,
+        },
+      },
     }));
     const user = auth.currentUser;
     if (user) {
@@ -1086,14 +1220,49 @@ Règles:
         [`objectifBacDs.${DS_EXAM_ID}.type`]: DS_LOCK_TYPE,
         [`objectifBacDs.${DS_EXAM_ID}.attemptStarted`]: true,
         [`objectifBacDs.${DS_EXAM_ID}.forcedZero`]: dsForcedZero,
-        [`objectifBacDs.${DS_EXAM_ID}.submissions.${exercise.id}`]: payload,
+        [`objectifBacDs.${DS_EXAM_ID}.submissions.${exercise.id}.title`]: exercise.title,
+        [`objectifBacDs.${DS_EXAM_ID}.submissions.${exercise.id}.questions.${question.id}`]: payload,
       }).catch((err) => console.error("Sauvegarde copie DS impossible", err));
+    }
+    setBanner({ type: "success", text: `${question.label || "Question"} validée.` });
+  };
+
+  const dsExercises = useMemo(() => EXERCISES.filter((e) => e.type === DS_LOCK_TYPE), []);
+  const canFinalizeDsCopy = useMemo(() => {
+    if (!dsUnlocked || dsForcedZero || dsFinalizedAt || !dsExercises.length) return false;
+    return dsExercises.every((exercise) => {
+      const questions = Array.isArray(exercise.dsQuestions) && exercise.dsQuestions.length ? exercise.dsQuestions : [{ id: "q1" }];
+      return questions.every((q) => Boolean(dsSubmissions?.[exercise.id]?.questions?.[q.id]));
+    });
+  }, [dsUnlocked, dsForcedZero, dsFinalizedAt, dsExercises, dsSubmissions]);
+
+  const finalizeDsCopy = async () => {
+    if (!canFinalizeDsCopy) {
+      setBanner({ type: "error", text: "Toutes les réponses ne sont pas encore validées." });
+      return;
+    }
+    const user = auth.currentUser;
+    const nowIso = new Date().toISOString();
+    setDsFinalizedAt(nowIso);
+    setBanner({ type: "success", text: "Copie finale validée. Aucune modification possible." });
+    if (!user) return;
+    try {
+      await updateDoc(doc(db, "users", user.uid), {
+        [`objectifBacDs.${DS_EXAM_ID}.finalizedAt`]: nowIso,
+      });
+    } catch (err) {
+      console.error("Validation finale DS impossible", err);
     }
   };
 
   const downloadDsPdf = () => {
-    const dsExercises = EXERCISES.filter((e) => e.type === DS_LOCK_TYPE);
-    const hasCopies = dsExercises.some((e) => Boolean(dsSubmissions[e.id]?.answer));
+    const hasCopies = dsExercises.some((e) => {
+      const submission = dsSubmissions[e.id];
+      if (!submission) return false;
+      if (submission.answer) return true;
+      const questionMap = submission.questions || {};
+      return Object.values(questionMap).some((q) => Boolean(q?.answer));
+    });
     if (!hasCopies) {
       setBanner({ type: "error", text: "Aucune copie DS disponible à exporter." });
       return;
@@ -1123,15 +1292,27 @@ Règles:
     writeLine(`Classe : ${profil?.classe || "non renseignee"}`);
     writeLine(`Date export : ${new Date().toLocaleString()}`);
     writeLine(`Statut anti-triche : ${dsForcedZero ? "DISQUALIFIE (sortie de page -> 0)" : "Conforme"}`, 11, true);
+    writeLine(`Copie finale : ${dsFinalizedAt ? `validee le ${new Date(dsFinalizedAt).toLocaleString()}` : "non finalisee"}`);
     y += 6;
 
     dsExercises.forEach((exercise, idx) => {
       const submission = dsSubmissions[exercise.id];
       writeLine(`${idx + 1}. ${exercise.title}`, 12, true, 16);
-      writeLine(`Consigne : ${exercise.consigne}`);
-      writeLine(`Heure de rendu : ${submission?.submittedAt ? new Date(submission.submittedAt).toLocaleString() : "non rendu"}`);
-      writeLine("Reponse de l'eleve :", 11, true);
-      writeLine(submission?.answer || "(aucune reponse)");
+      const questionMap = submission?.questions || {};
+      const questionEntries = Object.entries(questionMap);
+      if (!questionEntries.length && submission?.answer) {
+        writeLine("Reponse unique :", 11, true);
+        writeLine(submission.answer);
+      } else if (!questionEntries.length) {
+        writeLine("(aucune reponse)");
+      } else {
+        questionEntries.forEach(([qId, qData], qIndex) => {
+          writeLine(`Q${qIndex + 1} (${qId})`, 11, true);
+          writeLine(`Question : ${qData?.prompt || "non renseignee"}`);
+          writeLine(`Validation : ${qData?.validatedAt ? new Date(qData.validatedAt).toLocaleString() : "non renseignee"}`);
+          writeLine(`Reponse : ${qData?.answer || "(vide)"}`);
+        });
+      }
       y += 8;
     });
 
@@ -1365,6 +1546,21 @@ Règles:
                 </p>
               </section>
             )}
+            {hasDsPack && dsUnlocked && (
+              <section style={{ ...SHELL_CARD, padding: 12, border: "1px solid #FCD34D", background: "#FFFBEB", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                <p style={{ margin: 0, color: "#92400E", fontWeight: 700 }}>
+                  Étape finale DS : valider chaque question puis cliquer sur « Valider ma copie ».
+                </p>
+                <button
+                  className="ob-btn"
+                  onClick={finalizeDsCopy}
+                  disabled={!canFinalizeDsCopy}
+                  style={{ border: "none", borderRadius: 10, padding: "9px 12px", cursor: canFinalizeDsCopy ? "pointer" : "not-allowed", fontWeight: 800, background: canFinalizeDsCopy ? COLORS.orange : "#CBD5E1", color: "white" }}
+                >
+                  {dsFinalizedAt ? "Copie déjà validée" : "Valider ma copie (final)"}
+                </button>
+              </section>
+            )}
             {dsForcedZero && (
               <section style={{ ...SHELL_CARD, padding: 12, border: "1px solid #FCA5A5", background: "#FEF2F2" }}>
                 <p style={{ margin: 0, color: "#991B1B", fontWeight: 800 }}>
@@ -1405,16 +1601,28 @@ Règles:
 
             <section style={{ display: "grid", gap: 12 }}>
               {filteredExercises.map((exercise) => (
-                <ExerciseCard
-                  key={exercise.id}
-                  exercise={exercise}
-                  status={claimState[exercise.id]}
-                  onClaimXP={handleClaimXP}
-                  onEvaluateResponse={handleEvaluateResponse}
-                  forceZero={exercise.type === DS_LOCK_TYPE && dsForcedZero}
-                  isDsExercise={exercise.type === DS_LOCK_TYPE}
-                  onDsSubmit={handleDsSubmit}
-                />
+                exercise.type === DS_LOCK_TYPE ? (
+                  <DsExerciseCard
+                    key={exercise.id}
+                    exercise={exercise}
+                    forceZero={dsForcedZero}
+                    copyFinalized={Boolean(dsFinalizedAt)}
+                    answerDrafts={dsDraftAnswers[exercise.id] || {}}
+                    lockedQuestions={(dsSubmissions[exercise.id] && dsSubmissions[exercise.id].questions) || {}}
+                    onDraftChange={handleDsDraftChange}
+                    onValidateQuestion={handleDsValidateQuestion}
+                  />
+                ) : (
+                  <ExerciseCard
+                    key={exercise.id}
+                    exercise={exercise}
+                    status={claimState[exercise.id]}
+                    onClaimXP={handleClaimXP}
+                    onEvaluateResponse={handleEvaluateResponse}
+                    forceZero={false}
+                    isDsExercise={false}
+                  />
+                )
               ))}
             </section>
           </>

@@ -367,7 +367,11 @@ export default function Admin() {
         const exam = eleve.objectifBacDs?.[DS_EXAM_ID];
         if (!exam) return null;
         const submissions = exam.submissions || {};
-        const answersCount = Object.values(submissions).filter((item) => item?.answer).length;
+        const answersCount = Object.values(submissions).reduce((sum, item) => {
+          if (item?.answer) return sum + 1;
+          const questionMap = item?.questions || {};
+          return sum + Object.values(questionMap).filter((q) => q?.answer).length;
+        }, 0);
         return {
           ...eleve,
           dsExam: exam,
@@ -419,8 +423,22 @@ export default function Admin() {
       } else {
         submissionEntries.forEach(([, submission], sIdx) => {
           writeBlock(`Exercice ${sIdx + 1} : ${submission?.title || "Sans titre"}`, 11, true);
-          writeBlock(`Heure de rendu : ${submission?.submittedAt ? new Date(submission.submittedAt).toLocaleString("fr-FR") : "non renseignee"}`);
-          writeBlock(`Reponse : ${submission?.answer || "(vide)"}`);
+          if (submission?.answer) {
+            writeBlock(`Heure de rendu : ${submission?.submittedAt ? new Date(submission.submittedAt).toLocaleString("fr-FR") : "non renseignee"}`);
+            writeBlock(`Reponse : ${submission?.answer || "(vide)"}`);
+          } else {
+            const questionEntries = Object.entries(submission?.questions || {});
+            if (!questionEntries.length) {
+              writeBlock("Aucune reponse enregistree pour cet exercice.");
+            } else {
+              questionEntries.forEach(([qId, qData], qIdx) => {
+                writeBlock(`Q${qIdx + 1} (${qId})`, 10, true);
+                writeBlock(`Question : ${qData?.prompt || "non renseignee"}`);
+                writeBlock(`Validation : ${qData?.validatedAt ? new Date(qData.validatedAt).toLocaleString("fr-FR") : "non renseignee"}`);
+                writeBlock(`Reponse : ${qData?.answer || "(vide)"}`);
+              });
+            }
+          }
         });
       }
       y += 8;
