@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { deleteField, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { DS_EXAM_ID, DS_LOCK_TYPE, DS_EXERCISES } from "../data/devoirSurveilleExam";
 const DS_CODE_STORAGE_KEY = "devoirSurveilleUnlocked";
@@ -145,6 +145,26 @@ export default function DevoirSurveille({ profil }) {
     setBanner({ type: "success", text: "Copie validée définitivement." });
   };
 
+  const resetAdminCopy = async () => {
+    if (profil?.role !== "admin") return;
+    if (!window.confirm("Réinitialiser entièrement ta copie de test DS (incluant anti-triche et note 0) ?")) return;
+    const user = auth.currentUser;
+    if (!user) return;
+    try {
+      await updateDoc(doc(db, "users", user.uid), {
+        [`objectifBacDs.${DS_EXAM_ID}`]: deleteField(),
+      });
+      setForcedZero(false);
+      setFinalizedAt("");
+      setDrafts({});
+      setAttemptStarted(false);
+      setBanner({ type: "success", text: "Copie DS admin réinitialisée. Tu peux retester." });
+    } catch (err) {
+      console.error("Reset DS admin impossible", err);
+      setBanner({ type: "error", text: "Reset impossible pour le moment." });
+    }
+  };
+
   return (
     <div style={{ minHeight: "100vh", background: "#F8FAFC", padding: "20px 14px", color: "#0F172A" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto", display: "grid", gap: 12 }}>
@@ -162,6 +182,24 @@ export default function DevoirSurveille({ profil }) {
           <p style={{ margin: "6px 0 0", color: "#7C2D12", fontWeight: 700 }}>
             Élève : {`${profil?.prenom || ""} ${profil?.nom || ""}`.trim() || "Compte connecté"}
           </p>
+          {profil?.role === "admin" && (
+            <div style={{ marginTop: 10 }}>
+              <button
+                onClick={resetAdminCopy}
+                style={{
+                  border: "none",
+                  borderRadius: 10,
+                  padding: "8px 11px",
+                  cursor: "pointer",
+                  fontWeight: 800,
+                  background: "#991B1B",
+                  color: "white",
+                }}
+              >
+                Réinitialiser ma copie test (admin)
+              </button>
+            </div>
+          )}
         </section>
 
         {!unlocked && (
