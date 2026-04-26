@@ -120,6 +120,7 @@ export default function Admin() {
   const [importMissions, setImportMissions] = useState({ loading: false, succes: 0, erreurs: 0, message: "" });
   const [xpMessage, setXpMessage] = useState("");
   const [eleves, setEleves] = useState([]);
+  const [usersAll, setUsersAll] = useState([]);
   const [chargementEleves, setChargementEleves] = useState(false);
   const [recompenseEnCours, setRecompenseEnCours] = useState(false);
   const [messagesRecompense, setMessagesRecompense] = useState([]);
@@ -148,7 +149,9 @@ export default function Admin() {
     setErreurEleves("");
     try {
       const snapshot = await getDocs(collection(db, "users"));
-      const users = snapshot.docs.map(d => ({ id: d.id, ...d.data() }))
+      const allUsers = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      setUsersAll(allUsers);
+      const users = allUsers
         .filter(u => u.role !== "admin")
         .sort((a, b) => (b.xp || 0) - (a.xp || 0));
       setEleves(users);
@@ -362,7 +365,14 @@ export default function Admin() {
   }, [reportingRows, todayKey]);
 
   const dsCopiesRows = useMemo(() => {
-    return reportingFiltres
+    return usersAll
+      .filter((user) => {
+        const okClasse = filtreClasse === "toutes" || user.classe === filtreClasse;
+        const okLycee = filtreLycee === "tous" || user.lycee === filtreLycee;
+        const haystack = `${user.prenom || ""} ${user.nom || ""} ${user.email || ""}`.toLowerCase();
+        const okRecherche = !rechercheEleve.trim() || haystack.includes(rechercheEleve.toLowerCase());
+        return okClasse && okLycee && okRecherche;
+      })
       .map((eleve) => {
         const exam = eleve.objectifBacDs?.[DS_EXAM_ID];
         if (!exam) return null;
@@ -374,13 +384,14 @@ export default function Admin() {
         }, 0);
         return {
           ...eleve,
+          nomAffiche: eleve.prenom || eleve.nom || eleve.email || `Élève ${eleve.id.slice(0, 6)}`,
           dsExam: exam,
           answersCount,
         };
       })
       .filter(Boolean)
       .sort((a, b) => (a.nomAffiche || "").localeCompare(b.nomAffiche || "", "fr"));
-  }, [reportingFiltres]);
+  }, [usersAll, filtreClasse, filtreLycee, rechercheEleve]);
 
   const exportAllDsCopiesPdf = () => {
     if (!dsCopiesRows.length) {
