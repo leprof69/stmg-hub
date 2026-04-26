@@ -3,6 +3,7 @@ import { db, auth } from "../firebase";
 import { doc, setDoc, collection, getDocs, deleteDoc, updateDoc } from "firebase/firestore";
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
+import { DS_EXAM_ID, DS_LOCK_TYPE, DS_EXERCISES } from "../data/devoirSurveilleExam";
 
 const COLORS = {
   S: "#3B82F6", T: "#7C3AED", M: "#F97316",
@@ -47,8 +48,7 @@ const ONGLET_ADMIN = [
   { id: "imports", label: "📥 Imports & maintenance" },
   { id: "infos", label: "💡 Infos" },
 ];
-const DS_EXAM_ID = "chapitre13_1h_2026";
-const DS_LOCK_TYPE = "DS 1h - Chapitre 13";
+const DS_EXERCISE_BY_ID = Object.fromEntries(DS_EXERCISES.map((exercise) => [exercise.id, exercise]));
 
 const col = (row, ...keys) => {
   for (const k of keys) {
@@ -433,7 +433,10 @@ export default function Admin() {
         writeBlock("Aucune reponse enregistree.");
       } else {
         submissionEntries.forEach(([, submission], sIdx) => {
-          writeBlock(`Exercice ${sIdx + 1} : ${submission?.title || "Sans titre"}`, 11, true);
+          const exerciseId = submissionEntries[sIdx]?.[0];
+          const refExercise = DS_EXERCISE_BY_ID[exerciseId];
+          const exerciceBareme = (refExercise?.questions || []).reduce((sum, question) => sum + (Number(question.points) || 0), 0);
+          writeBlock(`Exercice ${sIdx + 1} : ${submission?.title || "Sans titre"} ${exerciceBareme ? `(/${exerciceBareme})` : ""}`, 11, true);
           if (submission?.answer) {
             writeBlock(`Heure de rendu : ${submission?.submittedAt ? new Date(submission.submittedAt).toLocaleString("fr-FR") : "non renseignee"}`);
             writeBlock(`Reponse : ${submission?.answer || "(vide)"}`);
@@ -443,10 +446,13 @@ export default function Admin() {
               writeBlock("Aucune reponse enregistree pour cet exercice.");
             } else {
               questionEntries.forEach(([qId, qData], qIdx) => {
-                writeBlock(`Q${qIdx + 1} (${qId})`, 10, true);
-                writeBlock(`Question : ${qData?.prompt || "non renseignee"}`);
+                const refQuestion = refExercise?.questions?.find((question) => question.id === qId);
+                const points = Number(refQuestion?.points) || 0;
+                writeBlock(`Q${qIdx + 1} (${qId}) ${points ? `- Barème: /${points}` : ""}`, 10, true);
+                writeBlock(`Question : ${qData?.prompt || refQuestion?.prompt || "non renseignee"}`);
                 writeBlock(`Validation : ${qData?.validatedAt ? new Date(qData.validatedAt).toLocaleString("fr-FR") : "non renseignee"}`);
                 writeBlock(`Reponse : ${qData?.answer || "(vide)"}`);
+                writeBlock(`Correction attendue : ${refQuestion?.expected || "Correction non renseignée."}`);
               });
             }
           }

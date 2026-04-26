@@ -1,45 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../firebase";
-
-const DS_EXAM_ID = "chapitre13_1h_2026";
-const DS_LOCK_TYPE = "DS 1h - Chapitre 13";
+import { DS_EXAM_ID, DS_LOCK_TYPE, DS_EXERCISES } from "../data/devoirSurveilleExam";
 const DS_CODE_STORAGE_KEY = "devoirSurveilleUnlocked";
 const DS_ACCESS_CODE = (process.env.REACT_APP_DS_ACCESS_CODE || "STMG13").trim();
 const normalizeCode = (value = "") => String(value).trim().toUpperCase();
-
-const EXERCISES = [
-  {
-    id: "ds13_e1",
-    title: "Partie 1 - Questions de cours",
-    context: "Réponds avec un vocabulaire de cours précis.",
-    questions: [
-      { id: "q1", label: "Q1", prompt: "Définis la performance d’une organisation et donne les 3 étapes de la démarche de performance." },
-      { id: "q2", label: "Q2", prompt: "Explique la différence entre efficacité et efficience avec un exemple." },
-      { id: "q3", label: "Q3", prompt: "Définis rentabilité et profitabilité, puis cite 3 indicateurs de performance commerciale." },
-    ],
-  },
-  {
-    id: "ds13_e2",
-    title: "Partie 2 - Calculs",
-    context: "NOVA SNACK : N CA 1 260 000 €, marché 6 000 000 €, RN 94 500 €, CP 540 000 €. N-1 CA 1 080 000 €, marché 5 700 000 €, RN 81 000 €, CP 500 000 €.",
-    questions: [
-      { id: "q1", label: "Q1", prompt: "Calcule le taux d’évolution du CA entre N-1 et N (formule + calcul + résultat)." },
-      { id: "q2", label: "Q2", prompt: "Calcule la part de marché en N-1 puis en N, puis compare." },
-      { id: "q3", label: "Q3", prompt: "Calcule profitabilité et rentabilité en N-1 puis en N, puis rédige ton analyse." },
-    ],
-  },
-  {
-    id: "ds13_e3",
-    title: "Partie 3 - Analyse d’objectifs",
-    context: "ECO'BAG : objectif +10% CA, satisfaction 90%, délai max 3 jours. Résultats : CA 800 000 -> 860 000, satisfaction 87%, délai 3,8 jours.",
-    questions: [
-      { id: "q1", label: "Q1", prompt: "Calcule l’évolution du CA et indique si l’objectif +10 % est atteint." },
-      { id: "q2", label: "Q2", prompt: "Vérifie les objectifs satisfaction et délai, puis justifie." },
-      { id: "q3", label: "Q3", prompt: "Rédige une analyse globale et propose 2 actions d’amélioration concrètes." },
-    ],
-  },
-];
 
 const cardStyle = {
   background: "#FFFFFF",
@@ -156,7 +121,7 @@ export default function DevoirSurveille({ profil }) {
     if (!user) return;
     const now = new Date().toISOString();
     const submissionPayload = {};
-    EXERCISES.forEach((exercise) => {
+    DS_EXERCISES.forEach((exercise) => {
       submissionPayload[exercise.id] = {
         title: exercise.title,
         questions: {},
@@ -234,7 +199,7 @@ export default function DevoirSurveille({ profil }) {
               </section>
             )}
 
-            {EXERCISES.map((exercise) => (
+            {DS_EXERCISES.map((exercise) => (
               <section key={exercise.id} style={{ ...cardStyle, padding: 16 }}>
                 <h3 style={{ margin: "0 0 4px" }}>{exercise.title}</h3>
                 <p style={{ margin: "0 0 8px", color: "#475569" }}>{exercise.context}</p>
