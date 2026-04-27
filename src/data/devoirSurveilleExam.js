@@ -1,5 +1,5 @@
-export const DS_EXAM_ID = "chapitre13_1h_2026";
-export const DS_LOCK_TYPE = "DS 1h - Chapitre 13";
+export const DS_EXAM_ID = "chapitre13_1h_2026_v2";
+export const DS_LOCK_TYPE = "DS 1h - Chapitre 13 (version 2)";
 
 export const DS_EXERCISES = [
   {
@@ -54,77 +54,77 @@ export const DS_EXERCISES = [
   {
     id: "ds13_e2",
     title: "Partie 2 - Cas pratique détaillé : performance commerciale et financière",
-    context: "L’entreprise NOVA SNACK vend des lunch box réutilisables aux lycéens et aux entreprises. En N, elle lance une nouvelle gamme premium, augmente ses dépenses de communication et renforce son réseau de distribution dans deux nouvelles villes. Le dirigeant veut savoir si ces décisions améliorent réellement la performance commerciale et financière.\n\nDonnées N : CA 1 260 000 €, marché 6 000 000 €, résultat net 94 500 €, capitaux propres 540 000 €.\nDonnées N-1 : CA 1 080 000 €, marché 5 700 000 €, résultat net 81 000 €, capitaux propres 500 000 €.",
+    context: "L’entreprise GREEN CUP fabrique des gobelets réutilisables pour les cafés et les événements locaux. En N, elle ouvre un site e-commerce, élargit sa gamme et renforce sa force commerciale. La direction veut vérifier l’impact de ces choix sur la performance commerciale et financière.\n\nDonnées N : CA 1 485 000 €, marché 7 200 000 €, résultat net 118 800 €, capitaux propres 660 000 €.\nDonnées N-1 : CA 1 320 000 €, marché 7 000 000 €, résultat net 99 000 €, capitaux propres 620 000 €.",
     questions: [
       {
         id: "q1",
         label: "Q1",
         points: 2,
         prompt: "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
-        expected: "Taux d’évolution = (1 260 000 - 1 080 000) / 1 080 000 = +16,7 %.",
+        expected: "Taux d’évolution = (1 485 000 - 1 320 000) / 1 320 000 = +12,5 %.",
       },
       {
         id: "q2",
         label: "Q2",
         points: 1,
         prompt: "Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.",
-        expected: "N-1 : 1 080 000 / 5 700 000 = 18,9 %. N : 1 260 000 / 6 000 000 = 21,0 %. Conclusion : gain de part de marché.",
+        expected: "N-1 : 1 320 000 / 7 000 000 = 18,9 %. N : 1 485 000 / 7 200 000 = 20,6 %. Conclusion : gain de part de marché.",
       },
       {
         id: "q3",
         label: "Q3",
         points: 1,
         prompt: "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
-        expected: "Profitabilité N-1 = 81 000 / 1 080 000 = 7,5 %. Profitabilité N = 94 500 / 1 260 000 = 7,5 %. Interprétation : marge nette stable par rapport au CA.",
+        expected: "Profitabilité N-1 = 99 000 / 1 320 000 = 7,5 %. Profitabilité N = 118 800 / 1 485 000 = 8,0 %. Interprétation : amélioration de la marge nette sur CA.",
       },
       {
         id: "q4",
         label: "Q4",
         points: 1,
         prompt: "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
-        expected: "Rentabilité N-1 = 81 000 / 500 000 = 16,2 %. Rentabilité N = 94 500 / 540 000 = 17,5 %. Interprétation : meilleure rémunération des capitaux propres.",
+        expected: "Rentabilité N-1 = 99 000 / 620 000 = 16,0 %. Rentabilité N = 118 800 / 660 000 = 18,0 %. Interprétation : meilleure rémunération des capitaux propres.",
       },
       {
         id: "q5",
         label: "Q5",
         points: 3,
         prompt: "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
-        expected: "Analyse attendue : performance commerciale en hausse (CA et part de marché), profitabilité stable, rentabilité financière en progression. Les investissements commerciaux semblent efficaces pour gagner des parts de marché tout en maintenant le niveau de profitabilité.",
+        expected: "Analyse attendue : performance commerciale en hausse (CA et part de marché), profitabilité en progression, rentabilité financière en hausse. Les investissements semblent efficaces : ils soutiennent la croissance et améliorent la performance financière.",
       },
     ],
   },
   {
     id: "ds13_e3",
     title: "Partie 3 - Cas pratique détaillé : pilotage par objectifs",
-    context: "L’entreprise ECO'BAG fabrique des sacs réutilisables à destination des commerces de proximité. Pour l’année N, la direction fixe trois objectifs prioritaires : croissance de l’activité, amélioration de la satisfaction client et réduction des délais de livraison. En fin d’année, les indicateurs suivants sont relevés.\n\nObjectifs N : +10 % de CA ; satisfaction client 90 % ; délai de livraison maximum 3 jours.\nRésultats N : CA N-1 = 800 000 €, CA N = 860 000 €, satisfaction = 87 %, délai moyen = 3,8 jours.",
+    context: "L’entreprise VIVA TEXTILE vend des tenues professionnelles à des PME. En N, la direction fixe trois objectifs : accélérer la croissance, améliorer la satisfaction client et réduire les retards de livraison. En fin d’année, les indicateurs sont les suivants.\n\nObjectifs N : +12 % de CA ; satisfaction client 92 % ; délai moyen de livraison 2,5 jours.\nRésultats N : CA N-1 = 950 000 €, CA N = 1 036 500 €, satisfaction = 89 %, délai moyen = 2,9 jours.",
     questions: [
       {
         id: "q1",
         label: "Q1",
         points: 1,
-        prompt: "Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +10 % est atteint.",
-        expected: "Évolution = (860 000 - 800 000) / 800 000 = +7,5 %. Objectif +10 % non atteint.",
+        prompt: "Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +12 % est atteint.",
+        expected: "Évolution = (1 036 500 - 950 000) / 950 000 = +9,1 %. Objectif +12 % non atteint.",
       },
       {
         id: "q2",
         label: "Q2",
         points: 1,
-        prompt: "Vérifie les objectifs de satisfaction (90 %) et de délai (3 jours) puis justifie ta conclusion.",
-        expected: "Satisfaction 87 % < 90 % : non atteint. Délai 3,8 jours > 3 jours : non atteint.",
+        prompt: "Vérifie les objectifs de satisfaction (92 %) et de délai (2,5 jours) puis justifie ta conclusion.",
+        expected: "Satisfaction 89 % < 92 % : non atteint. Délai 2,9 jours > 2,5 jours : non atteint.",
       },
       {
         id: "q3",
         label: "Q3",
         points: 3,
         prompt: "Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.",
-        expected: "Performance globale partiellement atteinte. Actions possibles : amélioration logistique pour délai, programme qualité/satisfaction, suivi d’indicateurs réguliers.",
+        expected: "Performance globale partiellement atteinte : CA progresse mais en dessous de l’objectif, satisfaction et délai non atteints. Actions possibles : optimiser la préparation des commandes, renforcer le SAV, mieux planifier les stocks et suivre les indicateurs mensuellement.",
       },
       {
         id: "q4",
         label: "Q4",
         points: 1,
         prompt: "Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de progression pour l’année suivante.",
-        expected: "Attendu : identifier des contraintes (organisation logistique, moyens humains, coordination) et proposer des opportunités (digitalisation du suivi, formation, meilleure planification, pilotage plus fin des indicateurs).",
+        expected: "Attendu : identifier des contraintes (capacités logistiques, coordination commerciale, ressources humaines) et proposer des opportunités (digitalisation du suivi, formation, planification, pilotage plus fin des indicateurs).",
       },
     ],
   },

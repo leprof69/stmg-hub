@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { deleteField, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { DS_EXAM_ID, DS_LOCK_TYPE, DS_EXERCISES } from "../data/devoirSurveilleExam";
 const DS_CODE_STORAGE_KEY = "devoirSurveilleUnlocked";
-const DS_ACCESS_CODE = (process.env.REACT_APP_DS_ACCESS_CODE || "STMG13").trim();
+const DS_ACCESS_CODE = "123vivaalgerie";
 const normalizeCode = (value = "") => String(value).trim().toUpperCase();
 const HIDDEN_DISQUALIFY_DELAY_MS = 10000;
 
@@ -21,6 +21,8 @@ export default function DevoirSurveille({ profil }) {
   const [finalizedAt, setFinalizedAt] = useState("");
   const [drafts, setDrafts] = useState({});
   const [banner, setBanner] = useState(null);
+  const hiddenTimeoutRef = useRef(null);
+  const disqualifyTriggeredRef = useRef(false);
 
   useEffect(() => {
     try {
@@ -56,9 +58,10 @@ export default function DevoirSurveille({ profil }) {
 
   useEffect(() => {
     if (!unlocked || forcedZero || finalizedAt) return undefined;
-    let hiddenTimeout = null;
 
     const disqualify = async (reason = "Sortie de page détectée") => {
+      if (disqualifyTriggeredRef.current) return;
+      disqualifyTriggeredRef.current = true;
       const user = auth.currentUser;
       setForcedZero(true);
       setBanner({ type: "error", text: `${reason} : note DS forcée à 0.` });
@@ -72,21 +75,32 @@ export default function DevoirSurveille({ profil }) {
     };
     const onVisibility = () => {
       if (document.hidden) {
+        if (hiddenTimeoutRef.current) return;
         // Tolérance large : évite de sanctionner un simple écran verrouillé/éteint brièvement.
-        hiddenTimeout = window.setTimeout(() => {
+        hiddenTimeoutRef.current = window.setTimeout(() => {
+          hiddenTimeoutRef.current = null;
           disqualify("Changement d'écran / onglet prolongé");
         }, HIDDEN_DISQUALIFY_DELAY_MS);
-      } else if (hiddenTimeout) {
-        window.clearTimeout(hiddenTimeout);
-        hiddenTimeout = null;
+      } else if (hiddenTimeoutRef.current) {
+        window.clearTimeout(hiddenTimeoutRef.current);
+        hiddenTimeoutRef.current = null;
       }
     };
     document.addEventListener("visibilitychange", onVisibility);
     return () => {
-      if (hiddenTimeout) window.clearTimeout(hiddenTimeout);
+      if (hiddenTimeoutRef.current) {
+        window.clearTimeout(hiddenTimeoutRef.current);
+        hiddenTimeoutRef.current = null;
+      }
       document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [unlocked, forcedZero, finalizedAt]);
+
+  useEffect(() => {
+    if (!forcedZero) {
+      disqualifyTriggeredRef.current = false;
+    }
+  }, [forcedZero]);
 
   const unlock = () => {
     if (normalizeCode(codeInput) !== normalizeCode(DS_ACCESS_CODE)) {
