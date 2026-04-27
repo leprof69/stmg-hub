@@ -5,7 +5,7 @@ import { DS_EXAM_ID, DS_LOCK_TYPE, DS_EXERCISES } from "../data/devoirSurveilleE
 const DS_CODE_STORAGE_KEY = "devoirSurveilleUnlocked";
 const DS_ACCESS_CODE = "123vivaalgerie";
 const normalizeCode = (value = "") => String(value).trim().toUpperCase();
-const HIDDEN_DISQUALIFY_DELAY_MS = 10000;
+const HIDDEN_DISQUALIFY_DELAY_MS = 2000;
 
 const cardStyle = {
   background: "#FFFFFF",
@@ -244,7 +244,7 @@ export default function DevoirSurveille({ profil }) {
             {!forcedZero && (
               <section style={{ ...cardStyle, padding: 12, border: "1px solid #F59E0B", background: "#FFFBEB" }}>
                 <p style={{ margin: 0, color: "#92400E", fontWeight: 800 }}>
-                  Règle anti-triche : quitter l’onglet/la page entraîne automatiquement la note 0.
+                  Règle anti-triche : quitter l’onglet/la page plus de 2 secondes entraîne automatiquement la note 0.
                 </p>
               </section>
             )}
