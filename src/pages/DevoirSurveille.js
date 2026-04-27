@@ -5,6 +5,7 @@ import { DS_EXAM_ID, DS_LOCK_TYPE, DS_EXERCISES } from "../data/devoirSurveilleE
 const DS_CODE_STORAGE_KEY = "devoirSurveilleUnlocked";
 const DS_ACCESS_CODE = (process.env.REACT_APP_DS_ACCESS_CODE || "STMG13").trim();
 const normalizeCode = (value = "") => String(value).trim().toUpperCase();
+const HIDDEN_DISQUALIFY_DELAY_MS = 10000;
 
 const cardStyle = {
   background: "#FFFFFF",
@@ -71,10 +72,10 @@ export default function DevoirSurveille({ profil }) {
     };
     const onVisibility = () => {
       if (document.hidden) {
-        // Petite fenêtre de tolérance pour éviter les faux positifs courts
+        // Tolérance large : évite de sanctionner un simple écran verrouillé/éteint brièvement.
         hiddenTimeout = window.setTimeout(() => {
-          disqualify("Changement d'écran / onglet");
-        }, 1200);
+          disqualify("Changement d'écran / onglet prolongé");
+        }, HIDDEN_DISQUALIFY_DELAY_MS);
       } else if (hiddenTimeout) {
         window.clearTimeout(hiddenTimeout);
         hiddenTimeout = null;
