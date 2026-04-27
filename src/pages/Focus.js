@@ -19,6 +19,8 @@ const FOCUS_PROGRESS_VERSION = 2;
 const EXERCISES = [
   {
     id: "focus-13-1",
+    matiere: "SDGN",
+    theme: "Thème 3",
     difficulty: 1,
     type: "Définition",
     xp: 40,
@@ -31,6 +33,8 @@ const EXERCISES = [
   },
   {
     id: "focus-13-2",
+    matiere: "SDGN",
+    theme: "Thème 3",
     difficulty: 2,
     type: "Définition",
     xp: 55,
@@ -42,6 +46,8 @@ const EXERCISES = [
   },
   {
     id: "focus-13-3",
+    matiere: "SDGN",
+    theme: "Thème 3",
     difficulty: 3,
     type: "Analyse",
     xp: 65,
@@ -53,6 +59,8 @@ const EXERCISES = [
   },
   {
     id: "focus-13-4",
+    matiere: "SDGN",
+    theme: "Thème 3",
     difficulty: 4,
     type: "Calcul",
     xp: 80,
@@ -66,6 +74,8 @@ const EXERCISES = [
   },
   {
     id: "focus-13-5",
+    matiere: "SDGN",
+    theme: "Thème 3",
     difficulty: 5,
     type: "Calcul",
     xp: 90,
@@ -79,6 +89,8 @@ const EXERCISES = [
   },
   {
     id: "focus-13-6",
+    matiere: "SDGN",
+    theme: "Thème 3",
     difficulty: 6,
     type: "Calcul",
     xp: 100,
@@ -92,6 +104,8 @@ const EXERCISES = [
   },
   {
     id: "focus-13-6b",
+    matiere: "SDGN",
+    theme: "Thème 3",
     difficulty: 7,
     type: "Calcul",
     xp: 115,
@@ -105,6 +119,8 @@ const EXERCISES = [
   },
   {
     id: "focus-13-6c",
+    matiere: "SDGN",
+    theme: "Thème 3",
     difficulty: 8,
     type: "Calcul",
     xp: 125,
@@ -118,6 +134,8 @@ const EXERCISES = [
   },
   {
     id: "focus-13-7",
+    matiere: "SDGN",
+    theme: "Thème 3",
     difficulty: 9,
     type: "Tableau de bord",
     xp: 120,
@@ -131,6 +149,8 @@ const EXERCISES = [
   },
   {
     id: "focus-13-8",
+    matiere: "SDGN",
+    theme: "Thème 3",
     difficulty: 10,
     type: "Comparaison",
     xp: 140,
@@ -144,6 +164,8 @@ const EXERCISES = [
   },
   {
     id: "focus-13-9",
+    matiere: "SDGN",
+    theme: "Thème 3",
     difficulty: 11,
     type: "Calcul",
     xp: 150,
@@ -157,6 +179,8 @@ const EXERCISES = [
   },
   {
     id: "focus-13-10",
+    matiere: "SDGN",
+    theme: "Thème 3",
     difficulty: 12,
     type: "Calcul",
     xp: 160,
@@ -170,6 +194,8 @@ const EXERCISES = [
   },
   {
     id: "focus-13-11",
+    matiere: "SDGN",
+    theme: "Thème 3",
     difficulty: 13,
     type: "Comparaison",
     xp: 170,
@@ -183,6 +209,8 @@ const EXERCISES = [
   },
   {
     id: "focus-13-12",
+    matiere: "SDGN",
+    theme: "Thème 3",
     difficulty: 14,
     type: "Calcul",
     xp: 180,
@@ -196,6 +224,8 @@ const EXERCISES = [
   },
   {
     id: "focus-13-13",
+    matiere: "SDGN",
+    theme: "Thème 3",
     difficulty: 15,
     type: "Tableau de bord",
     xp: 200,
@@ -206,6 +236,213 @@ const EXERCISES = [
       "Exemples attendus : CA, évolution CA, part de marché, taux de fidélité, rentabilité, profitabilité. Ajouter unité, fréquence (mensuel/trimestriel) et seuil d’alerte.",
     expectedKeywords: ["tableau", "bord", "indicateurs", "commerciale", "financiere", "periodicite", "seuil", "alerte"],
     expectedNumbers: [6],
+  },
+  {
+    id: "focus-6-1",
+    matiere: "SDGN",
+    theme: "Thème 2",
+    difficulty: 1,
+    type: "Définition",
+    xp: 40,
+    title: "Donnée, information, connaissance",
+    consigne: "Définis les notions de donnée, information et connaissance.",
+    correction:
+      "La donnée est un élément brut. L’information est une donnée traitée et contextualisée. La connaissance est l’information interprétée et mobilisable pour agir.",
+    expectedKeywords: ["donnee", "information", "connaissance", "brut", "contextualisee", "interpretee"],
+  },
+  {
+    id: "focus-6-2",
+    matiere: "SDGN",
+    theme: "Thème 2",
+    difficulty: 2,
+    type: "Définition",
+    xp: 50,
+    title: "Définir le Big Data",
+    consigne: "Explique ce qu’est le Big Data et pourquoi il représente un enjeu pour les organisations.",
+    correction:
+      "Le Big Data correspond à des masses très importantes de données numériques. L’enjeu principal est de pouvoir les collecter, trier et exploiter pour piloter l’activité et la décision.",
+    expectedKeywords: ["big", "data", "masses", "donnees", "enjeu", "organisation", "decision"],
+  },
+  {
+    id: "focus-6-3",
+    matiere: "SDGN",
+    theme: "Thème 2",
+    difficulty: 3,
+    type: "Notions",
+    xp: 60,
+    title: "Les 5V du Big Data",
+    consigne: "Cite et définis les 5V du Big Data.",
+    correction:
+      "Volume (quantité), Vélocité (vitesse de traitement), Variété (hétérogénéité), Véracité (fiabilité), Valeur (utilité/retour).",
+    expectedKeywords: ["volume", "velocite", "variete", "veracite", "valeur", "5v"],
+    expectedNumbers: [5],
+  },
+  {
+    id: "focus-6-4",
+    matiere: "SDGN",
+    theme: "Thème 2",
+    difficulty: 4,
+    type: "Définition",
+    xp: 70,
+    title: "Open Data",
+    consigne: "Définis l’open data et donne deux caractéristiques essentielles.",
+    correction:
+      "L’open data regroupe des données accessibles à tous, réutilisables et redistribuables sans restriction forte. Les caractéristiques attendues : accès public, réutilisation, diffusion.",
+    expectedKeywords: ["open", "data", "accessible", "reutilisable", "distribuable", "public"],
+    expectedNumbers: [2],
+  },
+  {
+    id: "focus-6-5",
+    matiere: "SDGN",
+    theme: "Thème 2",
+    difficulty: 5,
+    type: "Réglementation",
+    xp: 80,
+    title: "Loi République numérique",
+    consigne: "Quelle obligation d’open data concerne les collectivités de plus de 3 500 habitants ?",
+    correction:
+      "Elles doivent publier leurs données sur Internet pour les rendre visibles et réutilisables, afin d’améliorer la transparence de l’action publique.",
+    expectedKeywords: ["collectivites", "3500", "publier", "donnees", "internet", "reutilisables", "transparence"],
+    expectedNumbers: [3500],
+  },
+  {
+    id: "focus-6-6",
+    matiere: "SDGN",
+    theme: "Thème 2",
+    difficulty: 6,
+    type: "Définition",
+    xp: 90,
+    title: "Données personnelles",
+    consigne: "Définis une donnée personnelle et explique la contrainte principale pour son utilisation.",
+    correction:
+      "Une donnée personnelle permet d’identifier directement ou indirectement une personne. Son utilisation exige un cadre légal et le respect des droits des individus.",
+    expectedKeywords: ["donnees", "personnelles", "identifier", "indirectement", "cadre", "legal", "droits"],
+  },
+  {
+    id: "focus-6-7",
+    matiere: "SDGN",
+    theme: "Thème 2",
+    difficulty: 7,
+    type: "Application",
+    xp: 100,
+    title: "Usages opérationnels des données",
+    consigne: "Donne 3 exemples d’opérations de gestion courante rendues possibles par les données numériques.",
+    correction:
+      "Exemples : bon de commande, facturation, suivi de livraison, gestion des stocks, suivi client. Les données soutiennent les processus quotidiens.",
+    expectedKeywords: ["commande", "facture", "livraison", "stocks", "gestion", "courante"],
+    expectedNumbers: [3],
+  },
+  {
+    id: "focus-6-8",
+    matiere: "SDGN",
+    theme: "Thème 2",
+    difficulty: 8,
+    type: "Application",
+    xp: 110,
+    title: "Données et décision",
+    consigne: "Explique comment les données numériques aident la prise de décision managériale.",
+    correction:
+      "Elles permettent de produire des tableaux de bord et indicateurs, d’analyser la situation, puis de décider (aménagement, offre, fidélisation, allocation des ressources).",
+    expectedKeywords: ["tableau", "bord", "indicateurs", "analyse", "decision", "manageriale"],
+  },
+  {
+    id: "focus-6-9",
+    matiere: "SDGN",
+    theme: "Thème 2",
+    difficulty: 9,
+    type: "Système d'information",
+    xp: 120,
+    title: "Rôle du système d’information",
+    consigne: "Décris le rôle du SI dans la transformation des données en information utile.",
+    correction:
+      "Le SI collecte, stocke, traite et diffuse les données. Il articule ressources humaines, logicielles et matérielles pour transformer la donnée brute en information exploitable.",
+    expectedKeywords: ["si", "collecter", "stocker", "traiter", "diffuser", "ressources", "logiciels", "materielles"],
+  },
+  {
+    id: "focus-6-10",
+    matiere: "SDGN",
+    theme: "Thème 2",
+    difficulty: 10,
+    type: "Qualité",
+    xp: 130,
+    title: "Qualité de l’information",
+    consigne: "Cite et explique 4 critères de qualité de l’information.",
+    correction:
+      "Critères possibles : pertinence, fiabilité, objectivité, actualité, accessibilité rapide, rentabilité. Une information de qualité doit être utile et exploitable.",
+    expectedKeywords: ["pertinente", "fiable", "objective", "actualite", "accessible", "rentable"],
+    expectedNumbers: [4],
+  },
+  {
+    id: "focus-6-11",
+    matiere: "SDGN",
+    theme: "Thème 2",
+    difficulty: 11,
+    type: "Réglementation",
+    xp: 145,
+    title: "RGPD - obligations",
+    consigne: "Présente 4 obligations majeures imposées par le RGPD aux organisations.",
+    correction:
+      "Exemples attendus : registre des traitements, finalité explicite, tri/minimisation, information des personnes, sécurisation des données, durée de conservation encadrée.",
+    expectedKeywords: ["rgpd", "registre", "finalite", "tri", "information", "securisation", "conservation"],
+    expectedNumbers: [4],
+  },
+  {
+    id: "focus-6-12",
+    matiere: "SDGN",
+    theme: "Thème 2",
+    difficulty: 12,
+    type: "Étude de cas",
+    xp: 160,
+    title: "Audit RGPD rapide",
+    consigne:
+      "Une boutique en ligne collecte email, nom, historique d’achat, géolocalisation et conserve tout sans limite. Identifie au moins 3 non-conformités RGPD et propose une correction pour chacune.",
+    correction:
+      "Non-conformités possibles : absence de durée de conservation, collecte excessive sans finalité claire, manque d’information des personnes, sécurisation insuffisante. Chaque écart doit être relié à une action corrective.",
+    expectedKeywords: ["non", "conformite", "rgpd", "duree", "conservation", "finalite", "information", "securisation", "correction"],
+    expectedNumbers: [3],
+  },
+  {
+    id: "focus-6-13",
+    matiere: "SDGN",
+    theme: "Thème 2",
+    difficulty: 13,
+    type: "Conception",
+    xp: 175,
+    title: "Chaîne de transformation",
+    consigne: "Construis un schéma texte de la chaîne donnée → information → connaissance appliqué à un exemple d’organisation.",
+    correction:
+      "Réponse attendue : données collectées, traitement/contextualisation, information produite, interprétation par un acteur, décision/action. L’exemple doit être cohérent.",
+    expectedKeywords: ["donnee", "information", "connaissance", "traitement", "interpretation", "decision", "action"],
+  },
+  {
+    id: "focus-6-14",
+    matiere: "SDGN",
+    theme: "Thème 2",
+    difficulty: 14,
+    type: "Tableau de bord",
+    xp: 190,
+    title: "Piloter un projet Open Data",
+    consigne:
+      "Propose un mini tableau de bord (5 indicateurs) pour suivre la réussite d’un projet open data d’une collectivité.",
+    correction:
+      "Indicateurs pertinents : nombre de jeux publiés, taux de réutilisation, fréquence de mise à jour, taux de qualité/fiabilité, satisfaction usagers, délai d’accès.",
+    expectedKeywords: ["tableau", "bord", "open", "data", "indicateurs", "reutilisation", "qualite", "mise", "jour"],
+    expectedNumbers: [5],
+  },
+  {
+    id: "focus-6-15",
+    matiere: "SDGN",
+    theme: "Thème 2",
+    difficulty: 15,
+    type: "Synthèse",
+    xp: 210,
+    title: "Synthèse chap 6",
+    consigne:
+      "Rédige une synthèse argumentée (15 lignes) : montre que les technologies transforment l’information en ressource stratégique, tout en créant des contraintes juridiques et organisationnelles.",
+    correction:
+      "Attendu : articulation Big Data / SI / décision / qualité de l’information / RGPD. La synthèse doit montrer les apports (pilotage, efficacité, transparence) et les limites (protection des données, conformité, qualité).",
+    expectedKeywords: ["technologies", "information", "ressource", "strategique", "si", "big", "data", "rgpd", "contraintes", "organisationnelles"],
+    expectedNumbers: [15],
   },
 ];
 
@@ -465,8 +702,28 @@ function FocusCard({ exercise, claim, onClaimXP }) {
 export default function Focus({ profil, onXPGagne }) {
   const [claims, setClaims] = useState({});
   const [banner, setBanner] = useState(null);
+  const [matiereSelectionnee, setMatiereSelectionnee] = useState("SDGN");
+  const [themeSelectionne, setThemeSelectionne] = useState("Thème 3");
 
-  const xpPotential = useMemo(() => EXERCISES.reduce((sum, ex) => sum + ex.xp, 0), []);
+  const matieres = useMemo(() => Array.from(new Set(EXERCISES.map((ex) => ex.matiere || "SDGN"))), []);
+  const themes = useMemo(
+    () => Array.from(new Set(EXERCISES.filter((ex) => (ex.matiere || "SDGN") === matiereSelectionnee).map((ex) => ex.theme || "Sans thème"))),
+    [matiereSelectionnee]
+  );
+  const exercicesFiltres = useMemo(
+    () =>
+      EXERCISES
+        .filter((ex) => (ex.matiere || "SDGN") === matiereSelectionnee && (ex.theme || "Sans thème") === themeSelectionne)
+        .sort((a, b) => a.difficulty - b.difficulty),
+    [matiereSelectionnee, themeSelectionne]
+  );
+  const xpPotential = useMemo(() => exercicesFiltres.reduce((sum, ex) => sum + ex.xp, 0), [exercicesFiltres]);
+
+  useEffect(() => {
+    if (!themes.includes(themeSelectionne)) {
+      setThemeSelectionne(themes[0] || "Thème 3");
+    }
+  }, [themes, themeSelectionne]);
 
   useEffect(() => {
     const load = async () => {
@@ -577,12 +834,44 @@ export default function Focus({ profil, onXPGagne }) {
             <span style={{ background: "#FEF3C7", color: "#92400E", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>15 exercices progressifs</span>
             <span style={{ background: "#FFE4E6", color: "#9F1239", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>Mode correction équilibré v{FOCUS_PROGRESS_VERSION}</span>
           </div>
+
+          <div style={{ marginTop: 12, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+            <div style={{ borderRadius: 12, border: "1px solid #BFDBFE", padding: "9px 10px", background: "#EFF6FF" }}>
+              <p style={{ margin: "0 0 5px", color: "#1D4ED8", fontWeight: 700, fontSize: 12 }}>Matière</p>
+              <select
+                value={matiereSelectionnee}
+                onChange={(e) => setMatiereSelectionnee(e.target.value)}
+                style={{ width: "100%", borderRadius: 8, border: "1px solid #93C5FD", padding: "7px 9px", fontWeight: 700, color: "#1E3A8A", background: "white" }}
+              >
+                {matieres.map((matiere) => (
+                  <option key={matiere} value={matiere}>{matiere}</option>
+                ))}
+              </select>
+            </div>
+            <div style={{ borderRadius: 12, border: "1px solid #FBCFE8", padding: "9px 10px", background: "#FFF1F2" }}>
+              <p style={{ margin: "0 0 5px", color: "#BE185D", fontWeight: 700, fontSize: 12 }}>Thème</p>
+              <select
+                value={themeSelectionne}
+                onChange={(e) => setThemeSelectionne(e.target.value)}
+                style={{ width: "100%", borderRadius: 8, border: "1px solid #FDA4AF", padding: "7px 9px", fontWeight: 700, color: "#9F1239", background: "white" }}
+              >
+                {themes.map((theme) => (
+                  <option key={theme} value={theme}>{theme}</option>
+                ))}
+              </select>
+            </div>
+          </div>
         </section>
 
         <section style={{ display: "grid", gap: 10 }}>
-          {EXERCISES.map((exercise) => (
+          {exercicesFiltres.map((exercise) => (
             <FocusCard key={exercise.id} exercise={exercise} claim={claims[exercise.id]} onClaimXP={handleClaimXP} />
           ))}
+          {!exercicesFiltres.length && (
+            <div style={{ background: "#FFFFFF", border: `1px solid ${COLORS.border}`, borderRadius: 14, padding: 14, color: COLORS.muted }}>
+              Aucun exercice disponible pour ce filtre.
+            </div>
+          )}
         </section>
       </div>
     </div>
