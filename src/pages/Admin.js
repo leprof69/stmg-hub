@@ -4,6 +4,7 @@ import { doc, setDoc, collection, getDocs, deleteDoc, updateDoc, deleteField } f
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
 import { DS_EXAM_ID, DS_LOCK_TYPE, DS_EXERCISES } from "../data/devoirSurveilleExam";
+import { COLLECTIONS } from "../data/collections";
 
 const COLORS = {
   S: "#3B82F6", T: "#7C3AED", M: "#F97316",
@@ -49,6 +50,23 @@ const ONGLET_ADMIN = [
   { id: "infos", label: "💡 Infos" },
 ];
 const DS_EXERCISE_BY_ID = Object.fromEntries(DS_EXERCISES.map((exercise) => [exercise.id, exercise]));
+const RARETE_PARTICIPATION = {
+  commune: 0,
+  peu_commune: 0,
+  rare: 0.5,
+  epique: 1,
+  legendaire: 2,
+  ultra_rare: 3,
+};
+const CARD_BONUS_BY_ID = (() => {
+  const map = {};
+  COLLECTIONS.forEach((colSet) => {
+    (colSet.cartes || []).forEach((card) => {
+      map[card.id] = RARETE_PARTICIPATION[card.rarete] || 0;
+    });
+  });
+  return map;
+})();
 
 const col = (row, ...keys) => {
   for (const k of keys) {
@@ -297,6 +315,10 @@ export default function Admin() {
 
       const cartesTotal = compterCartesTotal(eleve.cartes || {});
       const cartesUniques = compterCartesUniques(eleve.cartes || {});
+      const participationPoints = Object.entries(eleve.cartes || {}).reduce((sum, [cardId, qty]) => {
+        if ((Number(qty) || 0) <= 0) return sum;
+        return sum + (CARD_BONUS_BY_ID[cardId] || 0);
+      }, 0);
       const aFaitCartesToday = eleve.lastVisit === todayKey;
 
       const actionsToday = [];
@@ -317,6 +339,7 @@ export default function Admin() {
         nomAffiche: nom,
         cartesTotal,
         cartesUniques,
+        participationPoints,
         missionsToday,
         missionsTotal: missionEntries.length,
         antiCheatEvents: antiCheatEvents.length,
@@ -362,7 +385,8 @@ export default function Admin() {
     const actionsToday = reportingRows.reduce((sum, e) => sum + e.missionsToday + e.objectifToday + (e.lastVisit === todayKey ? 1 : 0), 0);
     const suspicions = reportingRows.reduce((sum, e) => sum + (e.antiCheatEvents || 0), 0);
     const sessionTodaySec = reportingRows.reduce((sum, e) => sum + (e.sessionTodaySec || 0), 0);
-    return { total, actifsAujourdhui, actifs7j, inactifs7j, actionsToday, suspicions, sessionTodaySec };
+    const participationTotal = reportingRows.reduce((sum, e) => sum + (Number(e.participationPoints) || 0), 0);
+    return { total, actifsAujourdhui, actifs7j, inactifs7j, actionsToday, suspicions, sessionTodaySec, participationTotal };
   }, [reportingRows, todayKey]);
 
   const dsCopiesRows = useMemo(() => {
@@ -695,6 +719,12 @@ export default function Admin() {
                 <p style={{ margin: 0, color: "#0369A1", fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem" }}>Temps connecté aujourd’hui</p>
                 <p style={{ margin: "4px 0 0", fontSize: "1.7rem", fontWeight: 900, color: "#0F172A" }}>{formatDuration(dashboardStats.sessionTodaySec)}</p>
               </div>
+              <div style={{ background: "white", borderRadius: 14, padding: 14, border: "1px solid #FDE68A" }}>
+                <p style={{ margin: 0, color: "#B45309", fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem" }}>Points participation (cartes rares)</p>
+                <p style={{ margin: "4px 0 0", fontSize: "1.7rem", fontWeight: 900, color: "#0F172A" }}>
+                  {Number(dashboardStats.participationTotal || 0).toFixed(1)} pts
+                </p>
+              </div>
             </div>
 
             <div style={{ background: "white", borderRadius: "20px", padding: "18px", marginBottom: "14px", border: "1px solid #E2E8F0" }}>
@@ -782,6 +812,9 @@ export default function Admin() {
                       </p>
                       <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Objectif Bac : <strong>{eleve.objectifTotal}</strong> (aujourd’hui {eleve.objectifToday})</p>
                       <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Cartes : <strong>{eleve.cartesTotal}</strong> ({eleve.cartesUniques} uniques)</p>
+                      <p style={{ margin: 0, color: "#B45309", fontSize: "0.8rem", fontWeight: 700 }}>
+                        Participation cartes rares : <strong>{Number(eleve.participationPoints || 0).toFixed(1)} pt(s)</strong>
+                      </p>
                       <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Connexion aujourd’hui : <strong>{formatDuration(eleve.sessionTodaySec)}</strong></p>
                       <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Temps cumulé : <strong>{formatDuration(eleve.sessionTotalSec)}</strong> ({eleve.sessionCount || 0} session(s))</p>
                       <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Dernière session : <strong>{formatDuration(eleve.lastSessionDurationSec)}</strong></p>
