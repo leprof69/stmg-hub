@@ -3,7 +3,6 @@ import { deleteField, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { DS_EXAM_ID, DS_LOCK_TYPE, DS_EXERCISES } from "../data/devoirSurveilleExam";
 const DS_CODE_STORAGE_KEY = "devoirSurveilleUnlocked";
-const DS_FORCED_ZERO_STORAGE_KEY = "devoirSurveilleForcedZero";
 const DS_ACCESS_CODE = (process.env.REACT_APP_DS_ACCESS_CODE || "STMG13").trim();
 const normalizeCode = (value = "") => String(value).trim().toUpperCase();
 
@@ -25,9 +24,6 @@ export default function DevoirSurveille({ profil }) {
   useEffect(() => {
     try {
       setUnlocked(window.sessionStorage.getItem(DS_CODE_STORAGE_KEY) === "1");
-      if (window.sessionStorage.getItem(DS_FORCED_ZERO_STORAGE_KEY) === "1") {
-        setForcedZero(true);
-      }
     } catch {
       setUnlocked(false);
     }
@@ -52,29 +48,19 @@ export default function DevoirSurveille({ profil }) {
         setDrafts(nextDrafts);
       }
       if (exam.finalizedAt) setFinalizedAt(exam.finalizedAt);
-      if (exam.forcedZero) {
-        setForcedZero(true);
-        try {
-          window.sessionStorage.setItem(DS_FORCED_ZERO_STORAGE_KEY, "1");
-        } catch {
-          // ignore
-        }
-      }
+      setForcedZero(Boolean(exam.forcedZero));
     };
     load();
   }, []);
 
   useEffect(() => {
     if (!unlocked || forcedZero || finalizedAt) return undefined;
+    let hiddenTimeout = null;
+
     const disqualify = async (reason = "Sortie de page détectée") => {
       const user = auth.currentUser;
       setForcedZero(true);
       setBanner({ type: "error", text: `${reason} : note DS forcée à 0.` });
-      try {
-        window.sessionStorage.setItem(DS_FORCED_ZERO_STORAGE_KEY, "1");
-      } catch {
-        // ignore
-      }
       if (!user) return;
       updateDoc(doc(db, "users", user.uid), {
         [`objectifBacDs.${DS_EXAM_ID}.forcedZero`]: true,
@@ -84,19 +70,19 @@ export default function DevoirSurveille({ profil }) {
       }).catch((err) => console.error("Sauvegarde forced zero impossible", err));
     };
     const onVisibility = () => {
-      if (document.hidden) disqualify("Changement d'écran / onglet");
+      if (document.hidden) {
+        // Petite fenêtre de tolérance pour éviter les faux positifs courts
+        hiddenTimeout = window.setTimeout(() => {
+          disqualify("Changement d'écran / onglet");
+        }, 1200);
+      } else if (hiddenTimeout) {
+        window.clearTimeout(hiddenTimeout);
+        hiddenTimeout = null;
+      }
     };
-    const onBlur = () => disqualify("Perte de focus de la fenêtre");
-    const onPageHide = () => disqualify("Sortie de page");
-    const onBeforeUnload = () => disqualify("Fermeture ou changement de page");
-    window.addEventListener("blur", onBlur);
-    window.addEventListener("pagehide", onPageHide);
-    window.addEventListener("beforeunload", onBeforeUnload);
     document.addEventListener("visibilitychange", onVisibility);
     return () => {
-      window.removeEventListener("blur", onBlur);
-      window.removeEventListener("pagehide", onPageHide);
-      window.removeEventListener("beforeunload", onBeforeUnload);
+      if (hiddenTimeout) window.clearTimeout(hiddenTimeout);
       document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [unlocked, forcedZero, finalizedAt]);
@@ -176,11 +162,6 @@ export default function DevoirSurveille({ profil }) {
       setForcedZero(false);
       setFinalizedAt("");
       setDrafts({});
-      try {
-        window.sessionStorage.removeItem(DS_FORCED_ZERO_STORAGE_KEY);
-      } catch {
-        // ignore
-      }
       setBanner({ type: "success", text: "Copie DS admin réinitialisée. Tu peux retester." });
     } catch (err) {
       console.error("Reset DS admin impossible", err);

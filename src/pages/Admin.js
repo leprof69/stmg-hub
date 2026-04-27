@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { db, auth } from "../firebase";
-import { doc, setDoc, collection, getDocs, deleteDoc, updateDoc } from "firebase/firestore";
+import { doc, setDoc, collection, getDocs, deleteDoc, updateDoc, deleteField } from "firebase/firestore";
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
 import { DS_EXAM_ID, DS_LOCK_TYPE, DS_EXERCISES } from "../data/devoirSurveilleExam";
@@ -132,6 +132,7 @@ export default function Admin() {
   const [ongletActif, setOngletActif] = useState("reporting");
   const [filtreActivite, setFiltreActivite] = useState("tous");
   const [rechercheEleve, setRechercheEleve] = useState("");
+  const [resetDsLoading, setResetDsLoading] = useState(false);
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -464,6 +465,40 @@ export default function Admin() {
     docPdf.save(`copies-ds-${DS_EXAM_ID}.pdf`);
   };
 
+  const resetDsLocksForFilteredStudents = async () => {
+    const targets = usersAll.filter((user) => {
+      if (user.role === "admin") return false;
+      const okClasse = filtreClasse === "toutes" || user.classe === filtreClasse;
+      const okLycee = filtreLycee === "tous" || user.lycee === filtreLycee;
+      const haystack = `${user.prenom || ""} ${user.nom || ""} ${user.email || ""}`.toLowerCase();
+      const okRecherche = !rechercheEleve.trim() || haystack.includes(rechercheEleve.toLowerCase());
+      return okClasse && okLycee && okRecherche;
+    });
+    if (!targets.length) {
+      alert("Aucun élève ciblé avec les filtres actuels.");
+      return;
+    }
+    if (!window.confirm(`Réinitialiser le DS (blocages + copies) pour ${targets.length} élève(s) ?`)) return;
+
+    setResetDsLoading(true);
+    try {
+      await Promise.all(
+        targets.map((user) =>
+          updateDoc(doc(db, "users", user.id), {
+            [`objectifBacDs.${DS_EXAM_ID}`]: deleteField(),
+          })
+        )
+      );
+      await chargerEleves();
+      alert(`DS réinitialisé pour ${targets.length} élève(s).`);
+    } catch (err) {
+      console.error("Reset DS global impossible", err);
+      alert("Erreur lors du reset DS global.");
+    } finally {
+      setResetDsLoading(false);
+    }
+  };
+
   const elevesSuspects = useMemo(
     () => [...reportingRows].filter((e) => (e.antiCheatEvents || 0) > 0).sort((a, b) => (b.antiCheatEvents || 0) - (a.antiCheatEvents || 0)).slice(0, 8),
     [reportingRows]
@@ -670,9 +705,14 @@ export default function Admin() {
                     {dsCopiesRows.length} élève(s) avec copie enregistrée pour « {DS_LOCK_TYPE} ».
                   </p>
                 </div>
-                <Btn onClick={exportAllDsCopiesPdf} color={COLORS.S} small disabled={!dsCopiesRows.length}>
-                  📄 Exporter toutes les copies DS (PDF)
-                </Btn>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  <Btn onClick={exportAllDsCopiesPdf} color={COLORS.S} small disabled={!dsCopiesRows.length}>
+                    📄 Exporter toutes les copies DS (PDF)
+                  </Btn>
+                  <Btn onClick={resetDsLocksForFilteredStudents} color={COLORS.H} small disabled={resetDsLoading}>
+                    {resetDsLoading ? "⏳ Reset DS..." : "♻️ Reset DS (élèves filtrés)"}
+                  </Btn>
+                </div>
               </div>
 
               {elevesSuspects.length > 0 && (
