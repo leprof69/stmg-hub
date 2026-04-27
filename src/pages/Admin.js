@@ -491,7 +491,6 @@ export default function Admin() {
 
   const resetDsLocksForFilteredStudents = async () => {
     const targets = usersAll.filter((user) => {
-      if (user.role === "admin") return false;
       const okClasse = filtreClasse === "toutes" || user.classe === filtreClasse;
       const okLycee = filtreLycee === "tous" || user.lycee === filtreLycee;
       const haystack = `${user.prenom || ""} ${user.nom || ""} ${user.email || ""}`.toLowerCase();

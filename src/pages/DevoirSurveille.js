@@ -326,6 +326,24 @@ export default function DevoirSurveille({ profil }) {
               <br />
               L’épreuve est disqualifiée et la page est verrouillée.
             </p>
+            {profil?.role === "admin" && (
+              <div style={{ marginTop: 14 }}>
+                <button
+                  onClick={resetAdminCopy}
+                  style={{
+                    border: "none",
+                    borderRadius: 10,
+                    padding: "10px 14px",
+                    cursor: "pointer",
+                    fontWeight: 800,
+                    background: "#FCA5A5",
+                    color: "#7F1D1D",
+                  }}
+                >
+                  Débloquer ma session test admin
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
