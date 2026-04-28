@@ -1,5 +1,5 @@
-export const DS_EXAM_ID = "chapitre13_1h_2026_v2";
-export const DS_LOCK_TYPE = "DS 1h - Chapitre 13 (version 2)";
+export const DS_EXAM_ID = "chapitre13_1h_2026_v3";
+export const DS_LOCK_TYPE = "DS 1h - Chapitre 13 (version 3)";
 
 export const DS_EXERCISES = [
   {
@@ -11,8 +11,8 @@ export const DS_EXERCISES = [
         id: "q1",
         label: "Q1",
         points: 1,
-        prompt: "Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.",
-        expected: "Performance = atteinte d’objectifs prédéfinis. Étapes attendues : définition d’objectifs, mobilisation de moyens, atteinte d’un résultat.",
+        prompt: "Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.",
+        expected: "Performance = atteinte d’objectifs prédéfinis. Étapes attendues : définition d’objectifs, mobilisation de moyens, mesure/atteinte des résultats.",
       },
       {
         id: "q2",
@@ -54,70 +54,70 @@ export const DS_EXERCISES = [
   {
     id: "ds13_e2",
     title: "Partie 2 - Cas pratique détaillé : performance commerciale et financière",
-    context: "L’entreprise GREEN CUP fabrique des gobelets réutilisables pour les cafés et les événements locaux. En N, elle ouvre un site e-commerce, élargit sa gamme et renforce sa force commerciale. La direction veut vérifier l’impact de ces choix sur la performance commerciale et financière.\n\nDonnées N : CA 1 485 000 €, marché 7 200 000 €, résultat net 118 800 €, capitaux propres 660 000 €.\nDonnées N-1 : CA 1 320 000 €, marché 7 000 000 €, résultat net 99 000 €, capitaux propres 620 000 €.",
+    context: "L’entreprise OCEA FOOD produit des lunch box isothermes pour les lycées et la restauration rapide. En N, elle lance une gamme personnalisable, signe un partenariat avec deux grossistes et renforce sa communication digitale. La direction souhaite mesurer les effets commerciaux et financiers de ces décisions.\n\nDonnées N : CA 1 620 000 €, marché 8 100 000 €, résultat net 113 400 €, capitaux propres 700 000 €.\nDonnées N-1 : CA 1 440 000 €, marché 7 900 000 €, résultat net 93 600 €, capitaux propres 650 000 €.",
     questions: [
       {
         id: "q1",
         label: "Q1",
         points: 2,
         prompt: "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
-        expected: "Taux d’évolution = (1 485 000 - 1 320 000) / 1 320 000 = +12,5 %.",
+        expected: "Taux d’évolution = (1 620 000 - 1 440 000) / 1 440 000 = +12,5 %.",
       },
       {
         id: "q2",
         label: "Q2",
         points: 1,
-        prompt: "Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.",
-        expected: "N-1 : 1 320 000 / 7 000 000 = 18,9 %. N : 1 485 000 / 7 200 000 = 20,6 %. Conclusion : gain de part de marché.",
+        prompt: "Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.",
+        expected: "N-1 : 1 440 000 / 7 900 000 = 18,2 %. N : 1 620 000 / 8 100 000 = 20,0 %. Conclusion : gain de part de marché.",
       },
       {
         id: "q3",
         label: "Q3",
         points: 1,
         prompt: "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
-        expected: "Profitabilité N-1 = 99 000 / 1 320 000 = 7,5 %. Profitabilité N = 118 800 / 1 485 000 = 8,0 %. Interprétation : amélioration de la marge nette sur CA.",
+        expected: "Profitabilité N-1 = 93 600 / 1 440 000 = 6,5 %. Profitabilité N = 113 400 / 1 620 000 = 7,0 %. Interprétation : amélioration de la marge nette sur CA.",
       },
       {
         id: "q4",
         label: "Q4",
         points: 1,
         prompt: "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
-        expected: "Rentabilité N-1 = 99 000 / 620 000 = 16,0 %. Rentabilité N = 118 800 / 660 000 = 18,0 %. Interprétation : meilleure rémunération des capitaux propres.",
+        expected: "Rentabilité N-1 = 93 600 / 650 000 = 14,4 %. Rentabilité N = 113 400 / 700 000 = 16,2 %. Interprétation : meilleure rémunération des capitaux propres.",
       },
       {
         id: "q5",
         label: "Q5",
         points: 3,
         prompt: "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
-        expected: "Analyse attendue : performance commerciale en hausse (CA et part de marché), profitabilité en progression, rentabilité financière en hausse. Les investissements semblent efficaces : ils soutiennent la croissance et améliorent la performance financière.",
+        expected: "Analyse attendue : progression du CA et de la part de marché, amélioration de la profitabilité et de la rentabilité financière. Les actions commerciales semblent efficaces et créent davantage de valeur.",
       },
     ],
   },
   {
     id: "ds13_e3",
     title: "Partie 3 - Cas pratique détaillé : pilotage par objectifs",
-    context: "L’entreprise VIVA TEXTILE vend des tenues professionnelles à des PME. En N, la direction fixe trois objectifs : accélérer la croissance, améliorer la satisfaction client et réduire les retards de livraison. En fin d’année, les indicateurs sont les suivants.\n\nObjectifs N : +12 % de CA ; satisfaction client 92 % ; délai moyen de livraison 2,5 jours.\nRésultats N : CA N-1 = 950 000 €, CA N = 1 036 500 €, satisfaction = 89 %, délai moyen = 2,9 jours.",
+    context: "L’entreprise BLEU MARKET distribue des produits d’entretien écologiques auprès des commerces de proximité. Pour l’année N, la direction fixe trois objectifs : augmenter les ventes, améliorer la satisfaction client et réduire les délais de préparation de commandes.\n\nObjectifs N : +9 % de CA ; satisfaction client 91 % ; délai moyen de préparation 24 heures.\nRésultats N : CA N-1 = 1 000 000 €, CA N = 1 070 000 €, satisfaction = 88 %, délai moyen = 29 heures.",
     questions: [
       {
         id: "q1",
         label: "Q1",
         points: 1,
-        prompt: "Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +12 % est atteint.",
-        expected: "Évolution = (1 036 500 - 950 000) / 950 000 = +9,1 %. Objectif +12 % non atteint.",
+        prompt: "Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +9 % est atteint.",
+        expected: "Évolution = (1 070 000 - 1 000 000) / 1 000 000 = +7,0 %. Objectif +9 % non atteint.",
       },
       {
         id: "q2",
         label: "Q2",
         points: 1,
-        prompt: "Vérifie les objectifs de satisfaction (92 %) et de délai (2,5 jours) puis justifie ta conclusion.",
-        expected: "Satisfaction 89 % < 92 % : non atteint. Délai 2,9 jours > 2,5 jours : non atteint.",
+        prompt: "Vérifie les objectifs de satisfaction (91 %) et de délai (24 h) puis justifie ta conclusion.",
+        expected: "Satisfaction 88 % < 91 % : non atteint. Délai moyen 29 h > 24 h : non atteint.",
       },
       {
         id: "q3",
         label: "Q3",
         points: 3,
         prompt: "Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.",
-        expected: "Performance globale partiellement atteinte : CA progresse mais en dessous de l’objectif, satisfaction et délai non atteints. Actions possibles : optimiser la préparation des commandes, renforcer le SAV, mieux planifier les stocks et suivre les indicateurs mensuellement.",
+        expected: "Performance globale partiellement atteinte : progression du CA, mais objectif de croissance non atteint, satisfaction et délai insuffisants. Actions possibles : améliorer l’organisation logistique, renforcer le suivi client, ajuster la planification des équipes et des stocks.",
       },
       {
         id: "q4",

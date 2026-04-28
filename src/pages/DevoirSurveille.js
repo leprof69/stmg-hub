@@ -3,7 +3,7 @@ import { deleteField, doc, getDoc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { DS_EXAM_ID, DS_LOCK_TYPE, DS_EXERCISES } from "../data/devoirSurveilleExam";
 const DS_CODE_STORAGE_KEY = "devoirSurveilleUnlocked";
-const DS_ACCESS_CODE = "123vivaalgerie";
+const DS_ACCESS_CODE = "POULPE";
 const normalizeCode = (value = "") => String(value).trim().toUpperCase();
 const HIDDEN_DISQUALIFY_DELAY_MS = 2000;
 

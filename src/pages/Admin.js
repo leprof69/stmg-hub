@@ -424,68 +424,130 @@ export default function Admin() {
       return;
     }
     const docPdf = new jsPDF({ unit: "pt", format: "a4" });
-    const left = 38;
-    const right = 560;
-    const maxWidth = right - left;
-    let y = 46;
+    const page = { left: 40, right: 555, top: 42, bottom: 800 };
+    const contentWidth = page.right - page.left;
+    let y = page.top;
+    let pageNumber = 1;
 
-    const writeBlock = (text, size = 11, bold = false, lineHeight = 14) => {
-      docPdf.setFont("helvetica", bold ? "bold" : "normal");
-      docPdf.setFontSize(size);
-      const lines = docPdf.splitTextToSize(String(text), maxWidth);
-      if (y + lines.length * lineHeight > 795) {
-        docPdf.addPage();
-        y = 46;
-      }
-      docPdf.text(lines, left, y);
-      y += lines.length * lineHeight;
+    const drawFooter = () => {
+      docPdf.setFont("helvetica", "normal");
+      docPdf.setFontSize(9);
+      docPdf.setTextColor(100, 116, 139);
+      docPdf.text(`Page ${pageNumber}`, page.right, 825, { align: "right" });
+      docPdf.setTextColor(15, 23, 42);
     };
 
-    writeBlock("STMG HUB - Export global copies DS", 15, true, 18);
-    writeBlock(`Sujet : ${DS_LOCK_TYPE}`, 11, true);
-    writeBlock(`Date export : ${new Date().toLocaleString("fr-FR")}`);
-    writeBlock(`Nombre d'eleves exportes : ${dsCopiesRows.length}`);
-    y += 8;
+    const newPage = () => {
+      drawFooter();
+      docPdf.addPage();
+      pageNumber += 1;
+      y = page.top;
+    };
+
+    const ensureSpace = (neededHeight = 20) => {
+      if (y + neededHeight > page.bottom) {
+        newPage();
+      }
+    };
+
+    const writeText = (text, opts = {}) => {
+      const {
+        size = 10.5,
+        bold = false,
+        color = [15, 23, 42],
+        lineHeight = 14,
+        indent = 0,
+      } = opts;
+      docPdf.setFont("helvetica", bold ? "bold" : "normal");
+      docPdf.setFontSize(size);
+      docPdf.setTextColor(color[0], color[1], color[2]);
+      const width = contentWidth - indent;
+      const lines = docPdf.splitTextToSize(String(text || ""), width);
+      ensureSpace(lines.length * lineHeight + 2);
+      docPdf.text(lines, page.left + indent, y);
+      y += lines.length * lineHeight;
+      docPdf.setTextColor(15, 23, 42);
+    };
+
+    const writeSectionTitle = (title, tone = "default") => {
+      const palette = tone === "danger"
+        ? { fill: [254, 226, 226], border: [248, 113, 113], text: [153, 27, 27] }
+        : tone === "info"
+          ? { fill: [219, 234, 254], border: [96, 165, 250], text: [30, 64, 175] }
+          : { fill: [241, 245, 249], border: [148, 163, 184], text: [30, 41, 59] };
+
+      ensureSpace(28);
+      docPdf.setFillColor(palette.fill[0], palette.fill[1], palette.fill[2]);
+      docPdf.setDrawColor(palette.border[0], palette.border[1], palette.border[2]);
+      docPdf.roundedRect(page.left, y, contentWidth, 22, 4, 4, "FD");
+      docPdf.setFont("helvetica", "bold");
+      docPdf.setFontSize(11);
+      docPdf.setTextColor(palette.text[0], palette.text[1], palette.text[2]);
+      docPdf.text(String(title), page.left + 8, y + 15);
+      docPdf.setTextColor(15, 23, 42);
+      y += 28;
+    };
+
+    writeText("STMG HUB - Export global copies DS", { size: 16, bold: true, lineHeight: 18 });
+    writeText(`Sujet : ${DS_LOCK_TYPE}`, { size: 11, bold: true });
+    writeText(`Date export : ${new Date().toLocaleString("fr-FR")} | Élèves exportés : ${dsCopiesRows.length}`, { size: 10 });
+    y += 6;
 
     dsCopiesRows.forEach((row, idx) => {
+      if (idx > 0) newPage();
       const submissions = row.dsExam?.submissions || {};
       const submissionEntries = Object.entries(submissions).sort(([a], [b]) => a.localeCompare(b, "fr"));
-      writeBlock(`${idx + 1}. ${row.nomAffiche} (${row.classe || "-"} | ${row.lycee || "-"})`, 12, true, 16);
-      writeBlock(`Email : ${row.email || "non renseigne"}`);
-      writeBlock(`Statut anti-triche : ${row.dsExam?.forcedZero ? "DISQUALIFIE (sortie de page -> 0)" : "Conforme"}`, 11, true);
-      writeBlock(`Nombre de reponses rendues : ${submissionEntries.length}/3`);
+      const isDisqualified = Boolean(row.dsExam?.forcedZero);
+      const antiCheatLabel = isDisqualified ? "DISQUALIFIÉ (sortie de page => 0)" : "Conforme";
+
+      writeSectionTitle(`Copie ${idx + 1} - ${row.nomAffiche}`, isDisqualified ? "danger" : "info");
+      writeText(`Classe : ${row.classe || "-"} | Lycée : ${row.lycee || "-"}`, { size: 10 });
+      writeText(`Email : ${row.email || "non renseigné"}`, { size: 10 });
+      writeText(`Statut anti-triche : ${antiCheatLabel}`, { size: 10.5, bold: true, color: isDisqualified ? [153, 27, 27] : [22, 101, 52] });
+      writeText(`Exercices rendus : ${submissionEntries.length}/${DS_EXERCISES.length}`, { size: 10, bold: true });
+      y += 6;
+
       if (!submissionEntries.length) {
-        writeBlock("Aucune reponse enregistree.");
-      } else {
-        submissionEntries.forEach(([, submission], sIdx) => {
-          const exerciseId = submissionEntries[sIdx]?.[0];
-          const refExercise = DS_EXERCISE_BY_ID[exerciseId];
-          const exerciceBareme = (refExercise?.questions || []).reduce((sum, question) => sum + (Number(question.points) || 0), 0);
-          writeBlock(`Exercice ${sIdx + 1} : ${submission?.title || "Sans titre"} ${exerciceBareme ? `(/${exerciceBareme})` : ""}`, 11, true);
-          if (submission?.answer) {
-            writeBlock(`Heure de rendu : ${submission?.submittedAt ? new Date(submission.submittedAt).toLocaleString("fr-FR") : "non renseignee"}`);
-            writeBlock(`Reponse : ${submission?.answer || "(vide)"}`);
-          } else {
-            const questionEntries = Object.entries(submission?.questions || {});
-            if (!questionEntries.length) {
-              writeBlock("Aucune reponse enregistree pour cet exercice.");
-            } else {
-              questionEntries.forEach(([qId, qData], qIdx) => {
-                const refQuestion = refExercise?.questions?.find((question) => question.id === qId);
-                const points = Number(refQuestion?.points) || 0;
-                writeBlock(`Q${qIdx + 1} (${qId}) ${points ? `- Barème: /${points}` : ""}`, 10, true);
-                writeBlock(`Question : ${qData?.prompt || refQuestion?.prompt || "non renseignee"}`);
-                writeBlock(`Validation : ${qData?.validatedAt ? new Date(qData.validatedAt).toLocaleString("fr-FR") : "non renseignee"}`);
-                writeBlock(`Reponse : ${qData?.answer || "(vide)"}`);
-                writeBlock(`Correction attendue : ${refQuestion?.expected || "Correction non renseignée."}`);
-              });
-            }
-          }
-        });
+        writeText("Aucune réponse enregistrée pour cet élève.", { size: 10.5, color: [71, 85, 105] });
+        return;
       }
-      y += 8;
+
+      submissionEntries.forEach(([exerciseId, submission], sIdx) => {
+        const refExercise = DS_EXERCISE_BY_ID[exerciseId];
+        const exerciceBareme = (refExercise?.questions || []).reduce((sum, question) => sum + (Number(question.points) || 0), 0);
+        writeSectionTitle(
+          `Exercice ${sIdx + 1} - ${submission?.title || refExercise?.title || "Sans titre"} ${exerciceBareme ? `(barème /${exerciceBareme})` : ""}`
+        );
+
+        if (submission?.answer) {
+          writeText(`Heure de rendu : ${submission?.submittedAt ? new Date(submission.submittedAt).toLocaleString("fr-FR") : "non renseignée"}`, { size: 9.5, color: [71, 85, 105] });
+          writeText("Réponse élève :", { size: 10, bold: true });
+          writeText(submission?.answer || "(vide)", { size: 10, indent: 10 });
+          y += 4;
+          return;
+        }
+
+        const questionEntries = Object.entries(submission?.questions || {});
+        if (!questionEntries.length) {
+          writeText("Aucune réponse enregistrée pour cet exercice.", { size: 10.5, color: [71, 85, 105] });
+          y += 4;
+          return;
+        }
+
+        questionEntries.forEach(([qId, qData], qIdx) => {
+          const refQuestion = refExercise?.questions?.find((question) => question.id === qId);
+          const points = Number(refQuestion?.points) || 0;
+          writeText(`Q${qIdx + 1} ${points ? `- Barème /${points}` : ""}`, { size: 10.5, bold: true, color: [30, 64, 175] });
+          writeText(`Énoncé : ${qData?.prompt || refQuestion?.prompt || "non renseigné"}`, { size: 9.8, color: [30, 41, 59], indent: 8 });
+          writeText(`Réponse élève : ${qData?.answer || "(vide)"}`, { size: 10, indent: 8 });
+          writeText(`Correction attendue : ${refQuestion?.expected || "Correction non renseignée."}`, { size: 9.8, indent: 8, color: [71, 85, 105] });
+          writeText(`Validation : ${qData?.validatedAt ? new Date(qData.validatedAt).toLocaleString("fr-FR") : "non renseignée"}`, { size: 9.2, indent: 8, color: [100, 116, 139] });
+          y += 4;
+        });
+      });
     });
 
+    drawFooter();
     docPdf.save(`copies-ds-${DS_EXAM_ID}.pdf`);
   };
 
