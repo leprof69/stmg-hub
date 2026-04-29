@@ -17,6 +17,12 @@ const COLORS = {
 
 const FOCUS_PROGRESS_VERSION = 3;
 
+const STORY = {
+  title: "Fil rouge: moderniser le SI du PokéMart de Céladopole",
+  context:
+    "Tu es assistant de gestion. Le directeur veut mieux exploiter les données (ventes, stocks, clients) tout en respectant le RGPD.",
+};
+
 const EXERCISES = [
   {
     id: "focus-6-1",
@@ -27,8 +33,10 @@ const EXERCISES = [
     type: "QCM",
     mode: "qcm",
     xp: 40,
-    title: "Notion clé de la PokéData",
-    consigne: "Dans la Ligue Pokémon, le Big Data se caractérise principalement par :",
+    title: "Étape 1 - Comprendre le Big Data",
+    contexte: "Le PokéMart reçoit des données de caisse, de stock et de commandes en ligne toutes les minutes.",
+    objectif: "Identifier la bonne définition pour poser les bases du chapitre.",
+    consigne: "Choisis la proposition la plus juste.",
     options: [
       "Un faible volume de données",
       "Un volume, une variété et une vélocité élevés",
@@ -47,7 +55,9 @@ const EXERCISES = [
     type: "Vrai/Faux",
     mode: "truefalse",
     xp: 50,
-    title: "Open Data de Kanto: vrai ou faux",
+    title: "Étape 2 - Distinguer open data et données fermées",
+    contexte: "La mairie de Céladopole veut publier des données de transport autour du centre commercial.",
+    objectif: "Vérifier que tu distingues bien accès public et restrictions.",
     consigne: "Indique Vrai/Faux pour chaque affirmation.",
     statements: [
       { text: "L'open data permet la réutilisation des données publiques.", expected: true },
@@ -65,7 +75,9 @@ const EXERCISES = [
     type: "Texte à trous",
     mode: "fill",
     xp: 60,
-    title: "Chaîne de valeur du Pokédex",
+    title: "Étape 3 - Passer de la donnée à la décision",
+    contexte: "Le gérant reçoit des chiffres bruts mais ne sait pas toujours quoi en conclure.",
+    objectif: "Remettre dans l'ordre les notions du cours.",
     consigne: "Complète les 3 mots manquants.",
     fillSentence: "La ... brute du Pokédex devient une ... grâce au contexte, puis une ... utile à la décision.",
     blanks: ["donnée", "information", "connaissance"],
@@ -80,8 +92,10 @@ const EXERCISES = [
     type: "Classement",
     mode: "checklist",
     xp: 70,
-    title: "Données personnelles du dresseur",
-    consigne: "Dans l'application de la Ligue, coche uniquement les données personnelles.",
+    title: "Étape 4 - Trier les données personnelles",
+    contexte: "L'application fidélité du PokéMart collecte plusieurs informations à l'inscription.",
+    objectif: "Identifier ce qui est réellement une donnée personnelle.",
+    consigne: "Coche uniquement les données personnelles.",
     checklist: [
       { label: "Nom et prénom du client", expected: true },
       { label: "Numéro de ticket anonyme", expected: false },
@@ -100,9 +114,11 @@ const EXERCISES = [
     type: "Mini-cas",
     mode: "redaction",
     xp: 90,
-    title: "Cas PokéMart: erreur de saisie",
+    title: "Étape 5 - Diagnostiquer une erreur de SI",
+    contexte: "Une mauvaise référence produit a été saisie dans le logiciel de commande.",
+    objectif: "Mesurer les impacts opérationnels et proposer une correction réaliste.",
     consigne:
-      "Au PokéMart, une commande est saisie avec une mauvaise référence produit. Donne 3 conséquences possibles pour l'entreprise et propose une action corrective.",
+      "Donne 3 conséquences possibles pour le PokéMart puis propose 1 action corrective concrète.",
     correction:
       "Conséquences possibles: erreur logistique, litige client, coût supplémentaire. Action corrective: contrôle qualité de saisie et validation automatique au moment de la commande.",
     expectedKeywords: ["erreur", "commande", "client", "cout", "controle", "qualite", "saisie"],
@@ -117,9 +133,11 @@ const EXERCISES = [
     type: "Application RGPD",
     mode: "redaction",
     xp: 110,
-    title: "Principe de minimisation (RGPD)",
+    title: "Étape 6 - Appliquer le RGPD",
+    contexte: "Le site e-commerce du PokéMart veut ajouter de nouveaux champs au formulaire de commande.",
+    objectif: "Appliquer le principe de minimisation des données.",
     consigne:
-      "Pour la boutique en ligne Pokémon, explique quelles données sont strictement nécessaires pour traiter une commande et lesquelles ne le sont pas.",
+      "Distingue les données nécessaires (commande/livraison/paiement) des données non nécessaires, puis justifie brièvement.",
     correction:
       "Nécessaires: identité, adresse de livraison, paiement, contact. Non nécessaires: informations sans lien avec la finalité de la commande.",
     expectedKeywords: ["rgpd", "finalite", "necessaires", "commande", "livraison", "paiement", "minimisation"],
@@ -133,8 +151,10 @@ const EXERCISES = [
     type: "QCM expert",
     mode: "qcm",
     xp: 120,
-    title: "SI de la Ligue Pokémon",
-    consigne: "Quel enchaînement décrit correctement le rôle du système d'information de la Ligue ?",
+    title: "Étape 7 - Modéliser le SI",
+    contexte: "Tu dois expliquer simplement le fonctionnement du SI au nouveau manager du magasin.",
+    objectif: "Valider la chaîne fonctionnelle du SI.",
+    consigne: "Quel enchaînement décrit correctement le rôle du système d'information ?",
     options: [
       "Collecte des données -> stockage -> traitement -> diffusion",
       "Diffusion -> suppression -> stockage -> collecte",
@@ -153,9 +173,11 @@ const EXERCISES = [
     type: "Synthèse",
     mode: "redaction",
     xp: 150,
-    title: "Bilan du cahier de vacances Pokémon",
+    title: "Étape 8 - Synthèse finale (cahier de vacances)",
+    contexte: "Le directeur te demande un mini-rapport de fin de stage.",
+    objectif: "Construire une réponse structurée et cohérente de niveau STMG.",
     consigne:
-      "Rédige une synthèse de 12 à 15 lignes: dans l'univers Pokémon, comment la donnée devient une ressource stratégique, avec limites de qualité, d'accès et de conformité RGPD.",
+      "Rédige une synthèse de 12 à 15 lignes expliquant comment la donnée devient une ressource stratégique au PokéMart, avec les limites de qualité, d'accès et de conformité RGPD.",
     correction:
       "La synthèse doit relier Big Data, SI, transformation en connaissance, décision managériale et contraintes juridiques dans le cas de la Ligue/PokéMart.",
     expectedKeywords: ["big data", "si", "donnee", "information", "connaissance", "decision", "qualite", "rgpd"],
@@ -167,7 +189,7 @@ const CHAPTER_CONTENT = {
   "Chapitre 6": {
     heroTitle: "☀️ Cahier de vacances — SDGN 1ère",
     heroText:
-      "Activités interactives type manuel, version Pokémon: QCM, vrai/faux, texte à trous, cas pratique et synthèse finale.",
+      "Parcours guidé en 8 activités reliées entre elles: tu accompagnes le PokéMart de Céladopole pour transformer ses données en décisions utiles.",
     notions: "Notions: donnée, information, SI, Big Data, open data, RGPD",
   },
 };
@@ -234,7 +256,7 @@ const evaluateInteractive = (exercise, state) => {
   return evaluateRedaction(exercise, state.text || "");
 };
 
-function FocusCard({ exercise, claim, onClaimXP }) {
+function FocusCard({ exercise, claim, onClaimXP, index, total }) {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [locked, setLocked] = useState(false);
@@ -276,12 +298,25 @@ function FocusCard({ exercise, claim, onClaimXP }) {
   return (
     <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 18, padding: 18, boxShadow: "0 6px 24px rgba(15,23,42,0.05)" }}>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 10 }}>
+        <span style={{ borderRadius: 999, padding: "4px 10px", background: "#EEF2FF", color: COLORS.violet, fontWeight: 700, fontSize: 12 }}>Activité {index + 1}/{total}</span>
         <span style={{ borderRadius: 999, padding: "4px 10px", background: "#DBEAFE", color: "#1D4ED8", fontWeight: 700, fontSize: 12 }}>Niveau {exercise.difficulty}</span>
         <span style={{ borderRadius: 999, padding: "4px 10px", background: "#F3E8FF", color: "#6D28D9", fontWeight: 700, fontSize: 12 }}>{exercise.type}</span>
         <span style={{ borderRadius: 999, padding: "4px 10px", background: "#DCFCE7", color: "#166534", fontWeight: 700, fontSize: 12 }}>+{exercise.xp} XP</span>
       </div>
       <h3 style={{ margin: "0 0 8px", color: COLORS.text }}>{exercise.title}</h3>
-      <p style={{ margin: "0 0 10px", color: COLORS.muted, lineHeight: 1.5 }}>{exercise.consigne}</p>
+      {exercise.contexte && (
+        <p style={{ margin: "0 0 6px", color: "#334155", lineHeight: 1.5 }}>
+          <strong>Contexte :</strong> {exercise.contexte}
+        </p>
+      )}
+      {exercise.objectif && (
+        <p style={{ margin: "0 0 6px", color: "#0F766E", lineHeight: 1.5 }}>
+          <strong>Objectif :</strong> {exercise.objectif}
+        </p>
+      )}
+      <p style={{ margin: "0 0 10px", color: COLORS.muted, lineHeight: 1.5 }}>
+        <strong>Consigne :</strong> {exercise.consigne}
+      </p>
 
       {exercise.mode === "qcm" && (
         <div style={{ display: "grid", gap: 8 }}>
@@ -442,6 +477,10 @@ export default function Focus({ onXPGagne }) {
         <section style={{ background: "linear-gradient(135deg, #0B2447, #1D4ED8)", borderRadius: 22, padding: 22, color: "white" }}>
           <h1 style={{ margin: "0 0 6px", fontSize: "2rem" }}>{chapterUI.heroTitle}</h1>
           <p style={{ margin: "0 0 10px", color: "#DBEAFE", lineHeight: 1.5 }}>{chapterUI.heroText}</p>
+          <div style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(191,219,254,0.45)", borderRadius: 12, padding: "10px 12px", marginBottom: 10 }}>
+            <p style={{ margin: "0 0 4px", fontWeight: 800, color: "#E0F2FE" }}>{STORY.title}</p>
+            <p style={{ margin: 0, color: "#BFDBFE", fontSize: 14 }}>{STORY.context}</p>
+          </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <span style={{ background: "rgba(255,255,255,0.16)", borderRadius: 999, padding: "6px 12px", fontWeight: 700 }}>{chapterUI.notions}</span>
             <span style={{ background: "rgba(16,185,129,0.25)", borderRadius: 999, padding: "6px 12px", fontWeight: 700 }}>XP potentiel: +{xpPotential}</span>
@@ -459,8 +498,8 @@ export default function Focus({ onXPGagne }) {
         </section>
 
         <section style={{ display: "grid", gap: 10 }}>
-          {exercicesFiltres.map((exercise) => (
-            <FocusCard key={exercise.id} exercise={exercise} claim={claims[exercise.id]} onClaimXP={handleClaimXP} />
+          {exercicesFiltres.map((exercise, index) => (
+            <FocusCard key={exercise.id} exercise={exercise} claim={claims[exercise.id]} onClaimXP={handleClaimXP} index={index} total={exercicesFiltres.length} />
           ))}
         </section>
       </div>
