@@ -47,18 +47,6 @@ const PACKS = [
   },
 ];
 
-const PACK_SPECIAL_1STMG2 = {
-  id: "special_1stmg2",
-  nom: "Pack 1STMG2",
-  emoji: "🔥",
-  cout: 300,
-  nbCartes: 3,
-  couleur: "#DB2777",
-  gradient: "linear-gradient(135deg, #DB2777, #2563EB)",
-  description: "Édition spéciale 1STMG2 • 3 cartes • 300 XP",
-  prob: { commune: 0.88, peu_commune: 0.10, rare: 0.02, epique: 0, legendaire: 0, ultra_rare: 0 },
-};
-
 const getPacksForCollection = (collection) => {
   if (isSpecialCollection(collection)) return [];
   return PACKS.filter((p) => p.id !== "mystere");
