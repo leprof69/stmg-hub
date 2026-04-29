@@ -18,12 +18,12 @@ const familleEmojis = {
   Challenger: "⚡", Explorateur: "🔬", Influenceur: "🔥",
 };
 
-const niveauNom = (xp) => {
-  if (xp < 100) return { nom: "Recrue", emoji: "🌱" };
-  if (xp < 300) return { nom: "Apprenti", emoji: "⚡" };
-  if (xp < 600) return { nom: "Guerrier", emoji: "⚔️" };
-  if (xp < 1000) return { nom: "Champion", emoji: "🏆" };
-  if (xp < 2000) return { nom: "Légende", emoji: "👑" };
+const niveauNom = (score) => {
+  if (score < 100) return { nom: "Recrue", emoji: "🌱" };
+  if (score < 300) return { nom: "Apprenti", emoji: "⚡" };
+  if (score < 600) return { nom: "Guerrier", emoji: "⚔️" };
+  if (score < 1000) return { nom: "Champion", emoji: "🏆" };
+  if (score < 2000) return { nom: "Légende", emoji: "👑" };
   return { nom: "Dieu du STMG", emoji: "🌟" };
 };
 
@@ -72,10 +72,10 @@ export default function Classement({ profil }) {
       const snapshot = await getDocs(collection(db, "users"));
       const users = snapshot.docs.map(d => ({ id: d.id, ...d.data() })).filter(u => u.role !== "admin");
 
-      // XP
+      // Prestige
       const elevesClasses = users
-        .filter(u => u.prenom && u.xp !== undefined)
-        .sort((a, b) => (b.xp || 0) - (a.xp || 0))
+        .filter(u => u.prenom)
+        .sort((a, b) => (b.prestige || 0) - (a.prestige || 0))
         .slice(0, 50);
       setClassementEleves(elevesClasses);
 
@@ -124,7 +124,7 @@ export default function Classement({ profil }) {
   const monRangFamille = classementFamilles.findIndex(f => f.nom === profil?.famille) + 1;
 
   const onglets = [
-    { id: "xp", label: "⚡ XP", couleur: COLORS.S },
+    { id: "xp", label: "👑 Prestige", couleur: "#A855F7" },
     { id: "collection", label: "🃏 Collection", couleur: "#DB2777" },
     { id: "lycees", label: "🏫 Lycées", couleur: COLORS.M },
     { id: "familles", label: "🧬 Familles", couleur: COLORS.T },
@@ -146,7 +146,7 @@ export default function Classement({ profil }) {
           {/* MES RANGS */}
           <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "16px" }}>
             {[
-              { label: "XP", rang: monRangEleve, couleur: COLORS.S },
+              { label: "Prestige", rang: monRangEleve, couleur: "#A855F7" },
               { label: "Collection", rang: monRangCollection, couleur: "#DB2777" },
               { label: "Lycée", rang: monRangLycee, couleur: COLORS.M },
               { label: "Famille", rang: monRangFamille, couleur: COLORS.T },
@@ -186,21 +186,24 @@ export default function Classement({ profil }) {
           </div>
         ) : (
           <>
-            {/* CLASSEMENT XP */}
+            {/* CLASSEMENT PRESTIGE */}
             {onglet === "xp" && (
               <div style={{ background: "white", borderRadius: "24px", padding: "24px", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
-                <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: COLORS.S, marginBottom: "20px" }}>⚡ Top Élèves — XP</h2>
+                <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: "#A855F7", marginBottom: "8px" }}>👑 Top Élèves - Prestige</h2>
+                <p style={{ color: "#9CA3AF", fontSize: "0.82rem", marginBottom: "20px" }}>
+                  Le prestige augmente quand l'XP est depensee dans la boutique.
+                </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   {classementEleves.map((eleve, i) => {
                     const rang = i + 1;
                     const estMoi = eleve.id === profil?.id;
-                    const niveau = niveauNom(eleve.xp || 0);
+                    const niveau = niveauNom(eleve.prestige || 0);
                     const couleurFamille = familleColors[eleve.famille] || COLORS.S;
                     return (
                       <div key={i} style={{
-                        background: estMoi ? COLORS.S + "10" : "#F8FAFC",
+                        background: estMoi ? "#A855F710" : "#F8FAFC",
                         borderRadius: "16px", padding: "14px 16px",
-                        border: estMoi ? `2px solid ${COLORS.S}` : "2px solid transparent",
+                        border: estMoi ? "2px solid #A855F7" : "2px solid transparent",
                         display: "flex", alignItems: "center", gap: "12px",
                       }}>
                         <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: rang <= 3 ? "1.6rem" : "1rem", width: "40px", textAlign: "center", color: "#9CA3AF" }}>
@@ -209,7 +212,7 @@ export default function Classement({ profil }) {
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
                             <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1rem", margin: 0 }}>{eleve.prenom}</p>
-                            {estMoi && <span style={{ background: COLORS.S, color: "white", fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.7rem" }}>Moi</span>}
+                            {estMoi && <span style={{ background: "#A855F7", color: "white", fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.7rem" }}>Moi</span>}
                             <span style={{ background: couleurFamille + "20", color: couleurFamille, fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.7rem" }}>
                               {familleEmojis[eleve.famille]} {eleve.famille}
                             </span>
@@ -218,8 +221,8 @@ export default function Classement({ profil }) {
                             {eleve.lycee} • {niveau.emoji} {niveau.nom}
                           </p>
                         </div>
-                        <div style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.S, fontSize: "1.1rem", flexShrink: 0 }}>
-                          {(eleve.xp || 0).toLocaleString()} XP
+                        <div style={{ fontFamily: "'Fredoka One', cursive", color: "#A855F7", fontSize: "1.1rem", flexShrink: 0 }}>
+                          {(eleve.prestige || 0).toLocaleString()} prestige
                         </div>
                       </div>
                     );

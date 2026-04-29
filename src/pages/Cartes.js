@@ -5,6 +5,11 @@ import { COLLECTIONS } from "../data/collections";
 
 const getCollectionMatiere = (collection) => collection.matiere || "SDGN";
 const getCollectionTheme = (collection) => collection.theme || "Sans thème";
+const PRESTIGE_XP_RATIO = 10;
+const SPECIAL_COLLECTION_IDS = new Set(["special_drop1"]);
+
+const isSpecialCollection = (collection) => SPECIAL_COLLECTION_IDS.has(collection?.id);
+const getNonSpecialCollections = (collections = []) => collections.filter((collection) => !isSpecialCollection(collection));
 
 const RARETE_CONFIG = {
   commune:     { label: "Commune",     couleur: "#9CA3AF", bg: "#F3F4F6", emoji: "⚪", bonus: 0 },
@@ -55,7 +60,7 @@ const PACK_SPECIAL_1STMG2 = {
 };
 
 const getPacksForCollection = (collection) => {
-  if (collection?.id === "special_drop1") return [PACK_SPECIAL_1STMG2];
+  if (isSpecialCollection(collection)) return [];
   return PACKS.filter((p) => p.id !== "mystere");
 };
 
@@ -303,6 +308,10 @@ export default function Cartes({ profil, onXPGagne }) {
   };
 
   const ouvrirPack = async (pack, collection) => {
+    if (isSpecialCollection(collection)) {
+      afficherMessage("Le drop 1STMG2 est terminé.", "error");
+      return;
+    }
     if (pack.id !== "mystere" && (profil?.xp || 0) < pack.cout) {
       afficherMessage(`Il te faut ${pack.cout} XP pour ce pack !`, "error");
       return;
@@ -319,7 +328,16 @@ export default function Cartes({ profil, onXPGagne }) {
       const cartes = { ...(data.cartes || {}) };
       nouvelles.forEach(c => { cartes[c.id] = (cartes[c.id] || 0) + 1; });
 
-      const updates = { cartes, xp: (data.xp || 0) - pack.cout };
+      const xpDepenseeActuelle = data.xpDepensee || 0;
+      const nouvelleXpDepensee = xpDepenseeActuelle + pack.cout;
+      const prestigeActuel = data.prestige || 0;
+      const gainPrestige = Math.floor(nouvelleXpDepensee / PRESTIGE_XP_RATIO) - Math.floor(xpDepenseeActuelle / PRESTIGE_XP_RATIO);
+      const updates = {
+        cartes,
+        xp: (data.xp || 0) - pack.cout,
+        xpDepensee: nouvelleXpDepensee,
+        prestige: prestigeActuel + Math.max(0, gainPrestige),
+      };
       if (pack.id === "mystere") {
         updates.dernierPackMystere = getDebutSemaine();
         setPackMystereDisponible(false);
@@ -335,6 +353,9 @@ export default function Cartes({ profil, onXPGagne }) {
       await updateDoc(doc(db, "users", auth.currentUser.uid), updates);
       setMaCollection(cartes);
       setCartesAnimation(nouvelles);
+      if (gainPrestige > 0) {
+        afficherMessage(`✨ +${gainPrestige} prestige (grace a ${pack.cout} XP depenses)`);
+      }
       if (onXPGagne) onXPGagne();
     } catch (err) {
       afficherMessage("Erreur lors de l'ouverture du pack.", "error");
@@ -347,7 +368,11 @@ export default function Cartes({ profil, onXPGagne }) {
     try {
       const snap = await getDoc(doc(db, "users", auth.currentUser.uid));
       const data = snap.data();
-      const toutesCartes = COLLECTIONS.flatMap(c => c.cartes);
+      const toutesCartes = getNonSpecialCollections(COLLECTIONS).flatMap(c => c.cartes);
+      if (!toutesCartes.length) {
+        afficherMessage("Aucune carte disponible pour la carte du lundi.", "error");
+        return;
+      }
       const carte = toutesCartes[Math.floor(Math.random() * toutesCartes.length)];
       const cartes = { ...(data.cartes || {}) };
       cartes[carte.id] = (cartes[carte.id] || 0) + 1;
@@ -402,6 +427,10 @@ export default function Cartes({ profil, onXPGagne }) {
     ),
     [matiereSelectionnee, themeSelectionne]
   );
+  const collectionsFiltreesBoutique = useMemo(
+    () => getNonSpecialCollections(collectionsFiltrees),
+    [collectionsFiltrees]
+  );
 
   useEffect(() => {
     if (!themesDisponibles.includes(themeSelectionne)) {
@@ -452,6 +481,7 @@ export default function Cartes({ profil, onXPGagne }) {
                 { label: `${totalCartes} cartes`, bg: "#0284C7", emoji: "🃏" },
                 { label: `+${bonusTotal.toFixed(1)} pts`, bg: "#F59E0B", emoji: "⭐" },
                 { label: `${profil?.xp || 0} XP`, bg: "#3B82F6", emoji: "⚡" },
+                { label: `${profil?.prestige || 0} prestige`, bg: "#A855F7", emoji: "👑" },
               ].map((stat, i) => (
                 <div key={i} style={{ background: stat.bg + "30", border: `1px solid ${stat.bg}50`, borderRadius: "14px", padding: "8px 18px", fontFamily: "'Fredoka One', cursive", color: "white", fontSize: "0.95rem" }}>{stat.emoji} {stat.label}</div>
               ))}
@@ -488,8 +518,12 @@ export default function Cartes({ profil, onXPGagne }) {
             </div>
             <button
               onClick={() => {
-                const base = collectionsFiltrees.length ? collectionsFiltrees : COLLECTIONS;
-                ouvrirPack(PACKS[3], base[Math.floor(Math.random() * base.length)]);
+                const baseFiltre = collectionsFiltreesBoutique.length ? collectionsFiltreesBoutique : getNonSpecialCollections(COLLECTIONS);
+                if (!baseFiltre.length) {
+                  afficherMessage("Le drop 1STMG2 est terminé.", "error");
+                  return;
+                }
+                ouvrirPack(PACKS[3], baseFiltre[Math.floor(Math.random() * baseFiltre.length)]);
               }}
               style={{ background: "white", color: "#EC4899", border: "none", fontFamily: "'Fredoka One', cursive", fontSize: "1rem", padding: "12px 24px", borderRadius: "14px", cursor: "pointer" }}
             >
@@ -571,12 +605,12 @@ export default function Cartes({ profil, onXPGagne }) {
 
         {onglet === "boutique" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-            {collectionsFiltrees.length === 0 && (
+            {collectionsFiltreesBoutique.length === 0 && (
               <div style={{ textAlign: "center", padding: "50px 20px", background: "white", borderRadius: "20px", color: "#9CA3AF", fontFamily: "'Fredoka One', cursive" }}>
                 Aucun drop disponible avec ces filtres.
               </div>
             )}
-            {collectionsFiltrees.map(col => {
+            {collectionsFiltreesBoutique.map(col => {
               const obtenues = col.cartes.filter(c => maCollection[c.id] > 0).length;
               return (
                 <div key={col.id} style={{ background: "white", borderRadius: "24px", overflow: "hidden", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
