@@ -18,430 +18,238 @@ const FOCUS_PROGRESS_VERSION = 2;
 
 const EXERCISES = [
   {
-    id: "focus-13-1",
-    matiere: "SDGN",
-    theme: "Thème 3",
-    difficulty: 1,
-    type: "Définition",
-    xp: 40,
-    title: "Définir la performance",
-    consigne: "Définis la performance dans une organisation et cite les 3 étapes de la démarche de performance.",
-    correction:
-      "La performance correspond à l’atteinte d’objectifs prédéfinis. La démarche suit 3 étapes : définition des objectifs, détermination/utilisation des moyens, atteinte du résultat.",
-    expectedKeywords: ["performance", "objectifs", "definition", "moyens", "resultat", "atteinte"],
-    expectedNumbers: [3],
-  },
-  {
-    id: "focus-13-2",
-    matiere: "SDGN",
-    theme: "Thème 3",
-    difficulty: 2,
-    type: "Définition",
-    xp: 55,
-    title: "Rentabilité vs profitabilité",
-    consigne: "Explique la différence entre rentabilité et profitabilité en une réponse structurée.",
-    correction:
-      "La rentabilité mesure la capacité à générer des profits à partir des moyens investis (capitaux). La profitabilité mesure la capacité à dégager du profit à partir de l’activité (souvent le chiffre d’affaires).",
-    expectedKeywords: ["rentabilite", "profitabilite", "profits", "capitaux", "activite", "chiffre"],
-  },
-  {
-    id: "focus-13-3",
-    matiere: "SDGN",
-    theme: "Thème 3",
-    difficulty: 3,
-    type: "Analyse",
-    xp: 65,
-    title: "Objectifs bien formulés",
-    consigne: "Pourquoi des objectifs doivent-ils être compréhensibles, mesurables, réalisables et limités dans le temps ?",
-    correction:
-      "Des objectifs clairs permettent aux acteurs d’agir correctement. Ils doivent être mesurables pour vérifier l’atteinte, réalisables pour rester motivants, et limités dans le temps pour piloter l’action.",
-    expectedKeywords: ["comprehensibles", "mesurables", "realisables", "temps", "indicateurs", "atteinte"],
-  },
-  {
-    id: "focus-13-4",
-    matiere: "SDGN",
-    theme: "Thème 3",
-    difficulty: 4,
-    type: "Calcul",
-    xp: 80,
-    title: "Évolution du chiffre d’affaires",
-    consigne:
-      "Une entreprise passe de 180 000 € de CA à 225 000 €. Calcule l’évolution en valeur et en pourcentage, puis interprète.",
-    correction:
-      "Évolution en valeur = 225 000 - 180 000 = +45 000 €. Évolution en % = 45 000 / 180 000 = 25 %. L’entreprise améliore sa performance commerciale.",
-    expectedKeywords: ["evolution", "valeur", "pourcentage", "performance", "commerciale", "analyse", "interprete"],
-    expectedNumbers: [45000, 25],
-  },
-  {
-    id: "focus-13-5",
-    matiere: "SDGN",
-    theme: "Thème 3",
-    difficulty: 5,
-    type: "Calcul",
-    xp: 90,
-    title: "Part de marché",
-    consigne:
-      "Le CA de l’entreprise est 300 000 €. Le CA total du marché est 1 200 000 €. Calcule la part de marché puis analyse ce que cela signifie face aux concurrents.",
-    correction:
-      "Part de marché = 300 000 / 1 200 000 = 0,25 soit 25 %. L’entreprise réalise un quart des ventes du marché.",
-    expectedKeywords: ["part", "marche", "pourcentage", "concurrents", "ventes", "analyse", "interprete"],
-    expectedNumbers: [25],
-  },
-  {
-    id: "focus-13-6",
-    matiere: "SDGN",
-    theme: "Thème 3",
-    difficulty: 6,
-    type: "Calcul",
-    xp: 100,
-    title: "Rentabilité financière",
-    consigne:
-      "Bénéfice net = 48 000 €. Capitaux propres = 240 000 €. Calcule la rentabilité (en %) et interprète le résultat.",
-    correction:
-      "Rentabilité = bénéfice net / capitaux propres = 48 000 / 240 000 = 0,20 soit 20 %. Chaque euro investi en capitaux propres génère 0,20 € de bénéfice.",
-    expectedKeywords: ["rentabilite", "benefice", "capitaux", "pourcentage", "interprete", "analyse"],
-    expectedNumbers: [20],
-  },
-  {
-    id: "focus-13-6b",
-    matiere: "SDGN",
-    theme: "Thème 3",
-    difficulty: 7,
-    type: "Calcul",
-    xp: 115,
-    title: "Profitabilité de l’activité",
-    consigne:
-      "Résultat net = 36 000 € et chiffre d’affaires = 450 000 €. Calcule la profitabilité (en %) puis analyse ce résultat pour l’activité.",
-    correction:
-      "Profitabilité = résultat net / chiffre d’affaires = 36 000 / 450 000 = 0,08 soit 8 %. L’organisation transforme 8 % de son CA en résultat net, ce qui mesure l’efficacité de l’activité.",
-    expectedKeywords: ["profitabilite", "resultat", "chiffre", "affaires", "pourcentage", "analyse", "activite"],
-    expectedNumbers: [8],
-  },
-  {
-    id: "focus-13-6c",
-    matiere: "SDGN",
-    theme: "Thème 3",
-    difficulty: 8,
-    type: "Calcul",
-    xp: 125,
-    title: "Comparer rentabilité et profitabilité",
-    consigne:
-      "Entreprise A : bénéfice 50 000 €, capitaux 250 000 €, CA 1 000 000 €. Calcule rentabilité et profitabilité, puis analyse l’écart entre les deux indicateurs.",
-    correction:
-      "Rentabilité = 50 000 / 250 000 = 20 %. Profitabilité = 50 000 / 1 000 000 = 5 %. L’entreprise est rentable pour ses capitaux mais sa marge sur activité reste limitée.",
-    expectedKeywords: ["rentabilite", "profitabilite", "capitaux", "activite", "ecart", "analyse"],
-    expectedNumbers: [20, 5],
-  },
-  {
-    id: "focus-13-7",
-    matiere: "SDGN",
-    theme: "Thème 3",
-    difficulty: 9,
-    type: "Tableau de bord",
-    xp: 120,
-    title: "Construire un mini tableau de bord",
-    consigne:
-      "Propose un mini tableau de bord (5 indicateurs) pour suivre la performance commerciale et financière d’une organisation.",
-    correction:
-      "Exemples pertinents : chiffre d’affaires, évolution du CA, part de marché, taux de fidélité, marge/profit, rentabilité. Il faut préciser l’unité et la périodicité.",
-    expectedKeywords: ["tableau", "bord", "indicateurs", "chiffre", "part", "fidelite", "rentabilite", "periodicite"],
-    expectedNumbers: [5],
-  },
-  {
-    id: "focus-13-8",
-    matiere: "SDGN",
-    theme: "Thème 3",
-    difficulty: 10,
-    type: "Comparaison",
-    xp: 140,
-    title: "Comparer les performances dans le temps",
-    consigne:
-      "Année N : CA 520 000 €, part de marché 18 %, rentabilité 12 %. Année N+1 : CA 560 000 €, part de marché 17 %, rentabilité 10 %. Analyse la performance globale.",
-    correction:
-      "Le CA progresse (+40 000 €), mais part de marché et rentabilité reculent. La performance est contrastée : volume en hausse, efficacité concurrentielle et financière en baisse.",
-    expectedKeywords: ["comparaison", "temps", "hausse", "baisse", "part", "rentabilite", "globale", "analyse"],
-    expectedNumbers: [40000],
-  },
-  {
-    id: "focus-13-9",
-    matiere: "SDGN",
-    theme: "Thème 3",
-    difficulty: 11,
-    type: "Calcul",
-    xp: 150,
-    title: "Profitabilité année N",
-    consigne:
-      "Une organisation réalise un résultat net de 28 000 € pour un chiffre d’affaires de 350 000 €. Calcule la profitabilité (en %) puis analyse ce que cela indique.",
-    correction:
-      "Profitabilité = résultat net / chiffre d’affaires = 28 000 / 350 000 = 0,08 soit 8 %. L’activité transforme 8 % de son CA en résultat net.",
-    expectedKeywords: ["profitabilite", "resultat", "chiffre", "affaires", "analyse", "activite", "pourcentage"],
-    expectedNumbers: [8],
-  },
-  {
-    id: "focus-13-10",
-    matiere: "SDGN",
-    theme: "Thème 3",
-    difficulty: 12,
-    type: "Calcul",
-    xp: 160,
-    title: "Rentabilité année N",
-    consigne:
-      "Bénéfice net = 54 000 €, capitaux propres = 300 000 €. Calcule la rentabilité (en %) puis interprète le résultat pour les investisseurs.",
-    correction:
-      "Rentabilité = 54 000 / 300 000 = 0,18 soit 18 %. Les capitaux propres dégagent 18 % de bénéfice sur la période.",
-    expectedKeywords: ["rentabilite", "benefice", "capitaux", "investisseurs", "interprete", "analyse", "pourcentage"],
-    expectedNumbers: [18],
-  },
-  {
-    id: "focus-13-11",
-    matiere: "SDGN",
-    theme: "Thème 3",
-    difficulty: 13,
-    type: "Comparaison",
-    xp: 170,
-    title: "Comparer 2 entreprises",
-    consigne:
-      "Entreprise A : bénéfice 40 000 €, capitaux 200 000 €, CA 800 000 €. Entreprise B : bénéfice 45 000 €, capitaux 300 000 €, CA 600 000 €. Compare rentabilité et profitabilité puis conclus.",
-    correction:
-      "A : rentabilité 20 %, profitabilité 5 %. B : rentabilité 15 %, profitabilité 7,5 %. A rémunère mieux les capitaux, B transforme mieux son activité en profit.",
-    expectedKeywords: ["comparer", "rentabilite", "profitabilite", "conclusion", "capitaux", "activite", "analyse"],
-    expectedNumbers: [20, 5, 15, 7.5],
-  },
-  {
-    id: "focus-13-12",
-    matiere: "SDGN",
-    theme: "Thème 3",
-    difficulty: 14,
-    type: "Calcul",
-    xp: 180,
-    title: "Évolution de la rentabilité",
-    consigne:
-      "Rentabilité N = 10 % et rentabilité N+1 = 13 %. Calcule l’évolution en points et en pourcentage, puis explique le sens managérial.",
-    correction:
-      "Évolution en points = +3 points. Évolution relative = 3 / 10 = +30 %. L’organisation améliore sa capacité à rémunérer les capitaux investis.",
-    expectedKeywords: ["evolution", "points", "pourcentage", "rentabilite", "analyse", "managerial"],
-    expectedNumbers: [3, 30],
-  },
-  {
-    id: "focus-13-13",
-    matiere: "SDGN",
-    theme: "Thème 3",
-    difficulty: 15,
-    type: "Tableau de bord",
-    xp: 200,
-    title: "Tableau de bord final chap 13",
-    consigne:
-      "Conçois un tableau de bord final (au moins 6 indicateurs) pour piloter performance commerciale ET financière, avec périodicité et seuil d’alerte.",
-    correction:
-      "Exemples attendus : CA, évolution CA, part de marché, taux de fidélité, rentabilité, profitabilité. Ajouter unité, fréquence (mensuel/trimestriel) et seuil d’alerte.",
-    expectedKeywords: ["tableau", "bord", "indicateurs", "commerciale", "financiere", "periodicite", "seuil", "alerte"],
-    expectedNumbers: [6],
-  },
-  {
     id: "focus-6-1",
     matiere: "SDGN",
     theme: "Thème 2",
+    chapter: "Chapitre 6",
     difficulty: 1,
-    type: "Définition",
+    type: "Repérage",
     xp: 40,
-    title: "Donnée, information, connaissance",
-    consigne: "Définis les notions de donnée, information et connaissance.",
+    title: "Radar des données Pokémon",
+    consigne:
+      "Repère 6 sources de masses de données dans l'univers Pokémon (ex: combats en ligne, mails, réseaux, achats) et explique pourquoi elles alimentent le Big Data.",
     correction:
-      "La donnée est un élément brut. L’information est une donnée traitée et contextualisée. La connaissance est l’information interprétée et mobilisable pour agir.",
-    expectedKeywords: ["donnee", "information", "connaissance", "brut", "contextualisee", "interpretee"],
+      "Des flux comme combats, objets achetés, messages, géolocalisation et interactions sociales génèrent un volume élevé et continu de données: c'est une base Big Data.",
+    expectedKeywords: ["big", "data", "volume", "donnees", "reseaux", "mails", "achats", "combats"],
+    expectedNumbers: [6],
   },
   {
     id: "focus-6-2",
     matiere: "SDGN",
     theme: "Thème 2",
+    chapter: "Chapitre 6",
     difficulty: 2,
-    type: "Définition",
+    type: "Notions",
     xp: 50,
-    title: "Définir le Big Data",
-    consigne: "Explique ce qu’est le Big Data et pourquoi il représente un enjeu pour les organisations.",
+    title: "Les 5V de la PokéLigue",
+    consigne: "Définis les 5V du Big Data et donne un exemple Pokémon pour chacun.",
     correction:
-      "Le Big Data correspond à des masses très importantes de données numériques. L’enjeu principal est de pouvoir les collecter, trier et exploiter pour piloter l’activité et la décision.",
-    expectedKeywords: ["big", "data", "masses", "donnees", "enjeu", "organisation", "decision"],
+      "Volume, vélocité, variété, véracité et valeur: ces 5 dimensions décrivent la nature du Big Data et son potentiel pour la décision.",
+    expectedKeywords: ["volume", "velocite", "variete", "veracite", "valeur", "big", "data"],
+    expectedNumbers: [5],
   },
   {
     id: "focus-6-3",
     matiere: "SDGN",
     theme: "Thème 2",
+    chapter: "Chapitre 6",
     difficulty: 3,
-    type: "Notions",
+    type: "Open Data",
     xp: 60,
-    title: "Les 5V du Big Data",
-    consigne: "Cite et définis les 5V du Big Data.",
+    title: "Open Data de Kanto",
+    consigne:
+      "Explique ce qu'est l'open data et cite 3 caractéristiques essentielles à respecter pour une ville Pokémon.",
     correction:
-      "Volume (quantité), Vélocité (vitesse de traitement), Variété (hétérogénéité), Véracité (fiabilité), Valeur (utilité/retour).",
-    expectedKeywords: ["volume", "velocite", "variete", "veracite", "valeur", "5v"],
-    expectedNumbers: [5],
+      "L'open data correspond à des données mises à disposition publiquement: accessibles, réutilisables et diffusables.",
+    expectedKeywords: ["open", "data", "accessible", "reutilisable", "diffusion", "public"],
+    expectedNumbers: [3],
   },
   {
     id: "focus-6-4",
     matiere: "SDGN",
     theme: "Thème 2",
+    chapter: "Chapitre 6",
     difficulty: 4,
-    type: "Définition",
+    type: "Réglementation",
     xp: 70,
-    title: "Open Data",
-    consigne: "Définis l’open data et donne deux caractéristiques essentielles.",
+    title: "Règle des 3 500 habitants",
+    consigne:
+      "Quelle obligation concerne les collectivités de plus de 3 500 habitants en open data ? Réponds en prenant l'exemple de Safrania.",
     correction:
-      "L’open data regroupe des données accessibles à tous, réutilisables et redistribuables sans restriction forte. Les caractéristiques attendues : accès public, réutilisation, diffusion.",
-    expectedKeywords: ["open", "data", "accessible", "reutilisable", "distribuable", "public"],
-    expectedNumbers: [2],
+      "La collectivité doit publier ses données sur Internet pour assurer transparence et réutilisation.",
+    expectedKeywords: ["collectivites", "3500", "publier", "internet", "reutilisation", "transparence"],
+    expectedNumbers: [3500],
   },
   {
     id: "focus-6-5",
     matiere: "SDGN",
     theme: "Thème 2",
+    chapter: "Chapitre 6",
     difficulty: 5,
-    type: "Réglementation",
+    type: "Définition",
     xp: 80,
-    title: "Loi République numérique",
-    consigne: "Quelle obligation d’open data concerne les collectivités de plus de 3 500 habitants ?",
+    title: "Donnée personnelle dresseur",
+    consigne:
+      "Définis une donnée personnelle et donne 4 exemples de données personnelles dans une appli Pokémon.",
     correction:
-      "Elles doivent publier leurs données sur Internet pour les rendre visibles et réutilisables, afin d’améliorer la transparence de l’action publique.",
-    expectedKeywords: ["collectivites", "3500", "publier", "donnees", "internet", "reutilisables", "transparence"],
-    expectedNumbers: [3500],
+      "Une donnée personnelle identifie directement ou indirectement une personne (nom, numéro, photo, mail, etc.).",
+    expectedKeywords: ["donnee", "personnelle", "identifier", "nom", "photo", "mail", "numero"],
+    expectedNumbers: [4],
   },
   {
     id: "focus-6-6",
     matiere: "SDGN",
     theme: "Thème 2",
+    chapter: "Chapitre 6",
     difficulty: 6,
-    type: "Définition",
+    type: "Gestion",
     xp: 90,
-    title: "Données personnelles",
-    consigne: "Définis une donnée personnelle et explique la contrainte principale pour son utilisation.",
+    title: "Ticket de caisse PokéMart",
+    consigne:
+      "À partir d'un ticket de caisse Pokémon, identifie les données utiles pour faire un bilan de journée et propose une décision de gestion.",
     correction:
-      "Une donnée personnelle permet d’identifier directement ou indirectement une personne. Son utilisation exige un cadre légal et le respect des droits des individus.",
-    expectedKeywords: ["donnees", "personnelles", "identifier", "indirectement", "cadre", "legal", "droits"],
+      "Les données de prix, quantité, code article et heure permettent de calculer ventes et stock, puis d'ajuster les commandes.",
+    expectedKeywords: ["prix", "quantite", "code", "article", "ventes", "stock", "decision"],
   },
   {
     id: "focus-6-7",
     matiere: "SDGN",
     theme: "Thème 2",
+    chapter: "Chapitre 6",
     difficulty: 7,
-    type: "Application",
+    type: "Chaîne de valeur",
     xp: 100,
-    title: "Usages opérationnels des données",
-    consigne: "Donne 3 exemples d’opérations de gestion courante rendues possibles par les données numériques.",
+    title: "De la donnée à la connaissance",
+    consigne:
+      "Explique la chaîne donnée -> information -> connaissance avec l'exemple d'un chiffre d'affaires mensuel de 10 000 Pokedollars.",
     correction:
-      "Exemples : bon de commande, facturation, suivi de livraison, gestion des stocks, suivi client. Les données soutiennent les processus quotidiens.",
-    expectedKeywords: ["commande", "facture", "livraison", "stocks", "gestion", "courante"],
-    expectedNumbers: [3],
+      "Donnée: 10 000. Information: CA du mois. Connaissance: le manager interprète et agit (promotion, réassort, etc.).",
+    expectedKeywords: ["donnee", "information", "connaissance", "contextualisation", "interpretation", "decision", "chiffre", "affaires"],
+    expectedNumbers: [10000],
   },
   {
     id: "focus-6-8",
     matiere: "SDGN",
     theme: "Thème 2",
+    chapter: "Chapitre 6",
     difficulty: 8,
-    type: "Application",
+    type: "SI",
     xp: 110,
-    title: "Données et décision",
-    consigne: "Explique comment les données numériques aident la prise de décision managériale.",
+    title: "SI de la Ligue Pokémon",
+    consigne:
+      "Décris le rôle du système d'information: collecte, stockage, traitement et diffusion. Ajoute le rôle des acteurs humains.",
     correction:
-      "Elles permettent de produire des tableaux de bord et indicateurs, d’analyser la situation, puis de décider (aménagement, offre, fidélisation, allocation des ressources).",
-    expectedKeywords: ["tableau", "bord", "indicateurs", "analyse", "decision", "manageriale"],
+      "Le SI transforme la donnée en information exploitable grâce aux ressources techniques et humaines, puis soutient la décision.",
+    expectedKeywords: ["si", "collecte", "stockage", "traitement", "diffusion", "acteurs", "decision"],
   },
   {
     id: "focus-6-9",
     matiere: "SDGN",
     theme: "Thème 2",
+    chapter: "Chapitre 6",
     difficulty: 9,
-    type: "Système d'information",
+    type: "Qualité",
     xp: 120,
-    title: "Rôle du système d’information",
-    consigne: "Décris le rôle du SI dans la transformation des données en information utile.",
+    title: "Qualité d'info du Pokédex",
+    consigne:
+      "Donne 6 critères de qualité de l'information (ex: fiabilité, objectivité, actualité...) et explique pourquoi ils créent de la valeur.",
     correction:
-      "Le SI collecte, stocke, traite et diffuse les données. Il articule ressources humaines, logicielles et matérielles pour transformer la donnée brute en information exploitable.",
-    expectedKeywords: ["si", "collecter", "stocker", "traiter", "diffuser", "ressources", "logiciels", "materielles"],
+      "Une information utile doit être fiable, pertinente, récente, objective, rentable et rapidement accessible.",
+    expectedKeywords: ["fiable", "objective", "actualite", "pertinence", "rentabilite", "acces", "valeur"],
+    expectedNumbers: [6],
   },
   {
     id: "focus-6-10",
     matiere: "SDGN",
     theme: "Thème 2",
+    chapter: "Chapitre 6",
     difficulty: 10,
-    type: "Qualité",
+    type: "Étude de cas",
     xp: 130,
-    title: "Qualité de l’information",
-    consigne: "Cite et explique 4 critères de qualité de l’information.",
+    title: "Erreur de commande chez Bois Brut",
+    consigne:
+      "Analyse un cas de mauvaise information (commande mal saisie) et montre 3 conséquences possibles pour l'entreprise Pokémon.",
     correction:
-      "Critères possibles : pertinence, fiabilité, objectivité, actualité, accessibilité rapide, rentabilité. Une information de qualité doit être utile et exploitable.",
-    expectedKeywords: ["pertinente", "fiable", "objective", "actualite", "accessible", "rentable"],
-    expectedNumbers: [4],
+      "Une donnée de mauvaise qualité peut provoquer erreur logistique, litige client et perte financière ou d'image.",
+    expectedKeywords: ["qualite", "erreur", "commande", "client", "perte", "decision", "information"],
+    expectedNumbers: [3],
   },
   {
     id: "focus-6-11",
     matiere: "SDGN",
     theme: "Thème 2",
+    chapter: "Chapitre 6",
     difficulty: 11,
-    type: "Réglementation",
+    type: "RGPD",
     xp: 145,
-    title: "RGPD - obligations",
-    consigne: "Présente 4 obligations majeures imposées par le RGPD aux organisations.",
+    title: "RGPD anti Team Rocket",
+    consigne:
+      "Présente 4 obligations RGPD que doit respecter une organisation qui collecte des données de dresseurs.",
     correction:
-      "Exemples attendus : registre des traitements, finalité explicite, tri/minimisation, information des personnes, sécurisation des données, durée de conservation encadrée.",
-    expectedKeywords: ["rgpd", "registre", "finalite", "tri", "information", "securisation", "conservation"],
+      "Exemples: finalité claire, minimisation, information des personnes, sécurité, durée de conservation, droit d'accès/suppression.",
+    expectedKeywords: ["rgpd", "finalite", "information", "securite", "conservation", "droit", "suppression"],
     expectedNumbers: [4],
   },
   {
     id: "focus-6-12",
     matiere: "SDGN",
     theme: "Thème 2",
+    chapter: "Chapitre 6",
     difficulty: 12,
-    type: "Étude de cas",
+    type: "Données personnelles",
     xp: 160,
-    title: "Audit RGPD rapide",
+    title: "DMP de dresseur",
     consigne:
-      "Une boutique en ligne collecte email, nom, historique d’achat, géolocalisation et conserve tout sans limite. Identifie au moins 3 non-conformités RGPD et propose une correction pour chacune.",
+      "Explique l'utilité d'un dossier medical partage (DMP) et précise qui peut y accéder dans le respect des droits de la personne.",
     correction:
-      "Non-conformités possibles : absence de durée de conservation, collecte excessive sans finalité claire, manque d’information des personnes, sécurisation insuffisante. Chaque écart doit être relié à une action corrective.",
-    expectedKeywords: ["non", "conformite", "rgpd", "duree", "conservation", "finalite", "information", "securisation", "correction"],
-    expectedNumbers: [3],
+      "Le DMP centralise les informations de santé pour améliorer le suivi; l'accès est encadré et contrôlé par les droits du patient.",
+    expectedKeywords: ["dmp", "acces", "sante", "dossier", "droits", "protection", "information"],
   },
   {
     id: "focus-6-13",
     matiere: "SDGN",
     theme: "Thème 2",
+    chapter: "Chapitre 6",
     difficulty: 13,
-    type: "Conception",
+    type: "Appliquer",
     xp: 175,
-    title: "Chaîne de transformation",
-    consigne: "Construis un schéma texte de la chaîne donnée → information → connaissance appliqué à un exemple d’organisation.",
+    title: "Kibali en ligne",
+    consigne:
+      "À partir du cas Kibali, identifie les données strictement nécessaires pour traiter une commande sans collecter d'informations inutiles.",
     correction:
-      "Réponse attendue : données collectées, traitement/contextualisation, information produite, interprétation par un acteur, décision/action. L’exemple doit être cohérent.",
-    expectedKeywords: ["donnee", "information", "connaissance", "traitement", "interpretation", "decision", "action"],
+      "Le principe RGPD impose de limiter la collecte aux données nécessaires à la finalité (commande, paiement, livraison).",
+    expectedKeywords: ["kibali", "commande", "livraison", "finalite", "necessaires", "rgpd", "collecte"],
   },
   {
     id: "focus-6-14",
     matiere: "SDGN",
     theme: "Thème 2",
+    chapter: "Chapitre 6",
     difficulty: 14,
-    type: "Tableau de bord",
+    type: "Vrai/Faux argumenté",
     xp: 190,
-    title: "Piloter un projet Open Data",
+    title: "SF-Tester Pokémon",
     consigne:
-      "Propose un mini tableau de bord (5 indicateurs) pour suivre la réussite d’un projet open data d’une collectivité.",
+      "Rédige 5 affirmations vraies ou fausses argumentées sur open data, données personnelles, mégadonnées, SI et prise de décision.",
     correction:
-      "Indicateurs pertinents : nombre de jeux publiés, taux de réutilisation, fréquence de mise à jour, taux de qualité/fiabilité, satisfaction usagers, délai d’accès.",
-    expectedKeywords: ["tableau", "bord", "open", "data", "indicateurs", "reutilisation", "qualite", "mise", "jour"],
+      "Une bonne réponse mobilise les notions du chapitre et justifie clairement chaque affirmation.",
+    expectedKeywords: ["open", "data", "personnelles", "big", "si", "decision", "justifier"],
     expectedNumbers: [5],
   },
   {
     id: "focus-6-15",
     matiere: "SDGN",
     theme: "Thème 2",
+    chapter: "Chapitre 6",
     difficulty: 15,
     type: "Synthèse",
-    xp: 210,
-    title: "Synthèse chap 6",
+    xp: 220,
+    title: "Cahier de vacances final Pokémon",
     consigne:
-      "Rédige une synthèse argumentée (15 lignes) : montre que les technologies transforment l’information en ressource stratégique, tout en créant des contraintes juridiques et organisationnelles.",
+      "Rédige une synthèse de 15 lignes: comment les technologies transforment l'information en ressource stratégique, avec limites de qualité, accessibilité et RGPD.",
     correction:
-      "Attendu : articulation Big Data / SI / décision / qualité de l’information / RGPD. La synthèse doit montrer les apports (pilotage, efficacité, transparence) et les limites (protection des données, conformité, qualité).",
-    expectedKeywords: ["technologies", "information", "ressource", "strategique", "si", "big", "data", "rgpd", "contraintes", "organisationnelles"],
+      "La synthèse relie masses de données, SI, transformation en connaissance et décision, puis expose les limites (qualité, accès, contraintes juridiques).",
+    expectedKeywords: ["technologies", "information", "ressource", "si", "connaissance", "decision", "qualite", "rgpd", "limites"],
     expectedNumbers: [15],
   },
 ];
@@ -477,6 +285,22 @@ const canonicalize = (text = "") => {
     });
   });
   return out;
+};
+
+const deriveChapter = (exercise) => {
+  if (exercise?.chapter) return exercise.chapter;
+  const id = String(exercise?.id || "");
+  if (id.startsWith("focus-6-")) return "Chapitre 6";
+  return "Sans chapitre";
+};
+
+const CHAPTER_CONTENT = {
+  "Chapitre 6": {
+    heroTitle: "🎯 Focus — SDGN 1ère · Chapitre 6",
+    heroText:
+      "Cahier de vacances interactif: rôle des technologies dans la transformation de l'information en ressource, version Pokémon (définitions, applications, RGPD, synthèse).",
+    notions: "Notions: donnée, information, SI, Big Data, open data, RGPD",
+  },
 };
 
 const getTodayKey = () => {
@@ -703,27 +527,51 @@ export default function Focus({ profil, onXPGagne }) {
   const [claims, setClaims] = useState({});
   const [banner, setBanner] = useState(null);
   const [matiereSelectionnee, setMatiereSelectionnee] = useState("SDGN");
-  const [themeSelectionne, setThemeSelectionne] = useState("Thème 3");
+  const [themeSelectionne, setThemeSelectionne] = useState("Thème 2");
+  const [chapitreSelectionne, setChapitreSelectionne] = useState("Chapitre 6");
 
   const matieres = useMemo(() => Array.from(new Set(EXERCISES.map((ex) => ex.matiere || "SDGN"))), []);
   const themes = useMemo(
     () => Array.from(new Set(EXERCISES.filter((ex) => (ex.matiere || "SDGN") === matiereSelectionnee).map((ex) => ex.theme || "Sans thème"))),
     [matiereSelectionnee]
   );
+  const chapitres = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          EXERCISES.filter(
+            (ex) => (ex.matiere || "SDGN") === matiereSelectionnee && (ex.theme || "Sans thème") === themeSelectionne
+          ).map((ex) => deriveChapter(ex))
+        )
+      ),
+    [matiereSelectionnee, themeSelectionne]
+  );
   const exercicesFiltres = useMemo(
     () =>
       EXERCISES
-        .filter((ex) => (ex.matiere || "SDGN") === matiereSelectionnee && (ex.theme || "Sans thème") === themeSelectionne)
+        .filter(
+          (ex) =>
+            (ex.matiere || "SDGN") === matiereSelectionnee &&
+            (ex.theme || "Sans thème") === themeSelectionne &&
+            deriveChapter(ex) === chapitreSelectionne
+        )
         .sort((a, b) => a.difficulty - b.difficulty),
-    [matiereSelectionnee, themeSelectionne]
+    [matiereSelectionnee, themeSelectionne, chapitreSelectionne]
   );
   const xpPotential = useMemo(() => exercicesFiltres.reduce((sum, ex) => sum + ex.xp, 0), [exercicesFiltres]);
+  const chapterUI = CHAPTER_CONTENT[chapitreSelectionne] || CHAPTER_CONTENT["Chapitre 6"];
 
   useEffect(() => {
     if (!themes.includes(themeSelectionne)) {
       setThemeSelectionne(themes[0] || "Thème 3");
     }
   }, [themes, themeSelectionne]);
+
+  useEffect(() => {
+    if (!chapitres.includes(chapitreSelectionne)) {
+      setChapitreSelectionne(chapitres[0] || "Sans chapitre");
+    }
+  }, [chapitres, chapitreSelectionne]);
 
   useEffect(() => {
     const load = async () => {
@@ -777,7 +625,7 @@ export default function Focus({ profil, onXPGagne }) {
         focusProgress: {
           ...(storedProgress || {}),
           version: FOCUS_PROGRESS_VERSION,
-          chapter: "SDGN 1ère - Chapitre 13",
+          chapter: `SDGN 1ère - ${chapitreSelectionne}`,
           claims: nextClaims,
         },
       });
@@ -824,18 +672,18 @@ export default function Focus({ profil, onXPGagne }) {
         )}
 
         <section className="focus-hero" style={{ background: "#FFFFFF", border: `1px solid ${COLORS.border}`, borderRadius: 18, padding: 18 }}>
-          <h1 className="focus-hero-title" style={{ margin: "0 0 6px", color: "#1E3A8A" }}>🎯 Focus — SDGN 1ère · Chapitre 13</h1>
+          <h1 className="focus-hero-title" style={{ margin: "0 0 6px", color: "#1E3A8A" }}>{chapterUI.heroTitle}</h1>
           <p className="focus-hero-text" style={{ margin: 0, color: COLORS.muted, lineHeight: 1.55 }}>
-            Révision ciblée sur l’analyse des performances commerciale et financière. Progression en difficulté croissante: définitions, analyses, calculs et tableau de bord.
+            {chapterUI.heroText}
           </p>
           <div className="focus-badges" style={{ marginTop: 10, display: "flex", gap: 8, flexWrap: "wrap" }}>
-            <span style={{ background: "#DBEAFE", color: "#1D4ED8", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>Notions: performance, rentabilité, profitabilité, indicateurs</span>
+            <span style={{ background: "#DBEAFE", color: "#1D4ED8", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>{chapterUI.notions}</span>
             <span style={{ background: "#DCFCE7", color: "#166534", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>XP potentiel/jour: +{xpPotential}</span>
-            <span style={{ background: "#FEF3C7", color: "#92400E", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>15 exercices progressifs</span>
+            <span style={{ background: "#FEF3C7", color: "#92400E", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>{exercicesFiltres.length} exercices progressifs</span>
             <span style={{ background: "#FFE4E6", color: "#9F1239", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>Mode correction équilibré v{FOCUS_PROGRESS_VERSION}</span>
           </div>
 
-          <div style={{ marginTop: 12, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+          <div style={{ marginTop: 12, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: 10 }}>
             <div style={{ borderRadius: 12, border: "1px solid #BFDBFE", padding: "9px 10px", background: "#EFF6FF" }}>
               <p style={{ margin: "0 0 5px", color: "#1D4ED8", fontWeight: 700, fontSize: 12 }}>Matière</p>
               <select
@@ -857,6 +705,18 @@ export default function Focus({ profil, onXPGagne }) {
               >
                 {themes.map((theme) => (
                   <option key={theme} value={theme}>{theme}</option>
+                ))}
+              </select>
+            </div>
+            <div style={{ borderRadius: 12, border: "1px solid #FDE68A", padding: "9px 10px", background: "#FFFBEB" }}>
+              <p style={{ margin: "0 0 5px", color: "#92400E", fontWeight: 700, fontSize: 12 }}>Chapitre</p>
+              <select
+                value={chapitreSelectionne}
+                onChange={(e) => setChapitreSelectionne(e.target.value)}
+                style={{ width: "100%", borderRadius: 8, border: "1px solid #FCD34D", padding: "7px 9px", fontWeight: 700, color: "#92400E", background: "white" }}
+              >
+                {chapitres.map((chap) => (
+                  <option key={chap} value={chap}>{chap}</option>
                 ))}
               </select>
             </div>

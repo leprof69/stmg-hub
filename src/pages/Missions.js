@@ -9,6 +9,7 @@ const COLORS = {
 const MISSION_ENGINE_VERSION = "strict-v7-2026-04-22";
 const MISSION_XP_MULTIPLIER = 1.35;
 const MISSION_XP_MIN = { quotidienne: 200, hebdomadaire: 300, mensuelle: 500 };
+const MISSION_CAS_SILPH_ID = "mission-etude-cas-silph-sarl";
 
 const getDateJour = () => {
   const today = new Date();
@@ -25,6 +26,63 @@ const getMissionXPBase = (mission) => {
   const xpSource = Number(mission?.xp) || 0;
   const minimum = MISSION_XP_MIN[mission?.type] || 0;
   return Math.max(xpSource, minimum);
+};
+
+const getCategorieDifficulte = (mission) => {
+  const difficulte = Math.max(1, Math.min(5, Number(mission?.difficulte) || 1));
+  return difficulte <= 2 ? "facile" : "difficile";
+};
+
+const MISSION_CAS_SILPH = {
+  id: MISSION_CAS_SILPH_ID,
+  titre: "Étude de cas - SI de la Silph SARL",
+  emoji: "🏢",
+  niveau: "premiere",
+  matiere: "Sciences de Gestion",
+  theme: "Système d'information",
+  chapitre: "Chapitre 6 - L'information numérique",
+  difficulte: 5,
+  ordre: 1,
+  type: "mensuelle",
+  xp: 7407,
+  xp_max: 10000,
+  contexte: "La Silph SARL veut transformer ses données en avantage concurrentiel face à Rocket-Map, tout en respectant le RGPD.",
+  question: `Tu réalises l'étude de cas complète :
+
+Dossier 1 - Big Data et stratégie
+1) Montre que Silph gère du Big Data avec au moins 2 des 5V.
+2) Explique pourquoi l'Open Data améliore l'image de marque de Silph.
+
+Dossier 2 - Composantes et qualité du SI
+3) Donne un exemple de ressource humaine, matérielle et logicielle.
+4) Identifie l'indicateur qualité le plus critique et la conséquence pour l'utilisateur.
+5) Explique le passage Donnée -> Information -> Connaissance avec l'exemple du cri Pokémon.
+
+Dossier 3 - Responsabilité et stratégie
+6) Présente le rôle du DPO et pourquoi il est obligatoire.
+7) Explique quel droit exerce le dresseur qui refuse la géolocalisation.
+8) Fais une synthèse : en quoi un SI performant et éthique différencie Silph de Team Rocket ?`,
+  mots_cles: [
+    "big data", "volume", "variété", "vélocité", "open data", "transparence",
+    "ressources humaines", "ressources matérielles", "ressources logicielles",
+    "accessibilité", "donnée", "information", "connaissance", "dpo", "rgpd",
+    "droit d'opposition", "droit à l'effacement", "éthique", "performance"
+  ],
+  correction: `Dossier 1 :
+- Big Data : volume en forte hausse (de 0,4 To à 4,5 To), variété des formats (GPS, images, audio, vidéo), et vélocité (120 000 signaux GPS/seconde).
+- Open Data : partage partiel des données, transparence et confiance des utilisateurs, fidélisation, meilleure image que Rocket-Map.
+
+Dossier 2 :
+- Ressources humaines : techniciens réseau, analystes data, DPO.
+- Ressources matérielles : serveurs cloud, terminaux Pokedex.
+- Ressources logicielles : algorithme de combat.
+- Indicateur critique : accessibilité (78 % vs objectif 98 %) ; conséquence : indisponibilités du SI pendant un combat, perte d'avantage tactique.
+- Transformation : donnée brute (cri) -> information (identification du Pokémon) -> connaissance (choix de la bonne attaque).
+
+Dossier 3 :
+- DPO : garantit la conformité RGPD, registre CNIL, limitation des risques juridiques ; rôle obligatoire car données personnelles traitées à grande échelle.
+- Géolocalisation : donnée personnelle car elle permet d'identifier/traquer les habitudes ; exercice du droit d'opposition ou d'effacement.
+- Synthèse : Silph se différencie par la performance du SI (conseils utiles) et l'éthique (respect RGPD), contrairement à Rocket-Map.`,
 };
 
 const normalizeTexte = (texte = "") => String(texte)
@@ -665,7 +723,8 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
       const xpMissionBoostee = Math.round(xpBase * MISSION_XP_MULTIPLIER);
       const xpBrut = (dejaFaite || resultFinal.triche_detectee) ? 0 : Math.round((resultFinal.score / 10) * xpMissionBoostee);
       const xpCapStyle = styleArtificiel.suspect ? Math.round(xpMissionBoostee * 0.2) : xpMissionBoostee;
-      const xpGagne = Math.max(0, Math.min(xpBrut, xpCapStyle));
+      const xpMaxMission = Number.isFinite(Number(mission?.xp_max)) ? Number(mission.xp_max) : Infinity;
+      const xpGagne = Math.max(0, Math.min(xpBrut, xpCapStyle, xpMaxMission));
       const newXP = (userData.xp || 0) + xpGagne;
       const historique = userData.missionsHistorique || {};
       const antiCheatFlags = {
@@ -874,6 +933,7 @@ export default function Missions({ profil, onXPGagne }) {
   const [niveauSelectionne, setNiveauSelectionne] = useState(profil?.classe === "terminale" ? "terminale" : "premiere");
   const [matiereSelectionnee, setMatiereSelectionnee] = useState("");
   const [themeSelectionne, setThemeSelectionne] = useState("");
+  const [difficulteSelectionnee, setDifficulteSelectionnee] = useState("facile");
   const [xpGagne, setXpGagne] = useState(0);
   const [showNotif, setShowNotif] = useState(false);
   const [missions, setMissions] = useState([]);
@@ -908,7 +968,8 @@ export default function Missions({ profil, onXPGagne }) {
           if (diffA !== diffB) return diffA - diffB;
           return (Number(a.ordre) || 999) - (Number(b.ordre) || 999);
         });
-      setMissions(toutes);
+      const sansDoublonSilph = toutes.filter((mission) => mission.id !== MISSION_CAS_SILPH_ID);
+      setMissions([...sansDoublonSilph, MISSION_CAS_SILPH]);
     } catch (err) { console.error(err); }
     setChargement(false);
   };
@@ -923,6 +984,7 @@ export default function Missions({ profil, onXPGagne }) {
   const matieresDisponibles = Array.from(new Set(
     missions
       .filter(m => (m.niveau || "premiere").toLowerCase() === niveauSelectionne)
+      .filter(m => !difficulteSelectionnee || getCategorieDifficulte(m) === difficulteSelectionnee)
       .map(m => m.matiere)
       .filter(Boolean)
   )).sort();
@@ -930,6 +992,7 @@ export default function Missions({ profil, onXPGagne }) {
   const themesDisponibles = Array.from(new Set(
     missions
       .filter(m => (m.niveau || "premiere").toLowerCase() === niveauSelectionne)
+      .filter(m => !difficulteSelectionnee || getCategorieDifficulte(m) === difficulteSelectionnee)
       .filter(m => !matiereSelectionnee || m.matiere === matiereSelectionnee)
       .map(m => m.theme)
       .filter(Boolean)
@@ -943,7 +1006,7 @@ export default function Missions({ profil, onXPGagne }) {
     if (!matiereSelectionnee || !matieresDisponibles.includes(matiereSelectionnee)) {
       setMatiereSelectionnee(matieresDisponibles[0]);
     }
-  }, [niveauSelectionne, missions, matieresDisponibles, matiereSelectionnee]);
+  }, [niveauSelectionne, difficulteSelectionnee, missions, matieresDisponibles, matiereSelectionnee]);
 
   useEffect(() => {
     if (!themesDisponibles.length) {
@@ -953,11 +1016,12 @@ export default function Missions({ profil, onXPGagne }) {
     if (!themeSelectionne || !themesDisponibles.includes(themeSelectionne)) {
       setThemeSelectionne(themesDisponibles[0]);
     }
-  }, [niveauSelectionne, matiereSelectionnee, missions, themesDisponibles, themeSelectionne]);
+  }, [niveauSelectionne, difficulteSelectionnee, matiereSelectionnee, missions, themesDisponibles, themeSelectionne]);
 
   const missionsFiltrees = missions.filter(m =>
     niveauxAccessibles.includes((m.niveau || "premiere").toLowerCase()) &&
     (m.niveau || "premiere").toLowerCase() === niveauSelectionne &&
+    (!difficulteSelectionnee || getCategorieDifficulte(m) === difficulteSelectionnee) &&
     (!matiereSelectionnee || m.matiere === matiereSelectionnee) &&
     (!themeSelectionne || m.theme === themeSelectionne)
   );
@@ -1006,7 +1070,7 @@ export default function Missions({ profil, onXPGagne }) {
           <p style={{ fontFamily: "'Fredoka One', cursive", color: "#111827", fontSize: "0.9rem", margin: "0 0 10px" }}>
             Filtres des missions
           </p>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "10px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "10px" }}>
             <div style={{ borderRadius: "12px", border: `2px solid ${COLORS.S}30`, padding: "10px 12px" }}>
               <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.S, fontSize: "0.78rem", margin: "0 0 6px" }}>
                 Niveau
@@ -1030,6 +1094,28 @@ export default function Missions({ profil, onXPGagne }) {
                     {nv === "terminale" ? "Terminale" : "Première"}
                   </option>
                 ))}
+              </select>
+            </div>
+            <div style={{ borderRadius: "12px", border: `2px solid ${COLORS.H}30`, padding: "10px 12px" }}>
+              <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.H, fontSize: "0.78rem", margin: "0 0 6px" }}>
+                Difficulté
+              </p>
+              <select
+                value={difficulteSelectionnee}
+                onChange={(e) => setDifficulteSelectionnee(e.target.value)}
+                style={{
+                  width: "100%",
+                  border: `2px solid ${COLORS.H}35`,
+                  borderRadius: "10px",
+                  padding: "8px 10px",
+                  fontFamily: "'Nunito', sans-serif",
+                  fontWeight: 700,
+                  color: "#1F2937",
+                  background: "white",
+                }}
+              >
+                <option value="facile">FACILE (⭐ 1-2)</option>
+                <option value="difficile">DIFFICILE (⭐ 3-5)</option>
               </select>
             </div>
             <div style={{ borderRadius: "12px", border: `2px solid ${COLORS.U}30`, padding: "10px 12px" }}>
