@@ -121,6 +121,11 @@ const EXERCISES = [
       "Donne 3 conséquences possibles pour le PokéMart puis propose 1 action corrective concrète.",
     correction:
       "Conséquences possibles: erreur logistique, litige client, coût supplémentaire. Action corrective: contrôle qualité de saisie et validation automatique au moment de la commande.",
+    document: {
+      type: "Ticket de caisse",
+      title: "Extrait caisse PokéMart (12/06)",
+      content: "- Hyper Ball x18\n- Potion x42\n- Rappel x6\n- 3 erreurs de référence signalées\n- Temps moyen caisse: 4 min 12",
+    },
     expectedKeywords: ["erreur", "commande", "client", "cout", "controle", "qualite", "saisie"],
     expectedNumbers: [3],
   },
@@ -140,7 +145,36 @@ const EXERCISES = [
       "Distingue les données nécessaires (commande/livraison/paiement) des données non nécessaires, puis justifie brièvement.",
     correction:
       "Nécessaires: identité, adresse de livraison, paiement, contact. Non nécessaires: informations sans lien avec la finalité de la commande.",
+    document: {
+      type: "Formulaire web",
+      title: "Prototype inscription boutique en ligne",
+      content:
+        "Champs actuels: nom, prénom, email, adresse, téléphone, date de naissance, Pokémon préféré, couleur favorite, coordonnées bancaires, pseudo réseau social.",
+    },
     expectedKeywords: ["rgpd", "finalite", "necessaires", "commande", "livraison", "paiement", "minimisation"],
+  },
+  {
+    id: "focus-6-6b",
+    chapter: "Chapitre 6",
+    matiere: "SDGN",
+    theme: "Thème 2",
+    difficulty: 7,
+    type: "Liaison",
+    mode: "matching",
+    xp: 130,
+    title: "Étape 6B - Relier notions et définitions",
+    contexte: "Le directeur prépare une formation interne pour l'équipe.",
+    objectif: "Vérifier la maîtrise du vocabulaire du chapitre.",
+    consigne: "Relie chaque notion à sa bonne définition.",
+    matchingLeft: ["Donnée", "Information", "Connaissance", "Open data"],
+    matchingRight: [
+      "Donnée publique accessible, réutilisable et diffusée",
+      "Résultat interprété qui guide la décision",
+      "Fait brut non encore contextualisé",
+      "Donnée contextualisée qui prend du sens",
+    ],
+    matchingAnswer: [2, 3, 1, 0],
+    correction: "Les notions doivent être distinguées précisément pour produire une analyse de gestion fiable.",
   },
   {
     id: "focus-6-7",
@@ -165,6 +199,28 @@ const EXERCISES = [
     correction: "Le SI suit la logique collecte, stockage, traitement puis diffusion de l'information.",
   },
   {
+    id: "focus-6-7b",
+    chapter: "Chapitre 6",
+    matiere: "SDGN",
+    theme: "Thème 2",
+    difficulty: 8,
+    type: "Memory",
+    mode: "memory",
+    xp: 140,
+    title: "Étape 7B - Memory des notions clés",
+    contexte: "Réunion flash avant audit qualité du SI.",
+    objectif: "Mémoriser rapidement les concepts et leurs définitions.",
+    consigne: "Trouve toutes les paires notion-définition avant de corriger.",
+    memoryPairsCount: 4,
+    memoryPairs: [
+      { a: "Vélocité", b: "Vitesse de production et de circulation des données" },
+      { a: "Véracité", b: "Niveau de fiabilité et de qualité des données" },
+      { a: "SI", b: "Ressources humaines et techniques qui gèrent l'information" },
+      { a: "RGPD", b: "Cadre juridique de protection des données personnelles" },
+    ],
+    correction: "Un bon niveau de mémorisation accélère l'analyse dans les cas pratiques.",
+  },
+  {
     id: "focus-6-8",
     chapter: "Chapitre 6",
     matiere: "SDGN",
@@ -180,8 +236,42 @@ const EXERCISES = [
       "Rédige une synthèse de 12 à 15 lignes expliquant comment la donnée devient une ressource stratégique au PokéMart, avec les limites de qualité, d'accès et de conformité RGPD.",
     correction:
       "La synthèse doit relier Big Data, SI, transformation en connaissance, décision managériale et contraintes juridiques dans le cas de la Ligue/PokéMart.",
+    document: {
+      type: "Tableau de bord",
+      title: "Indicateurs mensuels du PokéMart",
+      content:
+        "Ventes +18% ; ruptures de stock 14 ; erreurs de saisie 9 ; réclamations clients 27 ; disponibilité SI 92% (objectif 98%).",
+    },
     expectedKeywords: ["big data", "si", "donnee", "information", "connaissance", "decision", "qualite", "rgpd"],
     expectedNumbers: [12],
+  },
+  {
+    id: "focus-6-9",
+    chapter: "Chapitre 6",
+    matiere: "SDGN",
+    theme: "Thème 2",
+    difficulty: 10,
+    type: "Analyse de document",
+    mode: "docqa",
+    xp: 180,
+    title: "Étape 9 - Étude de document multi-questions",
+    contexte: "Le directeur du PokéMart prépare un plan d'action trimestriel.",
+    objectif: "Exploiter un document chiffré puis argumenter des choix de gestion.",
+    consigne: "Réponds aux 4 questions en t'appuyant explicitement sur le document.",
+    document: {
+      type: "Tableau de bord trimestriel",
+      title: "Performance SI & activité commerciale - T2",
+      content:
+        "Ventes: 428 000 Pokedollars (+11%)\nDisponibilité SI: 91% (objectif 98%)\nRuptures de stock: 19\nRéclamations clients: 34\nCommandes web: +22%\nErreurs de saisie: 12",
+    },
+    docQuestions: [
+      { prompt: "Identifie deux signaux positifs de performance.", keywords: ["ventes", "11", "commandes", "22", "hausse", "positif"] },
+      { prompt: "Identifie deux risques prioritaires pour la gestion.", keywords: ["disponibilite", "91", "objectif", "98", "ruptures", "reclamations", "risque"] },
+      { prompt: "Explique le lien entre qualité des données et satisfaction client.", keywords: ["erreurs", "saisie", "qualite", "information", "client", "reclamations"] },
+      { prompt: "Propose deux actions concrètes pour le prochain trimestre.", keywords: ["action", "controle", "formation", "stock", "si", "pilotage"] },
+    ],
+    correction:
+      "Une bonne copie repère les signaux, hiérarchise les risques, relie données et expérience client, puis propose des actions réalistes et mesurables.",
   },
 ];
 
@@ -189,7 +279,7 @@ const CHAPTER_CONTENT = {
   "Chapitre 6": {
     heroTitle: "☀️ Cahier de vacances — SDGN 1ère",
     heroText:
-      "Parcours guidé en 8 activités reliées entre elles: tu accompagnes le PokéMart de Céladopole pour transformer ses données en décisions utiles.",
+      "Parcours guidé avec activités variées reliées entre elles: tu accompagnes le PokéMart de Céladopole pour transformer ses données en décisions utiles.",
     notions: "Notions: donnée, information, SI, Big Data, open data, RGPD",
   },
 };
@@ -201,6 +291,15 @@ const getTodayKey = () => {
 
 const normalize = (v = "") =>
   String(v).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+
+const shuffleArray = (arr = []) => {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+};
 
 const extractNumbers = (text = "") => {
   const matches = String(text).match(/-?\d+(?:[.,]\d+)?/g) || [];
@@ -253,6 +352,50 @@ const evaluateInteractive = (exercise, state) => {
     const score = Math.round((good / total) * 10);
     return { score, mention: score >= 8 ? "Très bien" : "Bon travail", pointsForts: `${good}/${total} choix corrects.`, aAmeliorer: score < 8 ? "Distingue mieux les données personnelles des données neutres." : "Très bon tri." };
   }
+  if (exercise.mode === "matching") {
+    const total = exercise.matchingLeft.length;
+    const good = exercise.matchingLeft.filter((_, i) => Number(state.matches[i]) === Number(exercise.matchingAnswer[i])).length;
+    const score = Math.round((good / total) * 10);
+    return {
+      score,
+      mention: score >= 8 ? "Très bien" : score >= 6 ? "Bon travail" : "À retravailler",
+      pointsForts: `${good}/${total} liaisons correctes.`,
+      aAmeliorer: score < 8 ? "Revois les définitions du chapitre pour sécuriser chaque association." : "Associations solides.",
+    };
+  }
+  if (exercise.mode === "memory") {
+    const solved = Number(state.memorySolved || 0);
+    const total = Number(exercise.memoryPairsCount || 1);
+    const turns = Math.max(1, Number(state.memoryTurns || 1));
+    const base = Math.round((solved / total) * 8);
+    const bonus = turns <= total + 2 ? 2 : turns <= total + 5 ? 1 : 0;
+    const score = Math.min(10, base + bonus);
+    return {
+      score,
+      mention: score >= 8 ? "Très bien" : score >= 6 ? "Bon travail" : "À retravailler",
+      pointsForts: `${solved}/${total} paires trouvées.`,
+      aAmeliorer: turns > total + 4 ? "Essaie d'observer plus finement le document avant de retourner les cartes." : "Bonne mémorisation des notions.",
+    };
+  }
+  if (exercise.mode === "docqa") {
+    const answers = exercise.docQuestions || [];
+    const scoreParts = answers.map((q, i) => {
+      const ans = normalize((state.docAnswers && state.docAnswers[i]) || "");
+      if (!ans) return 0;
+      const expected = (q.keywords || []).map(normalize);
+      const hits = expected.filter((k) => ans.includes(k)).length;
+      const ratio = expected.length ? hits / expected.length : 0;
+      return Math.min(1, ratio + (ans.length >= 70 ? 0.2 : 0));
+    });
+    const avg = scoreParts.length ? scoreParts.reduce((a, b) => a + b, 0) / scoreParts.length : 0;
+    const score = Math.max(2, Math.min(10, Math.round(avg * 10)));
+    return {
+      score,
+      mention: score >= 8 ? "Très bien" : score >= 6 ? "Bon travail" : "À retravailler",
+      pointsForts: `${scoreParts.filter((p) => p >= 0.6).length}/${scoreParts.length} réponses bien argumentées.`,
+      aAmeliorer: score < 8 ? "Appuie davantage chaque réponse sur le document et le vocabulaire du cours." : "Analyse solide et structurée.",
+    };
+  }
   return evaluateRedaction(exercise, state.text || "");
 };
 
@@ -265,7 +408,26 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
   const [tf, setTf] = useState({});
   const [blanks, setBlanks] = useState({});
   const [checks, setChecks] = useState({});
+  const [matches, setMatches] = useState({});
+  const [memoryDeck, setMemoryDeck] = useState([]);
+  const [memoryFlipped, setMemoryFlipped] = useState([]);
+  const [memorySolved, setMemorySolved] = useState({});
+  const [memoryTurns, setMemoryTurns] = useState(0);
+  const [docAnswers, setDocAnswers] = useState({});
   const [text, setText] = useState("");
+
+  useEffect(() => {
+    if (exercise.mode !== "memory") return;
+    const cards = [];
+    (exercise.memoryPairs || []).forEach((pair, pairIndex) => {
+      cards.push({ id: `${exercise.id}-a-${pairIndex}`, text: pair.a, pairKey: `p-${pairIndex}` });
+      cards.push({ id: `${exercise.id}-b-${pairIndex}`, text: pair.b, pairKey: `p-${pairIndex}` });
+    });
+    setMemoryDeck(shuffleArray(cards));
+    setMemoryFlipped([]);
+    setMemorySolved({});
+    setMemoryTurns(0);
+  }, [exercise.id, exercise.mode, exercise.memoryPairs]);
 
   const today = getTodayKey();
   const alreadyClaimed = claim?.lastClaimDate === today;
@@ -276,12 +438,43 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
       (exercise.mode === "truefalse" && exercise.statements.every((_, i) => tf[i] !== undefined)) ||
       (exercise.mode === "fill" && exercise.blanks.every((_, i) => (blanks[i] || "").trim().length > 0)) ||
       (exercise.mode === "checklist" && Object.keys(checks).length === exercise.checklist.length) ||
+      (exercise.mode === "matching" && exercise.matchingLeft.every((_, i) => matches[i] !== undefined && matches[i] !== "")) ||
+      (exercise.mode === "memory" && Object.keys(memorySolved).length === (exercise.memoryPairsCount || 0)) ||
+      (exercise.mode === "docqa" && (exercise.docQuestions || []).every((_, i) => (docAnswers[i] || "").trim().length >= 12)) ||
       (exercise.mode === "redaction" && text.trim().length >= 40));
 
   const validate = () => {
-    const next = evaluateInteractive(exercise, { selected, tf, blanks, checks, text });
+    const next = evaluateInteractive(exercise, {
+      selected, tf, blanks, checks, matches, text,
+      docAnswers,
+      memorySolved: Object.keys(memorySolved).length,
+      memoryTurns,
+    });
     setResult(next);
     setLocked(true);
+  };
+
+  const handleMemoryFlip = (idx) => {
+    if (locked || exercise.mode !== "memory") return;
+    const card = memoryDeck[idx];
+    if (!card) return;
+    if (memorySolved[card.pairKey]) return;
+    if (memoryFlipped.includes(idx)) return;
+    if (memoryFlipped.length >= 2) return;
+    const nextFlipped = [...memoryFlipped, idx];
+    setMemoryFlipped(nextFlipped);
+    if (nextFlipped.length === 2) {
+      setMemoryTurns((v) => v + 1);
+      const [i1, i2] = nextFlipped;
+      const c1 = memoryDeck[i1];
+      const c2 = memoryDeck[i2];
+      if (c1 && c2 && c1.pairKey === c2.pairKey) {
+        setMemorySolved((prev) => ({ ...prev, [c1.pairKey]: true }));
+        setTimeout(() => setMemoryFlipped([]), 250);
+      } else {
+        setTimeout(() => setMemoryFlipped([]), 700);
+      }
+    }
   };
 
   const claimXp = async () => {
@@ -317,6 +510,14 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
       <p style={{ margin: "0 0 10px", color: COLORS.muted, lineHeight: 1.5 }}>
         <strong>Consigne :</strong> {exercise.consigne}
       </p>
+      {exercise.document && (
+        <div style={{ marginBottom: 10, background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 10, padding: 10 }}>
+          <p style={{ margin: "0 0 4px", color: "#92400E", fontWeight: 800 }}>
+            📄 Document ({exercise.document.type}) : {exercise.document.title}
+          </p>
+          <p style={{ margin: 0, color: "#78350F", fontSize: 14, whiteSpace: "pre-line" }}>{exercise.document.content}</p>
+        </div>
+      )}
 
       {exercise.mode === "qcm" && (
         <div style={{ display: "grid", gap: 8 }}>
@@ -362,6 +563,63 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
         </div>
       )}
 
+      {exercise.mode === "matching" && (
+        <div style={{ display: "grid", gap: 8 }}>
+          {exercise.matchingLeft.map((leftItem, i) => (
+            <div key={`${leftItem}-${i}`} style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, alignItems: "center" }}>
+              <p style={{ margin: 0, color: "#1F2937", fontWeight: 700 }}>{leftItem}</p>
+              <select
+                disabled={locked}
+                value={matches[i] ?? ""}
+                onChange={(e) => setMatches((p) => ({ ...p, [i]: e.target.value }))}
+                style={{ borderRadius: 8, border: `1px solid ${COLORS.border}`, padding: "8px" }}
+              >
+                <option value="">Choisir une définition...</option>
+                {exercise.matchingRight.map((rightItem, rightIdx) => (
+                  <option key={`${rightItem}-${rightIdx}`} value={rightIdx}>{rightItem}</option>
+                ))}
+              </select>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {exercise.mode === "memory" && (
+        <div>
+          <p style={{ margin: "0 0 8px", color: "#334155", fontSize: 13 }}>
+            Retourne les cartes pour associer chaque notion à sa définition. Tours joués : {memoryTurns}
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: 8 }}>
+            {memoryDeck.map((card, idx) => {
+              const isOpen = memoryFlipped.includes(idx) || memorySolved[card.pairKey];
+              return (
+                <button
+                  key={card.id}
+                  onClick={() => handleMemoryFlip(idx)}
+                  disabled={locked || memorySolved[card.pairKey]}
+                  style={{
+                    minHeight: 74,
+                    borderRadius: 10,
+                    border: `1px solid ${isOpen ? "#93C5FD" : COLORS.border}`,
+                    background: isOpen ? "#EFF6FF" : "#0B2447",
+                    color: isOpen ? "#1E3A8A" : "#BFDBFE",
+                    padding: 8,
+                    fontSize: 12,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                  }}
+                >
+                  {isOpen ? card.text : "🃏 Mémo"}
+                </button>
+              );
+            })}
+          </div>
+          <p style={{ margin: "8px 0 0", color: "#64748B", fontSize: 12 }}>
+            Paires trouvées : {Object.keys(memorySolved).length}/{exercise.memoryPairsCount || 0}
+          </p>
+        </div>
+      )}
+
       {exercise.mode === "redaction" && (
         <>
           <textarea
@@ -375,6 +633,30 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
           />
           <p style={{ margin: "6px 0 0", color: "#64748B", fontSize: 12 }}>Minimum conseillé: 40 caractères.</p>
         </>
+      )}
+
+      {exercise.mode === "docqa" && (
+        <div style={{ display: "grid", gap: 10 }}>
+          {(exercise.docQuestions || []).map((q, i) => (
+            <div key={`${exercise.id}-q-${i}`} style={{ border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: 10, background: "#F8FAFC" }}>
+              <p style={{ margin: "0 0 6px", color: "#0F172A", fontWeight: 700 }}>
+                Question {i + 1} : {q.prompt}
+              </p>
+              <textarea
+                value={docAnswers[i] || ""}
+                onChange={(e) => {
+                  if (!locked) setDocAnswers((prev) => ({ ...prev, [i]: e.target.value }));
+                }}
+                readOnly={locked}
+                placeholder="Réponse argumentée à partir du document..."
+                style={{ width: "100%", minHeight: 78, borderRadius: 8, border: `1px solid ${COLORS.border}`, padding: 8, boxSizing: "border-box" }}
+              />
+            </div>
+          ))}
+          <p style={{ margin: "2px 0 0", color: "#64748B", fontSize: 12 }}>
+            Conseil: cite au moins un élément chiffré ou factuel du document dans chaque réponse.
+          </p>
+        </div>
       )}
 
       <div style={{ display: "flex", gap: 8, marginTop: 10, flexWrap: "wrap" }}>
