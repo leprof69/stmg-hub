@@ -46,7 +46,9 @@ const MISSION_CAS_SILPH = {
   type: "mensuelle",
   xp: 7407,
   xp_max: 10000,
-  contexte: "Contexte complet : la Silph SARL, acteur technologique majeur de Safrania, fait face à Rocket-Map (collecte illégale et usage opaque des données). Pour reprendre l'avantage, Silph déploie Silph-Scanner : un SI nouvelle génération chargé de transformer une masse de données brutes en avantage concurrentiel tout en respectant l'éthique et le RGPD. En tant qu'assistant de gestion, tu dois évaluer la performance, la robustesse et la conformité de ce SI.",
+  contexte: `Contexte : La révolution Silph-Scanner
+La Silph SARL, joyau technologique de la ville de Safrania, fait face à une menace sans précédent. La Team Rocket a lancé sa propre application "Rocket-Map", capturant les données des dresseurs de manière illégale pour dominer le marché.
+Pour répliquer, la Silph SARL déploie Silph-Scanner. Ce Système d'Information (SI) nouvelle génération doit transformer une masse de données brutes (Big Data) en un avantage concurrentiel décisif tout en garantissant l'éthique et la sécurité. En tant qu'assistant de gestion, vous devez évaluer la performance de ce système.`,
   question: `Étude de cas complète - Le SI de la Silph SARL
 
 Consigne générale :
@@ -69,11 +71,13 @@ ANNEXE 1 - Rapport d'activité Data (DSI)
   2026 | █████████████████████████████████████████████
 
 ANNEXE 2 - Tableau de bord Qualité SI (T1 2026)
-- Fiabilité (Exactitude) : 84% (objectif 99%) -> Attention
-- Actualité (Météo) : 96% (objectif 95%) -> Conforme
-- Accessibilité (Serveur) : 78% (objectif 98%) -> Critique
-- Pertinence (Conseils) : 92% (objectif 95%) -> Conforme
-- Commentaire DSI : saturation du SI sous le poids de données non triées ; incidents d'indisponibilité en pics d'usage
+| Indicateur                | Réalisé | Objectif | État      |
+|---------------------------|---------|----------|-----------|
+| Fiabilité (Exactitude)    | 84%     | 99%      | Attention |
+| Actualité (Météo)         | 96%     | 95%      | Conforme  |
+| Accessibilité (Serveur)   | 78%     | 98%      | Critique  |
+| Pertinence (Conseils)     | 92%     | 95%      | Conforme  |
+Commentaire DSI : saturation du SI sous le poids de données non triées ; incidents d'indisponibilité en pics d'usage.
 
 ANNEXE 3 - Note RH (organisation SI)
 - Pôle Infrastructure : 12 techniciens réseau (serveurs cloud, terminaux Pokédex)

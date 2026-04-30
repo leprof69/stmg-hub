@@ -226,6 +226,9 @@ export default function Classement({ profil }) {
                         </div>
                         <div style={{ fontFamily: "'Fredoka One', cursive", color: "#A855F7", fontSize: "1.1rem", flexShrink: 0 }}>
                           {prestigeTotal.toLocaleString()} prestige
+                          <p style={{ margin: "2px 0 0", color: "#94A3B8", fontSize: "0.72rem", fontFamily: "'Nunito', sans-serif", textAlign: "right" }}>
+                            {(eleve.xp || 0).toLocaleString()} XP
+                          </p>
                         </div>
                       </div>
                     );

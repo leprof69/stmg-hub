@@ -37,6 +37,10 @@ const EXERCISES = [
     contexte: "Le PokéMart reçoit des données de caisse, de stock et de commandes en ligne toutes les minutes.",
     objectif: "Identifier la bonne définition pour poser les bases du chapitre.",
     consigne: "Choisis la proposition la plus juste.",
+    attendus: [
+      "Repérer les caractéristiques majeures du Big Data.",
+      "Justifier ton choix en 1 phrase après correction.",
+    ],
     options: [
       "Un faible volume de données",
       "Un volume, une variété et une vélocité élevés",
@@ -59,6 +63,10 @@ const EXERCISES = [
     contexte: "La mairie de Céladopole veut publier des données de transport autour du centre commercial.",
     objectif: "Vérifier que tu distingues bien accès public et restrictions.",
     consigne: "Indique Vrai/Faux pour chaque affirmation.",
+    attendus: [
+      "Distinguer donnée publique et donnée fermée.",
+      "Identifier ce qui peut être réutilisé légalement.",
+    ],
     statements: [
       { text: "L'open data permet la réutilisation des données publiques.", expected: true },
       { text: "L'open data interdit toute diffusion.", expected: false },
@@ -79,6 +87,10 @@ const EXERCISES = [
     contexte: "Le gérant reçoit des chiffres bruts mais ne sait pas toujours quoi en conclure.",
     objectif: "Remettre dans l'ordre les notions du cours.",
     consigne: "Complète les 3 mots manquants.",
+    attendus: [
+      "Utiliser le vocabulaire exact du chapitre.",
+      "Comprendre le passage vers la décision managériale.",
+    ],
     fillSentence: "La ... brute du Pokédex devient une ... grâce au contexte, puis une ... utile à la décision.",
     blanks: ["donnée", "information", "connaissance"],
     correction: "La transformation donnée -> information -> connaissance soutient la décision.",
@@ -119,6 +131,10 @@ const EXERCISES = [
     objectif: "Mesurer les impacts opérationnels et proposer une correction réaliste.",
     consigne:
       "Donne 3 conséquences possibles pour le PokéMart puis propose 1 action corrective concrète.",
+    attendus: [
+      "Citer 3 impacts précis (client, logistique, coût).",
+      "Proposer 1 action de contrôle qualité applicable.",
+    ],
     correction:
       "Conséquences possibles: erreur logistique, litige client, coût supplémentaire. Action corrective: contrôle qualité de saisie et validation automatique au moment de la commande.",
     document: {
@@ -143,6 +159,10 @@ const EXERCISES = [
     objectif: "Appliquer le principe de minimisation des données.",
     consigne:
       "Distingue les données nécessaires (commande/livraison/paiement) des données non nécessaires, puis justifie brièvement.",
+    attendus: [
+      "Trier clairement nécessaires / non nécessaires.",
+      "Justifier par la finalité RGPD.",
+    ],
     correction:
       "Nécessaires: identité, adresse de livraison, paiement, contact. Non nécessaires: informations sans lien avec la finalité de la commande.",
     document: {
@@ -258,6 +278,10 @@ const EXERCISES = [
     contexte: "Le directeur du PokéMart prépare un plan d'action trimestriel.",
     objectif: "Exploiter un document chiffré puis argumenter des choix de gestion.",
     consigne: "Réponds aux 4 questions en t'appuyant explicitement sur le document.",
+    attendus: [
+      "Citer des chiffres du tableau dans chaque réponse.",
+      "Hiérarchiser risques et actions de gestion.",
+    ],
     document: {
       type: "Tableau de bord trimestriel",
       title: "Performance SI & activité commerciale - T2",
@@ -561,6 +585,16 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
       <p style={{ margin: "0 0 10px", color: COLORS.muted, lineHeight: 1.5 }}>
         <strong>Consigne :</strong> {exercise.consigne}
       </p>
+      {Array.isArray(exercise.attendus) && exercise.attendus.length > 0 && (
+        <div style={{ marginBottom: 10, background: "#F8FAFC", border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: 10 }}>
+          <p style={{ margin: "0 0 6px", color: "#0F766E", fontWeight: 800 }}>✅ Ce qui est attendu</p>
+          <ul style={{ margin: 0, paddingLeft: 18, color: "#334155", fontSize: 14, lineHeight: 1.5 }}>
+            {exercise.attendus.map((item, idx) => (
+              <li key={`${exercise.id}-attendu-${idx}`}>{item}</li>
+            ))}
+          </ul>
+        </div>
+      )}
       {exercise.document && (
         <div style={{ marginBottom: 10, background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 10, padding: 10 }}>
           <p style={{ margin: "0 0 4px", color: "#92400E", fontWeight: 800 }}>
