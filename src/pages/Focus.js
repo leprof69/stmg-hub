@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { auth, db } from "../firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 
@@ -516,8 +516,10 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
   const [memoryTurns, setMemoryTurns] = useState(0);
   const [docAnswers, setDocAnswers] = useState({});
   const [crosswordCells, setCrosswordCells] = useState({});
+  const [activeCrosswordWord, setActiveCrosswordWord] = useState(null);
   const [text, setText] = useState("");
   const crosswordMeta = useMemo(() => buildCrosswordMeta(exercise), [exercise]);
+  const crosswordInputRefs = useRef({});
 
   useEffect(() => {
     if (exercise.mode !== "memory") return;
@@ -605,6 +607,10 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
     });
     return map;
   }, [crosswordMeta.words]);
+  const activeCellSet = useMemo(() => {
+    if (!activeCrosswordWord || !Array.isArray(activeCrosswordWord.cells)) return new Set();
+    return new Set(activeCrosswordWord.cells.map((cell) => cell.key));
+  }, [activeCrosswordWord]);
 
   return (
     <div style={{ background: COLORS.card, border: `2px solid ${modeStyle.border}55`, borderLeft: `8px solid ${modeStyle.border}`, borderRadius: 18, padding: 18, boxShadow: "0 6px 24px rgba(15,23,42,0.05)" }}>
@@ -798,7 +804,17 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
                   const val = crosswordCells[key] || "";
                   const nums = crosswordNumbers[key] || [];
                   return (
-                    <div key={key} style={{ width: 34, height: 34, position: "relative", borderRadius: 4, background: isActive ? "white" : "#334155", border: isActive ? "1px solid #F9A8D4" : "1px solid #334155" }}>
+                    <div
+                      key={key}
+                      style={{
+                        width: 34,
+                        height: 34,
+                        position: "relative",
+                        borderRadius: 4,
+                        background: !isActive ? "#334155" : activeCellSet.has(key) ? "#FFE4E6" : "white",
+                        border: !isActive ? "1px solid #334155" : activeCellSet.has(key) ? "1px solid #F472B6" : "1px solid #F9A8D4",
+                      }}
+                    >
                       {isActive && nums.length > 0 && (
                         <span style={{ position: "absolute", top: 1, left: 3, fontSize: 9, color: "#9D174D", fontWeight: 700 }}>
                           {nums.join(",")}
@@ -806,6 +822,9 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
                       )}
                       {isActive && (
                         <input
+                          ref={(el) => {
+                            if (el) crosswordInputRefs.current[key] = el;
+                          }}
                           value={val}
                           onChange={(e) => {
                             if (locked) return;
@@ -824,11 +843,30 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
           </div>
           <div style={{ display: "grid", gap: 6 }}>
             {crosswordMeta.words.map((word) => (
-              <div key={`${exercise.id}-cw-${word.number}`} style={{ border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: 10, background: "#FFF1F2" }}>
+              <button
+                key={`${exercise.id}-cw-${word.number}`}
+                type="button"
+                onClick={() => {
+                  setActiveCrosswordWord(word);
+                  const firstCell = word.cells?.[0];
+                  if (firstCell) {
+                    const firstRef = crosswordInputRefs.current[firstCell.key];
+                    if (firstRef) firstRef.focus();
+                  }
+                }}
+                style={{
+                  border: `1px solid ${activeCrosswordWord?.number === word.number ? "#EC4899" : COLORS.border}`,
+                  borderRadius: 10,
+                  padding: 10,
+                  background: activeCrosswordWord?.number === word.number ? "#FCE7F3" : "#FFF1F2",
+                  cursor: "pointer",
+                  textAlign: "left",
+                }}
+              >
                 <p style={{ margin: 0, color: "#9D174D", fontWeight: 700 }}>
                   {word.number}. ({word.direction === "across" ? "Horizontal" : "Vertical"}) {word.clue}
                 </p>
-              </div>
+              </button>
             ))}
           </div>
         </div>
