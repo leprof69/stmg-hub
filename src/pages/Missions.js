@@ -38,7 +38,7 @@ const MISSION_CAS_SILPH = {
   titre: "Étude de cas - SI de la Silph SARL",
   emoji: "🏢",
   niveau: "premiere",
-  matiere: "Sciences de Gestion",
+  matiere: "CAS SILPH",
   theme: "Système d'information",
   chapitre: "Chapitre 6 - L'information numérique",
   difficulte: 5,
@@ -46,7 +46,7 @@ const MISSION_CAS_SILPH = {
   type: "mensuelle",
   xp: 7407,
   xp_max: 10000,
-  contexte: "Contexte officiel (1ère STMG, chapitre 6) : la Silph SARL de Safrania déploie Silph-Scanner pour contrer Rocket-Map. Tu dois évaluer la performance du SI, la qualité de l'information et la conformité RGPD à partir d'annexes documentaires.",
+  contexte: "Contexte complet : la Silph SARL, acteur technologique majeur de Safrania, fait face à Rocket-Map (collecte illégale et usage opaque des données). Pour reprendre l'avantage, Silph déploie Silph-Scanner : un SI nouvelle génération chargé de transformer une masse de données brutes en avantage concurrentiel tout en respectant l'éthique et le RGPD. En tant qu'assistant de gestion, tu dois évaluer la performance, la robustesse et la conformité de ce SI.",
   question: `Étude de cas complète - Le SI de la Silph SARL
 
 Consigne générale :
@@ -59,29 +59,39 @@ ANNEXE 1 - Rapport d'activité Data (DSI)
 - Flux audio : 15 000 cris de Pokémon
 - Données images HD de combats
 - Intégration vidéo prévue en 2026 (besoins de stockage x3)
-- Volume data en forte hausse (ordre de grandeur : de ~0,4 To à ~4,5 To)
+- Volume data en forte hausse :
+  2023 : 0,4 To
+  2025 : 1,5 To
+  2026 (prévision) : 4,5 To
+  Graphique (évolution du volume) :
+  2023 | ████
+  2025 | ███████████████
+  2026 | █████████████████████████████████████████████
 
 ANNEXE 2 - Tableau de bord Qualité SI (T1 2026)
 - Fiabilité (Exactitude) : 84% (objectif 99%) -> Attention
 - Actualité (Météo) : 96% (objectif 95%) -> Conforme
 - Accessibilité (Serveur) : 78% (objectif 98%) -> Critique
 - Pertinence (Conseils) : 92% (objectif 95%) -> Conforme
-- Commentaire DSI : saturation du SI sous le poids de données non triées
+- Commentaire DSI : saturation du SI sous le poids de données non triées ; incidents d'indisponibilité en pics d'usage
 
 ANNEXE 3 - Note RH (organisation SI)
 - Pôle Infrastructure : 12 techniciens réseau (serveurs cloud, terminaux Pokédex)
 - Pôle Data Science : 5 analystes (algorithme de combat)
 - Pôle Conformité : 1 DPO (registre CNIL, protection des données)
+- Rôle opérationnel attendu : coordination entre pôles pour garantir performance + conformité
 
 ANNEXE 4 - Comparatif stratégique Silph vs Rocket
 - Source des données : Silph (capteurs certifiés, données collaboratives) / Rocket (hacking, interception)
 - Éthique : Silph (respect RGPD) / Rocket (revente de données)
 - Modèle : Silph (open data partiel) / Rocket (opaque, tout payant)
+- Enjeu d'image : confiance, fidélisation et réputation de marque
 
 ANNEXE 5 - Mentions légales (extrait)
 - Collecte : nom, géolocalisation, IP
 - Droits utilisateurs : accès, rectification, effacement
 - Contact DPO pour suppression de compte
+- Exigence de traçabilité : preuve de conformité et gestion des demandes utilisateurs
 
 TRAVAIL À FAIRE (barème 20 points)
 

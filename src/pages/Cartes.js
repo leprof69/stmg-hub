@@ -78,6 +78,8 @@ const getAujourdhui = () => {
   return `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
 };
 
+const getPrestigeTotal = (data = {}) => (Number(data.prestigeBase) || 0) + (Number(data.prestige) || 0);
+
 // ===== VISIONNEUSE =====
 const Visionneuse = ({ carte, cartesPossedees, indexDansPossedees, onFermer, onPrecedent, onSuivant }) => {
   const config = RARETE_CONFIG[carte.rarete] || RARETE_CONFIG.commune;
@@ -318,6 +320,8 @@ export default function Cartes({ profil, onXPGagne }) {
 
       const xpDepenseeActuelle = data.xpDepensee || 0;
       const nouvelleXpDepensee = xpDepenseeActuelle + pack.cout;
+      const hasPrestigeBase = Number.isFinite(Number(data.prestigeBase));
+      const prestigeBase = hasPrestigeBase ? (Number(data.prestigeBase) || 0) : Math.floor((data.xp || 0) / PRESTIGE_XP_RATIO);
       const prestigeActuel = data.prestige || 0;
       const gainPrestige = Math.floor(nouvelleXpDepensee / PRESTIGE_XP_RATIO) - Math.floor(xpDepenseeActuelle / PRESTIGE_XP_RATIO);
       const updates = {
@@ -326,6 +330,7 @@ export default function Cartes({ profil, onXPGagne }) {
         xpDepensee: nouvelleXpDepensee,
         prestige: prestigeActuel + Math.max(0, gainPrestige),
       };
+      if (!hasPrestigeBase) updates.prestigeBase = prestigeBase;
       if (pack.id === "mystere") {
         updates.dernierPackMystere = getDebutSemaine();
         setPackMystereDisponible(false);
@@ -469,7 +474,7 @@ export default function Cartes({ profil, onXPGagne }) {
                 { label: `${totalCartes} cartes`, bg: "#0284C7", emoji: "🃏" },
                 { label: `+${bonusTotal.toFixed(1)} pts`, bg: "#F59E0B", emoji: "⭐" },
                 { label: `${profil?.xp || 0} XP`, bg: "#3B82F6", emoji: "⚡" },
-                { label: `${profil?.prestige || 0} prestige`, bg: "#A855F7", emoji: "👑" },
+                { label: `${getPrestigeTotal(profil)} prestige`, bg: "#A855F7", emoji: "👑" },
               ].map((stat, i) => (
                 <div key={i} style={{ background: stat.bg + "30", border: `1px solid ${stat.bg}50`, borderRadius: "14px", padding: "8px 18px", fontFamily: "'Fredoka One', cursive", color: "white", fontSize: "0.95rem" }}>{stat.emoji} {stat.label}</div>
               ))}

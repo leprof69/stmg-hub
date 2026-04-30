@@ -273,6 +273,28 @@ const EXERCISES = [
     correction:
       "Une bonne copie repère les signaux, hiérarchise les risques, relie données et expérience client, puis propose des actions réalistes et mesurables.",
   },
+  {
+    id: "focus-6-10",
+    chapter: "Chapitre 6",
+    matiere: "SDGN",
+    theme: "Thème 2",
+    difficulty: 11,
+    type: "Mots croisés",
+    mode: "crossword",
+    xp: 190,
+    title: "Étape 10 - Mots croisés des notions",
+    contexte: "Révision finale avant le bilan du chapitre.",
+    objectif: "Vérifier que le vocabulaire clé est parfaitement maîtrisé.",
+    consigne: "Complète chaque mot à partir de l'indice. Un mot = une réponse.",
+    crosswordClues: [
+      { clue: "Cadre juridique qui protège les données personnelles (4 lettres)", answer: "RGPD" },
+      { clue: "Donnée contextualisée qui prend du sens (11 lettres)", answer: "information" },
+      { clue: "Donnée publique réutilisable (4 lettres)", answer: "open" },
+      { clue: "V des 5V lié à la rapidité des flux (8 lettres)", answer: "velocite" },
+      { clue: "Ressource du SI qui fait les calculs/traitements (8 lettres)", answer: "logiciel" },
+    ],
+    correction: "Les mots attendus sont : RGPD, information, open, vélocité, logiciel.",
+  },
 ];
 
 const CHAPTER_CONTENT = {
@@ -282,6 +304,18 @@ const CHAPTER_CONTENT = {
       "Parcours guidé avec activités variées reliées entre elles: tu accompagnes le PokéMart de Céladopole pour transformer ses données en décisions utiles.",
     notions: "Notions: donnée, information, SI, Big Data, open data, RGPD",
   },
+};
+
+const MODE_UI = {
+  qcm: { border: "#2563EB", bg: "#EFF6FF", label: "QCM" },
+  truefalse: { border: "#DC2626", bg: "#FEF2F2", label: "Vrai/Faux" },
+  fill: { border: "#7C3AED", bg: "#F5F3FF", label: "Texte à trous" },
+  checklist: { border: "#0F766E", bg: "#F0FDFA", label: "Tri / Checklist" },
+  matching: { border: "#EA580C", bg: "#FFF7ED", label: "Liaison" },
+  memory: { border: "#0B2447", bg: "#EFF6FF", label: "Memory" },
+  docqa: { border: "#92400E", bg: "#FFFBEB", label: "Analyse doc" },
+  redaction: { border: "#475569", bg: "#F8FAFC", label: "Rédaction" },
+  crossword: { border: "#BE185D", bg: "#FFF1F2", label: "Mots croisés" },
 };
 
 const getTodayKey = () => {
@@ -396,6 +430,18 @@ const evaluateInteractive = (exercise, state) => {
       aAmeliorer: score < 8 ? "Appuie davantage chaque réponse sur le document et le vocabulaire du cours." : "Analyse solide et structurée.",
     };
   }
+  if (exercise.mode === "crossword") {
+    const clues = exercise.crosswordClues || [];
+    const good = clues.filter((c, i) => normalize((state.crosswordAnswers && state.crosswordAnswers[i]) || "") === normalize(c.answer)).length;
+    const total = clues.length || 1;
+    const score = Math.round((good / total) * 10);
+    return {
+      score,
+      mention: score >= 8 ? "Très bien" : score >= 6 ? "Bon travail" : "À retravailler",
+      pointsForts: `${good}/${total} mots corrects.`,
+      aAmeliorer: score < 8 ? "Reprends les définitions du vocabulaire du chapitre." : "Vocabulaire bien maîtrisé.",
+    };
+  }
   return evaluateRedaction(exercise, state.text || "");
 };
 
@@ -414,6 +460,7 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
   const [memorySolved, setMemorySolved] = useState({});
   const [memoryTurns, setMemoryTurns] = useState(0);
   const [docAnswers, setDocAnswers] = useState({});
+  const [crosswordAnswers, setCrosswordAnswers] = useState({});
   const [text, setText] = useState("");
 
   useEffect(() => {
@@ -441,12 +488,14 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
       (exercise.mode === "matching" && exercise.matchingLeft.every((_, i) => matches[i] !== undefined && matches[i] !== "")) ||
       (exercise.mode === "memory" && Object.keys(memorySolved).length === (exercise.memoryPairsCount || 0)) ||
       (exercise.mode === "docqa" && (exercise.docQuestions || []).every((_, i) => (docAnswers[i] || "").trim().length >= 12)) ||
+      (exercise.mode === "crossword" && (exercise.crosswordClues || []).every((_, i) => (crosswordAnswers[i] || "").trim().length >= 2)) ||
       (exercise.mode === "redaction" && text.trim().length >= 40));
 
   const validate = () => {
     const next = evaluateInteractive(exercise, {
       selected, tf, blanks, checks, matches, text,
       docAnswers,
+      crosswordAnswers,
       memorySolved: Object.keys(memorySolved).length,
       memoryTurns,
     });
@@ -488,12 +537,14 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
     }
   };
 
+  const modeStyle = MODE_UI[exercise.mode] || MODE_UI.redaction;
+
   return (
-    <div style={{ background: COLORS.card, border: `1px solid ${COLORS.border}`, borderRadius: 18, padding: 18, boxShadow: "0 6px 24px rgba(15,23,42,0.05)" }}>
+    <div style={{ background: COLORS.card, border: `2px solid ${modeStyle.border}55`, borderLeft: `8px solid ${modeStyle.border}`, borderRadius: 18, padding: 18, boxShadow: "0 6px 24px rgba(15,23,42,0.05)" }}>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 10 }}>
         <span style={{ borderRadius: 999, padding: "4px 10px", background: "#EEF2FF", color: COLORS.violet, fontWeight: 700, fontSize: 12 }}>Activité {index + 1}/{total}</span>
         <span style={{ borderRadius: 999, padding: "4px 10px", background: "#DBEAFE", color: "#1D4ED8", fontWeight: 700, fontSize: 12 }}>Niveau {exercise.difficulty}</span>
-        <span style={{ borderRadius: 999, padding: "4px 10px", background: "#F3E8FF", color: "#6D28D9", fontWeight: 700, fontSize: 12 }}>{exercise.type}</span>
+        <span style={{ borderRadius: 999, padding: "4px 10px", background: modeStyle.bg, color: modeStyle.border, fontWeight: 800, fontSize: 12 }}>{modeStyle.label}</span>
         <span style={{ borderRadius: 999, padding: "4px 10px", background: "#DCFCE7", color: "#166534", fontWeight: 700, fontSize: 12 }}>+{exercise.xp} XP</span>
       </div>
       <h3 style={{ margin: "0 0 8px", color: COLORS.text }}>{exercise.title}</h3>
@@ -656,6 +707,25 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
           <p style={{ margin: "2px 0 0", color: "#64748B", fontSize: 12 }}>
             Conseil: cite au moins un élément chiffré ou factuel du document dans chaque réponse.
           </p>
+        </div>
+      )}
+
+      {exercise.mode === "crossword" && (
+        <div style={{ display: "grid", gap: 8 }}>
+          {(exercise.crosswordClues || []).map((item, i) => (
+            <div key={`${exercise.id}-cw-${i}`} style={{ border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: 10, background: "#FFF1F2" }}>
+              <p style={{ margin: "0 0 6px", color: "#9D174D", fontWeight: 700 }}>Indice {i + 1}: {item.clue}</p>
+              <input
+                value={crosswordAnswers[i] || ""}
+                onChange={(e) => {
+                  if (!locked) setCrosswordAnswers((prev) => ({ ...prev, [i]: e.target.value }));
+                }}
+                readOnly={locked}
+                placeholder="Ta réponse"
+                style={{ width: "100%", borderRadius: 8, border: `1px solid ${COLORS.border}`, padding: "8px", boxSizing: "border-box" }}
+              />
+            </div>
+          ))}
         </div>
       )}
 

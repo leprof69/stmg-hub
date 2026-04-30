@@ -48,6 +48,8 @@ const getNbCartesRares = (cartes) => {
   ).length;
 };
 
+const getPrestigeTotal = (user = {}) => (Number(user.prestigeBase) || 0) + (Number(user.prestige) || 0);
+
 export default function Classement({ profil }) {
   const [onglet, setOnglet] = useState("xp");
   const [classementEleves, setClassementEleves] = useState([]);
@@ -75,7 +77,7 @@ export default function Classement({ profil }) {
       // Prestige
       const elevesClasses = users
         .filter(u => u.prenom)
-        .sort((a, b) => (b.prestige || 0) - (a.prestige || 0))
+        .sort((a, b) => getPrestigeTotal(b) - getPrestigeTotal(a))
         .slice(0, 50);
       setClassementEleves(elevesClasses);
 
@@ -197,7 +199,8 @@ export default function Classement({ profil }) {
                   {classementEleves.map((eleve, i) => {
                     const rang = i + 1;
                     const estMoi = eleve.id === profil?.id;
-                    const niveau = niveauNom(eleve.prestige || 0);
+                    const prestigeTotal = getPrestigeTotal(eleve);
+                    const niveau = niveauNom(prestigeTotal);
                     const couleurFamille = familleColors[eleve.famille] || COLORS.S;
                     return (
                       <div key={i} style={{
@@ -222,7 +225,7 @@ export default function Classement({ profil }) {
                           </p>
                         </div>
                         <div style={{ fontFamily: "'Fredoka One', cursive", color: "#A855F7", fontSize: "1.1rem", flexShrink: 0 }}>
-                          {(eleve.prestige || 0).toLocaleString()} prestige
+                          {prestigeTotal.toLocaleString()} prestige
                         </div>
                       </div>
                     );
