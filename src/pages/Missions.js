@@ -835,6 +835,11 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
         score: resultFinal.score,
         xpGagne,
         antiCheatFlags,
+        reponseEleve: reponse.trim(),
+        feedbackIA: String(resultFinal.feedback || ""),
+        pointsForts: String(resultFinal.points_forts || ""),
+        aAmeliorer: String(resultFinal.a_ameliorer || ""),
+        correctionRepere: extraireElementsCorrection(mission, 4),
       };
       await updateDoc(doc(db, "users", user.uid), { xp: newXP, missionsHistorique: historique });
       const xpDetail = "Modificateur familier: desactive";

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { auth, db } from "../firebase";
 import { doc, updateDoc, getDoc } from "firebase/firestore";
 import { COLLECTIONS } from "../data/collections";
@@ -63,22 +63,7 @@ const familleColors = {
 };
 
 const toutesCartes = COLLECTIONS.flatMap(c => c.cartes);
-const cartesLegendaires = toutesCartes.filter((c) => c.rarete === "legendaire");
-const cartesPrismatiques = toutesCartes.filter((c) => c.rarete === "ultra_rare");
-const DAILY_TICKET_VERSION = 4;
-const SCRATCH_GRID_X = 20;
-const SCRATCH_GRID_Y = 10;
-const SCRATCH_TOTAL_CELLS = SCRATCH_GRID_X * SCRATCH_GRID_Y;
-const SCRATCH_REVEAL_RATIO = 0.68;
-
-const getAujourdhui = () => {
-  const d = new Date();
-  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
-};
-
-const randomItem = (arr = []) => arr[Math.floor(Math.random() * arr.length)];
-
-export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }) {
+export default function Profil({ profil, onRefaire, onDeconnexion }) {
   const [showCGU, setShowCGU] = useState(false);
   const [showContact, setShowContact] = useState(false);
   const [showJoker, setShowJoker] = useState(false);
@@ -88,14 +73,6 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
   const [vitrine, setVitrine] = useState([null, null, null]);
   const [modeChoixVitrine, setModeChoixVitrine] = useState(null); // index slot en cours
   const [message, setMessage] = useState(null);
-  const [ticketJour, setTicketJour] = useState(null);
-  const [revealedTicket, setRevealedTicket] = useState(false);
-  const [loadingTicket, setLoadingTicket] = useState(false);
-  const [scratchProgress, setScratchProgress] = useState(0);
-  const canvasRef = useRef(null);
-  const scratchAreaRef = useRef(null);
-  const isScratchingRef = useRef(false);
-  const touchedBucketsRef = useRef(new Set());
 
   const jokerDisponible = !profil.jokerUtilise && !jokerUtilise;
   const couleurFamille = familleColors[profil.famille] || "#0EA5E9";
@@ -115,19 +92,6 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
     const data = snap.data();
     setMaCollection(data.cartes || {});
     setVitrine(data.vitrine || [null, null, null]);
-    const today = getAujourdhui();
-    const stored = data.dailyScratchTicket || null;
-    if (stored && stored.date === today && stored.version === DAILY_TICKET_VERSION) {
-      setTicketJour(stored);
-      setRevealedTicket(Boolean(stored.claimed));
-      setScratchProgress(0);
-      touchedBucketsRef.current = new Set();
-    } else {
-      setTicketJour(null);
-      setRevealedTicket(false);
-      setScratchProgress(0);
-      touchedBucketsRef.current = new Set();
-    }
   };
 
   const afficherMessage = (texte, type = "success") => {
@@ -136,159 +100,6 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
   };
 
   const cartesPossedees = toutesCartes.filter(c => (maCollection[c.id] || 0) > 0);
-  const scratchedPercent = Math.round(scratchProgress * 100);
-  const ticketDisponible = !ticketJour;
-
-  const getTicketRewardLabel = (reward) => {
-    if (!reward) return "";
-    if (reward.type === "xp") return `⚡ ${reward.xp} XP`;
-    const carte = toutesCartes.find((c) => c.id === reward.cardId);
-    if (!carte) return "🃏 Carte bonus";
-    const rarete = RARETE_CONFIG[carte.rarete];
-    return `${rarete?.emoji || "🃏"} ${carte.nom} (${rarete?.label || carte.rarete})`;
-  };
-
-  const genererRewardTicket = () => {
-    const roll = Math.random();
-    if (roll < 0.55) {
-      const xpPool = [1000, 1200, 1500, 1800, 2200, 3000];
-      return { type: "xp", xp: randomItem(xpPool) };
-    }
-    if (roll < 0.95) {
-      const carteLegendaire = randomItem(cartesLegendaires);
-      if (carteLegendaire) return { type: "card", cardId: carteLegendaire.id };
-    }
-    const cartePrismatique = randomItem(cartesPrismatiques);
-    if (cartePrismatique) return { type: "card", cardId: cartePrismatique.id };
-    const carteLegendaire = randomItem(cartesLegendaires);
-    if (carteLegendaire) return { type: "card", cardId: carteLegendaire.id };
-    return { type: "xp", xp: 1500 };
-  };
-
-  const creerTicketDuJour = async () => {
-    if (!auth.currentUser || loadingTicket || ticketJour) return;
-    setLoadingTicket(true);
-    try {
-      const today = getAujourdhui();
-      const snap = await getDoc(doc(db, "users", auth.currentUser.uid));
-      if (!snap.exists()) return;
-      const data = snap.data();
-      const stored = data.dailyScratchTicket;
-      if (stored && stored.date === today && stored.version === DAILY_TICKET_VERSION) {
-        setTicketJour(stored);
-        setRevealedTicket(Boolean(stored.claimed));
-        afficherMessage("🎟️ Ticket déjà disponible aujourd’hui.");
-        return;
-      }
-      const reward = genererRewardTicket();
-      const nextTicket = { date: today, version: DAILY_TICKET_VERSION, reward, claimed: false };
-      await updateDoc(doc(db, "users", auth.currentUser.uid), { dailyScratchTicket: nextTicket });
-      setTicketJour(nextTicket);
-      setScratchProgress(0);
-      touchedBucketsRef.current = new Set();
-      setRevealedTicket(false);
-      afficherMessage("🎟️ Ticket du jour ajouté !");
-    } catch (err) {
-      afficherMessage("Erreur lors de la création du ticket.", "error");
-    } finally {
-      setLoadingTicket(false);
-    }
-  };
-
-  const revelerTicket = async () => {
-    if (!ticketJour || ticketJour.claimed || !auth.currentUser) return;
-    setLoadingTicket(true);
-    try {
-      const ref = doc(db, "users", auth.currentUser.uid);
-      const snap = await getDoc(ref);
-      if (!snap.exists()) return;
-      const data = snap.data();
-      const currentTicket = data.dailyScratchTicket;
-      if (!currentTicket || currentTicket.date !== getAujourdhui() || currentTicket.version !== DAILY_TICKET_VERSION || currentTicket.claimed) {
-        setTicketJour(currentTicket || null);
-        setRevealedTicket(Boolean(currentTicket?.claimed));
-        return;
-      }
-
-      const reward = currentTicket.reward;
-      const updates = {
-        dailyScratchTicket: { ...currentTicket, claimed: true },
-      };
-
-      if (reward?.type === "xp") {
-        updates.xp = (data.xp || 0) + (reward.xp || 0);
-      } else if (reward?.type === "card") {
-        const cartes = { ...(data.cartes || {}) };
-        cartes[reward.cardId] = (cartes[reward.cardId] || 0) + 1;
-        updates.cartes = cartes;
-        setMaCollection(cartes);
-      }
-
-      await updateDoc(ref, updates);
-      setTicketJour({ ...currentTicket, claimed: true });
-      setRevealedTicket(true);
-      afficherMessage(`🎉 Récompense débloquée: ${getTicketRewardLabel(reward)}`);
-      if (onMiseAJour) onMiseAJour();
-    } catch (err) {
-      afficherMessage("Erreur lors de l'ouverture du ticket.", "error");
-    } finally {
-      setLoadingTicket(false);
-    }
-  };
-
-  const drawScratch = (clientX, clientY) => {
-    if (!canvasRef.current || !scratchAreaRef.current || !ticketJour || revealedTicket || ticketJour.claimed) return;
-    const rect = scratchAreaRef.current.getBoundingClientRect();
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
-    if (x < 0 || y < 0 || x > rect.width || y > rect.height) return;
-
-    const ctx = canvasRef.current.getContext("2d");
-    ctx.globalCompositeOperation = "destination-out";
-    ctx.beginPath();
-    ctx.arc(x, y, 38, 0, Math.PI * 2);
-    ctx.fill();
-
-    const bucketX = Math.floor((x / rect.width) * SCRATCH_GRID_X);
-    const bucketY = Math.floor((y / rect.height) * SCRATCH_GRID_Y);
-    const key = `${bucketX}-${bucketY}`;
-    if (!touchedBucketsRef.current.has(key)) {
-      touchedBucketsRef.current.add(key);
-      setScratchProgress(Math.min(1, touchedBucketsRef.current.size / SCRATCH_TOTAL_CELLS));
-    }
-  };
-
-  useEffect(() => {
-    if (!ticketJour || revealedTicket || ticketJour.claimed) return;
-    if (scratchProgress >= SCRATCH_REVEAL_RATIO) {
-      revelerTicket();
-    }
-  }, [scratchProgress, ticketJour, revealedTicket]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (!canvasRef.current || !ticketJour || revealedTicket || ticketJour.claimed) return;
-    const canvas = canvasRef.current;
-    const rect = scratchAreaRef.current?.getBoundingClientRect();
-    const width = Math.max(280, Math.floor(rect?.width || 600));
-    const height = Math.max(100, Math.floor(rect?.height || 160));
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext("2d");
-    const gradient = ctx.createLinearGradient(0, 0, width, height);
-    gradient.addColorStop(0, "#D1D5DB");
-    gradient.addColorStop(0.5, "#9CA3AF");
-    gradient.addColorStop(1, "#6B7280");
-    ctx.globalCompositeOperation = "source-over";
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, width, height);
-    for (let i = 0; i < 420; i++) {
-      const px = Math.random() * width;
-      const py = Math.random() * height;
-      const alpha = 0.08 + (Math.random() * 0.22);
-      ctx.fillStyle = `rgba(255,255,255,${alpha})`;
-      ctx.fillRect(px, py, 1.8, 1.8);
-    }
-  }, [ticketJour, revealedTicket]);
 
   const choisirCarteVitrine = async (carte) => {
     if (modeChoixVitrine === null) return;
@@ -392,132 +203,6 @@ export default function Profil({ profil, onRefaire, onDeconnexion, onMiseAJour }
           <p style={{ color: "#9CA3AF", fontSize: "0.75rem", textAlign: "center", margin: "12px 0 0" }}>
             Clique sur un slot pour changer la carte
           </p>
-        </div>
-
-        {/* TICKET À GRATTER DU JOUR */}
-        <div style={{ background: "white", borderRadius: "24px", padding: "24px", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
-          <style>
-            {`
-              .gold-ticket {
-                position: relative;
-                background: linear-gradient(135deg, #FEF3C7 0%, #F59E0B 40%, #B45309 100%);
-                border: 2px solid #B45309;
-                box-shadow: 0 10px 30px rgba(180, 83, 9, 0.35), inset 0 2px 0 rgba(255,255,255,0.45);
-                overflow: hidden;
-              }
-              .gold-ticket::before {
-                content: "";
-                position: absolute;
-                top: -50%;
-                left: -30%;
-                width: 60%;
-                height: 220%;
-                background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.45), rgba(255,255,255,0));
-                transform: rotate(22deg);
-                animation: shineTicket 3.2s linear infinite;
-                pointer-events: none;
-              }
-              @keyframes shineTicket {
-                0% { left: -45%; }
-                100% { left: 120%; }
-              }
-              .gold-pill {
-                background: linear-gradient(135deg, #FDE68A, #F59E0B);
-                color: #7C2D12;
-                border: 1px solid #B45309;
-                box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
-              }
-              .scratch-canvas {
-                position: absolute;
-                inset: 0;
-                width: 100%;
-                height: 100%;
-                touch-action: none;
-                cursor: crosshair;
-              }
-            `}
-          </style>
-          <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1.2rem", margin: "0 0 6px" }}>🎟️ Ticket à gratter quotidien</p>
-          <p style={{ color: "#9CA3AF", fontSize: "0.82rem", margin: "0 0 14px" }}>
-            1 ticket offert par jour. Récompense possible: gros XP (1000+), carte Légendaire (fréquent) ou Prismatique (très rare).
-          </p>
-
-          {ticketDisponible ? (
-            <button
-              onClick={creerTicketDuJour}
-              disabled={loadingTicket}
-              style={{
-                width: "100%",
-                background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
-                color: "white",
-                border: "none",
-                fontFamily: "'Fredoka One', cursive",
-                fontSize: "0.95rem",
-                padding: "12px 16px",
-                borderRadius: "12px",
-                cursor: loadingTicket ? "not-allowed" : "pointer",
-              }}
-            >
-              {loadingTicket ? "⏳ Création..." : "🎟️ Récupérer mon ticket du jour"}
-            </button>
-          ) : (
-            <div>
-              <div
-                className="gold-ticket"
-                ref={scratchAreaRef}
-                style={{
-                  position: "relative",
-                  borderRadius: "16px",
-                  overflow: "hidden",
-                  padding: "14px",
-                  minHeight: "170px",
-                }}
-              >
-                <div style={{ textAlign: "center", marginBottom: 8 }}>
-                  <p style={{ color: "#7C2D12", fontFamily: "'Fredoka One', cursive", margin: 0, fontSize: "0.85rem", position: "relative", zIndex: 2 }}>
-                    {revealedTicket || ticketJour?.claimed ? "Récompense du jour" : "Gratte le ticket"}
-                  </p>
-                  <p style={{ color: "#1F2937", fontFamily: "'Fredoka One', cursive", margin: "5px 0 0", fontSize: "1.08rem", position: "relative", zIndex: 2 }}>
-                    {revealedTicket || ticketJour?.claimed ? getTicketRewardLabel(ticketJour?.reward) : "?????"}
-                  </p>
-                </div>
-
-                <div
-                  style={{
-                    marginTop: "10px",
-                    borderRadius: "10px",
-                    overflow: "hidden",
-                    height: "115px",
-                    position: "relative",
-                    zIndex: 2,
-                    border: "1px dashed rgba(255,255,255,0.35)",
-                  }}
-                >
-                  {!(revealedTicket || ticketJour?.claimed) && (
-                    <canvas
-                      ref={canvasRef}
-                      className="scratch-canvas"
-                      onPointerDown={(e) => {
-                        e.preventDefault();
-                        isScratchingRef.current = true;
-                        e.currentTarget.setPointerCapture?.(e.pointerId);
-                        drawScratch(e.clientX, e.clientY);
-                      }}
-                      onPointerMove={(e) => {
-                        if (!isScratchingRef.current) return;
-                        drawScratch(e.clientX, e.clientY);
-                      }}
-                      onPointerUp={() => { isScratchingRef.current = false; }}
-                      onPointerCancel={() => { isScratchingRef.current = false; }}
-                    />
-                  )}
-                </div>
-              </div>
-              <p className="gold-pill" style={{ borderRadius: 999, padding: "6px 10px", color: "#6B7280", fontSize: "0.75rem", margin: "10px auto 0", textAlign: "center", width: "fit-content", fontFamily: "'Fredoka One', cursive" }}>
-                Progression grattage: {scratchedPercent}% · Révélation à {Math.round(SCRATCH_REVEAL_RATIO * 100)}%
-              </p>
-            </div>
-          )}
         </div>
 
         {/* INFOS */}

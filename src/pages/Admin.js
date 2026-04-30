@@ -50,6 +50,7 @@ const ONGLET_ADMIN = [
   { id: "infos", label: "💡 Infos" },
 ];
 const DS_EXERCISE_BY_ID = Object.fromEntries(DS_EXERCISES.map((exercise) => [exercise.id, exercise]));
+const MISSION_CAS_SILPH_ID = "mission-etude-cas-silph-sarl";
 const RARETE_PARTICIPATION = {
   commune: 0,
   peu_commune: 0,
@@ -303,13 +304,21 @@ export default function Admin() {
         .map((c) => parseDayKey(c?.lastClaimDate))
         .filter(Boolean)
         .sort((a, b) => b - a)[0] || null;
+      const focusClaims = eleve.focusProgress?.claims || {};
+      const focusEntries = Object.values(focusClaims);
+      const focusToday = focusEntries.filter((f) => f?.lastClaimDate === todayKey).length;
+      const focusTotal = focusEntries.reduce((sum, f) => sum + (f?.totalClaims || 0), 0);
+      const lastFocusDate = focusEntries
+        .map((f) => parseDayKey(f?.lastClaimDate))
+        .filter(Boolean)
+        .sort((a, b) => b - a)[0] || null;
 
       const lastConnectionAt = toDate(eleve.lastConnectionAt);
       const lastConnectionDay = parseDayKey(eleve.lastConnectionDay);
       const lastCartesDay = parseDayKey(eleve.lastVisit);
       const createdAt = toDate(eleve.createdAt);
 
-      const allDates = [lastConnectionAt, lastConnectionDay, lastCartesDay, lastMissionDate, lastObjectifDate, createdAt].filter(Boolean);
+      const allDates = [lastConnectionAt, lastConnectionDay, lastCartesDay, lastMissionDate, lastObjectifDate, lastFocusDate, createdAt].filter(Boolean);
       const lastActivity = allDates.sort((a, b) => b - a)[0] || null;
       const joursSansActivite = joursEcoules(lastActivity);
 
@@ -325,6 +334,7 @@ export default function Admin() {
       if (lastConnectionDay && toDayKey(lastConnectionDay) === todayKey) actionsToday.push("Connexion");
       if (missionsToday > 0) actionsToday.push(`${missionsToday} mission(s)`);
       if (objectifToday > 0) actionsToday.push(`${objectifToday} entraînement(s) bac`);
+      if (focusToday > 0) actionsToday.push(`${focusToday} activité(s) Focus`);
       if (aFaitCartesToday) actionsToday.push("Cartes");
       if (!actionsToday.length) actionsToday.push("Aucune action détectée");
 
@@ -346,6 +356,8 @@ export default function Admin() {
         antiCheatToday,
         objectifToday,
         objectifTotal,
+        focusToday,
+        focusTotal,
         lastActivity,
         joursSansActivite,
         actionsToday,
@@ -368,6 +380,7 @@ export default function Admin() {
       if (filtreActivite === "aujourdhui") okActivite = eleve.estActifAujourdhui;
       if (filtreActivite === "7jours") okActivite = eleve.joursSansActivite !== null && eleve.joursSansActivite <= 7;
       if (filtreActivite === "inactifs") okActivite = eleve.joursSansActivite !== null && eleve.joursSansActivite > 7;
+      if (filtreActivite === "focus") okActivite = (eleve.focusTotal || 0) > 0;
 
       return okClasse && okLycee && okRecherche && okActivite;
     }).sort((a, b) => {
@@ -382,11 +395,13 @@ export default function Admin() {
     const actifsAujourdhui = reportingRows.filter((e) => e.estActifAujourdhui).length;
     const actifs7j = reportingRows.filter((e) => e.joursSansActivite !== null && e.joursSansActivite <= 7).length;
     const inactifs7j = reportingRows.filter((e) => e.joursSansActivite !== null && e.joursSansActivite > 7).length;
-    const actionsToday = reportingRows.reduce((sum, e) => sum + e.missionsToday + e.objectifToday + (e.lastVisit === todayKey ? 1 : 0), 0);
+    const actionsToday = reportingRows.reduce((sum, e) => sum + e.missionsToday + e.objectifToday + e.focusToday + (e.lastVisit === todayKey ? 1 : 0), 0);
     const suspicions = reportingRows.reduce((sum, e) => sum + (e.antiCheatEvents || 0), 0);
     const sessionTodaySec = reportingRows.reduce((sum, e) => sum + (e.sessionTodaySec || 0), 0);
     const participationTotal = reportingRows.reduce((sum, e) => sum + (Number(e.participationPoints) || 0), 0);
-    return { total, actifsAujourdhui, actifs7j, inactifs7j, actionsToday, suspicions, sessionTodaySec, participationTotal };
+    const elevesFocus = reportingRows.filter((e) => (e.focusTotal || 0) > 0).length;
+    const focusTodayTotal = reportingRows.reduce((sum, e) => sum + (e.focusToday || 0), 0);
+    return { total, actifsAujourdhui, actifs7j, inactifs7j, actionsToday, suspicions, sessionTodaySec, participationTotal, elevesFocus, focusTodayTotal };
   }, [reportingRows, todayKey]);
 
   const dsCopiesRows = useMemo(() => {
@@ -549,6 +564,107 @@ export default function Admin() {
 
     drawFooter();
     docPdf.save(`copies-ds-${DS_EXAM_ID}.pdf`);
+  };
+
+  const exportSilphFeedbackPdf = (eleve) => {
+    const missionEntry = eleve?.missionsHistorique?.[MISSION_CAS_SILPH_ID];
+    if (!missionEntry) {
+      alert("Aucune copie CAS SILPH trouvée pour cet élève.");
+      return;
+    }
+    const docPdf = new jsPDF({ unit: "pt", format: "a4" });
+    const page = { left: 40, right: 555, top: 42, bottom: 800 };
+    const contentWidth = page.right - page.left;
+    let y = page.top;
+    let pageNumber = 1;
+
+    const drawFooter = () => {
+      docPdf.setFont("helvetica", "normal");
+      docPdf.setFontSize(9);
+      docPdf.setTextColor(100, 116, 139);
+      docPdf.text(`Page ${pageNumber}`, page.right, 825, { align: "right" });
+      docPdf.setTextColor(15, 23, 42);
+    };
+    const newPage = () => {
+      drawFooter();
+      docPdf.addPage();
+      pageNumber += 1;
+      y = page.top;
+    };
+    const ensureSpace = (neededHeight = 20) => {
+      if (y + neededHeight > page.bottom) newPage();
+    };
+    const writeText = (text, opts = {}) => {
+      const {
+        size = 10.5,
+        bold = false,
+        color = [15, 23, 42],
+        lineHeight = 14,
+        indent = 0,
+      } = opts;
+      docPdf.setFont("helvetica", bold ? "bold" : "normal");
+      docPdf.setFontSize(size);
+      docPdf.setTextColor(color[0], color[1], color[2]);
+      const lines = docPdf.splitTextToSize(String(text || ""), contentWidth - indent);
+      ensureSpace(lines.length * lineHeight + 2);
+      docPdf.text(lines, page.left + indent, y);
+      y += lines.length * lineHeight;
+      docPdf.setTextColor(15, 23, 42);
+    };
+    const writeSectionTitle = (title, tone = "default") => {
+      const palette = tone === "danger"
+        ? { fill: [254, 226, 226], border: [248, 113, 113], text: [153, 27, 27] }
+        : tone === "info"
+          ? { fill: [219, 234, 254], border: [96, 165, 250], text: [30, 64, 175] }
+          : { fill: [241, 245, 249], border: [148, 163, 184], text: [30, 41, 59] };
+      ensureSpace(28);
+      docPdf.setFillColor(palette.fill[0], palette.fill[1], palette.fill[2]);
+      docPdf.setDrawColor(palette.border[0], palette.border[1], palette.border[2]);
+      docPdf.roundedRect(page.left, y, contentWidth, 22, 4, 4, "FD");
+      docPdf.setFont("helvetica", "bold");
+      docPdf.setFontSize(11);
+      docPdf.setTextColor(palette.text[0], palette.text[1], palette.text[2]);
+      docPdf.text(String(title), page.left + 8, y + 15);
+      docPdf.setTextColor(15, 23, 42);
+      y += 28;
+    };
+
+    const nomEleve = eleve.prenom || eleve.nom || eleve.email || `Eleve ${eleve.id.slice(0, 6)}`;
+    const safeName = String(nomEleve).replace(/[^\w-]+/g, "_");
+    const antiCheat = missionEntry?.antiCheatFlags?.tricheDetectee;
+
+    writeText("STMG HUB - Copie individuelle CAS SILPH", { size: 16, bold: true, lineHeight: 18 });
+    writeText(`Eleve : ${nomEleve}`, { size: 11, bold: true });
+    writeText(`Classe : ${eleve.classe || "-"} | Lycee : ${eleve.lycee || "-"}`, { size: 10 });
+    writeText(`Date copie : ${missionEntry.date || "non renseignee"} | Export : ${new Date().toLocaleString("fr-FR")}`, { size: 9.8 });
+    writeText(`Score : ${Number(missionEntry.score || 0)}/10 | XP : ${Number(missionEntry.xpGagne || 0)}`, {
+      size: 10.5,
+      bold: true,
+      color: antiCheat ? [153, 27, 27] : [22, 101, 52],
+    });
+    y += 6;
+
+    writeSectionTitle("Reponse de l'eleve", "info");
+    writeText(missionEntry.reponseEleve || "(Reponse non archivee pour cette tentative.)", { size: 10.3 });
+
+    writeSectionTitle("Retour IA");
+    writeText(`Feedback general : ${missionEntry.feedbackIA || "Non disponible."}`, { size: 10.3 });
+    writeText(`Points forts : ${missionEntry.pointsForts || "Non disponible."}`, { size: 10.3 });
+    writeText(`A ameliorer : ${missionEntry.aAmeliorer || "Non disponible."}`, { size: 10.3 });
+
+    const reperes = Array.isArray(missionEntry.correctionRepere) ? missionEntry.correctionRepere : [];
+    if (reperes.length) {
+      writeSectionTitle("Reperes de correction");
+      reperes.forEach((rep, idx) => writeText(`${idx + 1}. ${rep}`, { size: 10.1, indent: 8 }));
+    }
+
+    if (antiCheat) {
+      writeSectionTitle("Alerte anti-triche", "danger");
+      writeText("Une alerte anti-triche a ete enregistree sur cette tentative.", { size: 10.2, color: [153, 27, 27] });
+    }
+
+    drawFooter();
+    docPdf.save(`cas-silph-${safeName}.pdf`);
   };
 
   const resetDsLocksForFilteredStudents = async () => {
@@ -786,6 +902,15 @@ export default function Admin() {
                   {Number(dashboardStats.participationTotal || 0).toFixed(1)} pts
                 </p>
               </div>
+              <div style={{ background: "white", borderRadius: 14, padding: 14, border: "1px solid #BBF7D0" }}>
+                <p style={{ margin: 0, color: "#15803D", fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem" }}>Élèves ayant fait Focus</p>
+                <p style={{ margin: "4px 0 0", fontSize: "1.7rem", fontWeight: 900, color: "#0F172A" }}>
+                  {dashboardStats.elevesFocus}
+                </p>
+                <p style={{ margin: "2px 0 0", color: "#166534", fontSize: "0.75rem", fontWeight: 700 }}>
+                  {dashboardStats.focusTodayTotal} activité(s) Focus aujourd’hui
+                </p>
+              </div>
             </div>
 
             <div style={{ background: "white", borderRadius: "20px", padding: "18px", marginBottom: "14px", border: "1px solid #E2E8F0" }}>
@@ -838,6 +963,7 @@ export default function Admin() {
                   <option value="aujourdhui">Actifs aujourd’hui</option>
                   <option value="7jours">Actifs 7 jours</option>
                   <option value="inactifs">Inactifs +7 jours</option>
+                  <option value="focus">Ont fait Focus</option>
                 </select>
               </div>
 
@@ -872,6 +998,9 @@ export default function Admin() {
                         Anti-triche missions : <strong>{eleve.antiCheatEvents || 0}</strong> (aujourd’hui {eleve.antiCheatToday || 0})
                       </p>
                       <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Objectif Bac : <strong>{eleve.objectifTotal}</strong> (aujourd’hui {eleve.objectifToday})</p>
+                      <p style={{ margin: 0, color: "#166534", fontSize: "0.8rem", fontWeight: 700 }}>
+                        Focus : <strong>{eleve.focusTotal}</strong> (aujourd’hui {eleve.focusToday})
+                      </p>
                       <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Cartes : <strong>{eleve.cartesTotal}</strong> ({eleve.cartesUniques} uniques)</p>
                       <p style={{ margin: 0, color: "#B45309", fontSize: "0.8rem", fontWeight: 700 }}>
                         Participation cartes rares : <strong>{Number(eleve.participationPoints || 0).toFixed(1)} pt(s)</strong>
@@ -879,6 +1008,16 @@ export default function Admin() {
                       <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Connexion aujourd’hui : <strong>{formatDuration(eleve.sessionTodaySec)}</strong></p>
                       <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Temps cumulé : <strong>{formatDuration(eleve.sessionTotalSec)}</strong> ({eleve.sessionCount || 0} session(s))</p>
                       <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Dernière session : <strong>{formatDuration(eleve.lastSessionDurationSec)}</strong></p>
+                    </div>
+                    <div style={{ marginTop: 10, display: "flex", justifyContent: "flex-end" }}>
+                      <Btn
+                        onClick={() => exportSilphFeedbackPdf(eleve)}
+                        color={COLORS.T}
+                        small
+                        disabled={!eleve?.missionsHistorique?.[MISSION_CAS_SILPH_ID]}
+                      >
+                        📄 Export PDF CAS SILPH
+                      </Btn>
                     </div>
                   </div>
                 ))}

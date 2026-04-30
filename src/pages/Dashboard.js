@@ -28,6 +28,11 @@ const matieres = [
   { nom: "Gestion Finance", emoji: "💰", couleur: "orange" },
 ];
 
+const getTodayKey = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+};
+
 export default function Dashboard({ profil }) {
   const [nouvelEvenement, setNouvelEvenement] = useState("");
   const [dateEvenement, setDateEvenement] = useState("");
@@ -37,6 +42,16 @@ export default function Dashboard({ profil }) {
     Math.ceil((profil.xp || 0) / 500) * 500;
   const niveau = Math.floor((profil.xp || 0) / 500) + 1;
   const progression = ((profil.xp || 0) % 500) / 500 * 100;
+  const todayKey = getTodayKey();
+  const hasConnectedToday = profil?.lastConnectionDay === todayKey;
+  const hasFocusToday = Boolean(
+    Object.values(profil?.focusProgress?.claims || {}).find((c) => c?.lastClaimDate === todayKey)
+  );
+  const hasMissionToday = Boolean(
+    Object.values(profil?.missionsHistorique || {}).find((h) => h?.date === todayKey)
+  );
+  const dailyDoneCount = [hasConnectedToday, hasFocusToday, hasMissionToday].filter(Boolean).length;
+  const dailyProgress = Math.round((dailyDoneCount / 3) * 100);
 
   const ajouterEvenement = async () => {
     if (!nouvelEvenement || !dateEvenement) return;
@@ -100,6 +115,39 @@ export default function Dashboard({ profil }) {
         <div className="rounded-2xl p-4 mb-4 border" style={{ background: "linear-gradient(135deg, #EFF6FF, #ECFEFF)", borderColor: "#BFDBFE" }}>
           <p className="text-center italic" style={{ color: "#0F172A" }}>
             💬 "{motivations[profil.famille]}"
+          </p>
+        </div>
+
+        {/* ENGAGEMENT QUOTIDIEN */}
+        <div className="rounded-2xl p-4 mb-4 border border-slate-200 shadow-sm bg-white">
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-lg font-bold">🔥 Routine quotidienne</h2>
+            <span className="text-sm font-semibold" style={{ color: dailyDoneCount === 3 ? "#16A34A" : "#0284C7" }}>
+              {dailyDoneCount}/3
+            </span>
+          </div>
+          <div className="w-full bg-slate-200 rounded-full h-2.5 mb-3">
+            <div
+              className="h-2.5 rounded-full transition-all"
+              style={{ width: `${dailyProgress}%`, background: "linear-gradient(90deg, #22C55E, #16A34A)" }}
+            />
+          </div>
+          <div className="space-y-2">
+            <div className="flex justify-between items-center bg-slate-50 border border-slate-200 rounded-lg p-2.5">
+              <span className="text-sm text-slate-700">Connexion du jour</span>
+              <span>{hasConnectedToday ? "✅" : "⬜"}</span>
+            </div>
+            <div className="flex justify-between items-center bg-slate-50 border border-slate-200 rounded-lg p-2.5">
+              <span className="text-sm text-slate-700">1 activité Focus validée</span>
+              <span>{hasFocusToday ? "✅" : "⬜"}</span>
+            </div>
+            <div className="flex justify-between items-center bg-slate-50 border border-slate-200 rounded-lg p-2.5">
+              <span className="text-sm text-slate-700">1 mission soumise</span>
+              <span>{hasMissionToday ? "✅" : "⬜"}</span>
+            </div>
+          </div>
+          <p className="text-xs mt-3" style={{ color: "#64748B" }}>
+            Objectif: compléter le 3/3 chaque jour pour ancrer les révisions.
           </p>
         </div>
 
