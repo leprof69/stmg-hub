@@ -611,6 +611,34 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
     if (!activeCrosswordWord || !Array.isArray(activeCrosswordWord.cells)) return new Set();
     return new Set(activeCrosswordWord.cells.map((cell) => cell.key));
   }, [activeCrosswordWord]);
+  const getActiveWordForCell = (cellKey) => {
+    if (activeCrosswordWord?.cells?.some((cell) => cell.key === cellKey)) return activeCrosswordWord;
+    return crosswordMeta.words.find((word) => word.cells.some((cell) => cell.key === cellKey)) || null;
+  };
+  const focusCrosswordCell = (cellKey) => {
+    const ref = crosswordInputRefs.current[cellKey];
+    if (ref) ref.focus();
+  };
+  const moveCrosswordFocus = (cellKey, direction = 1) => {
+    const word = getActiveWordForCell(cellKey);
+    if (!word) return;
+    const index = word.cells.findIndex((cell) => cell.key === cellKey);
+    if (index === -1) return;
+    const nextIndex = index + direction;
+    if (nextIndex < 0 || nextIndex >= word.cells.length) return;
+    focusCrosswordCell(word.cells[nextIndex].key);
+  };
+  const clearActiveWord = () => {
+    if (!activeCrosswordWord?.cells?.length) return;
+    setCrosswordCells((prev) => {
+      const next = { ...prev };
+      activeCrosswordWord.cells.forEach((cell) => {
+        next[cell.key] = "";
+      });
+      return next;
+    });
+    focusCrosswordCell(activeCrosswordWord.cells[0].key);
+  };
 
   return (
     <div style={{ background: COLORS.card, border: `2px solid ${modeStyle.border}55`, borderLeft: `8px solid ${modeStyle.border}`, borderRadius: 18, padding: 18, boxShadow: "0 6px 24px rgba(15,23,42,0.05)" }}>
@@ -830,6 +858,32 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
                             if (locked) return;
                             const next = normalize(e.target.value).slice(0, 1).toUpperCase();
                             setCrosswordCells((prev) => ({ ...prev, [key]: next }));
+                            if (next) {
+                              setTimeout(() => moveCrosswordFocus(key, 1), 0);
+                            }
+                          }}
+                          onFocus={() => {
+                            const word = getActiveWordForCell(key);
+                            if (word) setActiveCrosswordWord(word);
+                          }}
+                          onKeyDown={(e) => {
+                            if (locked) return;
+                            if (e.key === "Backspace") {
+                              if ((crosswordCells[key] || "").length > 0) {
+                                setCrosswordCells((prev) => ({ ...prev, [key]: "" }));
+                              } else {
+                                moveCrosswordFocus(key, -1);
+                              }
+                              e.preventDefault();
+                            }
+                            if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+                              moveCrosswordFocus(key, 1);
+                              e.preventDefault();
+                            }
+                            if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+                              moveCrosswordFocus(key, -1);
+                              e.preventDefault();
+                            }
                           }}
                           readOnly={locked}
                           style={{ width: "100%", height: "100%", border: "none", outline: "none", textAlign: "center", background: "transparent", color: "#9D174D", fontWeight: 800, fontSize: 15, textTransform: "uppercase", paddingTop: 4 }}
@@ -840,6 +894,25 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
                 })
               )}
             </div>
+          </div>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <button
+              type="button"
+              onClick={clearActiveWord}
+              disabled={locked || !activeCrosswordWord}
+              style={{
+                border: "1px solid #F9A8D4",
+                borderRadius: 8,
+                padding: "7px 10px",
+                fontSize: 12,
+                fontWeight: 700,
+                color: "#9D174D",
+                background: locked || !activeCrosswordWord ? "#F8FAFC" : "white",
+                cursor: locked || !activeCrosswordWord ? "not-allowed" : "pointer",
+              }}
+            >
+              Effacer le mot actif
+            </button>
           </div>
           <div style={{ display: "grid", gap: 6 }}>
             {crosswordMeta.words.map((word) => (
