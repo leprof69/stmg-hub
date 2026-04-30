@@ -46,43 +46,83 @@ const MISSION_CAS_SILPH = {
   type: "mensuelle",
   xp: 7407,
   xp_max: 10000,
-  contexte: "La Silph SARL veut transformer ses données en avantage concurrentiel face à Rocket-Map, tout en respectant le RGPD.",
-  question: `Tu réalises l'étude de cas complète :
+  contexte: "Contexte officiel (1ère STMG, chapitre 6) : la Silph SARL de Safrania déploie Silph-Scanner pour contrer Rocket-Map. Tu dois évaluer la performance du SI, la qualité de l'information et la conformité RGPD à partir d'annexes documentaires.",
+  question: `Étude de cas complète - Le SI de la Silph SARL
 
-Dossier 1 - Big Data et stratégie
-1) Montre que Silph gère du Big Data avec au moins 2 des 5V.
-2) Explique pourquoi l'Open Data améliore l'image de marque de Silph.
+Consigne générale :
+- Lis toutes les annexes ci-dessous.
+- Rédige une réponse structurée par dossiers.
+- Justifie chaque réponse en citant des éléments précis des annexes (chiffres, faits, comparaisons).
 
-Dossier 2 - Composantes et qualité du SI
-3) Donne un exemple de ressource humaine, matérielle et logicielle.
-4) Identifie l'indicateur qualité le plus critique et la conséquence pour l'utilisateur.
-5) Explique le passage Donnée -> Information -> Connaissance avec l'exemple du cri Pokémon.
+ANNEXE 1 - Rapport d'activité Data (DSI)
+- Flux traités : 120 000 signaux GPS/sec
+- Flux audio : 15 000 cris de Pokémon
+- Données images HD de combats
+- Intégration vidéo prévue en 2026 (besoins de stockage x3)
+- Volume data en forte hausse (ordre de grandeur : de ~0,4 To à ~4,5 To)
 
-Dossier 3 - Responsabilité et stratégie
-6) Présente le rôle du DPO et pourquoi il est obligatoire.
-7) Explique quel droit exerce le dresseur qui refuse la géolocalisation.
-8) Fais une synthèse : en quoi un SI performant et éthique différencie Silph de Team Rocket ?`,
+ANNEXE 2 - Tableau de bord Qualité SI (T1 2026)
+- Fiabilité (Exactitude) : 84% (objectif 99%) -> Attention
+- Actualité (Météo) : 96% (objectif 95%) -> Conforme
+- Accessibilité (Serveur) : 78% (objectif 98%) -> Critique
+- Pertinence (Conseils) : 92% (objectif 95%) -> Conforme
+- Commentaire DSI : saturation du SI sous le poids de données non triées
+
+ANNEXE 3 - Note RH (organisation SI)
+- Pôle Infrastructure : 12 techniciens réseau (serveurs cloud, terminaux Pokédex)
+- Pôle Data Science : 5 analystes (algorithme de combat)
+- Pôle Conformité : 1 DPO (registre CNIL, protection des données)
+
+ANNEXE 4 - Comparatif stratégique Silph vs Rocket
+- Source des données : Silph (capteurs certifiés, données collaboratives) / Rocket (hacking, interception)
+- Éthique : Silph (respect RGPD) / Rocket (revente de données)
+- Modèle : Silph (open data partiel) / Rocket (opaque, tout payant)
+
+ANNEXE 5 - Mentions légales (extrait)
+- Collecte : nom, géolocalisation, IP
+- Droits utilisateurs : accès, rectification, effacement
+- Contact DPO pour suppression de compte
+
+TRAVAIL À FAIRE (barème 20 points)
+
+Dossier 1 - La donnée comme matière première (6 pts)
+1) En t'appuyant sur l'annexe 1, démontre que Silph gère du Big Data en mobilisant au moins 2 des 5V. (3 pts)
+2) Avec l'annexe 4, explique pourquoi l'open data est une décision stratégique pour l'image de marque de Silph. (3 pts)
+
+Dossier 2 - Composantes et qualité du SI (7 pts)
+3) À l'aide de l'annexe 3, identifie les 3 types de ressources du SI (humaines, matérielles, logicielles) avec un exemple pour chacune. (3 pts)
+4) Analyse l'annexe 2 : quel indicateur est le plus critique et quelle conséquence pour l'utilisateur final ? (2 pts)
+5) Explique le passage Donnée -> Information -> Connaissance à partir de l'exemple du cri Pokémon. (2 pts)
+
+Dossier 3 - Responsabilité et stratégie (7 pts)
+6) Quel est le rôle du DPO (annexes 3 et 5) et pourquoi sa présence est-elle obligatoire ? (2 pts)
+7) Un dresseur refuse la géolocalisation : quel droit exerce-t-il et pourquoi la géolocalisation est-elle une donnée personnelle ? (2 pts)
+8) Synthèse argumentée : en quoi un SI performant et éthique permet-il à Silph de se différencier durablement de la Team Rocket ? (3 pts)`,
   mots_cles: [
     "big data", "volume", "variété", "vélocité", "open data", "transparence",
     "ressources humaines", "ressources matérielles", "ressources logicielles",
     "accessibilité", "donnée", "information", "connaissance", "dpo", "rgpd",
     "droit d'opposition", "droit à l'effacement", "éthique", "performance"
   ],
-  correction: `Dossier 1 :
-- Big Data : volume en forte hausse (de 0,4 To à 4,5 To), variété des formats (GPS, images, audio, vidéo), et vélocité (120 000 signaux GPS/seconde).
-- Open Data : partage partiel des données, transparence et confiance des utilisateurs, fidélisation, meilleure image que Rocket-Map.
+  correction: `Correction attendue (repères) :
 
-Dossier 2 :
-- Ressources humaines : techniciens réseau, analystes data, DPO.
-- Ressources matérielles : serveurs cloud, terminaux Pokedex.
-- Ressources logicielles : algorithme de combat.
-- Indicateur critique : accessibilité (78 % vs objectif 98 %) ; conséquence : indisponibilités du SI pendant un combat, perte d'avantage tactique.
-- Transformation : donnée brute (cri) -> information (identification du Pokémon) -> connaissance (choix de la bonne attaque).
+Dossier 1 - Big Data et stratégie
+- Big Data : montrer au moins 2 dimensions parmi Volume, Variété, Vélocité (annexe 1).
+  Exemples solides : hausse du volume (~0,4 To -> ~4,5 To), formats hétérogènes (GPS, image, audio, vidéo), flux temps réel (120 000 signaux/sec).
+- Open Data (annexe 4) : levier de transparence, confiance, image de marque et fidélisation ; différenciation face à Rocket-Map.
 
-Dossier 3 :
-- DPO : garantit la conformité RGPD, registre CNIL, limitation des risques juridiques ; rôle obligatoire car données personnelles traitées à grande échelle.
-- Géolocalisation : donnée personnelle car elle permet d'identifier/traquer les habitudes ; exercice du droit d'opposition ou d'effacement.
-- Synthèse : Silph se différencie par la performance du SI (conseils utiles) et l'éthique (respect RGPD), contrairement à Rocket-Map.`,
+Dossier 2 - Architecture et qualité SI
+- Ressources (annexe 3) :
+  * Humaines : techniciens, analystes, DPO
+  * Matérielles : serveurs cloud, terminaux Pokédex
+  * Logicielles : algorithme de combat
+- Indicateur critique (annexe 2) : accessibilité 78% (objectif 98%) ; conséquence : indisponibilités du SI, perte d'avantage utilisateur en situation de combat.
+- Chaîne de valeur informationnelle : donnée brute (cri) -> information (identification Pokémon) -> connaissance/action (choix tactique).
+
+Dossier 3 - RGPD et stratégie
+- Rôle du DPO (annexes 3 et 5) : conformité RGPD, registre CNIL, gestion des droits, réduction du risque juridique ; fonction nécessaire en cas de traitement massif de données personnelles.
+- Géolocalisation : donnée personnelle car traçage des habitudes ; droits mobilisables : opposition, effacement, accès, rectification.
+- Synthèse : avantage concurrentiel durable = performance technique du SI + cadre éthique/RGPD ; Silph est perçue comme partenaire fiable, Rocket comme acteur risqué.`,
 };
 
 const normalizeTexte = (texte = "") => String(texte)
