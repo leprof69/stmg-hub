@@ -309,14 +309,18 @@ const EXERCISES = [
     title: "Étape 10 - Mots croisés des notions",
     contexte: "Révision finale avant le bilan du chapitre.",
     objectif: "Vérifier que le vocabulaire clé est parfaitement maîtrisé.",
-    consigne: "Complète chaque mot à partir de l'indice. Un mot = une réponse.",
-    crosswordClues: [
-      { clue: "Cadre juridique qui protège les données personnelles (4 lettres)", answer: "RGPD" },
-      { clue: "Donnée contextualisée qui prend du sens (11 lettres)", answer: "information" },
-      { clue: "Donnée publique réutilisable (4 lettres)", answer: "open" },
-      { clue: "V des 5V lié à la rapidité des flux (8 lettres)", answer: "velocite" },
-      { clue: "Ressource du SI qui fait les calculs/traitements (8 lettres)", answer: "logiciel" },
-    ],
+    consigne: "Complète la grille: une case = une lettre. Les cases noires sont bloquées.",
+    crosswordLayout: {
+      rows: 13,
+      cols: 11,
+      words: [
+        { number: 1, direction: "across", row: 1, col: 0, clue: "Donnée contextualisée qui prend du sens (11 lettres)", answer: "information" },
+        { number: 2, direction: "down", row: 1, col: 3, clue: "Donnée publique réutilisable (4 lettres)", answer: "open" },
+        { number: 3, direction: "across", row: 2, col: 1, clue: "Cadre juridique qui protège les données personnelles (4 lettres)", answer: "rgpd" },
+        { number: 4, direction: "across", row: 5, col: 0, clue: "V des 5V lié à la rapidité des flux (8 lettres)", answer: "velocite" },
+        { number: 5, direction: "down", row: 5, col: 2, clue: "Ressource du SI qui fait les calculs/traitements (8 lettres)", answer: "logiciel" },
+      ],
+    },
     correction: "Les mots attendus sont : RGPD, information, open, vélocité, logiciel.",
   },
 ];
@@ -362,6 +366,29 @@ const shuffleArray = (arr = []) => {
 const extractNumbers = (text = "") => {
   const matches = String(text).match(/-?\d+(?:[.,]\d+)?/g) || [];
   return matches.map((m) => Number(m.replace(",", "."))).filter((n) => Number.isFinite(n));
+};
+
+const buildCrosswordMeta = (exercise) => {
+  const layout = exercise.crosswordLayout;
+  if (!layout || !Array.isArray(layout.words)) return { activeCells: [], activeSet: new Set(), words: [] };
+  const activeCells = [];
+  const activeSet = new Set();
+  const words = layout.words.map((word, idx) => {
+    const answer = normalize(word.answer || "").replace(/\s+/g, "");
+    const cells = [];
+    for (let i = 0; i < answer.length; i += 1) {
+      const r = word.direction === "down" ? word.row + i : word.row;
+      const c = word.direction === "across" ? word.col + i : word.col;
+      const key = `${r}-${c}`;
+      cells.push({ r, c, key, expected: answer[i] });
+      if (!activeSet.has(key)) {
+        activeSet.add(key);
+        activeCells.push({ r, c, key });
+      }
+    }
+    return { ...word, answer, cells, number: word.number || idx + 1 };
+  });
+  return { activeCells, activeSet, words };
 };
 
 const evaluateRedaction = (exercise, answer) => {
@@ -455,9 +482,13 @@ const evaluateInteractive = (exercise, state) => {
     };
   }
   if (exercise.mode === "crossword") {
-    const clues = exercise.crosswordClues || [];
-    const good = clues.filter((c, i) => normalize((state.crosswordAnswers && state.crosswordAnswers[i]) || "") === normalize(c.answer)).length;
-    const total = clues.length || 1;
+    const meta = buildCrosswordMeta(exercise);
+    const words = meta.words || [];
+    const good = words.filter((word) => {
+      const proposed = word.cells.map((cell) => normalize((state.crosswordCells && state.crosswordCells[cell.key]) || "").charAt(0)).join("");
+      return proposed === word.answer;
+    }).length;
+    const total = words.length || 1;
     const score = Math.round((good / total) * 10);
     return {
       score,
@@ -484,8 +515,9 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
   const [memorySolved, setMemorySolved] = useState({});
   const [memoryTurns, setMemoryTurns] = useState(0);
   const [docAnswers, setDocAnswers] = useState({});
-  const [crosswordAnswers, setCrosswordAnswers] = useState({});
+  const [crosswordCells, setCrosswordCells] = useState({});
   const [text, setText] = useState("");
+  const crosswordMeta = useMemo(() => buildCrosswordMeta(exercise), [exercise]);
 
   useEffect(() => {
     if (exercise.mode !== "memory") return;
@@ -512,14 +544,14 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
       (exercise.mode === "matching" && exercise.matchingLeft.every((_, i) => matches[i] !== undefined && matches[i] !== "")) ||
       (exercise.mode === "memory" && Object.keys(memorySolved).length === (exercise.memoryPairsCount || 0)) ||
       (exercise.mode === "docqa" && (exercise.docQuestions || []).every((_, i) => (docAnswers[i] || "").trim().length >= 12)) ||
-      (exercise.mode === "crossword" && (exercise.crosswordClues || []).every((_, i) => (crosswordAnswers[i] || "").trim().length >= 2)) ||
+      (exercise.mode === "crossword" && crosswordMeta.activeCells.every((cell) => (crosswordCells[cell.key] || "").trim().length >= 1)) ||
       (exercise.mode === "redaction" && text.trim().length >= 40));
 
   const validate = () => {
     const next = evaluateInteractive(exercise, {
       selected, tf, blanks, checks, matches, text,
       docAnswers,
-      crosswordAnswers,
+      crosswordCells,
       memorySolved: Object.keys(memorySolved).length,
       memoryTurns,
     });
@@ -562,6 +594,17 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
   };
 
   const modeStyle = MODE_UI[exercise.mode] || MODE_UI.redaction;
+  const crosswordRows = exercise.crosswordLayout?.rows || 0;
+  const crosswordCols = exercise.crosswordLayout?.cols || 0;
+  const crosswordNumbers = useMemo(() => {
+    const map = {};
+    crosswordMeta.words.forEach((word) => {
+      const key = `${word.row}-${word.col}`;
+      if (!map[key]) map[key] = [];
+      map[key].push(word.number);
+    });
+    return map;
+  }, [crosswordMeta.words]);
 
   return (
     <div style={{ background: COLORS.card, border: `2px solid ${modeStyle.border}55`, borderLeft: `8px solid ${modeStyle.border}`, borderRadius: 18, padding: 18, boxShadow: "0 6px 24px rgba(15,23,42,0.05)" }}>
@@ -745,21 +788,49 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
       )}
 
       {exercise.mode === "crossword" && (
-        <div style={{ display: "grid", gap: 8 }}>
-          {(exercise.crosswordClues || []).map((item, i) => (
-            <div key={`${exercise.id}-cw-${i}`} style={{ border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: 10, background: "#FFF1F2" }}>
-              <p style={{ margin: "0 0 6px", color: "#9D174D", fontWeight: 700 }}>Indice {i + 1}: {item.clue}</p>
-              <input
-                value={crosswordAnswers[i] || ""}
-                onChange={(e) => {
-                  if (!locked) setCrosswordAnswers((prev) => ({ ...prev, [i]: e.target.value }));
-                }}
-                readOnly={locked}
-                placeholder="Ta réponse"
-                style={{ width: "100%", borderRadius: 8, border: `1px solid ${COLORS.border}`, padding: "8px", boxSizing: "border-box" }}
-              />
+        <div style={{ display: "grid", gap: 10 }}>
+          <div style={{ overflowX: "auto", borderRadius: 10, border: "1px solid #FBCFE8", background: "#FFF1F2", padding: 10 }}>
+            <div style={{ display: "grid", gridTemplateColumns: `repeat(${crosswordCols}, 34px)`, gap: 2, justifyContent: "start" }}>
+              {Array.from({ length: crosswordRows }).map((_, r) =>
+                Array.from({ length: crosswordCols }).map((__, c) => {
+                  const key = `${r}-${c}`;
+                  const isActive = crosswordMeta.activeSet.has(key);
+                  const val = crosswordCells[key] || "";
+                  const nums = crosswordNumbers[key] || [];
+                  return (
+                    <div key={key} style={{ width: 34, height: 34, position: "relative", borderRadius: 4, background: isActive ? "white" : "#334155", border: isActive ? "1px solid #F9A8D4" : "1px solid #334155" }}>
+                      {isActive && nums.length > 0 && (
+                        <span style={{ position: "absolute", top: 1, left: 3, fontSize: 9, color: "#9D174D", fontWeight: 700 }}>
+                          {nums.join(",")}
+                        </span>
+                      )}
+                      {isActive && (
+                        <input
+                          value={val}
+                          onChange={(e) => {
+                            if (locked) return;
+                            const next = normalize(e.target.value).slice(0, 1).toUpperCase();
+                            setCrosswordCells((prev) => ({ ...prev, [key]: next }));
+                          }}
+                          readOnly={locked}
+                          style={{ width: "100%", height: "100%", border: "none", outline: "none", textAlign: "center", background: "transparent", color: "#9D174D", fontWeight: 800, fontSize: 15, textTransform: "uppercase", paddingTop: 4 }}
+                        />
+                      )}
+                    </div>
+                  );
+                })
+              )}
             </div>
-          ))}
+          </div>
+          <div style={{ display: "grid", gap: 6 }}>
+            {crosswordMeta.words.map((word) => (
+              <div key={`${exercise.id}-cw-${word.number}`} style={{ border: `1px solid ${COLORS.border}`, borderRadius: 10, padding: 10, background: "#FFF1F2" }}>
+                <p style={{ margin: 0, color: "#9D174D", fontWeight: 700 }}>
+                  {word.number}. ({word.direction === "across" ? "Horizontal" : "Vertical"}) {word.clue}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

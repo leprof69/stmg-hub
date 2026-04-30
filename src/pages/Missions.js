@@ -49,69 +49,109 @@ const MISSION_CAS_SILPH = {
   contexte: `Contexte : La révolution Silph-Scanner
 La Silph SARL, joyau technologique de la ville de Safrania, fait face à une menace sans précédent. La Team Rocket a lancé sa propre application "Rocket-Map", capturant les données des dresseurs de manière illégale pour dominer le marché.
 Pour répliquer, la Silph SARL déploie Silph-Scanner. Ce Système d'Information (SI) nouvelle génération doit transformer une masse de données brutes (Big Data) en un avantage concurrentiel décisif tout en garantissant l'éthique et la sécurité. En tant qu'assistant de gestion, vous devez évaluer la performance de ce système.`,
-  question: `Étude de cas complète - Le SI de la Silph SARL
-
-Consigne générale :
+  question: `Consigne générale :
 - Lis toutes les annexes ci-dessous.
 - Rédige une réponse structurée par dossiers.
-- Justifie chaque réponse en citant des éléments précis des annexes (chiffres, faits, comparaisons).
-
-ANNEXE 1 - Rapport d'activité Data (DSI)
-- Flux traités : 120 000 signaux GPS/sec
-- Flux audio : 15 000 cris de Pokémon
-- Données images HD de combats
-- Intégration vidéo prévue en 2026 (besoins de stockage x3)
-- Volume data en forte hausse :
-  2023 : 0,4 To
-  2025 : 1,5 To
-  2026 (prévision) : 4,5 To
-  Graphique (évolution du volume) :
-  2023 | ████
-  2025 | ███████████████
-  2026 | █████████████████████████████████████████████
-
-ANNEXE 2 - Tableau de bord Qualité SI (T1 2026)
-| Indicateur                | Réalisé | Objectif | État      |
-|---------------------------|---------|----------|-----------|
-| Fiabilité (Exactitude)    | 84%     | 99%      | Attention |
-| Actualité (Météo)         | 96%     | 95%      | Conforme  |
-| Accessibilité (Serveur)   | 78%     | 98%      | Critique  |
-| Pertinence (Conseils)     | 92%     | 95%      | Conforme  |
-Commentaire DSI : saturation du SI sous le poids de données non triées ; incidents d'indisponibilité en pics d'usage.
-
-ANNEXE 3 - Note RH (organisation SI)
-- Pôle Infrastructure : 12 techniciens réseau (serveurs cloud, terminaux Pokédex)
-- Pôle Data Science : 5 analystes (algorithme de combat)
-- Pôle Conformité : 1 DPO (registre CNIL, protection des données)
-- Rôle opérationnel attendu : coordination entre pôles pour garantir performance + conformité
-
-ANNEXE 4 - Comparatif stratégique Silph vs Rocket
-- Source des données : Silph (capteurs certifiés, données collaboratives) / Rocket (hacking, interception)
-- Éthique : Silph (respect RGPD) / Rocket (revente de données)
-- Modèle : Silph (open data partiel) / Rocket (opaque, tout payant)
-- Enjeu d'image : confiance, fidélisation et réputation de marque
-
-ANNEXE 5 - Mentions légales (extrait)
-- Collecte : nom, géolocalisation, IP
-- Droits utilisateurs : accès, rectification, effacement
-- Contact DPO pour suppression de compte
-- Exigence de traçabilité : preuve de conformité et gestion des demandes utilisateurs
-
-TRAVAIL À FAIRE (barème 20 points)
-
-Dossier 1 - La donnée comme matière première (6 pts)
-1) En t'appuyant sur l'annexe 1, démontre que Silph gère du Big Data en mobilisant au moins 2 des 5V. (3 pts)
-2) Avec l'annexe 4, explique pourquoi l'open data est une décision stratégique pour l'image de marque de Silph. (3 pts)
-
-Dossier 2 - Composantes et qualité du SI (7 pts)
-3) À l'aide de l'annexe 3, identifie les 3 types de ressources du SI (humaines, matérielles, logicielles) avec un exemple pour chacune. (3 pts)
-4) Analyse l'annexe 2 : quel indicateur est le plus critique et quelle conséquence pour l'utilisateur final ? (2 pts)
-5) Explique le passage Donnée -> Information -> Connaissance à partir de l'exemple du cri Pokémon. (2 pts)
-
-Dossier 3 - Responsabilité et stratégie (7 pts)
-6) Quel est le rôle du DPO (annexes 3 et 5) et pourquoi sa présence est-elle obligatoire ? (2 pts)
-7) Un dresseur refuse la géolocalisation : quel droit exerce-t-il et pourquoi la géolocalisation est-elle une donnée personnelle ? (2 pts)
-8) Synthèse argumentée : en quoi un SI performant et éthique permet-il à Silph de se différencier durablement de la Team Rocket ? (3 pts)`,
+- Justifie chaque réponse en citant des éléments précis des annexes (chiffres, faits, comparaisons).`,
+  annexes: [
+    {
+      id: "A1",
+      titre: "ANNEXE 1 - Rapport d'activité Data (DSI)",
+      contexte: "Cette annexe présente la croissance des flux et des volumes pour évaluer le caractère Big Data du SI Silph-Scanner.",
+      explication: "Observe à la fois la diversité des sources (GPS, audio, image, vidéo) et l'accélération des volumes stockés.",
+      bullets: [
+        "Flux traités : 120 000 signaux GPS/sec",
+        "Flux audio : 15 000 cris de Pokémon",
+        "Données images HD de combats",
+        "Intégration vidéo prévue en 2026 (besoins de stockage x3)",
+      ],
+      table: {
+        headers: ["Année", "Volume de données", "Lecture visuelle"],
+        rows: [
+          ["2023", "0,4 To", "███"],
+          ["2025", "1,5 To", "███████████"],
+          ["2026 (prévision)", "4,5 To", "█████████████████████████████████"],
+        ],
+      },
+    },
+    {
+      id: "A2",
+      titre: "ANNEXE 2 - Tableau de bord Qualité SI (T1 2026)",
+      contexte: "Cette annexe mesure la qualité opérationnelle du SI selon les critères de fiabilité, actualité, accessibilité et pertinence.",
+      explication: "Repère l'indicateur le plus éloigné de l'objectif et relie-le à une conséquence concrète pour les utilisateurs.",
+      table: {
+        headers: ["Indicateur", "Réalisé", "Objectif", "État"],
+        rows: [
+          ["Fiabilité (Exactitude)", "84%", "99%", "Attention"],
+          ["Actualité (Météo)", "96%", "95%", "Conforme"],
+          ["Accessibilité (Serveur)", "78%", "98%", "Critique"],
+          ["Pertinence (Conseils)", "92%", "95%", "Conforme"],
+        ],
+      },
+      note: "Commentaire DSI : saturation du SI sous le poids de données non triées ; incidents d'indisponibilité en pics d'usage.",
+    },
+    {
+      id: "A3",
+      titre: "ANNEXE 3 - Note RH (organisation SI)",
+      contexte: "Cette annexe décrit les ressources humaines mobilisées pour faire fonctionner le SI.",
+      explication: "Utilise ces éléments pour relier les ressources humaines aux ressources matérielles et logicielles du système.",
+      bullets: [
+        "Pôle Infrastructure : 12 techniciens réseau (serveurs cloud, terminaux Pokédex)",
+        "Pôle Data Science : 5 analystes (algorithme de combat)",
+        "Pôle Conformité : 1 DPO (registre CNIL, protection des données)",
+        "Rôle opérationnel attendu : coordination entre pôles pour garantir performance + conformité",
+      ],
+    },
+    {
+      id: "A4",
+      titre: "ANNEXE 4 - Comparatif stratégique Silph vs Rocket",
+      contexte: "Cette annexe compare deux modèles de SI concurrents sur les dimensions techniques, juridiques et marketing.",
+      explication: "Appuie-toi dessus pour montrer en quoi la stratégie data de Silph renforce durablement sa réputation.",
+      bullets: [
+        "Source des données : Silph (capteurs certifiés, données collaboratives) / Rocket (hacking, interception)",
+        "Éthique : Silph (respect RGPD) / Rocket (revente de données)",
+        "Modèle : Silph (open data partiel) / Rocket (opaque, tout payant)",
+        "Enjeu d'image : confiance, fidélisation et réputation de marque",
+      ],
+    },
+    {
+      id: "A5",
+      titre: "ANNEXE 5 - Mentions légales (extrait)",
+      contexte: "Cette annexe rassemble les obligations de conformité RGPD liées aux traitements de données personnelles.",
+      explication: "Exploite ces obligations pour justifier le rôle du DPO et les droits mobilisables par les utilisateurs.",
+      bullets: [
+        "Collecte : nom, géolocalisation, IP",
+        "Droits utilisateurs : accès, rectification, effacement",
+        "Contact DPO pour suppression de compte",
+        "Exigence de traçabilité : preuve de conformité et gestion des demandes utilisateurs",
+      ],
+    },
+  ],
+  travailAFaire: [
+    {
+      titre: "Dossier 1 - La donnée comme matière première (6 pts)",
+      questions: [
+        "1) En t'appuyant sur l'annexe 1, démontre que Silph gère du Big Data en mobilisant au moins 2 des 5V. (3 pts)",
+        "2) Avec l'annexe 4, explique pourquoi l'open data est une décision stratégique pour l'image de marque de Silph. (3 pts)",
+      ],
+    },
+    {
+      titre: "Dossier 2 - Composantes et qualité du SI (7 pts)",
+      questions: [
+        "3) À l'aide de l'annexe 3, identifie les 3 types de ressources du SI (humaines, matérielles, logicielles) avec un exemple pour chacune. (3 pts)",
+        "4) Analyse l'annexe 2 : quel indicateur est le plus critique et quelle conséquence pour l'utilisateur final ? (2 pts)",
+        "5) Explique le passage Donnée -> Information -> Connaissance à partir de l'exemple du cri Pokémon. (2 pts)",
+      ],
+    },
+    {
+      titre: "Dossier 3 - Responsabilité et stratégie (7 pts)",
+      questions: [
+        "6) Quel est le rôle du DPO (annexes 3 et 5) et pourquoi sa présence est-elle obligatoire ? (2 pts)",
+        "7) Un dresseur refuse la géolocalisation : quel droit exerce-t-il et pourquoi la géolocalisation est-elle une donnée personnelle ? (2 pts)",
+        "8) Synthèse argumentée : en quoi un SI performant et éthique permet-il à Silph de se différencier durablement de la Team Rocket ? (3 pts)",
+      ],
+    },
+  ],
   mots_cles: [
     "big data", "volume", "variété", "vélocité", "open data", "transparence",
     "ressources humaines", "ressources matérielles", "ressources logicielles",
@@ -702,6 +742,7 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
   const niveau = (mission.niveau || "premiere").toLowerCase();
   const couleur = difficulte >= 4 ? COLORS.H : difficulte >= 3 ? COLORS.U : COLORS.S;
   const niveauLabel = niveau === "terminale" ? "📘 Terminale" : "📗 Première";
+  const estCasSilph = mission.id === MISSION_CAS_SILPH_ID;
 
   useEffect(() => {
     if (correction || chargement) return undefined;
@@ -847,6 +888,84 @@ const CarteMission = ({ mission, profil, onMissionComplete }) => {
         <p style={{ fontFamily: "'Fredoka One', cursive", color: couleur, marginBottom: "8px", fontSize: "0.9rem" }}>❓ Question</p>
         <p style={{ color: "#374151", lineHeight: 1.8, whiteSpace: "pre-line" }}>{mission.question}</p>
       </div>
+      {estCasSilph && Array.isArray(mission.annexes) && mission.annexes.length > 0 && (
+        <div style={{ display: "grid", gap: "12px", marginBottom: "16px" }}>
+          {mission.annexes.map((annexe, idx) => (
+            <div key={annexe.id || idx} style={{ background: "#F8FAFC", borderRadius: "14px", border: "1px solid #E2E8F0", padding: "14px" }}>
+              <p style={{ margin: "0 0 6px", color: "#1E293B", fontWeight: 800 }}>
+                📎 {annexe.titre}
+              </p>
+              {annexe.contexte && (
+                <p style={{ margin: "0 0 6px", color: "#334155", fontSize: "0.88rem", lineHeight: 1.55 }}>
+                  <strong>Contexte :</strong> {annexe.contexte}
+                </p>
+              )}
+              {annexe.explication && (
+                <p style={{ margin: "0 0 10px", color: "#0F766E", fontSize: "0.88rem", lineHeight: 1.55 }}>
+                  <strong>À exploiter :</strong> {annexe.explication}
+                </p>
+              )}
+              {Array.isArray(annexe.bullets) && annexe.bullets.length > 0 && (
+                <ul style={{ margin: "0 0 8px", paddingLeft: "18px", color: "#334155", fontSize: "0.88rem", lineHeight: 1.55 }}>
+                  {annexe.bullets.map((item, itemIdx) => (
+                    <li key={`${annexe.id}-bullet-${itemIdx}`}>{item}</li>
+                  ))}
+                </ul>
+              )}
+              {annexe.table && Array.isArray(annexe.table.headers) && Array.isArray(annexe.table.rows) && (
+                <div style={{ overflowX: "auto", marginTop: "8px" }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem", background: "white" }}>
+                    <thead>
+                      <tr>
+                        {annexe.table.headers.map((h) => (
+                          <th key={`${annexe.id}-h-${h}`} style={{ textAlign: "left", border: "1px solid #CBD5E1", padding: "8px", background: "#E2E8F0", color: "#0F172A" }}>
+                            {h}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {annexe.table.rows.map((row, rowIdx) => (
+                        <tr key={`${annexe.id}-row-${rowIdx}`}>
+                          {row.map((cell, cellIdx) => (
+                            <td key={`${annexe.id}-cell-${rowIdx}-${cellIdx}`} style={{ border: "1px solid #CBD5E1", padding: "8px", color: "#1F2937" }}>
+                              {cell}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              {annexe.note && (
+                <p style={{ margin: "8px 0 0", color: "#92400E", background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: "8px", padding: "8px", fontSize: "0.83rem", lineHeight: 1.5 }}>
+                  {annexe.note}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+      {estCasSilph && Array.isArray(mission.travailAFaire) && mission.travailAFaire.length > 0 && (
+        <div style={{ background: "#FEF3C7", border: "1px solid #FCD34D", borderRadius: "14px", padding: "14px", marginBottom: "16px" }}>
+          <p style={{ margin: "0 0 10px", color: "#92400E", fontWeight: 800 }}>
+            🧭 Travail à faire (barème 20 points)
+          </p>
+          <div style={{ display: "grid", gap: "8px" }}>
+            {mission.travailAFaire.map((dossier, idx) => (
+              <div key={`dossier-${idx}`} style={{ background: "white", border: "1px solid #FDE68A", borderRadius: "10px", padding: "10px" }}>
+                <p style={{ margin: "0 0 6px", color: "#78350F", fontWeight: 800 }}>{dossier.titre}</p>
+                <ul style={{ margin: 0, paddingLeft: "18px", color: "#374151", fontSize: "0.86rem", lineHeight: 1.55 }}>
+                  {(dossier.questions || []).map((q, qIdx) => (
+                    <li key={`dossier-${idx}-q-${qIdx}`}>{q}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {!correction ? (
         <div>
