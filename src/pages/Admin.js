@@ -381,6 +381,7 @@ export default function Admin() {
       if (filtreActivite === "7jours") okActivite = eleve.joursSansActivite !== null && eleve.joursSansActivite <= 7;
       if (filtreActivite === "inactifs") okActivite = eleve.joursSansActivite !== null && eleve.joursSansActivite > 7;
       if (filtreActivite === "focus") okActivite = (eleve.focusTotal || 0) > 0;
+      if (filtreActivite === "pas_focus") okActivite = (eleve.focusTotal || 0) === 0;
 
       return okClasse && okLycee && okRecherche && okActivite;
     }).sort((a, b) => {
@@ -964,6 +965,7 @@ export default function Admin() {
                   <option value="7jours">Actifs 7 jours</option>
                   <option value="inactifs">Inactifs +7 jours</option>
                   <option value="focus">Ont fait Focus</option>
+                  <option value="pas_focus">N’ont pas fait Focus</option>
                 </select>
               </div>
 
@@ -972,7 +974,23 @@ export default function Admin() {
                   <div key={eleve.id} style={{ border: "1px solid #E2E8F0", borderRadius: 14, padding: "12px 14px", background: "white" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
                       <div>
-                        <p style={{ margin: 0, fontFamily: "'Fredoka One', cursive", color: "#0F172A", fontSize: "1rem" }}>{eleve.nomAffiche}</p>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                          <p style={{ margin: 0, fontFamily: "'Fredoka One', cursive", color: "#0F172A", fontSize: "1rem" }}>{eleve.nomAffiche}</p>
+                          <span
+                            title="Au moins une activité Focus validée (récupération XP)"
+                            style={{
+                              borderRadius: 999,
+                              padding: "3px 10px",
+                              fontSize: "0.72rem",
+                              fontWeight: 800,
+                              background: (eleve.focusTotal || 0) > 0 ? "#DCFCE7" : "#F1F5F9",
+                              color: (eleve.focusTotal || 0) > 0 ? "#15803D" : "#64748B",
+                              border: `1px solid ${(eleve.focusTotal || 0) > 0 ? "#86EFAC" : "#CBD5E1"}`,
+                            }}
+                          >
+                            Focus {(eleve.focusTotal || 0) > 0 ? "✓ fait" : "✗ pas encore"}
+                          </span>
+                        </div>
                         <p style={{ margin: "2px 0 0", color: "#64748B", fontSize: "0.82rem" }}>{eleve.classe || "-"} · {eleve.lycee || "-"} · {eleve.email || "email non renseigné"}</p>
                       </div>
                       <div style={{ textAlign: "right" }}>
