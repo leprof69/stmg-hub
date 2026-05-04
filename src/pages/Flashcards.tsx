@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type TouchEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type TouchEvent } from "react";
 import { auth, db } from "../firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import {
@@ -95,7 +95,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     setDeck(shuffleArray(remaining));
     setIndex(0);
     setShowAnswer(false);
-  }, [remaining.length]);
+  }, [remaining]);
 
   useEffect(() => {
     const load = async () => {
@@ -221,6 +221,11 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     setStreak(0);
   };
 
+  const handleMasteredRef = useRef(handleMastered);
+  handleMasteredRef.current = handleMastered;
+  const handleNotMasteredRef = useRef(handleNotMastered);
+  handleNotMasteredRef.current = handleNotMastered;
+
   const resetProgress = async () => {
     const impacted = cards.map((c) => c.id);
     const nextValidated = { ...validatedIds };
@@ -252,16 +257,16 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
       if (!showAnswer) return;
       if (e.key.toLowerCase() === "m" || e.key === "ArrowRight") {
         e.preventDefault();
-        void handleMastered();
+        void handleMasteredRef.current();
       }
       if (e.key.toLowerCase() === "r" || e.key === "ArrowLeft") {
         e.preventDefault();
-        handleNotMastered();
+        handleNotMasteredRef.current();
       }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [current, showAnswer, isActionBusy, validatedIds]);
+  }, [current, showAnswer]);
 
   const onTouchStart = (e: TouchEvent<HTMLDivElement>) => {
     if (!showAnswer) return;
