@@ -280,6 +280,9 @@ function App() {
         <button onClick={() => { setPage("dashboard"); chargerProfil(utilisateur); }} className={navBtnClass("dashboard")} style={{ "--nav-accent": NAV_ACCENTS.dashboard } as CSSProperties}>
           🏠 Accueil
         </button>
+        <button onClick={() => setPage("flashcards")} className={navBtnClass("flashcards")} style={{ "--nav-accent": NAV_ACCENTS.flashcards } as CSSProperties}>
+          🧠 Flashcards
+        </button>
         <button onClick={() => setPage("chapitres")} className={navBtnClass("chapitres")} style={{ "--nav-accent": NAV_ACCENTS.chapitres } as CSSProperties}>
           📚 Chapitres
         </button>
@@ -297,9 +300,6 @@ function App() {
         </button>
         <button onClick={() => setPage("cartes")} className={navBtnClass("cartes")} style={{ "--nav-accent": NAV_ACCENTS.cartes } as CSSProperties}>
           🃏 Cartes
-        </button>
-        <button onClick={() => setPage("flashcards")} className={navBtnClass("flashcards")} style={{ "--nav-accent": NAV_ACCENTS.flashcards } as CSSProperties}>
-          🧠 Flashcards
         </button>
         <button onClick={() => setPage("badges")} className={navBtnClass("badges")} style={{ "--nav-accent": NAV_ACCENTS.badges } as CSSProperties}>
           🏅 Badges
