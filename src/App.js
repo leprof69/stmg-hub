@@ -10,6 +10,7 @@ import Badges from "./pages/MesBadges";
 import Admin from "./pages/Admin";
 import Profil from "./pages/Profil";
 import Accueil from "./pages/Accueil";
+import Flashcards from "./pages/Flashcards";
 import Missions from "./pages/Missions";
 import Classement from "./pages/Classement";
 import Cartes from "./pages/Cartes";
@@ -245,6 +246,7 @@ function App() {
 
   const NAV_ACCENTS = {
     dashboard: "#0ea5e9",
+    flashcards: "#8b5cf6",
     chapitres: "#2563eb",
     missions: "#f97316",
     "objectif-bac": "#e11d48",
@@ -298,6 +300,9 @@ function App() {
         <button onClick={() => { setPage("dashboard"); chargerProfil(utilisateur); }} className={navBtnClass("dashboard")} style={{ "--nav-accent": NAV_ACCENTS.dashboard }}>
           🏠 Accueil
         </button>
+        <button onClick={() => setPage("flashcards")} className={navBtnClass("flashcards")} style={{ "--nav-accent": NAV_ACCENTS.flashcards }}>
+          🧠 Flashcards
+        </button>
         <button onClick={() => setPage("chapitres")} className={navBtnClass("chapitres")} style={{ "--nav-accent": NAV_ACCENTS.chapitres }}>
           📚 Chapitres
         </button>
@@ -330,6 +335,7 @@ function App() {
       </nav>
 
       {page === "dashboard" && <Dashboard profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
+      {page === "flashcards" && <Flashcards profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "chapitres" && <Chapitres profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "missions" && <Missions profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "objectif-bac" && <ObjectifBac profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
