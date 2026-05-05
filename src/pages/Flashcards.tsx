@@ -315,13 +315,13 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     setAnswerChecked(true);
     setAnswerAccepted(accepted);
     if (accepted) {
-      setBanner("Bonne réponse : carte validée automatiquement.");
+      setBanner("Bonne rÃ©ponse : carte validÃ©e automatiquement.");
       setCardEmoji("\u2705");
       setTimeout(() => {
         void handleMastered(true);
       }, 650);
     } else {
-      setBanner("Réponse insuffisante : carte remise à revoir automatiquement.");
+      setBanner("RÃ©ponse insuffisante : carte remise Ã  revoir automatiquement.");
       setCardEmoji("\u{1F914}");
       setTimeout(() => {
         handleNotMastered(true);
@@ -331,7 +331,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
 
   const handleToggleCard = () => {
     if (!answerChecked) {
-      setBanner("Réponds d'abord puis clique sur 'Vérifier ma réponse' pour voir la correction.");
+      setBanner("RÃ©ponds d'abord puis clique sur 'VÃ©rifier ma rÃ©ponse' pour voir la correction.");
       setCardEmoji("\u270D\uFE0F");
       setTimeout(() => setCardEmoji(""), 850);
       return;
@@ -349,7 +349,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     setValidatedIds(nextValidated);
     try {
       await persist(nextValidated, 0);
-      setBanner("Progression du pack réinitialisée.");
+      setBanner("Progression du pack rÃ©initialisÃ©e.");
     } catch {
       setBanner("Reinitialisation locale effectuee.");
     }
@@ -373,7 +373,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
       if (!showAnswer) return;
       if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
         e.preventDefault();
-      setBanner("La validation est automatique après vérification de la réponse.");
+      setBanner("La validation est automatique aprÃ¨s vÃ©rification de la rÃ©ponse.");
       }
     };
     window.addEventListener("keydown", onKeyDown);
@@ -455,10 +455,10 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
             <span style={{ background: "#EEF2FF", color: "#4338CA", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Progression: {progressPct}%</span>
-            <span style={{ background: "#DCFCE7", color: "#166534", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Maîtrisées : {masteredCount}</span>
-            <span style={{ background: "#FEF9C3", color: "#854D0E", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Série : {streak}</span>
+            <span style={{ background: "#DCFCE7", color: "#166534", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>MaÃ®trisÃ©es : {masteredCount}</span>
+            <span style={{ background: "#FEF9C3", color: "#854D0E", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>SÃ©rie : {streak}</span>
             <span style={{ background: "#F1F5F9", color: "#334155", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Session OK: {sessionGood}</span>
-            <span style={{ background: "#FFF1F2", color: "#9F1239", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Session à revoir : {sessionRetry}</span>
+            <span style={{ background: "#FFF1F2", color: "#9F1239", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Session Ã  revoir : {sessionRetry}</span>
             <span style={{ background: "#EDE9FE", color: "#5B21B6", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Niveau: {level}</span>
             <span style={{ background: "#F5F3FF", color: "#6D28D9", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Coef: x{getMultiplierFromLevel(level).toFixed(1)}</span>
             <span style={{ background: "#ECFEFF", color: "#155E75", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>XP flashcards: {flashcardsTotalXp}</span>
@@ -581,7 +581,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
             </div>
             <div style={{ marginTop: 12, border: "1px solid #DBEAFE", background: "#F8FAFF", borderRadius: 14, padding: 12 }}>
               <label htmlFor="flashcards-answer" style={{ color: "#334155", fontWeight: 700, fontSize: 14 }}>
-                Ta réponse (zone sous la carte) :
+                Ta rÃ©ponse (zone sous la carte) :
               </label>
               <textarea
                 id="flashcards-answer"
@@ -620,11 +620,11 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
                     cursor: learnerAnswer.trim() && !isActionBusy ? "pointer" : "not-allowed",
                   }}
                 >
-                  Vérifier ma réponse
+                  VÃ©rifier ma rÃ©ponse
                 </button>
                 {answerChecked && (
                   <span style={{ color: answerAccepted ? "#166534" : "#9F1239", fontWeight: 700 }}>
-                    {answerAccepted ? "Réponse acceptée : validation en cours..." : "Réponse insuffisante : carte renvoyée à revoir."}
+                    {answerAccepted ? "RÃ©ponse acceptÃ©e : validation en cours..." : "RÃ©ponse insuffisante : carte renvoyÃ©e Ã  revoir."}
                   </span>
                 )}
               </div>
@@ -635,7 +635,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
               </div>
             )}
             <p style={{ margin: "10px 0 0", color: "#64748B", fontSize: 13 }}>
-              Ecris ta réponse puis clique sur Vérifier ma réponse : la carte est évaluée automatiquement.
+              Ecris ta rÃ©ponse puis clique sur VÃ©rifier ma rÃ©ponse : la carte est Ã©valuÃ©e automatiquement.
             </p>
           </section>
         )}
