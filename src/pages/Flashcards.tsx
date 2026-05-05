@@ -249,7 +249,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
       const projectedTotalXp = flashcardsTotalXp + totalGain;
       const nextLevel = getLevelFromXp(projectedTotalXp);
       if (nextLevel > previousLevel) {
-        setCardEmoji("????");
+        setCardEmoji("Niveau +1");
         setBanner((prev) => `${prev}  Niveau ${nextLevel} atteint !`);
       }
       setBanner(
@@ -488,7 +488,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
                     border: `1px solid ${unlocked ? "#F59E0B" : "#CBD5E1"}`,
                   }}
                 >
-                  {unlocked ? "??" : "??"} {m} cartes
+                  {unlocked ? "Badge debloque" : "Badge verrouille"} - {m} cartes
                 </span>
               );
             })}
@@ -496,7 +496,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
           {banner && <p style={{ marginTop: 10, color: "#0F766E", fontWeight: 700 }}>{banner}</p>}
           {justUnlockedBadge && (
             <p style={{ marginTop: 8, color: "#92400E", fontWeight: 800 }}>
-              ?? Nouveau badge débloqué : {justUnlockedBadge} cartes maîtrisées !
+              Nouveau badge debloque : {justUnlockedBadge} cartes maitrisees !
             </p>
           )}
         </section>
