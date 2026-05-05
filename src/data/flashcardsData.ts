@@ -1,4 +1,4 @@
-export const FLASHCARDS_DATA_VERSION = 3;
+export const FLASHCARDS_DATA_VERSION = 4;
 
 export type FlashcardProgramme = "management_1ere" | "management_terminale" | "sdgn";
 
@@ -43,6 +43,18 @@ export const FLASHCARDS: FlashcardItem[] = [
   { id: "m1-28", programme: "management_1ere", notion: "Etude de marche", question: "Qu'est-ce qu'une etude de marche ?", reponse: "Une analyse de la demande, des clients et des concurrents avant lancement.", xp: 8 },
   { id: "m1-29", programme: "management_1ere", notion: "GPEC", question: "Qu'est-ce que la GPEC ?", reponse: "La gestion previsionnelle des emplois et competences.", xp: 8 },
   { id: "m1-30", programme: "management_1ere", notion: "Processus de recrutement", question: "Pourquoi un processus de recrutement ?", reponse: "Pour choisir un candidat de facon objective et conforme.", xp: 8 },
+  { id: "m1-31", programme: "management_1ere", notion: "Diagnostic interne", question: "Qu'est-ce qu'un diagnostic interne ?", reponse: "Une analyse des forces et faiblesses internes de l'organisation.", xp: 8 },
+  { id: "m1-32", programme: "management_1ere", notion: "Diagnostic externe", question: "Qu'est-ce qu'un diagnostic externe ?", reponse: "Une analyse des opportunites et menaces de l'environnement.", xp: 8 },
+  { id: "m1-33", programme: "management_1ere", notion: "Part de marche", question: "Qu'est-ce que la part de marche ?", reponse: "La proportion des ventes d'une entreprise sur le marche total.", xp: 8 },
+  { id: "m1-34", programme: "management_1ere", notion: "Satisfaction client", question: "Pourquoi mesurer la satisfaction client ?", reponse: "Pour evaluer la qualite percue et ameliorer la fidelisation.", xp: 8 },
+  { id: "m1-35", programme: "management_1ere", notion: "Fidelisation", question: "Qu'est-ce que la fidelisation client ?", reponse: "Les actions qui visent a conserver durablement les clients.", xp: 8 },
+  { id: "m1-36", programme: "management_1ere", notion: "Canal de distribution", question: "Qu'est-ce qu'un canal de distribution ?", reponse: "Le chemin emprunte par un produit du producteur au client.", xp: 8 },
+  { id: "m1-37", programme: "management_1ere", notion: "E-reputation", question: "Qu'est-ce que l'e-reputation ?", reponse: "L'image d'une organisation telle qu'elle est percue en ligne.", xp: 8 },
+  { id: "m1-38", programme: "management_1ere", notion: "Objectif SMART", question: "Qu'est-ce qu'un objectif SMART ?", reponse: "Un objectif Specifique, Mesurable, Atteignable, Realiste et Temporel.", xp: 8 },
+  { id: "m1-39", programme: "management_1ere", notion: "Delegation", question: "Pourquoi deleguer dans une organisation ?", reponse: "Pour repartir les responsabilites et gagner en efficacite.", xp: 8 },
+  { id: "m1-40", programme: "management_1ere", notion: "Communication interne", question: "A quoi sert la communication interne ?", reponse: "A partager l'information et coordonner les equipes.", xp: 8 },
+  { id: "m1-41", programme: "management_1ere", notion: "Culture d'entreprise", question: "Qu'est-ce que la culture d'entreprise ?", reponse: "Les valeurs, normes et pratiques partagees dans l'organisation.", xp: 8 },
+  { id: "m1-42", programme: "management_1ere", notion: "Conduite du changement", question: "Qu'est-ce que la conduite du changement ?", reponse: "L'accompagnement des equipes lors d'une transformation.", xp: 8 },
 
   // Management terminale
   { id: "mt-01", programme: "management_terminale", notion: "Strategie", question: "Qu'est-ce qu'une strategie d'entreprise ?", reponse: "Un ensemble de choix a long terme pour atteindre des objectifs.", xp: 9 },
@@ -65,6 +77,18 @@ export const FLASHCARDS: FlashcardItem[] = [
   { id: "mt-18", programme: "management_terminale", notion: "Modele economique", question: "Qu'est-ce qu'un modele economique ?", reponse: "Le modele economique explique comment l'entreprise cree, delivre et capte de la valeur. Il precise: qui est le client, quelle offre est proposee, comment l'entreprise gagne de l'argent et quels couts elle supporte.", xp: 10 },
   { id: "mt-19", programme: "management_terminale", notion: "Gouvernance", question: "Qu'est-ce que la gouvernance d'entreprise ?", reponse: "La repartition du pouvoir et du controle dans l'entreprise (dirigeants, actionnaires, organes de controle).", xp: 8 },
   { id: "mt-20", programme: "management_terminale", notion: "Avantage concurrentiel", question: "Qu'est-ce qu'un avantage concurrentiel ?", reponse: "Un atout durable qui distingue l'entreprise de ses concurrents (cout, qualite, innovation, marque, service...).", xp: 8 },
+  { id: "mt-21", programme: "management_terminale", notion: "Chaine de valeur", question: "Qu'est-ce que la chaine de valeur ?", reponse: "La decomposition des activites qui creent de la valeur pour le client.", xp: 9 },
+  { id: "mt-22", programme: "management_terminale", notion: "Externalisation", question: "Qu'est-ce que l'externalisation ?", reponse: "Le fait de confier une activite a un prestataire externe.", xp: 8 },
+  { id: "mt-23", programme: "management_terminale", notion: "Integration", question: "Qu'est-ce que l'integration verticale ?", reponse: "Le controle de plusieurs etapes d'une filiere par la meme entreprise.", xp: 8 },
+  { id: "mt-24", programme: "management_terminale", notion: "Diversification", question: "Qu'est-ce qu'une strategie de diversification ?", reponse: "Le developpement vers de nouveaux produits ou nouveaux marches.", xp: 8 },
+  { id: "mt-25", programme: "management_terminale", notion: "Domination par les couts", question: "Qu'est-ce qu'une strategie de domination par les couts ?", reponse: "Produire a cout plus faible pour proposer des prix competitifs.", xp: 8 },
+  { id: "mt-26", programme: "management_terminale", notion: "Differenciation", question: "Qu'est-ce qu'une strategie de differenciation ?", reponse: "Se distinguer par une offre percue comme unique par les clients.", xp: 8 },
+  { id: "mt-27", programme: "management_terminale", notion: "Specialisation", question: "Qu'est-ce qu'une strategie de specialisation ?", reponse: "Concentrer l'activite sur un domaine ou segment precis.", xp: 8 },
+  { id: "mt-28", programme: "management_terminale", notion: "Pilotage", question: "Que signifie piloter la performance ?", reponse: "Suivre des indicateurs pour corriger les ecarts et atteindre les objectifs.", xp: 8 },
+  { id: "mt-29", programme: "management_terminale", notion: "Budget", question: "A quoi sert un budget ?", reponse: "A prevoir les recettes et depenses pour orienter la gestion.", xp: 8 },
+  { id: "mt-30", programme: "management_terminale", notion: "Tableau de financement", question: "Que montre un tableau de financement ?", reponse: "L'origine des ressources et l'emploi des fonds sur une periode.", xp: 9 },
+  { id: "mt-31", programme: "management_terminale", notion: "Capacite d'autofinancement", question: "Qu'est-ce que la capacite d'autofinancement (CAF) ?", reponse: "Le potentiel de tresorerie genere par l'activite de l'entreprise.", xp: 9 },
+  { id: "mt-32", programme: "management_terminale", notion: "Productivite", question: "Qu'est-ce que la productivite ?", reponse: "Le rapport entre une production realisee et les moyens utilises.", xp: 8 },
 
   // Cartes formules Management
   { id: "mt-f01", programme: "management_terminale", notion: "Formule CA", question: "Quelle formule de base permet de calculer le CA ?", reponse: "CA = Prix de vente unitaire x Quantite vendue.", xp: 10 },
@@ -75,6 +99,10 @@ export const FLASHCARDS: FlashcardItem[] = [
   { id: "mt-f06", programme: "management_terminale", notion: "Formule BFR", question: "Quelle formule simplifiee du BFR ?", reponse: "BFR = Stocks + Creances clients - Dettes fournisseurs.", xp: 10 },
   { id: "mt-f07", programme: "management_terminale", notion: "Formule FR", question: "Quelle formule simplifiee du FR ?", reponse: "FR = Ressources stables - Emplois stables.", xp: 10 },
   { id: "mt-f08", programme: "management_terminale", notion: "Formule tresorerie nette", question: "Quelle formule de la tresorerie nette ?", reponse: "Tresorerie nette = FR - BFR.", xp: 10 },
+  { id: "mt-f09", programme: "management_terminale", notion: "Formule productivite", question: "Quelle formule simple de la productivite du travail ?", reponse: "Productivite du travail = Quantite produite / Quantite de travail utilisee.", xp: 10 },
+  { id: "mt-f10", programme: "management_terminale", notion: "Formule part de marche", question: "Quelle formule de la part de marche ?", reponse: "Part de marche = (Ventes de l'entreprise / Ventes totales du marche) x 100.", xp: 10 },
+  { id: "mt-f11", programme: "management_terminale", notion: "Formule evolution CA", question: "Quelle formule du taux d'evolution du CA ?", reponse: "Taux d'evolution = ((CA n - CA n-1) / CA n-1) x 100.", xp: 10 },
+  { id: "mt-f12", programme: "management_terminale", notion: "Formule seuil en volume", question: "Quelle formule du seuil de rentabilite en volume ?", reponse: "Seuil en volume = Charges fixes / Marge sur cout variable unitaire.", xp: 10 },
 
   // SDGN
   { id: "sdgn-01", programme: "sdgn", notion: "SI", question: "Qu'est-ce que le SI ?", reponse: "L'ensemble des ressources qui permettent de collecter, traiter, stocker et diffuser l'information.", xp: 8 },
@@ -107,6 +135,18 @@ export const FLASHCARDS: FlashcardItem[] = [
   { id: "sdgn-28", programme: "sdgn", notion: "Decision structuree", question: "Qu'est-ce qu'une decision structuree ?", reponse: "Une decision repetee, basee sur des regles claires.", xp: 8 },
   { id: "sdgn-29", programme: "sdgn", notion: "Decision semi-structuree", question: "Qu'est-ce qu'une decision semi-structuree ?", reponse: "Une decision partiellement reglee qui demande aussi du jugement humain.", xp: 8 },
   { id: "sdgn-30", programme: "sdgn", notion: "BYOD", question: "Qu'est-ce que le BYOD ?", reponse: "L'usage d'un appareil personnel pour travailler.", xp: 8 },
+  { id: "sdgn-31", programme: "sdgn", notion: "Sauvegarde", question: "Pourquoi faire des sauvegardes regulieres ?", reponse: "Pour restaurer les donnees en cas de perte, panne ou attaque.", xp: 8 },
+  { id: "sdgn-32", programme: "sdgn", notion: "Plan de reprise", question: "Qu'est-ce qu'un plan de reprise d'activite ?", reponse: "Un plan pour redemarrer rapidement les services critiques apres incident.", xp: 8 },
+  { id: "sdgn-33", programme: "sdgn", notion: "Disponibilite", question: "Que signifie la disponibilite d'un systeme ?", reponse: "La capacite d'un service a rester accessible quand on en a besoin.", xp: 8 },
+  { id: "sdgn-34", programme: "sdgn", notion: "Integrite", question: "Que signifie l'integrite des donnees ?", reponse: "Le fait que les donnees restent exactes et non alterees.", xp: 8 },
+  { id: "sdgn-35", programme: "sdgn", notion: "Confidentialite", question: "Que signifie la confidentialite des donnees ?", reponse: "Le fait que seules les personnes autorisees peuvent y acceder.", xp: 8 },
+  { id: "sdgn-36", programme: "sdgn", notion: "Journalisation", question: "A quoi sert la journalisation (logs) ?", reponse: "A tracer les actions pour securite, audit et diagnostic.", xp: 8 },
+  { id: "sdgn-37", programme: "sdgn", notion: "Droits d'acces", question: "Pourquoi gerer finement les droits d'acces ?", reponse: "Pour limiter les risques en appliquant le principe du moindre privilege.", xp: 8 },
+  { id: "sdgn-38", programme: "sdgn", notion: "Anonymisation", question: "Qu'est-ce que l'anonymisation des donnees ?", reponse: "Un traitement qui rend impossible l'identification d'une personne.", xp: 8 },
+  { id: "sdgn-39", programme: "sdgn", notion: "Pseudonymisation", question: "Qu'est-ce que la pseudonymisation ?", reponse: "Le remplacement des identifiants directs par des donnees indirectes.", xp: 8 },
+  { id: "sdgn-40", programme: "sdgn", notion: "Entrepot de donnees", question: "Qu'est-ce qu'un entrepot de donnees (data warehouse) ?", reponse: "Une base centralisee pour analyser des donnees historisees.", xp: 8 },
+  { id: "sdgn-41", programme: "sdgn", notion: "Qualite des donnees", question: "Pourquoi la qualite des donnees est-elle importante ?", reponse: "Parce que des decisions fiables exigent des donnees exactes et coherentes.", xp: 8 },
+  { id: "sdgn-42", programme: "sdgn", notion: "Gouvernance des donnees", question: "Qu'est-ce que la gouvernance des donnees ?", reponse: "Les regles, roles et controles qui organisent la gestion des donnees.", xp: 8 },
 ];
 
 export const FLASHCARD_PROGRAMME_LABELS: Record<FlashcardProgramme, string> = {

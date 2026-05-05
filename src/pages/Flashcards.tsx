@@ -332,6 +332,16 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     }
   };
 
+  const handleToggleCard = () => {
+    if (!answerChecked) {
+      setBanner("Reponds d'abord puis clique sur 'Verifier ma reponse' pour voir la correction.");
+      setCardEmoji("\u270D\uFE0F");
+      setTimeout(() => setCardEmoji(""), 850);
+      return;
+    }
+    setShowAnswer((v) => !v);
+  };
+
   const handleMasteredRef = useRef(handleMastered);
   handleMasteredRef.current = handleMastered;
   const handleNotMasteredRef = useRef(handleNotMastered);
@@ -340,6 +350,8 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   handleCheckAnswerRef.current = handleCheckAnswer;
   const answerCheckedRef = useRef(answerChecked);
   answerCheckedRef.current = answerChecked;
+  const handleToggleCardRef = useRef(handleToggleCard);
+  handleToggleCardRef.current = handleToggleCard;
 
   const resetProgress = async () => {
     const impacted = cards.map((c) => c.id);
@@ -366,7 +378,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
       if (!current) return;
       if (e.key === "Enter") {
         e.preventDefault();
-        setShowAnswer((v) => !v);
+        handleToggleCardRef.current();
         return;
       }
       if (!showAnswer) return;
@@ -423,8 +435,8 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   }
 
   return (
-    <div className="min-h-screen p-4" style={{ background: "radial-gradient(circle at 15% 10%, #DBEAFE 0%, #EEF2FF 36%, #F8FAFC 100%)", fontFamily: "Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" }}>
-      <div className="max-w-5xl mx-auto" style={{ display: "grid", gap: 14 }}>
+    <div className="min-h-screen p-3" style={{ background: "radial-gradient(circle at 15% 10%, #DBEAFE 0%, #EEF2FF 36%, #F8FAFC 100%)", fontFamily: "Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" }}>
+      <div className="max-w-3xl mx-auto" style={{ display: "grid", gap: 12 }}>
         <section style={{ background: "linear-gradient(145deg, rgba(255,255,255,0.96), rgba(240,249,255,0.94))", backdropFilter: "blur(10px)", borderRadius: 22, border: "1px solid #BFDBFE", padding: 16, boxShadow: "0 18px 45px rgba(30, 41, 59, 0.1)" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
             <h1 style={{ margin: 0, fontSize: "1.7rem", color: "#1E1B4B" }}>Flashcards Bac - Entrainement actif</h1>
@@ -530,61 +542,13 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
             <p style={{ margin: 0, color: "#475569" }}>Tu as valide toutes les cartes du pack.</p>
           </section>
         ) : (
-          <section style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)", borderRadius: 22, border: "1px solid #BFDBFE", padding: 18, boxShadow: "0 14px 34px rgba(30, 41, 59, 0.08)" }}>
+          <section style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)", borderRadius: 22, border: "1px solid #BFDBFE", padding: 14, boxShadow: "0 14px 34px rgba(30, 41, 59, 0.08)" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 8, flexWrap: "wrap" }}>
               <p style={{ margin: 0, color: categoryStyle.text, fontWeight: 800 }}>{current.notion}</p>
               <span style={{ background: categoryStyle.bg, color: categoryStyle.text, borderRadius: 999, padding: "4px 10px", fontWeight: 700, fontSize: 12, border: `1px solid ${categoryStyle.border}` }}>+{current.xp} XP</span>
             </div>
-            <div style={{ display: "grid", gap: 8, marginBottom: 12 }}>
-              <label htmlFor="flashcards-answer" style={{ color: "#334155", fontWeight: 700 }}>
-                Ta reponse (sans accent, pas besoin du mot a mot):
-              </label>
-              <textarea
-                id="flashcards-answer"
-                value={learnerAnswer}
-                onChange={(e) => {
-                  setLearnerAnswer(e.target.value);
-                  setAnswerChecked(false);
-                  setAnswerAccepted(false);
-                }}
-                placeholder="Ecris ta reponse ici..."
-                rows={3}
-                style={{
-                  borderRadius: 12,
-                  border: "1px solid #CBD5E1",
-                  padding: 12,
-                  fontFamily: "inherit",
-                  fontSize: 15,
-                  resize: "vertical",
-                  background: "#FFFFFF",
-                  boxShadow: "inset 0 1px 2px rgba(15, 23, 42, 0.08)",
-                }}
-              />
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
-                <button
-                  onClick={handleCheckAnswer}
-                  disabled={!learnerAnswer.trim() || isActionBusy}
-                  style={{
-                    border: "none",
-                    borderRadius: 10,
-                    background: learnerAnswer.trim() && !isActionBusy ? "#2563EB" : "#94A3B8",
-                    color: "white",
-                    padding: "8px 12px",
-                    fontWeight: 700,
-                    cursor: learnerAnswer.trim() && !isActionBusy ? "pointer" : "not-allowed",
-                  }}
-                >
-                  Verifier ma reponse [V]
-                </button>
-                {answerChecked && (
-                  <span style={{ color: answerAccepted ? "#166534" : "#9F1239", fontWeight: 700 }}>
-                    {answerAccepted ? "Reponse acceptee: tu peux valider." : "Reponse insuffisante: utilise A revoir."}
-                  </span>
-                )}
-              </div>
-            </div>
             <div
-              onClick={() => setShowAnswer((v) => !v)}
+              onClick={handleToggleCard}
               onTouchStart={onTouchStart}
               onTouchEnd={onTouchEnd}
               style={{
@@ -619,6 +583,9 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
                     boxShadow: `0 8px 24px ${categoryStyle.glow}`,
                   }}
                 >
+                  <p style={{ margin: "0 0 8px", color: categoryStyle.text, fontSize: 12, fontWeight: 800, letterSpacing: 0.4, textTransform: "uppercase" }}>
+                    Question
+                  </p>
                   <p style={{ margin: 0, color: "#0F172A", lineHeight: 1.65, fontSize: "1.05rem", fontWeight: 700 }}>
                     {current.question}
                   </p>
@@ -638,10 +605,63 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
                     boxShadow: "0 8px 24px rgba(30, 41, 59, 0.08)",
                   }}
                 >
+                  <p style={{ margin: "0 0 8px", color: categoryStyle.text, fontSize: 12, fontWeight: 800, letterSpacing: 0.4, textTransform: "uppercase" }}>
+                    Correction
+                  </p>
                   <p style={{ margin: 0, color: "#1E293B", lineHeight: 1.65, fontSize: "1.02rem" }}>
                     {current.reponse}
                   </p>
                 </div>
+              </div>
+            </div>
+            <div style={{ marginTop: 12, border: "1px solid #DBEAFE", background: "#F8FAFF", borderRadius: 14, padding: 12 }}>
+              <label htmlFor="flashcards-answer" style={{ color: "#334155", fontWeight: 700, fontSize: 14 }}>
+                Ta reponse (zone sous la carte) :
+              </label>
+              <textarea
+                id="flashcards-answer"
+                value={learnerAnswer}
+                onChange={(e) => {
+                  setLearnerAnswer(e.target.value);
+                  setAnswerChecked(false);
+                  setAnswerAccepted(false);
+                }}
+                placeholder="Ecris une definition courte avec les mots cles..."
+                rows={3}
+                style={{
+                  marginTop: 8,
+                  width: "100%",
+                  borderRadius: 12,
+                  border: "1px solid #CBD5E1",
+                  padding: 12,
+                  fontFamily: "inherit",
+                  fontSize: 15,
+                  resize: "vertical",
+                  background: "#FFFFFF",
+                  boxShadow: "inset 0 1px 2px rgba(15, 23, 42, 0.08)",
+                }}
+              />
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginTop: 8 }}>
+                <button
+                  onClick={handleCheckAnswer}
+                  disabled={!learnerAnswer.trim() || isActionBusy}
+                  style={{
+                    border: "none",
+                    borderRadius: 10,
+                    background: learnerAnswer.trim() && !isActionBusy ? "#2563EB" : "#94A3B8",
+                    color: "white",
+                    padding: "8px 12px",
+                    fontWeight: 700,
+                    cursor: learnerAnswer.trim() && !isActionBusy ? "pointer" : "not-allowed",
+                  }}
+                >
+                  Verifier ma reponse [V]
+                </button>
+                {answerChecked && (
+                  <span style={{ color: answerAccepted ? "#166534" : "#9F1239", fontWeight: 700 }}>
+                    {answerAccepted ? "Reponse acceptee: tu peux valider." : "Reponse insuffisante: utilise A revoir."}
+                  </span>
+                )}
               </div>
             </div>
             {(cardEmoji || swipeHint) && (
