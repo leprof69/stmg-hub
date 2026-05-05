@@ -4,6 +4,7 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import {
   FLASHCARDS,
   FLASHCARDS_DATA_VERSION,
+  type FlashcardItem,
 } from "../data/flashcardsData";
 
 type Props = {
@@ -24,6 +25,27 @@ const LEVEL_TITLES = [
   "Maitre Revision",
   "Boss du Bac",
 ];
+
+const STOP_WORDS = new Set([
+  "le", "la", "les", "de", "des", "du", "un", "une", "et", "ou", "pour", "par",
+  "dans", "sur", "avec", "sans", "au", "aux", "a", "en", "est", "sont", "qui",
+  "que", "quoi", "qu", "d", "l", "se", "ses", "son", "sa", "ce", "cet", "cette",
+  "ces", "leur", "leurs", "on", "il", "elle", "ils", "elles", "ne", "pas",
+]);
+
+type DeckCategory = "premiere" | "terminale" | "bac";
+
+const CATEGORY_LABELS: Record<DeckCategory, string> = {
+  premiere: "Programme 1ere",
+  terminale: "Programme terminale",
+  bac: "Tout niveau (bac)",
+};
+
+const CATEGORY_STYLES: Record<DeckCategory, { bg: string; border: string; text: string; glow: string }> = {
+  premiere: { bg: "#ECFEFF", border: "#67E8F9", text: "#0F766E", glow: "rgba(6, 182, 212, 0.25)" },
+  terminale: { bg: "#EEF2FF", border: "#A5B4FC", text: "#3730A3", glow: "rgba(99, 102, 241, 0.25)" },
+  bac: { bg: "#F5F3FF", border: "#C4B5FD", text: "#6D28D9", glow: "rgba(139, 92, 246, 0.25)" },
+};
 
 function getLevelFromXp(totalXp: number) {
   return Math.max(1, Math.floor(totalXp / LEVEL_STEP_XP) + 1);
@@ -59,9 +81,46 @@ function shuffleArray<T>(arr: T[]): T[] {
   return copy;
 }
 
+function normalizeAnswerText(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function extractKeywords(value: string): string[] {
+  const normalized = normalizeAnswerText(value);
+  if (!normalized) return [];
+  return normalized
+    .split(" ")
+    .filter((token) => token.length > 2 && !STOP_WORDS.has(token));
+}
+
+function isLearnerAnswerAccepted(expected: string, learner: string): boolean {
+  const normalizedExpected = normalizeAnswerText(expected);
+  const normalizedLearner = normalizeAnswerText(learner);
+  if (normalizedLearner.length < 3) return false;
+  if (normalizedExpected === normalizedLearner) return true;
+  if (normalizedLearner.length >= 10 && normalizedExpected.includes(normalizedLearner)) return true;
+  if (normalizedExpected.length >= 10 && normalizedLearner.includes(normalizedExpected)) return true;
+
+  const expectedKeywords = Array.from(new Set(extractKeywords(expected)));
+  if (!expectedKeywords.length) return normalizedLearner.length >= Math.max(4, Math.floor(normalizedExpected.length * 0.5));
+  const learnerSet = new Set(extractKeywords(learner));
+  let matches = 0;
+  expectedKeywords.forEach((token) => {
+    if (learnerSet.has(token)) matches += 1;
+  });
+  const coverage = matches / expectedKeywords.length;
+  return coverage >= 0.55 || (matches >= 3 && coverage >= 0.45);
+}
+
 export default function Flashcards({ profil, onXPGagne }: Props) {
   const [validatedIds, setValidatedIds] = useState<Record<string, true>>({});
-  const [deck, setDeck] = useState<any[]>([]);
+  const [deck, setDeck] = useState<FlashcardItem[]>([]);
   const [index, setIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
   const [banner, setBanner] = useState<string>("");
@@ -77,8 +136,21 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   const [level, setLevel] = useState(1);
   const [unlockedBadges, setUnlockedBadges] = useState<number[]>([]);
   const [justUnlockedBadge, setJustUnlockedBadge] = useState<number | null>(null);
+  const [category, setCategory] = useState<DeckCategory>("bac");
+  const [learnerAnswer, setLearnerAnswer] = useState("");
+  const [answerChecked, setAnswerChecked] = useState(false);
+  const [answerAccepted, setAnswerAccepted] = useState(false);
+  const [transitioningCard, setTransitioningCard] = useState(false);
 
-  const cards = useMemo(() => [...FLASHCARDS], []);
+  const cards = useMemo(() => {
+    if (category === "premiere") {
+      return FLASHCARDS.filter((c) => c.programme === "management_1ere");
+    }
+    if (category === "terminale") {
+      return FLASHCARDS.filter((c) => c.programme === "management_terminale" || c.programme === "sdgn");
+    }
+    return [...FLASHCARDS];
+  }, [category]);
   const remaining = useMemo(
     () => cards.filter((c) => !validatedIds[c.id]),
     [cards, validatedIds]
@@ -90,11 +162,15 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   const levelTitle = getLevelTitle(level);
   const xpToNextLevel = getXpToNextLevel(flashcardsTotalXp);
   const levelProgressPct = Math.round((getXpInCurrentLevel(flashcardsTotalXp) / LEVEL_STEP_XP) * 100);
+  const categoryStyle = CATEGORY_STYLES[category];
 
   useEffect(() => {
     setDeck(shuffleArray(remaining));
     setIndex(0);
     setShowAnswer(false);
+    setLearnerAnswer("");
+    setAnswerChecked(false);
+    setAnswerAccepted(false);
   }, [remaining]);
 
   useEffect(() => {
@@ -156,11 +232,17 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   };
 
   const handleMastered = async () => {
-    if (!current || isActionBusy) return;
+    if (!current || isActionBusy || transitioningCard) return;
+    if (!answerChecked || !answerAccepted) {
+      setBanner("Reponds d'abord puis valide avec 'Verifier ma reponse'.");
+      setCardEmoji("\u26A0\uFE0F");
+      setTimeout(() => setCardEmoji(""), 850);
+      return;
+    }
     if (validatedIds[current.id]) return;
     setIsActionBusy(true);
+    setTransitioningCard(true);
     const nextValidated = { ...validatedIds, [current.id]: true as const };
-    setValidatedIds(nextValidated);
     try {
       const nextSessionGood = sessionGood + 1;
       const currentMultiplier = getMultiplierFromLevel(level);
@@ -186,6 +268,13 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
       setTimeout(() => setCardEmoji(""), 850);
       setSessionGood(nextSessionGood);
       setStreak((v) => v + 1);
+      setLearnerAnswer("");
+      setAnswerChecked(false);
+      setAnswerAccepted(false);
+      setTimeout(() => {
+        setValidatedIds(nextValidated);
+        setTransitioningCard(false);
+      }, 520);
       const nextMastered = masteredCount + 1;
       const nextBadges = computeUnlockedBadges(nextMastered);
       const freshBadge = nextBadges.find((b) => !unlockedBadges.includes(b));
@@ -198,13 +287,14 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
       console.error("Validation flashcard impossible", err);
       setBanner("Validation impossible pour le moment.");
       setValidatedIds(validatedIds);
+      setTransitioningCard(false);
     } finally {
       setIsActionBusy(false);
     }
   };
 
   const handleNotMastered = () => {
-    if (!current || isActionBusy) return;
+    if (!current || isActionBusy || transitioningCard) return;
     setDeck((prev) => {
       const rest = prev.filter((_, i) => i !== index);
       const insertAt = Math.min(rest.length, 2 + Math.floor(Math.random() * 4));
@@ -214,17 +304,42 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     });
     setIndex(0);
     setShowAnswer(false);
+    setLearnerAnswer("");
+    setAnswerChecked(false);
+    setAnswerAccepted(false);
     setBanner("Carte remise dans la file");
     setCardEmoji("\u{1F622}\u{1F4DA}");
     setTimeout(() => setCardEmoji(""), 850);
+    setTransitioningCard(false);
     setSessionRetry((v) => v + 1);
     setStreak(0);
+  };
+
+  const handleCheckAnswer = () => {
+    if (!current) return;
+    const accepted = isLearnerAnswerAccepted(current.reponse, learnerAnswer);
+    setShowAnswer(true);
+    setAnswerChecked(true);
+    setAnswerAccepted(accepted);
+    if (accepted) {
+      setBanner("Bonne reponse: tu peux maintenant valider la carte.");
+      setCardEmoji("\u2705");
+      setTimeout(() => setCardEmoji(""), 850);
+    } else {
+      setBanner("Pas encore: compare avec la correction puis clique 'A revoir'.");
+      setCardEmoji("\u{1F914}");
+      setTimeout(() => setCardEmoji(""), 850);
+    }
   };
 
   const handleMasteredRef = useRef(handleMastered);
   handleMasteredRef.current = handleMastered;
   const handleNotMasteredRef = useRef(handleNotMastered);
   handleNotMasteredRef.current = handleNotMastered;
+  const handleCheckAnswerRef = useRef(handleCheckAnswer);
+  handleCheckAnswerRef.current = handleCheckAnswer;
+  const answerCheckedRef = useRef(answerChecked);
+  answerCheckedRef.current = answerChecked;
 
   const resetProgress = async () => {
     const impacted = cards.map((c) => c.id);
@@ -259,6 +374,10 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
         e.preventDefault();
         void handleMasteredRef.current();
       }
+      if (!answerCheckedRef.current && e.key.toLowerCase() === "v") {
+        e.preventDefault();
+        handleCheckAnswerRef.current();
+      }
       if (e.key.toLowerCase() === "r" || e.key === "ArrowLeft") {
         e.preventDefault();
         handleNotMasteredRef.current();
@@ -269,12 +388,12 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   }, [current, showAnswer]);
 
   const onTouchStart = (e: TouchEvent<HTMLDivElement>) => {
-    if (!showAnswer) return;
+    if (!showAnswer || !answerChecked) return;
     setTouchStartX(e.changedTouches[0]?.clientX ?? null);
   };
 
   const onTouchEnd = (e: TouchEvent<HTMLDivElement>) => {
-    if (!showAnswer || touchStartX === null) return;
+    if (!showAnswer || !answerChecked || touchStartX === null) return;
     const endX = e.changedTouches[0]?.clientX ?? touchStartX;
     const delta = endX - touchStartX;
     if (Math.abs(delta) < 60) {
@@ -304,11 +423,11 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   }
 
   return (
-    <div className="min-h-screen p-4" style={{ background: "radial-gradient(circle at 20% 10%, #E0E7FF 0%, #F8FAFF 35%, #F1F5F9 100%)" }}>
+    <div className="min-h-screen p-4" style={{ background: "radial-gradient(circle at 15% 10%, #DBEAFE 0%, #EEF2FF 36%, #F8FAFC 100%)", fontFamily: "Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" }}>
       <div className="max-w-5xl mx-auto" style={{ display: "grid", gap: 14 }}>
-        <section style={{ background: "rgba(255,255,255,0.92)", backdropFilter: "blur(10px)", borderRadius: 20, border: "1px solid #DBEAFE", padding: 16, boxShadow: "0 14px 34px rgba(30, 41, 59, 0.08)" }}>
+        <section style={{ background: "linear-gradient(145deg, rgba(255,255,255,0.96), rgba(240,249,255,0.94))", backdropFilter: "blur(10px)", borderRadius: 22, border: "1px solid #BFDBFE", padding: 16, boxShadow: "0 18px 45px rgba(30, 41, 59, 0.1)" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
-            <h1 style={{ margin: 0, fontSize: "1.7rem", color: "#1E1B4B" }}>Flashcards Bac - Pack Unique</h1>
+            <h1 style={{ margin: 0, fontSize: "1.7rem", color: "#1E1B4B" }}>Flashcards Bac - Entrainement actif</h1>
             <button
               onClick={resetProgress}
               style={{ borderRadius: 10, border: "1px solid #FCA5A5", background: "#FFF1F2", color: "#9F1239", padding: "7px 11px", fontWeight: 700, cursor: "pointer" }}
@@ -316,8 +435,33 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
               Reinitialiser le pack
             </button>
           </div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
+            {(["premiere", "terminale", "bac"] as DeckCategory[]).map((cat) => {
+              const active = category === cat;
+              const stylePreset = CATEGORY_STYLES[cat];
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setCategory(cat)}
+                  style={{
+                    borderRadius: 999,
+                    border: active ? `1px solid ${stylePreset.border}` : "1px solid #CBD5E1",
+                    background: active ? stylePreset.bg : "#F8FAFC",
+                    color: active ? stylePreset.text : "#334155",
+                    padding: "7px 12px",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                    boxShadow: active ? `0 6px 16px ${stylePreset.glow}` : "none",
+                    transition: "all 220ms ease",
+                  }}
+                >
+                  {CATEGORY_LABELS[cat]}
+                </button>
+              );
+            })}
+          </div>
 
-          <p style={{ color: "#475569", margin: "8px 0 10px" }}>
+          <p style={{ color: categoryStyle.text, margin: "8px 0 10px", fontWeight: 600 }}>
             {remaining.length} restantes / {cards.length} - XP potentiel restant: {estimatedXpLeft}
           </p>
 
@@ -386,10 +530,58 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
             <p style={{ margin: 0, color: "#475569" }}>Tu as valide toutes les cartes du pack.</p>
           </section>
         ) : (
-          <section style={{ background: "white", borderRadius: 20, border: "1px solid #DBEAFE", padding: 18, boxShadow: "0 12px 30px rgba(30, 41, 59, 0.06)" }}>
+          <section style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)", borderRadius: 22, border: "1px solid #BFDBFE", padding: 18, boxShadow: "0 14px 34px rgba(30, 41, 59, 0.08)" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 8, flexWrap: "wrap" }}>
-              <p style={{ margin: 0, color: "#6366F1", fontWeight: 800 }}>{current.notion}</p>
-              <span style={{ background: "#DCFCE7", color: "#166534", borderRadius: 999, padding: "4px 10px", fontWeight: 700, fontSize: 12 }}>+{current.xp} XP</span>
+              <p style={{ margin: 0, color: categoryStyle.text, fontWeight: 800 }}>{current.notion}</p>
+              <span style={{ background: categoryStyle.bg, color: categoryStyle.text, borderRadius: 999, padding: "4px 10px", fontWeight: 700, fontSize: 12, border: `1px solid ${categoryStyle.border}` }}>+{current.xp} XP</span>
+            </div>
+            <div style={{ display: "grid", gap: 8, marginBottom: 12 }}>
+              <label htmlFor="flashcards-answer" style={{ color: "#334155", fontWeight: 700 }}>
+                Ta reponse (sans accent, pas besoin du mot a mot):
+              </label>
+              <textarea
+                id="flashcards-answer"
+                value={learnerAnswer}
+                onChange={(e) => {
+                  setLearnerAnswer(e.target.value);
+                  setAnswerChecked(false);
+                  setAnswerAccepted(false);
+                }}
+                placeholder="Ecris ta reponse ici..."
+                rows={3}
+                style={{
+                  borderRadius: 12,
+                  border: "1px solid #CBD5E1",
+                  padding: 12,
+                  fontFamily: "inherit",
+                  fontSize: 15,
+                  resize: "vertical",
+                  background: "#FFFFFF",
+                  boxShadow: "inset 0 1px 2px rgba(15, 23, 42, 0.08)",
+                }}
+              />
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+                <button
+                  onClick={handleCheckAnswer}
+                  disabled={!learnerAnswer.trim() || isActionBusy}
+                  style={{
+                    border: "none",
+                    borderRadius: 10,
+                    background: learnerAnswer.trim() && !isActionBusy ? "#2563EB" : "#94A3B8",
+                    color: "white",
+                    padding: "8px 12px",
+                    fontWeight: 700,
+                    cursor: learnerAnswer.trim() && !isActionBusy ? "pointer" : "not-allowed",
+                  }}
+                >
+                  Verifier ma reponse [V]
+                </button>
+                {answerChecked && (
+                  <span style={{ color: answerAccepted ? "#166534" : "#9F1239", fontWeight: 700 }}>
+                    {answerAccepted ? "Reponse acceptee: tu peux valider." : "Reponse insuffisante: utilise A revoir."}
+                  </span>
+                )}
+              </div>
             </div>
             <div
               onClick={() => setShowAnswer((v) => !v)}
@@ -400,6 +592,8 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
                 perspective: 1200,
                 cursor: "pointer",
                 userSelect: "none",
+                opacity: transitioningCard ? 0.62 : 1,
+                transition: "opacity 260ms ease",
               }}
             >
               <div
@@ -407,7 +601,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
                   position: "relative",
                   minHeight: 240,
                   transformStyle: "preserve-3d",
-                  transition: "transform 520ms cubic-bezier(0.22, 1, 0.36, 1)",
+                  transition: "transform 620ms cubic-bezier(0.2, 0.9, 0.2, 1)",
                   transform: showAnswer ? "rotateY(180deg)" : "rotateY(0deg)",
                 }}
               >
@@ -415,14 +609,14 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
                   style={{
                     position: "absolute",
                     inset: 0,
-                    border: "1px solid #C7D2FE",
+                    border: `1px solid ${categoryStyle.border}`,
                     borderRadius: 16,
-                    padding: 18,
-                    background: "linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)",
+                    padding: 22,
+                    background: `linear-gradient(180deg, #FFFFFF 0%, ${categoryStyle.bg} 100%)`,
                     backfaceVisibility: "hidden",
                     display: "grid",
                     alignContent: "center",
-                    boxShadow: "0 8px 24px rgba(30, 41, 59, 0.08)",
+                    boxShadow: `0 8px 24px ${categoryStyle.glow}`,
                   }}
                 >
                   <p style={{ margin: 0, color: "#0F172A", lineHeight: 1.65, fontSize: "1.05rem", fontWeight: 700 }}>
@@ -433,10 +627,10 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
                   style={{
                     position: "absolute",
                     inset: 0,
-                    border: "1px solid #BFDBFE",
+                    border: `1px solid ${categoryStyle.border}`,
                     borderRadius: 16,
-                    padding: 18,
-                    background: "linear-gradient(180deg, #EEF2FF 0%, #E0F2FE 100%)",
+                    padding: 22,
+                    background: `linear-gradient(180deg, ${categoryStyle.bg} 0%, #E0F2FE 100%)`,
                     transform: "rotateY(180deg)",
                     backfaceVisibility: "hidden",
                     display: "grid",
@@ -456,44 +650,47 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
               </div>
             )}
             <p style={{ margin: "10px 0 0", color: "#64748B", fontSize: 13 }}>
-              Clique la carte ou appuie sur Entrer pour retourner. Raccourcis: M = maitrise, R = a revoir. Sur mobile: swipe droite = maitrise, swipe gauche = a revoir.
+              Clique la carte ou appuie sur Entrer pour retourner. D'abord: V = verifier la reponse. Ensuite: M = maitrise, R = a revoir. Sur mobile: swipe active apres verification.
             </p>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 12 }}>
               <button
                 onClick={() => void handleMastered()}
-                disabled={!showAnswer || isActionBusy}
+                disabled={!showAnswer || isActionBusy || transitioningCard || !answerChecked || !answerAccepted}
                 style={{
                   border: "none",
                   borderRadius: 12,
-                  background: showAnswer && !isActionBusy ? "linear-gradient(135deg, #22C55E, #16A34A)" : "#94A3B8",
+                  background: showAnswer && !isActionBusy && !transitioningCard && answerChecked && answerAccepted ? "linear-gradient(135deg, #22C55E, #16A34A)" : "#94A3B8",
                   color: "white",
                   padding: "10px 14px",
                   fontWeight: 800,
                   letterSpacing: 0.2,
-                  cursor: showAnswer && !isActionBusy ? "pointer" : "not-allowed",
+                  cursor: showAnswer && !isActionBusy && !transitioningCard && answerChecked && answerAccepted ? "pointer" : "not-allowed",
                   transition: "transform 150ms ease, box-shadow 150ms ease",
-                  boxShadow: showAnswer && !isActionBusy ? "0 8px 18px rgba(34, 197, 94, 0.35)" : "none",
+                  boxShadow: showAnswer && !isActionBusy && !transitioningCard && answerChecked && answerAccepted ? "0 8px 18px rgba(34, 197, 94, 0.35)" : "none",
                 }}
               >
                 Je maitrise (+{current.xp} XP) [M]
               </button>
               <button
                 onClick={handleNotMastered}
-                disabled={!showAnswer || isActionBusy}
+                disabled={!showAnswer || isActionBusy || transitioningCard}
                 style={{
                   border: "1px solid #FCA5A5",
                   borderRadius: 12,
-                  background: showAnswer && !isActionBusy ? "#FFF1F2" : "#F8FAFC",
+                  background: showAnswer && !isActionBusy && !transitioningCard ? "#FFF1F2" : "#F8FAFC",
                   color: "#9F1239",
                   padding: "10px 14px",
                   fontWeight: 800,
-                  cursor: showAnswer && !isActionBusy ? "pointer" : "not-allowed",
+                  cursor: showAnswer && !isActionBusy && !transitioningCard ? "pointer" : "not-allowed",
                   transition: "transform 150ms ease, box-shadow 150ms ease",
                 }}
               >
                 A revoir [R]
               </button>
             </div>
+            <p style={{ margin: "10px 0 0", color: "#94A3B8", fontSize: 12 }}>
+              Conseil: ecris une definition courte avec les mots cles essentiels. La correction reste volontairement souple.
+            </p>
           </section>
         )}
       </div>
