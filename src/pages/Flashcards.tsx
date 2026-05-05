@@ -140,6 +140,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   const [answerChecked, setAnswerChecked] = useState(false);
   const [answerAccepted, setAnswerAccepted] = useState(false);
   const [transitioningCard, setTransitioningCard] = useState(false);
+  const [pendingAutoAction, setPendingAutoAction] = useState<"mastered" | "retry" | null>(null);
 
   const cards = useMemo(() => {
     if (category === "premiere") {
@@ -264,6 +265,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
       setLearnerAnswer("");
       setAnswerChecked(false);
       setAnswerAccepted(false);
+      setPendingAutoAction(null);
       setTimeout(() => {
         setValidatedIds(nextValidated);
         setTransitioningCard(false);
@@ -300,6 +302,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     setLearnerAnswer("");
     setAnswerChecked(false);
     setAnswerAccepted(false);
+    setPendingAutoAction(null);
     setBanner("Carte remise dans la file");
     setCardEmoji("\u{1F622}\u{1F4DA}");
     setTimeout(() => setCardEmoji(""), 850);
@@ -315,23 +318,29 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     setAnswerChecked(true);
     setAnswerAccepted(accepted);
     if (accepted) {
-      setBanner("Bonne réponse : carte validée automatiquement.");
+      setBanner("Bonne r�ponse : lis la correction puis clique sur Continuer.");
       setCardEmoji("\u2705");
-      setTimeout(() => {
-        void handleMastered(true);
-      }, 650);
+      setPendingAutoAction("mastered");
     } else {
-      setBanner("Réponse insuffisante : carte remise à revoir automatiquement.");
+      setBanner("R�ponse insuffisante : lis la correction puis clique sur Continuer.");
       setCardEmoji("\u{1F914}");
-      setTimeout(() => {
-        handleNotMastered(true);
-      }, 650);
+      setPendingAutoAction("retry");
+    }
+  };
+
+  const handleContinueAfterCorrection = () => {
+    if (pendingAutoAction === "mastered") {
+      void handleMastered(true);
+      return;
+    }
+    if (pendingAutoAction === "retry") {
+      handleNotMastered(true);
     }
   };
 
   const handleToggleCard = () => {
     if (!answerChecked) {
-      setBanner("Réponds d'abord puis clique sur 'Vérifier ma réponse' pour voir la correction.");
+      setBanner("R�ponds d'abord puis clique sur 'V�rifier ma r�ponse' pour voir la correction.");
       setCardEmoji("\u270D\uFE0F");
       setTimeout(() => setCardEmoji(""), 850);
       return;
@@ -349,7 +358,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     setValidatedIds(nextValidated);
     try {
       await persist(nextValidated, 0);
-      setBanner("Progression du pack réinitialisée.");
+      setBanner("Progression du pack r�initialis�e.");
     } catch {
       setBanner("Reinitialisation locale effectuee.");
     }
@@ -373,7 +382,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
       if (!showAnswer) return;
       if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
         e.preventDefault();
-      setBanner("La validation est automatique après vérification de la réponse.");
+        setBanner("La validation est automatique apr�s v�rification de la r�ponse.");
       }
     };
     window.addEventListener("keydown", onKeyDown);
@@ -455,10 +464,10 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
             <span style={{ background: "#EEF2FF", color: "#4338CA", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Progression: {progressPct}%</span>
-            <span style={{ background: "#DCFCE7", color: "#166534", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Maîtrisées : {masteredCount}</span>
-            <span style={{ background: "#FEF9C3", color: "#854D0E", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Série : {streak}</span>
+            <span style={{ background: "#DCFCE7", color: "#166534", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Maitrisees : {masteredCount}</span>
+            <span style={{ background: "#FEF9C3", color: "#854D0E", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Serie : {streak}</span>
             <span style={{ background: "#F1F5F9", color: "#334155", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Session OK: {sessionGood}</span>
-            <span style={{ background: "#FFF1F2", color: "#9F1239", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Session à revoir : {sessionRetry}</span>
+            <span style={{ background: "#FFF1F2", color: "#9F1239", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Session a revoir : {sessionRetry}</span>
             <span style={{ background: "#EDE9FE", color: "#5B21B6", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Niveau: {level}</span>
             <span style={{ background: "#F5F3FF", color: "#6D28D9", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Coef: x{getMultiplierFromLevel(level).toFixed(1)}</span>
             <span style={{ background: "#ECFEFF", color: "#155E75", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>XP flashcards: {flashcardsTotalXp}</span>
@@ -581,7 +590,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
             </div>
             <div style={{ marginTop: 12, border: "1px solid #DBEAFE", background: "#F8FAFF", borderRadius: 14, padding: 12 }}>
               <label htmlFor="flashcards-answer" style={{ color: "#334155", fontWeight: 700, fontSize: 14 }}>
-                Ta réponse (zone sous la carte) :
+                Ta r�ponse (zone sous la carte) :
               </label>
               <textarea
                 id="flashcards-answer"
@@ -590,9 +599,11 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
                   setLearnerAnswer(e.target.value);
                   setAnswerChecked(false);
                   setAnswerAccepted(false);
+                  setPendingAutoAction(null);
                 }}
                 placeholder="Ecris une definition courte avec les mots cles..."
                 rows={3}
+                disabled={pendingAutoAction !== null || isActionBusy || transitioningCard}
                 style={{
                   marginTop: 8,
                   width: "100%",
@@ -609,23 +620,40 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginTop: 8 }}>
                 <button
                   onClick={handleCheckAnswer}
-                  disabled={!learnerAnswer.trim() || isActionBusy}
+                  disabled={!learnerAnswer.trim() || isActionBusy || transitioningCard || pendingAutoAction !== null}
                   style={{
                     border: "none",
                     borderRadius: 10,
-                    background: learnerAnswer.trim() && !isActionBusy ? "#2563EB" : "#94A3B8",
+                    background: learnerAnswer.trim() && !isActionBusy && !transitioningCard && pendingAutoAction === null ? "#2563EB" : "#94A3B8",
                     color: "white",
                     padding: "8px 12px",
                     fontWeight: 700,
-                    cursor: learnerAnswer.trim() && !isActionBusy ? "pointer" : "not-allowed",
+                    cursor: learnerAnswer.trim() && !isActionBusy && !transitioningCard && pendingAutoAction === null ? "pointer" : "not-allowed",
                   }}
                 >
-                  Vérifier ma réponse
+                  Verifier ma reponse
                 </button>
                 {answerChecked && (
                   <span style={{ color: answerAccepted ? "#166534" : "#9F1239", fontWeight: 700 }}>
-                    {answerAccepted ? "Réponse acceptée : validation en cours..." : "Réponse insuffisante : carte renvoyée à revoir."}
+                    {answerAccepted ? "Reponse acceptee : carte validee a l'etape suivante." : "Reponse insuffisante : carte renvoyee a revoir a l'etape suivante."}
                   </span>
+                )}
+                {pendingAutoAction && (
+                  <button
+                    onClick={handleContinueAfterCorrection}
+                    disabled={isActionBusy || transitioningCard}
+                    style={{
+                      border: "none",
+                      borderRadius: 10,
+                      background: "#0F766E",
+                      color: "white",
+                      padding: "8px 12px",
+                      fontWeight: 700,
+                      cursor: isActionBusy || transitioningCard ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    Continuer
+                  </button>
                 )}
               </div>
             </div>
@@ -635,7 +663,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
               </div>
             )}
             <p style={{ margin: "10px 0 0", color: "#64748B", fontSize: 13 }}>
-              Ecris ta réponse puis clique sur Vérifier ma réponse : la carte est évaluée automatiquement.
+              Ecris ta reponse puis clique sur Verifier ma reponse. Tu vois la correction, puis Continuer applique la decision automatique.
             </p>
           </section>
         )}
