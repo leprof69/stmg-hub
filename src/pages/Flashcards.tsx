@@ -130,7 +130,6 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   const [streak, setStreak] = useState(0);
   const [isActionBusy, setIsActionBusy] = useState(false);
   const [cardEmoji, setCardEmoji] = useState("");
-  const [swipeHint, setSwipeHint] = useState("");
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [flashcardsTotalXp, setFlashcardsTotalXp] = useState(0);
   const [level, setLevel] = useState(1);
@@ -231,14 +230,8 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     setUnlockedBadges(nextBadges);
   };
 
-  const handleMastered = async () => {
-    if (!current || isActionBusy || transitioningCard) return;
-    if (!answerChecked || !answerAccepted) {
-      setBanner("Reponds d'abord puis valide avec 'Verifier ma reponse'.");
-      setCardEmoji("\u26A0\uFE0F");
-      setTimeout(() => setCardEmoji(""), 850);
-      return;
-    }
+  const handleMastered = async (force = false) => {
+    if (!current || (!force && (isActionBusy || transitioningCard))) return;
     if (validatedIds[current.id]) return;
     setIsActionBusy(true);
     setTransitioningCard(true);
@@ -293,8 +286,8 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     }
   };
 
-  const handleNotMastered = () => {
-    if (!current || isActionBusy || transitioningCard) return;
+  const handleNotMastered = (force = false) => {
+    if (!current || (!force && (isActionBusy || transitioningCard))) return;
     setDeck((prev) => {
       const rest = prev.filter((_, i) => i !== index);
       const insertAt = Math.min(rest.length, 2 + Math.floor(Math.random() * 4));
@@ -316,25 +309,29 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   };
 
   const handleCheckAnswer = () => {
-    if (!current) return;
+    if (!current || isActionBusy || transitioningCard) return;
     const accepted = isLearnerAnswerAccepted(current.reponse, learnerAnswer);
     setShowAnswer(true);
     setAnswerChecked(true);
     setAnswerAccepted(accepted);
     if (accepted) {
-      setBanner("Bonne reponse: tu peux maintenant valider la carte.");
+      setBanner("Bonne réponse : carte validée automatiquement.");
       setCardEmoji("\u2705");
-      setTimeout(() => setCardEmoji(""), 850);
+      setTimeout(() => {
+        void handleMastered(true);
+      }, 650);
     } else {
-      setBanner("Pas encore: compare avec la correction puis clique 'A revoir'.");
+      setBanner("Réponse insuffisante : carte remise à revoir automatiquement.");
       setCardEmoji("\u{1F914}");
-      setTimeout(() => setCardEmoji(""), 850);
+      setTimeout(() => {
+        handleNotMastered(true);
+      }, 650);
     }
   };
 
   const handleToggleCard = () => {
     if (!answerChecked) {
-      setBanner("Reponds d'abord puis clique sur 'Verifier ma reponse' pour voir la correction.");
+      setBanner("Réponds d'abord puis clique sur 'Vérifier ma réponse' pour voir la correction.");
       setCardEmoji("\u270D\uFE0F");
       setTimeout(() => setCardEmoji(""), 850);
       return;
@@ -342,14 +339,6 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     setShowAnswer((v) => !v);
   };
 
-  const handleMasteredRef = useRef(handleMastered);
-  handleMasteredRef.current = handleMastered;
-  const handleNotMasteredRef = useRef(handleNotMastered);
-  handleNotMasteredRef.current = handleNotMastered;
-  const handleCheckAnswerRef = useRef(handleCheckAnswer);
-  handleCheckAnswerRef.current = handleCheckAnswer;
-  const answerCheckedRef = useRef(answerChecked);
-  answerCheckedRef.current = answerChecked;
   const handleToggleCardRef = useRef(handleToggleCard);
   handleToggleCardRef.current = handleToggleCard;
 
@@ -360,7 +349,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     setValidatedIds(nextValidated);
     try {
       await persist(nextValidated, 0);
-      setBanner("Progression du pack reinitialisee.");
+      setBanner("Progression du pack réinitialisée.");
     } catch {
       setBanner("Reinitialisation locale effectuee.");
     }
@@ -382,17 +371,9 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
         return;
       }
       if (!showAnswer) return;
-      if (e.key.toLowerCase() === "m" || e.key === "ArrowRight") {
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
         e.preventDefault();
-        void handleMasteredRef.current();
-      }
-      if (!answerCheckedRef.current && e.key.toLowerCase() === "v") {
-        e.preventDefault();
-        handleCheckAnswerRef.current();
-      }
-      if (e.key.toLowerCase() === "r" || e.key === "ArrowLeft") {
-        e.preventDefault();
-        handleNotMasteredRef.current();
+      setBanner("La validation est automatique après vérification de la réponse.");
       }
     };
     window.addEventListener("keydown", onKeyDown);
@@ -400,27 +381,11 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   }, [current, showAnswer]);
 
   const onTouchStart = (e: TouchEvent<HTMLDivElement>) => {
-    if (!showAnswer || !answerChecked) return;
     setTouchStartX(e.changedTouches[0]?.clientX ?? null);
   };
 
-  const onTouchEnd = (e: TouchEvent<HTMLDivElement>) => {
-    if (!showAnswer || !answerChecked || touchStartX === null) return;
-    const endX = e.changedTouches[0]?.clientX ?? touchStartX;
-    const delta = endX - touchStartX;
-    if (Math.abs(delta) < 60) {
-      setSwipeHint("");
-      setTouchStartX(null);
-      return;
-    }
-    if (delta > 0) {
-      setSwipeHint("\u{1F449} Maitrisee");
-      void handleMastered();
-    } else {
-      setSwipeHint("\u{1F448} A revoir");
-      handleNotMastered();
-    }
-    setTimeout(() => setSwipeHint(""), 700);
+  const onTouchEnd = () => {
+    if (touchStartX === null) return;
     setTouchStartX(null);
   };
 
@@ -490,10 +455,10 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
             <span style={{ background: "#EEF2FF", color: "#4338CA", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Progression: {progressPct}%</span>
-            <span style={{ background: "#DCFCE7", color: "#166534", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Maitrisees: {masteredCount}</span>
-            <span style={{ background: "#FEF9C3", color: "#854D0E", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Serie: {streak}</span>
+            <span style={{ background: "#DCFCE7", color: "#166534", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Maîtrisées : {masteredCount}</span>
+            <span style={{ background: "#FEF9C3", color: "#854D0E", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Série : {streak}</span>
             <span style={{ background: "#F1F5F9", color: "#334155", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Session OK: {sessionGood}</span>
-            <span style={{ background: "#FFF1F2", color: "#9F1239", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Session a revoir: {sessionRetry}</span>
+            <span style={{ background: "#FFF1F2", color: "#9F1239", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Session à revoir : {sessionRetry}</span>
             <span style={{ background: "#EDE9FE", color: "#5B21B6", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Niveau: {level}</span>
             <span style={{ background: "#F5F3FF", color: "#6D28D9", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Coef: x{getMultiplierFromLevel(level).toFixed(1)}</span>
             <span style={{ background: "#ECFEFF", color: "#155E75", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>XP flashcards: {flashcardsTotalXp}</span>
@@ -531,7 +496,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
           {banner && <p style={{ marginTop: 10, color: "#0F766E", fontWeight: 700 }}>{banner}</p>}
           {justUnlockedBadge && (
             <p style={{ marginTop: 8, color: "#92400E", fontWeight: 800 }}>
-              ?? Nouveau badge debloque: {justUnlockedBadge} cartes maitrisees !
+              ?? Nouveau badge débloqué : {justUnlockedBadge} cartes maîtrisées !
             </p>
           )}
         </section>
@@ -616,7 +581,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
             </div>
             <div style={{ marginTop: 12, border: "1px solid #DBEAFE", background: "#F8FAFF", borderRadius: 14, padding: 12 }}>
               <label htmlFor="flashcards-answer" style={{ color: "#334155", fontWeight: 700, fontSize: 14 }}>
-                Ta reponse (zone sous la carte) :
+                Ta réponse (zone sous la carte) :
               </label>
               <textarea
                 id="flashcards-answer"
@@ -655,61 +620,22 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
                     cursor: learnerAnswer.trim() && !isActionBusy ? "pointer" : "not-allowed",
                   }}
                 >
-                  Verifier ma reponse [V]
+                  Vérifier ma réponse
                 </button>
                 {answerChecked && (
                   <span style={{ color: answerAccepted ? "#166534" : "#9F1239", fontWeight: 700 }}>
-                    {answerAccepted ? "Reponse acceptee: tu peux valider." : "Reponse insuffisante: utilise A revoir."}
+                    {answerAccepted ? "Réponse acceptée : validation en cours..." : "Réponse insuffisante : carte renvoyée à revoir."}
                   </span>
                 )}
               </div>
             </div>
-            {(cardEmoji || swipeHint) && (
+            {cardEmoji && (
               <div style={{ marginTop: 10, textAlign: "center", fontSize: "1.5rem", fontWeight: 800, color: "#334155", animation: "popin 220ms ease-out" }}>
-                {cardEmoji || swipeHint}
+                {cardEmoji}
               </div>
             )}
             <p style={{ margin: "10px 0 0", color: "#64748B", fontSize: 13 }}>
-              Clique la carte ou appuie sur Entrer pour retourner. D'abord: V = verifier la reponse. Ensuite: M = maitrise, R = a revoir. Sur mobile: swipe active apres verification.
-            </p>
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 12 }}>
-              <button
-                onClick={() => void handleMastered()}
-                disabled={!showAnswer || isActionBusy || transitioningCard || !answerChecked || !answerAccepted}
-                style={{
-                  border: "none",
-                  borderRadius: 12,
-                  background: showAnswer && !isActionBusy && !transitioningCard && answerChecked && answerAccepted ? "linear-gradient(135deg, #22C55E, #16A34A)" : "#94A3B8",
-                  color: "white",
-                  padding: "10px 14px",
-                  fontWeight: 800,
-                  letterSpacing: 0.2,
-                  cursor: showAnswer && !isActionBusy && !transitioningCard && answerChecked && answerAccepted ? "pointer" : "not-allowed",
-                  transition: "transform 150ms ease, box-shadow 150ms ease",
-                  boxShadow: showAnswer && !isActionBusy && !transitioningCard && answerChecked && answerAccepted ? "0 8px 18px rgba(34, 197, 94, 0.35)" : "none",
-                }}
-              >
-                Je maitrise (+{current.xp} XP) [M]
-              </button>
-              <button
-                onClick={handleNotMastered}
-                disabled={!showAnswer || isActionBusy || transitioningCard}
-                style={{
-                  border: "1px solid #FCA5A5",
-                  borderRadius: 12,
-                  background: showAnswer && !isActionBusy && !transitioningCard ? "#FFF1F2" : "#F8FAFC",
-                  color: "#9F1239",
-                  padding: "10px 14px",
-                  fontWeight: 800,
-                  cursor: showAnswer && !isActionBusy && !transitioningCard ? "pointer" : "not-allowed",
-                  transition: "transform 150ms ease, box-shadow 150ms ease",
-                }}
-              >
-                A revoir [R]
-              </button>
-            </div>
-            <p style={{ margin: "10px 0 0", color: "#94A3B8", fontSize: 12 }}>
-              Conseil: ecris une definition courte avec les mots cles essentiels. La correction reste volontairement souple.
+              Ecris ta réponse puis clique sur Vérifier ma réponse : la carte est évaluée automatiquement.
             </p>
           </section>
         )}

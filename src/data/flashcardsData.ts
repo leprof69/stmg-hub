@@ -144,7 +144,7 @@ export const FLASHCARDS: FlashcardItem[] = [
   { id: "sdgn-37", programme: "sdgn", notion: "Droits d'acces", question: "Pourquoi gerer finement les droits d'acces ?", reponse: "Pour limiter les risques en appliquant le principe du moindre privilege.", xp: 8 },
   { id: "sdgn-38", programme: "sdgn", notion: "Anonymisation", question: "Qu'est-ce que l'anonymisation des donnees ?", reponse: "Un traitement qui rend impossible l'identification d'une personne.", xp: 8 },
   { id: "sdgn-39", programme: "sdgn", notion: "Pseudonymisation", question: "Qu'est-ce que la pseudonymisation ?", reponse: "Le remplacement des identifiants directs par des donnees indirectes.", xp: 8 },
-  { id: "sdgn-40", programme: "sdgn", notion: "Entrepot de donnees", question: "Qu'est-ce qu'un entrepot de donnees (data warehouse) ?", reponse: "Une base centralisee pour analyser des donnees historisees.", xp: 8 },
+  { id: "sdgn-40", programme: "sdgn", notion: "Data center", question: "Qu'est-ce qu'un data center ?", reponse: "Un centre physique qui heberge des serveurs et stocke/traite des donnees.", xp: 8 },
   { id: "sdgn-41", programme: "sdgn", notion: "Qualite des donnees", question: "Pourquoi la qualite des donnees est-elle importante ?", reponse: "Parce que des decisions fiables exigent des donnees exactes et coherentes.", xp: 8 },
   { id: "sdgn-42", programme: "sdgn", notion: "Gouvernance des donnees", question: "Qu'est-ce que la gouvernance des donnees ?", reponse: "Les regles, roles et controles qui organisent la gestion des donnees.", xp: 8 },
 ];
