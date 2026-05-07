@@ -1,0 +1,2736 @@
+[
+  {
+    "groupe": "VIVAALGERIE",
+    "eleve": "Adam",
+    "base20": 7.43,
+    "bonus": 0.0,
+    "final20": 7.43,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.95,
+        "prompt": "Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Tentative cohérente avec la question.",
+        "minus": "Réponse encore trop incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.25,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Idée générale présente.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 2.0,
+        "note": 0.0,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.4,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Interprétation trop courte."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.4,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Interprétation trop courte."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      }
+    ],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "VIVAALGERIE",
+    "eleve": "Azddine",
+    "base20": 3.86,
+    "bonus": 0.0,
+    "final20": 3.86,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.25,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Idée générale présente.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.",
+        "plus": "Tentative cohérente avec la question.",
+        "minus": "Réponse encore trop incomplète."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 2.0,
+        "note": 0.4,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Intention de réponse présente.",
+        "minus": "Calcul non exploitable."
+      }
+    ],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "VIVAALGERIE",
+    "eleve": "balkis",
+    "base20": 7.79,
+    "bonus": 0.0,
+    "final20": 7.79,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.95,
+        "prompt": "Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.2,
+        "prompt": "Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.",
+        "plus": "Intention de réponse présente.",
+        "minus": "Interprétation trop courte."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 2.0,
+        "note": 0.4,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Intention de réponse présente.",
+        "minus": "Calcul non exploitable."
+      }
+    ],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "VIVAALGERIE",
+    "eleve": "Dipa",
+    "base20": 8.64,
+    "bonus": 0.0,
+    "final20": 8.64,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.25,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Idée générale présente.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.4,
+        "prompt": "Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Interprétation trop courte."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 2.0,
+        "note": 0.8,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Résultat final non conforme."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      }
+    ],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "VIVAALGERIE",
+    "eleve": "ibti",
+    "base20": 6.86,
+    "bonus": 0.0,
+    "final20": 6.86,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Tentative cohérente avec la question.",
+        "minus": "Réponse encore trop incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.25,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Idée générale présente.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.95,
+        "prompt": "Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 2.0,
+        "note": 0.4,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Intention de réponse présente.",
+        "minus": "Calcul non exploitable."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      }
+    ],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "VIVAALGERIE",
+    "eleve": "Ines",
+    "base20": 16.93,
+    "bonus": 0.0,
+    "final20": 16.93,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.25,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Idée générale présente.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 2.0,
+        "note": 2.0,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Résultat juste (arrondi accepté).",
+        "minus": "Aucune erreur majeure."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Résultat final non conforme."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 3.0,
+        "note": 2.4,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.",
+        "plus": "Résultat juste (arrondi accepté).",
+        "minus": "Aucune erreur majeure."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Résultat juste (arrondi accepté).",
+        "minus": "Aucune erreur majeure."
+      }
+    ],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "VIVAALGERIE",
+    "eleve": "jasmim",
+    "base20": 0.0,
+    "bonus": 0.0,
+    "final20": 0.0,
+    "details": [],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "VIVAALGERIE",
+    "eleve": "julien",
+    "base20": 6.71,
+    "bonus": 0.0,
+    "final20": 6.71,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Tentative cohérente avec la question.",
+        "minus": "Réponse encore trop incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.25,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Idée générale présente.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 2.0,
+        "note": 0.4,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Intention de réponse présente.",
+        "minus": "Calcul non exploitable."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      }
+    ],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "VIVAALGERIE",
+    "eleve": "Kadiatou",
+    "base20": 6.21,
+    "bonus": 1.0,
+    "final20": 7.21,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.25,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Idée générale présente.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 2.0,
+        "note": 0.8,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Résultat final non conforme."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      }
+    ],
+    "part3_non_empty": 1
+  },
+  {
+    "groupe": "VIVAALGERIE",
+    "eleve": "Khadija",
+    "base20": 12.57,
+    "bonus": 0.0,
+    "final20": 12.57,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.",
+        "plus": "Résultat juste (arrondi accepté).",
+        "minus": "Aucune erreur majeure."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.4,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Interprétation trop courte."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.2,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Intention de réponse présente.",
+        "minus": "Interprétation trop courte."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 2.0,
+        "note": 2.0,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Résultat juste (arrondi accepté).",
+        "minus": "Aucune erreur majeure."
+      }
+    ],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "VIVAALGERIE",
+    "eleve": "maria",
+    "base20": 11.43,
+    "bonus": 0.0,
+    "final20": 11.43,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.95,
+        "prompt": "Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.25,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Idée générale présente.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 2.0,
+        "note": 2.0,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Résultat juste (arrondi accepté).",
+        "minus": "Aucune erreur majeure."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.",
+        "plus": "Résultat juste (arrondi accepté).",
+        "minus": "Aucune erreur majeure."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.2,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Intention de réponse présente.",
+        "minus": "Interprétation trop courte."
+      }
+    ],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "VIVAALGERIE",
+    "eleve": "Ornella",
+    "base20": 8.93,
+    "bonus": 0.0,
+    "final20": 8.93,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.95,
+        "prompt": "Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Tentative cohérente avec la question.",
+        "minus": "Réponse encore trop incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.25,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Idée générale présente.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 2.0,
+        "note": 2.0,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Résultat juste (arrondi accepté).",
+        "minus": "Aucune erreur majeure."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      }
+    ],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "VIVAALGERIE",
+    "eleve": "Rafael",
+    "base20": 8.0,
+    "bonus": 0.0,
+    "final20": 8.0,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Tentative cohérente avec la question.",
+        "minus": "Réponse encore trop incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 2.0,
+        "note": 0.8,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Résultat final non conforme."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      }
+    ],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "POULPE",
+    "eleve": "Amine",
+    "base20": 8.71,
+    "bonus": 0.0,
+    "final20": 8.71,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.25,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Idée générale présente.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 2.0,
+        "note": 0.4,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Intention de réponse présente.",
+        "minus": "Calcul non exploitable."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.",
+        "plus": "Résultat juste (arrondi accepté).",
+        "minus": "Aucune erreur majeure."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Résultat juste (arrondi accepté).",
+        "minus": "Aucune erreur majeure."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      }
+    ],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "POULPE",
+    "eleve": "Ellen",
+    "base20": 7.36,
+    "bonus": 1.0,
+    "final20": 8.36,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.25,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Idée générale présente.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.4,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Interprétation trop courte."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.4,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Interprétation trop courte."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 2.0,
+        "note": 0.8,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Résultat final non conforme."
+      }
+    ],
+    "part3_non_empty": 1
+  },
+  {
+    "groupe": "POULPE",
+    "eleve": "Eugenio",
+    "base20": 8.5,
+    "bonus": 0.0,
+    "final20": 8.5,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.95,
+        "prompt": "Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 2.0,
+        "note": 0.8,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Résultat final non conforme."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      }
+    ],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "POULPE",
+    "eleve": "hind",
+    "base20": 5.79,
+    "bonus": 0.0,
+    "final20": 5.79,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Tentative cohérente avec la question.",
+        "minus": "Réponse encore trop incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Tentative cohérente avec la question.",
+        "minus": "Réponse encore trop incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.25,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Idée générale présente.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.4,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Interprétation trop courte."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.4,
+        "prompt": "Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Interprétation trop courte."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 2.0,
+        "note": 0.8,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Résultat final non conforme."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.4,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Interprétation trop courte."
+      }
+    ],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "POULPE",
+    "eleve": "ines",
+    "base20": 9.29,
+    "bonus": 2.0,
+    "final20": 11.29,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Tentative cohérente avec la question.",
+        "minus": "Réponse encore trop incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Résultat juste (arrondi accepté).",
+        "minus": "Interprétation trop courte."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 2.0,
+        "note": 0.0,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Résultat juste (arrondi accepté).",
+        "minus": "Interprétation trop courte."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      }
+    ],
+    "part3_non_empty": 1
+  },
+  {
+    "groupe": "POULPE",
+    "eleve": "jocelyne",
+    "base20": 7.21,
+    "bonus": 0.0,
+    "final20": 7.21,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.95,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.",
+        "plus": "Tentative cohérente avec la question.",
+        "minus": "Réponse encore trop incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ? Page 16",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.2,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Intention de réponse présente.",
+        "minus": "Interprétation trop courte."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 2.0,
+        "note": 0.4,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Intention de réponse présente.",
+        "minus": "Calcul non exploitable."
+      }
+    ],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "POULPE",
+    "eleve": "Laurain",
+    "base20": 4.71,
+    "bonus": 0.0,
+    "final20": 4.71,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.25,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Idée générale présente.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Tentative cohérente avec la question.",
+        "minus": "Réponse encore trop incomplète."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 2.0,
+        "note": 0.0,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      }
+    ],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "POULPE",
+    "eleve": "najiba",
+    "base20": 6.36,
+    "bonus": 1.0,
+    "final20": 7.36,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 2.0,
+        "note": 0.4,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Intention de réponse présente.",
+        "minus": "Calcul non exploitable."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      }
+    ],
+    "part3_non_empty": 1
+  },
+  {
+    "groupe": "POULPE",
+    "eleve": "Nordine",
+    "base20": 5.93,
+    "bonus": 0.0,
+    "final20": 5.93,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.25,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Idée générale présente.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple. Page 25",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 2.0,
+        "note": 0.4,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Intention de réponse présente.",
+        "minus": "Calcul non exploitable."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.2,
+        "prompt": "Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.",
+        "plus": "Intention de réponse présente.",
+        "minus": "Interprétation trop courte."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      }
+    ],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "POULPE",
+    "eleve": "rafael",
+    "base20": 3.43,
+    "bonus": 2.0,
+    "final20": 5.43,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Tentative cohérente avec la question.",
+        "minus": "Réponse encore trop incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 2.0,
+        "note": 0.4,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Intention de réponse présente.",
+        "minus": "Calcul non exploitable."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.2,
+        "prompt": "Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.",
+        "plus": "Intention de réponse présente.",
+        "minus": "Interprétation trop courte."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      }
+    ],
+    "part3_non_empty": 1
+  },
+  {
+    "groupe": "POULPE",
+    "eleve": "sumaya",
+    "base20": 6.71,
+    "bonus": 0.0,
+    "final20": 6.71,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.25,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Idée générale présente.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Résultat final non conforme."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 2.0,
+        "note": 0.8,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Résultat final non conforme."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Résultat final non conforme."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      }
+    ],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "POULPE",
+    "eleve": "Titouann",
+    "base20": 7.64,
+    "bonus": 0.0,
+    "final20": 7.64,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.85,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Bonne compréhension du sens général.",
+        "minus": "Quelques notions restent imprécises."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.25,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Idée générale présente.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 2.0,
+        "note": 0.8,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Résultat final non conforme."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      }
+    ],
+    "part3_non_empty": 0
+  },
+  {
+    "groupe": "POULPE",
+    "eleve": "zoe",
+    "base20": 8.86,
+    "bonus": 1.0,
+    "final20": 9.86,
+    "details": [
+      {
+        "part": "Partie 1",
+        "index": 1,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans la recherche de performance.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 4,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 1",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 1.0,
+        "prompt": "Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?",
+        "plus": "Idée globalement comprise et pertinente.",
+        "minus": "Formulation perfectible."
+      },
+      {
+        "part": "Partie 1",
+        "index": 6,
+        "bareme": 1.0,
+        "note": 0.6,
+        "prompt": "Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.",
+        "plus": "Démarche visible.",
+        "minus": "Réponse incomplète."
+      },
+      {
+        "part": "Partie 2",
+        "index": 1,
+        "bareme": 2.0,
+        "note": 0.8,
+        "prompt": "Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).",
+        "plus": "Bonne démarche de calcul.",
+        "minus": "Résultat final non conforme."
+      },
+      {
+        "part": "Partie 2",
+        "index": 2,
+        "bareme": 1.0,
+        "note": 0.2,
+        "prompt": "Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.",
+        "plus": "Intention de réponse présente.",
+        "minus": "Interprétation trop courte."
+      },
+      {
+        "part": "Partie 2",
+        "index": 3,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 4,
+        "bareme": 3.0,
+        "note": 0.0,
+        "prompt": "Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance financière.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      },
+      {
+        "part": "Partie 2",
+        "index": 5,
+        "bareme": 1.0,
+        "note": 0.0,
+        "prompt": "Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.",
+        "plus": "Aucune réponse.",
+        "minus": "Question non traitée."
+      }
+    ],
+    "part3_non_empty": 1
+  }
+]

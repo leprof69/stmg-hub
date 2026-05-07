@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta
+      name="description"
+      content="STMG HUB � Plateforme gamifi�e pour �l�ves STMG : chapitres, missions, cartes et progression."
+    />
+    <link rel="apple-touch-icon" href="/logo192.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>STMG HUB</title>
+    <style>
+      .card-hover {
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease !important;
+      }
+      .card-hover:hover {
+        transform: scale(1.05) translateY(-6px) !important;
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.12) !important;
+      }
+      .card-hover-sm {
+        transition: transform 0.2s ease !important;
+      }
+      .card-hover-sm:hover {
+        transform: scale(1.08) translateY(-4px) !important;
+      }
+      .btn-anim {
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.15s ease !important;
+      }
+      .btn-anim:hover {
+        transform: scale(1.06) !important;
+      }
+    </style>
+  </head>
+  <body>
+    <noscript>Activez JavaScript pour utiliser STMG HUB.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

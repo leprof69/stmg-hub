@@ -1,0 +1,1237 @@
+# Corrections détaillées par élève - DS Chapitre 13 (V2 + V3)
+
+Règle appliquée : un arrondi raisonnable est accepté (ex. 15,9% est accepté pour 16%).
+
+## Version 2 - VIVAALGERIE
+
+### Adam
+Note finale: **3.60/20** (soit **3.6/20**)
+
+- Q1 — **0.75/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q2 — **0.75/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q3 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q4 — **0.50/1** — Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q5 — **0.50/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q6 — **0.00/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Réponse trop courte.
+  - Point - : Conclusion incomplète.
+- Q7 — **0.00/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q8 — **0.30/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Démarche/formule présente.
+  - Point - : Interprétation absente ou faible.
+- Q9 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q10 — **0.30/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Démarche/formule présente.
+  - Point - : Interprétation absente ou faible.
+- Q11 — **0.00/1** — Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q12 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +12 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Vérifie les objectifs de satisfaction (92 %) et de délai (2,5 jours) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### Azddine
+Note finale: **1.50/20** (soit **1.5/20**)
+
+- Q1 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q2 — **0.50/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q3 — **0.00/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q4 — **0.00/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Réponse trop courte.
+  - Point - : Conclusion incomplète.
+- Q5 — **0.00/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q6 — **0.50/1** — Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q7 — **0.00/1** — Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q8 — **0.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q9 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q10 — **0.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q11 — **0.00/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Tentative limitée.
+  - Point - : Pas de calcul valable.
+- Q12 — **0.00/1** — Vérifie les objectifs de satisfaction (92 %) et de délai (2,5 jours) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +12 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### balkis
+Note finale: **4.35/20** (soit **4.35/20**)
+
+- Q1 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q2 — **0.75/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q3 — **0.50/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q4 — **0.50/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q5 — **0.75/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q6 — **0.75/1** — Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q7 — **0.00/1** — Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.
+  - Point + : Tentative limitée.
+  - Point - : Interprétation absente ou faible.
+- Q8 — **0.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q9 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q10 — **0.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q11 — **0.60/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Démarche/formule présente.
+  - Point - : Résultat final faux ou absent.
+- Q12 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +12 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Vérifie les objectifs de satisfaction (92 %) et de délai (2,5 jours) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### Dipa
+Note finale: **4.40/20** (soit **4.4/20**)
+
+- Q1 — **0.75/1** — Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q2 — **0.00/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Réponse trop courte.
+  - Point - : Conclusion incomplète.
+- Q3 — **0.50/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q4 — **0.75/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q5 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q6 — **1.00/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Bonne compréhension du sens attendu.
+  - Point - : Expression parfois perfectible.
+- Q7 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q8 — **0.30/1** — Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.
+  - Point + : Démarche/formule présente.
+  - Point - : Interprétation absente ou faible.
+- Q9 — **0.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q10 — **0.60/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Démarche/formule présente.
+  - Point - : Résultat final faux ou absent.
+- Q11 — **0.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q12 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +12 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/1** — Vérifie les objectifs de satisfaction (92 %) et de délai (2,5 jours) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### ibti
+Note finale: **3.60/20** (soit **3.6/20**)
+
+- Q1 — **0.25/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Tentative de réponse.
+  - Point - : Contenu éloigné de l'attendu.
+- Q2 — **0.00/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Réponse trop courte.
+  - Point - : Conclusion incomplète.
+- Q3 — **0.75/1** — Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q4 — **0.75/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q5 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q6 — **0.75/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q7 — **0.60/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Démarche/formule présente.
+  - Point - : Résultat final faux ou absent.
+- Q8 — **0.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q9 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q10 — **0.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q11 — **0.00/1** — Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q12 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +12 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/1** — Vérifie les objectifs de satisfaction (92 %) et de délai (2,5 jours) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### Ines
+Note finale: **10.30/20** (soit **10.3/20**)
+
+- Q1 — **0.25/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Tentative de réponse.
+  - Point - : Contenu éloigné de l'attendu.
+- Q2 — **0.00/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Réponse trop courte.
+  - Point - : Conclusion incomplète.
+- Q3 — **1.00/1** — Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.
+  - Point + : Bonne compréhension du sens attendu.
+  - Point - : Expression parfois perfectible.
+- Q4 — **1.00/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Bonne compréhension du sens attendu.
+  - Point - : Expression parfois perfectible.
+- Q5 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q6 — **0.75/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q7 — **2.00/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Résultats justes (arrondi toléré).
+  - Point - : Rien de bloquant.
+- Q8 — **0.55/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Démarche/formule présente.
+  - Point - : Résultat final faux ou absent.
+- Q9 — **2.25/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q10 — **1.00/1** — Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.
+  - Point + : Résultats justes (arrondi toléré).
+  - Point - : Rien de bloquant.
+- Q11 — **1.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Résultats justes (arrondi toléré).
+  - Point - : Rien de bloquant.
+- Q12 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +12 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/1** — Vérifie les objectifs de satisfaction (92 %) et de délai (2,5 jours) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### jasmim
+Note finale: **0.00/20** (soit **0.0/20**)
+
+- Élève sans réponse exploitable dans l'export.
+
+### julien
+Note finale: **3.25/20** (soit **3.25/20**)
+
+- Q1 — **0.25/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Tentative de réponse.
+  - Point - : Contenu éloigné de l'attendu.
+- Q2 — **0.00/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Réponse trop courte.
+  - Point - : Conclusion incomplète.
+- Q3 — **0.75/1** — Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q4 — **1.00/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Bonne compréhension du sens attendu.
+  - Point - : Expression parfois perfectible.
+- Q5 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q6 — **0.75/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q7 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q8 — **0.00/1** — Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q9 — **0.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q10 — **0.00/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Tentative limitée.
+  - Point - : Pas de calcul valable.
+- Q11 — **0.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q12 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +12 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Vérifie les objectifs de satisfaction (92 %) et de délai (2,5 jours) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### Kadiatou
+Note finale: **2.85/20** (soit **2.85/20**)
+
+- Q1 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q2 — **0.50/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q3 — **0.50/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q4 — **0.00/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Réponse trop courte.
+  - Point - : Conclusion incomplète.
+- Q5 — **0.00/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q6 — **0.75/1** — Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q7 — **0.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q8 — **0.60/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Démarche/formule présente.
+  - Point - : Résultat final faux ou absent.
+- Q9 — **0.00/1** — Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q10 — **0.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q11 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q12 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +12 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Réponse trop courte.
+  - Point - : Conclusion incomplète.
+- Q14 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/1** — Vérifie les objectifs de satisfaction (92 %) et de délai (2,5 jours) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### Khadija
+Note finale: **7.15/20** (soit **7.15/20**)
+
+- Q1 — **0.75/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q2 — **1.00/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Bonne compréhension du sens attendu.
+  - Point - : Expression parfois perfectible.
+- Q3 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q4 — **0.75/1** — Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q5 — **0.50/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q6 — **0.50/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q7 — **0.85/1** — Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.
+  - Point + : Une partie des résultats est correcte.
+  - Point - : Résultats incomplets ou partiellement faux.
+- Q8 — **0.30/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Démarche/formule présente.
+  - Point - : Interprétation absente ou faible.
+- Q9 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q10 — **0.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Tentative limitée.
+  - Point - : Interprétation absente ou faible.
+- Q11 — **2.00/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Résultats justes (arrondi toléré).
+  - Point - : Rien de bloquant.
+- Q12 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +12 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Vérifie les objectifs de satisfaction (92 %) et de délai (2,5 jours) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### maria
+Note finale: **5.60/20** (soit **5.6/20**)
+
+- Q1 — **0.25/1** — Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.
+  - Point + : Tentative de réponse.
+  - Point - : Contenu éloigné de l'attendu.
+- Q2 — **0.25/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Tentative de réponse.
+  - Point - : Contenu éloigné de l'attendu.
+- Q3 — **0.00/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Réponse trop courte.
+  - Point - : Conclusion incomplète.
+- Q4 — **1.00/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Bonne compréhension du sens attendu.
+  - Point - : Expression parfois perfectible.
+- Q5 — **1.00/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Bonne compréhension du sens attendu.
+  - Point - : Expression parfois perfectible.
+- Q6 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q7 — **2.00/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Résultats justes (arrondi toléré).
+  - Point - : Rien de bloquant.
+- Q8 — **0.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q9 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q10 — **0.60/1** — Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.
+  - Point + : Une partie des résultats est correcte.
+  - Point - : Interprétation absente ou faible.
+- Q11 — **0.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Tentative limitée.
+  - Point - : Interprétation absente ou faible.
+- Q12 — **0.00/1** — Vérifie les objectifs de satisfaction (92 %) et de délai (2,5 jours) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +12 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### Ornella
+Note finale: **5.25/20** (soit **5.25/20**)
+
+- Q1 — **0.75/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q2 — **1.00/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Bonne compréhension du sens attendu.
+  - Point - : Expression parfois perfectible.
+- Q3 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q4 — **0.75/1** — Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q5 — **0.25/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Tentative de réponse.
+  - Point - : Contenu éloigné de l'attendu.
+- Q6 — **0.00/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Réponse trop courte.
+  - Point - : Conclusion incomplète.
+- Q7 — **0.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q8 — **2.00/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Résultats justes (arrondi toléré).
+  - Point - : Rien de bloquant.
+- Q9 — **0.00/1** — Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q10 — **0.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q11 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q12 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +12 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Vérifie les objectifs de satisfaction (92 %) et de délai (2,5 jours) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### Rafael
+Note finale: **4.35/20** (soit **4.35/20**)
+
+- Q1 — **0.75/1** — Définis la performance d’une organisation et présente les 3 étapes de la démarche de performance.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q2 — **0.25/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Tentative de réponse.
+  - Point - : Contenu éloigné de l'attendu.
+- Q3 — **0.50/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q4 — **0.75/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q5 — **1.00/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Bonne compréhension du sens attendu.
+  - Point - : Expression parfois perfectible.
+- Q6 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q7 — **0.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q8 — **0.60/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Démarche/formule présente.
+  - Point - : Résultat final faux ou absent.
+- Q9 — **0.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q10 — **0.00/1** — Calcule la part de marché de NOVA SNACK en N-1 puis en N et compare les deux résultats.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q11 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q12 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +12 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Vérifie les objectifs de satisfaction (92 %) et de délai (2,5 jours) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+## Version 3 - POULPE
+
+### Amine
+Note finale: **5.10/20** (soit **5.1/20**)
+
+- Q1 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q2 — **0.00/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q3 — **0.50/1** — Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q4 — **0.75/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q5 — **0.75/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q6 — **0.00/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Réponse trop courte.
+  - Point - : Conclusion incomplète.
+- Q7 — **0.60/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Démarche/formule présente.
+  - Point - : Résultat final faux ou absent.
+- Q8 — **1.00/1** — Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.
+  - Point + : Résultats justes (arrondi toléré).
+  - Point - : Rien de bloquant.
+- Q9 — **1.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Résultats justes (arrondi toléré).
+  - Point - : Rien de bloquant.
+- Q10 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q11 — **0.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q12 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +9 % est atteint. Page 2
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Vérifie les objectifs de satisfaction (91 %) et de délai (24 h) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### Ellen
+Note finale: **3.70/20** (soit **3.7/20**)
+
+- Q1 — **0.00/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Réponse trop courte.
+  - Point - : Conclusion incomplète.
+- Q2 — **0.75/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q3 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q4 — **0.00/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q5 — **0.75/1** — Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q6 — **0.50/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q7 — **0.30/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Démarche/formule présente.
+  - Point - : Interprétation absente ou faible.
+- Q8 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q9 — **0.30/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Démarche/formule présente.
+  - Point - : Interprétation absente ou faible.
+- Q10 — **0.00/1** — Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q11 — **0.60/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Démarche/formule présente.
+  - Point - : Résultat final faux ou absent.
+- Q12 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +9 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Vérifie les objectifs de satisfaction (91 %) et de délai (24 h) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Réponse trop courte.
+  - Point - : Conclusion incomplète.
+- Q15 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### Eugenio
+Note finale: **4.60/20** (soit **4.6/20**)
+
+- Q1 — **0.50/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q2 — **0.50/1** — Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q3 — **1.00/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Bonne compréhension du sens attendu.
+  - Point - : Expression parfois perfectible.
+- Q4 — **0.50/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q5 — **1.00/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Bonne compréhension du sens attendu.
+  - Point - : Expression parfois perfectible.
+- Q6 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q7 — **0.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q8 — **0.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q9 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q10 — **0.60/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Démarche/formule présente.
+  - Point - : Résultat final faux ou absent.
+- Q11 — **0.00/1** — Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q12 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Vérifie les objectifs de satisfaction (91 %) et de délai (24 h) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +9 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### hind
+Note finale: **2.75/20** (soit **2.75/20**)
+
+- Q1 — **0.00/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q2 — **0.00/1** — Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q3 — **0.25/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Tentative de réponse.
+  - Point - : Contenu éloigné de l'attendu.
+- Q4 — **0.50/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q5 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q6 — **0.00/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Réponse trop courte.
+  - Point - : Conclusion incomplète.
+- Q7 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q8 — **0.30/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Démarche/formule présente.
+  - Point - : Interprétation absente ou faible.
+- Q9 — **0.30/1** — Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.
+  - Point + : Démarche/formule présente.
+  - Point - : Interprétation absente ou faible.
+- Q10 — **0.60/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Démarche/formule présente.
+  - Point - : Résultat final faux ou absent.
+- Q11 — **0.30/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Démarche/formule présente.
+  - Point - : Interprétation absente ou faible.
+- Q12 — **0.00/1** — Vérifie les objectifs de satisfaction (91 %) et de délai (24 h) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +9 % est atteint. Page 11
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### ines
+Note finale: **5.25/20** (soit **5.25/20**)
+
+- Q1 — **0.50/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q2 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q3 — **0.75/1** — Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q4 — **0.25/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Tentative de réponse.
+  - Point - : Contenu éloigné de l'attendu.
+- Q5 — **0.25/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Tentative de réponse.
+  - Point - : Contenu éloigné de l'attendu.
+- Q6 — **0.50/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q7 — **1.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Résultats justes (arrondi toléré).
+  - Point - : Interprétation absente ou faible.
+- Q8 — **0.00/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q9 — **0.00/1** — Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q10 — **1.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Résultats justes (arrondi toléré).
+  - Point - : Interprétation absente ou faible.
+- Q11 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q12 — **0.00/1** — Vérifie les objectifs de satisfaction (91 %) et de délai (24 h) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +9 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.50/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q15 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### jocelyne
+Note finale: **3.00/20** (soit **3.0/20**)
+
+- Q1 — **0.50/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q2 — **0.75/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q3 — **0.50/1** — Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q4 — **0.25/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Tentative de réponse.
+  - Point - : Contenu éloigné de l'attendu.
+- Q5 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q6 — **0.50/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ? Page 16
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q7 — **0.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Tentative limitée.
+  - Point - : Interprétation absente ou faible.
+- Q8 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q9 — **0.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q10 — **0.00/1** — Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q11 — **0.00/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Tentative limitée.
+  - Point - : Pas de calcul valable.
+- Q12 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +9 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/1** — Vérifie les objectifs de satisfaction (91 %) et de délai (24 h) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### Laurain
+Note finale: **2.25/20** (soit **2.25/20**)
+
+- Q1 — **0.00/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Réponse trop courte.
+  - Point - : Conclusion incomplète.
+- Q2 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q3 — **0.75/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q4 — **0.75/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q5 — **0.00/1** — Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q6 — **0.25/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Tentative de réponse.
+  - Point - : Contenu éloigné de l'attendu.
+- Q7 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q8 — **0.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q9 — **0.00/1** — Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q10 — **0.00/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q11 — **0.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q12 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +9 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/1** — Vérifie les objectifs de satisfaction (91 %) et de délai (24 h) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### najiba
+Note finale: **3.00/20** (soit **3.0/20**)
+
+- Q1 — **0.50/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q2 — **1.00/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Bonne compréhension du sens attendu.
+  - Point - : Expression parfois perfectible.
+- Q3 — **0.75/1** — Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q4 — **0.25/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Tentative de réponse.
+  - Point - : Contenu éloigné de l'attendu.
+- Q5 — **0.00/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q6 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q7 — **0.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q8 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q9 — **0.00/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Tentative limitée.
+  - Point - : Pas de calcul valable.
+- Q10 — **0.00/1** — Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q11 — **0.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q12 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +9 % est atteint.
+  - Point + : Tentative limitée.
+  - Point - : Pas de calcul valable.
+- Q14 — **0.00/1** — Vérifie les objectifs de satisfaction (91 %) et de délai (24 h) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### Nordine
+Note finale: **2.25/20** (soit **2.25/20**)
+
+- Q1 — **0.00/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Réponse trop courte.
+  - Point - : Conclusion incomplète.
+- Q2 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q3 — **0.00/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q4 — **0.50/1** — Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q5 — **0.75/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple. Page 25
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q6 — **0.50/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q7 — **0.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q8 — **0.00/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Tentative limitée.
+  - Point - : Pas de calcul valable.
+- Q9 — **0.00/1** — Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.
+  - Point + : Tentative limitée.
+  - Point - : Interprétation absente ou faible.
+- Q10 — **0.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q11 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q12 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +9 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/1** — Vérifie les objectifs de satisfaction (91 %) et de délai (24 h) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### rafael
+Note finale: **2.25/20** (soit **2.25/20**)
+
+- Q1 — **0.00/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q2 — **0.00/1** — Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q3 — **0.00/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q4 — **0.25/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Tentative de réponse.
+  - Point - : Contenu éloigné de l'attendu.
+- Q5 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q6 — **0.50/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q7 — **0.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q8 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q9 — **0.00/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Tentative limitée.
+  - Point - : Pas de calcul valable.
+- Q10 — **0.00/1** — Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.
+  - Point + : Tentative limitée.
+  - Point - : Interprétation absente ou faible.
+- Q11 — **0.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q12 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +9 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **1.00/1** — Vérifie les objectifs de satisfaction (91 %) et de délai (24 h) puis justifie ta conclusion.
+  - Point + : Résultats justes (arrondi toléré).
+  - Point - : Interprétation absente ou faible.
+
+### sumaya
+Note finale: **3.45/20** (soit **3.45/20**)
+
+- Q1 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q2 — **0.50/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q3 — **0.00/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q4 — **0.00/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q5 — **0.75/1** — Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q6 — **0.00/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Réponse trop courte.
+  - Point - : Conclusion incomplète.
+- Q7 — **0.55/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Démarche/formule présente.
+  - Point - : Résultat final faux ou absent.
+- Q8 — **0.60/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Démarche/formule présente.
+  - Point - : Résultat final faux ou absent.
+- Q9 — **0.00/1** — Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q10 — **0.55/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Démarche/formule présente.
+  - Point - : Résultat final faux ou absent.
+- Q11 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q12 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Vérifie les objectifs de satisfaction (91 %) et de délai (24 h) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +9 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### Titouann
+Note finale: **3.60/20** (soit **3.6/20**)
+
+- Q1 — **1.00/1** — Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.
+  - Point + : Bonne compréhension du sens attendu.
+  - Point - : Expression parfois perfectible.
+- Q2 — **1.00/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Bonne compréhension du sens attendu.
+  - Point - : Expression parfois perfectible.
+- Q3 — **0.25/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Tentative de réponse.
+  - Point - : Contenu éloigné de l'attendu.
+- Q4 — **0.25/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Tentative de réponse.
+  - Point - : Contenu éloigné de l'attendu.
+- Q5 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q6 — **0.00/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Réponse trop courte.
+  - Point - : Conclusion incomplète.
+- Q7 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q8 — **0.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q9 — **0.00/1** — Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q10 — **0.60/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Démarche/formule présente.
+  - Point - : Résultat final faux ou absent.
+- Q11 — **0.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q12 — **0.00/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q13 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +9 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/1** — Vérifie les objectifs de satisfaction (91 %) et de délai (24 h) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+
+### zoe
+Note finale: **5.10/20** (soit **5.1/20**)
+
+- Q1 — **0.50/1** — Montre en quoi les attentes des différents acteurs (clients, salariés, actionnaires, dirigeants) peuvent être contradictoires dans...
+  - Point + : Réponse en lien avec le thème.
+  - Point - : Définition/argumentation trop partielle.
+- Q2 — **0.75/1** — Explique clairement la différence entre efficacité et efficience puis illustre avec un exemple.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q3 — **0.75/1** — Définis la performance d’une organisation et présente les trois étapes de la démarche de performance.
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q4 — **0.50/1** — Définis rentabilité et profitabilité, puis cite et définis 3 indicateurs de performance commerciale.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q5 — **0.75/1** — Pourquoi la comparaison dans le temps et dans l’espace est-elle importante pour analyser la performance ?
+  - Point + : Idées essentielles partiellement présentes.
+  - Point - : Notions de cours incomplètes.
+- Q6 — **0.50/1** — Explique ce qu’est un objectif mesurable. Donne un exemple d’objectif quantitatif et un exemple d’objectif qualitatif.
+  - Point + : Démarche visible.
+  - Point - : Conclusion incomplète.
+- Q7 — **0.60/2** — Calcule le taux d’évolution du chiffre d’affaires entre N-1 et N (formule, application numérique, résultat).
+  - Point + : Démarche/formule présente.
+  - Point - : Résultat final faux ou absent.
+- Q8 — **0.00/1** — Calcule la part de marché de OCEA FOOD en N-1 puis en N et compare les deux résultats.
+  - Point + : Tentative limitée.
+  - Point - : Interprétation absente ou faible.
+- Q9 — **0.00/1** — Calcule la profitabilité en N-1 puis en N et interprète l’évolution obtenue.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q10 — **0.00/3** — Calcule la profitabilité et la rentabilité financière en N-1 puis en N, puis rédige une analyse de l’évolution de la performance f...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q11 — **0.00/1** — Calcule la rentabilité financière en N-1 puis en N et interprète le résultat.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q12 — **0.75/3** — Rédige une analyse globale de la performance et propose 2 actions d’amélioration concrètes pour N+1.
+  - Point + : Tentative de réponse.
+  - Point - : Contenu éloigné de l'attendu.
+- Q13 — **0.00/1** — Explique en quoi la non-atteinte de certains objectifs peut révéler des contraintes de ressources, mais aussi des opportunités de ...
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q14 — **0.00/1** — Calcule l’évolution du chiffre d’affaires entre N-1 et N puis indique si l’objectif de +9 % est atteint.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.
+- Q15 — **0.00/1** — Vérifie les objectifs de satisfaction (91 %) et de délai (24 h) puis justifie ta conclusion.
+  - Point + : Aucune réponse exploitable.
+  - Point - : Question non traitée.

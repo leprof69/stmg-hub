@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, type CSSProperties } from "react";
 
 const STAGE_SCALE = {
   oeuf: 0.9,
@@ -40,7 +40,7 @@ export default function AnimatedFamiliar2D({
     return 220;
   }, [compact]);
 
-  const baseStyle = {
+  const baseStyle: CSSProperties = {
     width: `${size}px`,
     height: `${size}px`,
     position: "relative",

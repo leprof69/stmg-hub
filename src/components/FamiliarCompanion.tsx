@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
-import { auth, db } from "../firebase";
-import { getPetMoodLabel, normalizePet } from "../utils/familiar";
+import { auth, db } from "../services/firebase";
+import { getPetMoodLabel, normalizePet } from "../services/familiarPet";
 import AnimatedFamiliar2D from "./AnimatedFamiliar2D";
 
 const MOOD_EMOJI = {
