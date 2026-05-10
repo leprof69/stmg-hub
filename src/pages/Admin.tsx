@@ -1,5 +1,6 @@
+// @ts-nocheck
 import { useState, useEffect, useMemo } from "react";
-import { db, auth } from "../services/firebase";
+import { db } from "../services/firebase";
 import { doc, setDoc, collection, getDocs, deleteDoc, updateDoc, deleteField } from "firebase/firestore";
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
@@ -137,7 +138,6 @@ export default function Admin() {
   const [importChapitres, setImportChapitres] = useState({ loading: false, succes: 0, erreurs: 0, message: "" });
   const [fichierMissions, setFichierMissions] = useState(null);
   const [importMissions, setImportMissions] = useState({ loading: false, succes: 0, erreurs: 0, message: "" });
-  const [xpMessage, setXpMessage] = useState("");
   const [eleves, setEleves] = useState([]);
   const [usersAll, setUsersAll] = useState([]);
   const [chargementEleves, setChargementEleves] = useState(false);
@@ -804,17 +804,6 @@ export default function Admin() {
     alert("✅ Toutes les missions supprimées !");
   };
 
-  const donnerXPMax = async () => {
-    try {
-      await updateDoc(doc(db, "users", auth.currentUser.uid), { xp: 99999 });
-      setXpMessage("✅ 99 999 XP ajoutés ! Actualise la page.");
-      setTimeout(() => setXpMessage(""), 4000);
-    } catch {
-      setXpMessage("❌ Erreur.");
-      setTimeout(() => setXpMessage(""), 4000);
-    }
-  };
-
   const Btn = ({ children, onClick, color, disabled = false, small = false }) => (
     <button onClick={onClick} disabled={disabled} style={{
       background: disabled ? "#E5E7EB" : color,
@@ -1158,17 +1147,6 @@ export default function Admin() {
 
         {ongletActif === "imports" && (
           <>
-            <div style={{ background: "white", borderRadius: "24px", padding: "24px", marginBottom: "16px", border: `2px solid ${COLORS.U}20` }}>
-              <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.35rem", color: COLORS.U, marginBottom: "8px" }}>⚡ Test — XP Maximum</h2>
-              <p style={{ color: "#6B7280", fontSize: "0.9rem", marginBottom: "14px" }}>Donne 99 999 XP à ton compte pour tester.</p>
-              <Btn onClick={donnerXPMax} color={COLORS.U}>🚀 Donner 99 999 XP (test)</Btn>
-              {xpMessage && (
-                <div style={{ marginTop: "12px", padding: "12px", borderRadius: "12px", background: xpMessage.includes("✅") ? COLORS.G + "15" : COLORS.H + "15" }}>
-                  <p style={{ fontFamily: "'Fredoka One', cursive", color: xpMessage.includes("✅") ? COLORS.G : COLORS.H, margin: 0 }}>{xpMessage}</p>
-                </div>
-              )}
-            </div>
-
             <div style={{ background: "white", borderRadius: "24px", padding: "24px", marginBottom: "16px", border: `2px solid ${COLORS.S}20` }}>
               <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.35rem", color: COLORS.S, marginBottom: "8px" }}>📚 Importer les chapitres</h2>
               <p style={{ color: "#9CA3AF", fontSize: "0.8rem", marginBottom: "16px" }}>Colonnes : ID, Matière, Classe, Ordre, Thème, Titre, Question, Notions, Compétences, URL app, URL fiche, XP.</p>

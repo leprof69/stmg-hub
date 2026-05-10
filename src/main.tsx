@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 
 const el = document.getElementById("root");
-if (!el) throw new Error("�l�ment #root introuvable");
+if (!el) throw new Error("Élément #root introuvable");
 
 createRoot(el).render(
   <StrictMode>

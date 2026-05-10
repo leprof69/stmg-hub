@@ -1,17 +1,26 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, type FirebaseApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
+function env(name: keyof ImportMetaEnv): string {
+  const v = import.meta.env[name];
+  if (typeof v !== "string" || !v.trim()) {
+    throw new Error(
+      `Variable d'environnement manquante : ${String(name)}. Copiez .env.example vers .env et renseignez les clés Firebase (préfixe VITE_).`
+    );
+  }
+  return v.trim();
+}
+
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY ?? "AIzaSyDYkmxm99cMZBp553EQM3rH_7H1sjzHGvg",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ?? "stmg-hub.firebaseapp.com",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID ?? "stmg-hub",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ?? "stmg-hub.firebasestorage.app",
-  messagingSenderId:
-    import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID ?? "270987336613",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID ?? "1:270987336613:web:822d940bc5365e0646664c",
+  apiKey: env("VITE_FIREBASE_API_KEY"),
+  authDomain: env("VITE_FIREBASE_AUTH_DOMAIN"),
+  projectId: env("VITE_FIREBASE_PROJECT_ID"),
+  storageBucket: env("VITE_FIREBASE_STORAGE_BUCKET"),
+  messagingSenderId: env("VITE_FIREBASE_MESSAGING_SENDER_ID"),
+  appId: env("VITE_FIREBASE_APP_ID"),
 };
 
-const app = initializeApp(firebaseConfig);
+const app: FirebaseApp = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);

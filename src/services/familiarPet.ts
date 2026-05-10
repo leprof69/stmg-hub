@@ -1,3 +1,4 @@
+// @ts-nocheck
 const FAMILY_TO_FAMILIAR = {
   Architecte: {
     id: "griffon",

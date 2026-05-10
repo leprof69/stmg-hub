@@ -1,4 +1,7 @@
 rules_version = '2';
+// Sécurité progressive : évolution recommandée = champs jeu (xp, badges, etc.) mis à jour
+// uniquement via Cloud Functions ou sous-collections avec règles strictes, et exposition
+// classement via documents dérivés peu sensibles plutôt que lecture globale users.
 service cloud.firestore {
   match /databases/{database}/documents {
 
