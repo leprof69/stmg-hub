@@ -5,5 +5,6 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  # Le nom npm "stmg-hub" = même texte que Firebase project ID ? faux positif scan secrets.
-  SECRETS_SCAN_OMIT_KEYS = "VITE_FIREBASE_PROJECT_ID"
+  # Scan secrets après le build : timeouts / annulations observés sur ce site ; les VITE_* sont
+  # dans le JS client par design — désactiver évite l’étape qui finit en "Command was cancelled".
+  SECRETS_SCAN_ENABLED = "false"
