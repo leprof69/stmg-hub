@@ -129,6 +129,12 @@ Attends que le statut soit **Published** (publié) ou équivalent **succès**.
 
 ---
 
+## Les variables sont sur Netlify mais la page dit encore « configuration incomplète » / Firebase vide
+
+Souvent ce n’est pas ta faute : le code doit lire les variables en **`import.meta.env.VITE_…` écrites en toutes lettres** dans le fichier (pas `import.meta.env[uneVariable]`). Sinon, au moment du build sur Netlify, Vite ne peut pas les injecter dans le site — résultat : écran bizarre alors que les variables existent dans le tableau Netlify. Le fichier `src/services/firebase.ts` du dépôt est réglé pour ça ; après un **redeploy sans cache**, ça doit matcher.
+
+---
+
 ## Erreur Netlify « Secrets scanning » + `VITE_FIREBASE_PROJECT_ID`
 
 Si le log dit que la valeur est aussi dans `package.json` : c’est souvent parce que le **nom du projet Firebase** est le même que le nom du paquet npm (`"name": "stmg-hub"`). Ce n’est pas une vraie fuite. Le fichier **`netlify.toml`** à la racine du dépôt contient une ligne pour ignorer ce faux positif — il faut **pousser ce fichier sur GitHub** pour que Netlify l’utilise.
