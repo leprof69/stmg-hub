@@ -1,6 +1,6 @@
 /**
- * Force au moins un fichier nouveau dans dist/ à chaque build (évite souvent
- * "0 new file(s) to upload" et des étapes Deploy qui restent bizarres sur Netlify).
+ * Writes dist/netlify-build-stamp.txt (changes every build).
+ * Dotfiles were skipped by some deploy steps -> "0 new file(s) to upload".
  */
 const fs = require("fs");
 const path = require("path");
@@ -9,11 +9,11 @@ const dist = path.join(__dirname, "..", "dist");
 const indexHtml = path.join(dist, "index.html");
 
 if (!fs.existsSync(indexHtml)) {
-  console.error("dist/index.html introuvable après le build.");
+  console.error("Missing dist/index.html after build.");
   process.exit(1);
 }
 
-const stamp = path.join(dist, ".netlify-build-stamp.txt");
+const stamp = path.join(dist, "netlify-build-stamp.txt");
 const lines = [
   `time=${new Date().toISOString()}`,
   `commit=${process.env.COMMIT_REF || process.env.HEAD || "unknown"}`,
@@ -21,4 +21,4 @@ const lines = [
   "",
 ];
 fs.writeFileSync(stamp, lines.join("\n"), "utf8");
-console.log("Netlify stamp écrit :", stamp);
+console.log("Netlify stamp OK:", stamp);
