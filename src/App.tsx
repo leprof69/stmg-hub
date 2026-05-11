@@ -271,6 +271,9 @@ function App() {
         <button onClick={() => setPage("objectif-bac")} className={navBtnClass("objectif-bac")} style={{ "--nav-accent": NAV_ACCENTS["objectif-bac"] } as CSSProperties}>
           🎓 Objectif Bac
         </button>
+        <button onClick={() => setPage("devoir-sur-table")} className={navBtnClass("devoir-sur-table")} style={{ "--nav-accent": NAV_ACCENTS["devoir-sur-table"] } as CSSProperties}>
+          📝 Devoir sur table
+        </button>
         <button onClick={() => setPage("focus")} className={navBtnClass("focus")} style={{ "--nav-accent": NAV_ACCENTS.focus } as CSSProperties}>
           🎯 Focus
         </button>
