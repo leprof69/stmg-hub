@@ -738,8 +738,12 @@ function DsExerciseCard({
   );
 }
 
-export default function ObjectifBac({ profil, onXPGagne }) {
-  const [activeTab, setActiveTab] = useState("vue");
+const ONGLET_IDS = ["vue", "examen", "entrainements", "methodo"];
+
+export default function ObjectifBac({ profil, onXPGagne, initialActiveTab = "vue" }) {
+  const [activeTab, setActiveTab] = useState(() =>
+    ONGLET_IDS.includes(initialActiveTab) ? initialActiveTab : "vue"
+  );
   const [banner, setBanner] = useState(null);
   const [claimState, setClaimState] = useState({});
   const [selectedType, setSelectedType] = useState("Tous");

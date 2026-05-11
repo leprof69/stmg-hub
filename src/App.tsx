@@ -23,6 +23,7 @@ import Missions from "./pages/Missions";
 import Classement from "./pages/Classement";
 import Cartes from "./pages/Cartes";
 import ObjectifBac from "./pages/ObjectifBac";
+import DevoirSurTable from "./pages/DevoirSurTable";
 import Focus from "./pages/Focus";
 import Flashcards from "./pages/Flashcards";
 import "./App.css";
@@ -238,6 +239,7 @@ function App() {
     chapitres: "#2563eb",
     missions: "#f97316",
     "objectif-bac": "#e11d48",
+    "devoir-sur-table": "#b45309",
     focus: "#10b981",
     classement: "#f59e0b",
     cartes: "#06b6d4",
@@ -295,6 +297,7 @@ function App() {
       {page === "chapitres" && <Chapitres profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "missions" && <Missions profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "objectif-bac" && <ObjectifBac profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
+      {page === "devoir-sur-table" && <DevoirSurTable profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "focus" && <Focus onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "classement" && <Classement profil={profil} />}
       {page === "cartes" && <Cartes profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
