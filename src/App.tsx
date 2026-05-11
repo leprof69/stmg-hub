@@ -34,8 +34,9 @@ function App() {
   const [page, setPage] = useState("dashboard");
   const [afficherLogin, setAfficherLogin] = useState(false);
   const [afficherAccueil, setAfficherAccueil] = useState(false);
+  /** Tant que true (défaut), on affiche la page d'accueil publique même si Firebase a une session. */
+  const [accueilSiteVisible, setAccueilSiteVisible] = useState(true);
   const [modeLogin, setModeLogin] = useState<"connexion" | "inscription">("connexion");
-  const [showReleaseAlert, setShowReleaseAlert] = useState(false);
   const sessionConnexionMarquee = useRef(false);
   const dernierePageTrackee = useRef("");
   const sessionActive = useRef(false);
@@ -65,6 +66,10 @@ function App() {
     if (!utilisateur) return;
     const interval = setInterval(() => chargerProfil(utilisateur), 30000);
     return () => clearInterval(interval);
+  }, [utilisateur]);
+
+  useEffect(() => {
+    if (!utilisateur) setAfficherLogin(false);
   }, [utilisateur]);
 
   useEffect(() => {
@@ -165,21 +170,8 @@ function App() {
   }, [page, utilisateur, profil]);
 
   useEffect(() => {
-    if (!utilisateur || !profil) return;
-    const releaseKey = "stmg.release.2026-04-focus-silph-prestige";
-    const alreadySeen = window.localStorage.getItem(releaseKey);
-    if (!alreadySeen) setShowReleaseAlert(true);
-  }, [utilisateur, profil]);
-
-  useEffect(() => {
     if (profil?.role !== "admin" && page === "admin") setPage("dashboard");
   }, [page, profil]);
-
-  const closeReleaseAlert = () => {
-    const releaseKey = "stmg.release.2026-04-focus-silph-prestige";
-    window.localStorage.setItem(releaseKey, "seen");
-    setShowReleaseAlert(false);
-  };
 
   if (chargement) {
     return (
@@ -189,12 +181,29 @@ function App() {
     );
   }
 
-  if (!utilisateur) {
-    if (afficherLogin) return <Login modeInitial={modeLogin} />;
+  const montrerAccueilMarketing = !utilisateur || accueilSiteVisible;
+  if (montrerAccueilMarketing) {
+    if (!utilisateur && afficherLogin) return <Login key={modeLogin} modeInitial={modeLogin} />;
     return (
       <Accueil
-        onConnexion={() => { setModeLogin("connexion"); setAfficherLogin(true); }}
-        onInscription={() => { setModeLogin("inscription"); setAfficherLogin(true); }}
+        estConnecte={!!utilisateur}
+        onDeconnexion={utilisateur ? () => void signOut(auth) : undefined}
+        onConnexion={
+          utilisateur
+            ? () => setAccueilSiteVisible(false)
+            : () => {
+                setModeLogin("connexion");
+                setAfficherLogin(true);
+              }
+        }
+        onInscription={
+          utilisateur
+            ? () => setAccueilSiteVisible(false)
+            : () => {
+                setModeLogin("inscription");
+                setAfficherLogin(true);
+              }
+        }
       />
     );
   }
@@ -240,38 +249,6 @@ function App() {
 
   return (
     <div className="app-shell">
-      {showReleaseAlert && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(15, 23, 42, 0.55)", zIndex: 1200, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
-          <div style={{ width: "min(700px, 96vw)", background: "white", borderRadius: 18, border: "2px solid #C7D2FE", boxShadow: "0 18px 48px rgba(15, 23, 42, 0.28)", padding: 20 }}>
-            <h2 style={{ margin: "0 0 8px", color: "#1E1B4B", fontSize: "1.35rem" }}>📢 Nouveautés STMG HUB</h2>
-            <p style={{ margin: "0 0 10px", color: "#334155", lineHeight: 1.55 }}>
-              Des mises à jour importantes sont en ligne pour les élèves :
-            </p>
-            <ul style={{ margin: "0 0 12px", paddingLeft: 18, color: "#334155", lineHeight: 1.6 }}>
-              <li>🎯 Nouveau cas difficile <strong>CAS SILPH</strong> dans la page Missions.</li>
-              <li>🧩 Nouvelle page <strong>Focus</strong> avec activités interactives (dont mots croisés en grille).</li>
-              <li>🏆 Classement basé sur le <strong>prestige</strong> (gagné quand on dépense des XP en packs).</li>
-            </ul>
-            <p style={{ margin: "0 0 14px", color: "#475569", fontSize: "0.9rem" }}>
-              Astuce élève : ouvrir des packs ne fait plus perdre son rang global, car le prestige continue de monter.
-            </p>
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              <button onClick={() => { setPage("missions"); closeReleaseAlert(); }} style={{ border: "none", borderRadius: 10, padding: "9px 12px", cursor: "pointer", background: "#EA580C", color: "white", fontWeight: 700 }}>
-                Aller au cas Silph
-              </button>
-              <button onClick={() => { setPage("focus"); closeReleaseAlert(); }} style={{ border: "none", borderRadius: 10, padding: "9px 12px", cursor: "pointer", background: "#0EA5E9", color: "white", fontWeight: 700 }}>
-                Aller à Focus
-              </button>
-              <button onClick={() => { setPage("classement"); closeReleaseAlert(); }} style={{ border: "none", borderRadius: 10, padding: "9px 12px", cursor: "pointer", background: "#A855F7", color: "white", fontWeight: 700 }}>
-                Voir le classement prestige
-              </button>
-              <button onClick={closeReleaseAlert} style={{ borderRadius: 10, padding: "9px 12px", cursor: "pointer", background: "white", color: "#334155", fontWeight: 700, border: "1px solid #CBD5E1" }}>
-                Fermer
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
       <nav className="top-nav">
         <button onClick={() => setAfficherAccueil(true)} className="nav-brand">
           🎓 STMG HUB

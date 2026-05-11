@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { signOut } from "firebase/auth";
 import { auth, db } from "../services/firebase";
 import { doc, setDoc } from "firebase/firestore";
 
@@ -384,6 +385,14 @@ export default function Onboarding({ onTermine }) {
             <p className="text-5xl mb-3">🎓</p>
             <h1 className="text-2xl font-bold text-slate-900">Bienvenue sur STMG HUB !</h1>
             <p className="text-slate-500 mt-2 text-sm">Crée ton profil pour commencer l'aventure</p>
+            {auth.currentUser?.email && (
+              <p className="text-slate-400 text-xs mt-3">
+                Compte connecté : <span className="font-semibold text-slate-600">{auth.currentUser.email}</span>
+              </p>
+            )}
+            <p className="text-slate-400 text-xs mt-2 max-w-sm mx-auto leading-relaxed">
+              Cette page s'affiche parce que tu es déjà connecté sur ce navigateur, mais ton profil STMG HUB n'est pas encore enregistré (ou pas retrouvé). Si ce n'est pas le bon compte, déconnecte-toi puis reconnecte-toi avec l'email de ton compte habituel.
+            </p>
           </div>
 
           <div className="space-y-4">
@@ -488,6 +497,14 @@ export default function Onboarding({ onTermine }) {
                   : "bg-gray-600 cursor-not-allowed opacity-50"
               }`}>
               Commencer le quiz 🧠
+            </button>
+
+            <button
+              type="button"
+              onClick={() => void signOut(auth)}
+              className="w-full mt-3 text-slate-500 text-sm font-semibold py-2 rounded-xl border border-slate-200 hover:bg-slate-50 hover:text-slate-800 transition-colors"
+            >
+              Se déconnecter (changer de compte)
             </button>
           </div>
         </div>

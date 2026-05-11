@@ -51,7 +51,6 @@ const ONGLET_ADMIN = [
   { id: "infos", label: "💡 Infos" },
 ];
 const DS_EXERCISE_BY_ID = Object.fromEntries(DS_EXERCISES.map((exercise) => [exercise.id, exercise]));
-const MISSION_CAS_SILPH_ID = "mission-etude-cas-silph-sarl";
 const RARETE_PARTICIPATION = {
   commune: 0,
   peu_commune: 0,
@@ -567,107 +566,6 @@ export default function Admin() {
     docPdf.save(`copies-ds-${DS_EXAM_ID}.pdf`);
   };
 
-  const exportSilphFeedbackPdf = (eleve) => {
-    const missionEntry = eleve?.missionsHistorique?.[MISSION_CAS_SILPH_ID];
-    if (!missionEntry) {
-      alert("Aucune copie CAS SILPH trouvée pour cet élève.");
-      return;
-    }
-    const docPdf = new jsPDF({ unit: "pt", format: "a4" });
-    const page = { left: 40, right: 555, top: 42, bottom: 800 };
-    const contentWidth = page.right - page.left;
-    let y = page.top;
-    let pageNumber = 1;
-
-    const drawFooter = () => {
-      docPdf.setFont("helvetica", "normal");
-      docPdf.setFontSize(9);
-      docPdf.setTextColor(100, 116, 139);
-      docPdf.text(`Page ${pageNumber}`, page.right, 825, { align: "right" });
-      docPdf.setTextColor(15, 23, 42);
-    };
-    const newPage = () => {
-      drawFooter();
-      docPdf.addPage();
-      pageNumber += 1;
-      y = page.top;
-    };
-    const ensureSpace = (neededHeight = 20) => {
-      if (y + neededHeight > page.bottom) newPage();
-    };
-    const writeText = (text, opts = {}) => {
-      const {
-        size = 10.5,
-        bold = false,
-        color = [15, 23, 42],
-        lineHeight = 14,
-        indent = 0,
-      } = opts;
-      docPdf.setFont("helvetica", bold ? "bold" : "normal");
-      docPdf.setFontSize(size);
-      docPdf.setTextColor(color[0], color[1], color[2]);
-      const lines = docPdf.splitTextToSize(String(text || ""), contentWidth - indent);
-      ensureSpace(lines.length * lineHeight + 2);
-      docPdf.text(lines, page.left + indent, y);
-      y += lines.length * lineHeight;
-      docPdf.setTextColor(15, 23, 42);
-    };
-    const writeSectionTitle = (title, tone = "default") => {
-      const palette = tone === "danger"
-        ? { fill: [254, 226, 226], border: [248, 113, 113], text: [153, 27, 27] }
-        : tone === "info"
-          ? { fill: [219, 234, 254], border: [96, 165, 250], text: [30, 64, 175] }
-          : { fill: [241, 245, 249], border: [148, 163, 184], text: [30, 41, 59] };
-      ensureSpace(28);
-      docPdf.setFillColor(palette.fill[0], palette.fill[1], palette.fill[2]);
-      docPdf.setDrawColor(palette.border[0], palette.border[1], palette.border[2]);
-      docPdf.roundedRect(page.left, y, contentWidth, 22, 4, 4, "FD");
-      docPdf.setFont("helvetica", "bold");
-      docPdf.setFontSize(11);
-      docPdf.setTextColor(palette.text[0], palette.text[1], palette.text[2]);
-      docPdf.text(String(title), page.left + 8, y + 15);
-      docPdf.setTextColor(15, 23, 42);
-      y += 28;
-    };
-
-    const nomEleve = eleve.prenom || eleve.nom || eleve.email || `Eleve ${eleve.id.slice(0, 6)}`;
-    const safeName = String(nomEleve).replace(/[^\w-]+/g, "_");
-    const antiCheat = missionEntry?.antiCheatFlags?.tricheDetectee;
-
-    writeText("STMG HUB - Copie individuelle CAS SILPH", { size: 16, bold: true, lineHeight: 18 });
-    writeText(`Eleve : ${nomEleve}`, { size: 11, bold: true });
-    writeText(`Classe : ${eleve.classe || "-"} | Lycee : ${eleve.lycee || "-"}`, { size: 10 });
-    writeText(`Date copie : ${missionEntry.date || "non renseignee"} | Export : ${new Date().toLocaleString("fr-FR")}`, { size: 9.8 });
-    writeText(`Score : ${Number(missionEntry.score || 0)}/10 | XP : ${Number(missionEntry.xpGagne || 0)}`, {
-      size: 10.5,
-      bold: true,
-      color: antiCheat ? [153, 27, 27] : [22, 101, 52],
-    });
-    y += 6;
-
-    writeSectionTitle("Reponse de l'eleve", "info");
-    writeText(missionEntry.reponseEleve || "(Reponse non archivee pour cette tentative.)", { size: 10.3 });
-
-    writeSectionTitle("Retour IA");
-    writeText(`Feedback general : ${missionEntry.feedbackIA || "Non disponible."}`, { size: 10.3 });
-    writeText(`Points forts : ${missionEntry.pointsForts || "Non disponible."}`, { size: 10.3 });
-    writeText(`A ameliorer : ${missionEntry.aAmeliorer || "Non disponible."}`, { size: 10.3 });
-
-    const reperes = Array.isArray(missionEntry.correctionRepere) ? missionEntry.correctionRepere : [];
-    if (reperes.length) {
-      writeSectionTitle("Reperes de correction");
-      reperes.forEach((rep, idx) => writeText(`${idx + 1}. ${rep}`, { size: 10.1, indent: 8 }));
-    }
-
-    if (antiCheat) {
-      writeSectionTitle("Alerte anti-triche", "danger");
-      writeText("Une alerte anti-triche a ete enregistree sur cette tentative.", { size: 10.2, color: [153, 27, 27] });
-    }
-
-    drawFooter();
-    docPdf.save(`cas-silph-${safeName}.pdf`);
-  };
-
   const resetDsLocksForFilteredStudents = async () => {
     const targets = usersAll.filter((user) => {
       const okClasse = filtreClasse === "toutes" || user.classe === filtreClasse;
@@ -1015,16 +913,6 @@ export default function Admin() {
                       <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Connexion aujourd’hui : <strong>{formatDuration(eleve.sessionTodaySec)}</strong></p>
                       <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Temps cumulé : <strong>{formatDuration(eleve.sessionTotalSec)}</strong> ({eleve.sessionCount || 0} session(s))</p>
                       <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Dernière session : <strong>{formatDuration(eleve.lastSessionDurationSec)}</strong></p>
-                    </div>
-                    <div style={{ marginTop: 10, display: "flex", justifyContent: "flex-end" }}>
-                      <Btn
-                        onClick={() => exportSilphFeedbackPdf(eleve)}
-                        color={COLORS.T}
-                        small
-                        disabled={!eleve?.missionsHistorique?.[MISSION_CAS_SILPH_ID]}
-                      >
-                        📄 Export PDF CAS SILPH
-                      </Btn>
                     </div>
                   </div>
                 ))}

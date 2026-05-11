@@ -227,10 +227,12 @@ export default function Accueil({
   onConnexion,
   onInscription,
   estConnecte = false,
+  onDeconnexion,
 }: {
   onConnexion: () => void;
   onInscription: () => void;
   estConnecte?: boolean;
+  onDeconnexion?: () => void;
 }) {
   const [familleActive, setFamilleActive] = useState(0);
   const [menuOuvert, setMenuOuvert] = useState(false);
@@ -262,8 +264,19 @@ export default function Accueil({
       }}>
         <Logo size="normal" />
         <div className="hidden md:flex" style={{ gap: "12px", alignItems: "center" }}>
-          <Btn onClick={onConnexion} color={COLORS.S} outline>Se connecter</Btn>
-          <Btn onClick={onInscription} color={COLORS.T}>C'est parti ! 🚀</Btn>
+          {estConnecte ? (
+            <>
+              <Btn onClick={onConnexion} color={COLORS.S}>Accéder à la plateforme</Btn>
+              {onDeconnexion && (
+                <Btn onClick={onDeconnexion} color={COLORS.T} outline>Me déconnecter</Btn>
+              )}
+            </>
+          ) : (
+            <>
+              <Btn onClick={onConnexion} color={COLORS.S} outline>Se connecter</Btn>
+              <Btn onClick={onInscription} color={COLORS.T}>C'est parti ! 🚀</Btn>
+            </>
+          )}
         </div>
         <button onClick={() => setMenuOuvert(!menuOuvert)} className="md:hidden"
           style={{ fontSize: "1.5rem", background: "none", border: "none", cursor: "pointer" }}>☰</button>
@@ -271,8 +284,19 @@ export default function Accueil({
 
       {menuOuvert && (
         <div style={{ position: "fixed", top: "64px", left: 0, right: 0, zIndex: 49, background: "white", borderBottom: "2px solid #F3F4F6", padding: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
-          <Btn onClick={onConnexion} color={COLORS.S} outline>Se connecter</Btn>
-          <Btn onClick={onInscription} color={COLORS.T}>C'est parti ! 🚀</Btn>
+          {estConnecte ? (
+            <>
+              <Btn onClick={() => { onConnexion(); setMenuOuvert(false); }} color={COLORS.S}>Accéder à la plateforme</Btn>
+              {onDeconnexion && (
+                <Btn onClick={() => { onDeconnexion(); setMenuOuvert(false); }} color={COLORS.T} outline>Me déconnecter</Btn>
+              )}
+            </>
+          ) : (
+            <>
+              <Btn onClick={() => { onConnexion(); setMenuOuvert(false); }} color={COLORS.S} outline>Se connecter</Btn>
+              <Btn onClick={() => { onInscription(); setMenuOuvert(false); }} color={COLORS.T}>C'est parti ! 🚀</Btn>
+            </>
+          )}
         </div>
       )}
 
@@ -310,8 +334,14 @@ export default function Accueil({
           </p>
 
           <div style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap", marginBottom: "64px" }}>
-            <Btn onClick={onInscription} color={COLORS.T} big>Je veux tester ! 🎮</Btn>
-            <Btn onClick={onConnexion} color={COLORS.S} outline big>J'ai déjà un compte →</Btn>
+            {estConnecte ? (
+              <Btn onClick={onConnexion} color={COLORS.S} big>Accéder à la plateforme →</Btn>
+            ) : (
+              <>
+                <Btn onClick={onConnexion} color={COLORS.S} big>J'ai déjà un compte →</Btn>
+                <Btn onClick={onInscription} color={COLORS.T} outline big>Je veux tester ! 🎮</Btn>
+              </>
+            )}
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "16px" }}>
@@ -411,7 +441,9 @@ export default function Accueil({
                 Exemple de classement — rejoins pour y figurer !
               </p>
               <div style={{ marginTop: "20px" }}>
-                <Btn onClick={onInscription} color={COLORS.M} big>Rejoindre la compétition 🔥</Btn>
+                <Btn onClick={estConnecte ? onConnexion : onInscription} color={COLORS.M} big>
+                  {estConnecte ? "Accéder à la plateforme →" : "Rejoindre la compétition 🔥"}
+                </Btn>
               </div>
             </div>
           </div>
@@ -474,7 +506,9 @@ export default function Accueil({
                     </div>
                   ))}
                 </div>
-                <Btn onClick={onInscription} color={familles[familleActive].couleur} big>Faire le quiz →</Btn>
+                <Btn onClick={estConnecte ? onConnexion : onInscription} color={familles[familleActive].couleur} big>
+                  {estConnecte ? "Accéder à la plateforme →" : "Faire le quiz →"}
+                </Btn>
               </div>
             </div>
           </div>
@@ -551,12 +585,18 @@ export default function Accueil({
             <span style={{ color: "white" }}>? 😏</span>
           </h2>
           <p style={{ fontSize: "1.2rem", color: "#6B7280", marginBottom: "40px", lineHeight: 1.8 }}>
-            Rejoins STMG HUB, c'est gratuit et ça prend 2 minutes. Ton aventure commence maintenant !
+            {estConnecte
+              ? "Tu es connecté : entre sur la plateforme pour reprendre tes révisions."
+              : "Rejoins STMG HUB, c'est gratuit et ça prend 2 minutes. Ton aventure commence maintenant !"}
           </p>
-          <Btn onClick={onInscription} color={COLORS.T} big>Rejoindre STMG HUB 🎓</Btn>
-          <p style={{ color: "#4B5563", fontSize: "0.9rem", marginTop: "20px" }}>
-            Gratuit • Sans carte bancaire • 2 min pour créer ton profil
-          </p>
+          <Btn onClick={estConnecte ? onConnexion : onInscription} color={COLORS.T} big>
+            {estConnecte ? "Accéder à la plateforme 🎓" : "Rejoindre STMG HUB 🎓"}
+          </Btn>
+          {!estConnecte && (
+            <p style={{ color: "#4B5563", fontSize: "0.9rem", marginTop: "20px" }}>
+              Gratuit • Sans carte bancaire • 2 min pour créer ton profil
+            </p>
+          )}
         </div>
       </section>
 

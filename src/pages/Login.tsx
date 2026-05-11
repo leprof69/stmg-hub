@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { auth } from "../services/firebase";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
@@ -9,6 +9,10 @@ export default function Login({ modeInitial = "connexion" }: LoginProps) {
   const [motDePasse, setMotDePasse] = useState("");
   const [estInscription, setEstInscription] = useState(modeInitial === "inscription");
   const [erreur, setErreur] = useState("");
+
+  useEffect(() => {
+    setEstInscription(modeInitial === "inscription");
+  }, [modeInitial]);
 
   const handleEmailAuth = async () => {
     try {
