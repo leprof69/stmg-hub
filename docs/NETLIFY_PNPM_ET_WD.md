@@ -1,58 +1,36 @@
 # Si Netlify parle de « pnpm » ou du paquet « wd »
 
-Le projet **STMG HUB** sur ton PC utilise **`npm`** et un fichier **`package-lock.json`**. Il n'utilise **pas** `pnpm` et il n'y a **pas** le paquet `wd` dans les dependances.
-
-Si le log Netlify dit **`pnpm install`** et une erreur sur **`wd`** :
+Le projet **STMG HUB** utilise **`npm`** et **`package-lock.json`**. Pas de `pnpm`, pas de paquet `wd`.
 
 ## 1. Verifier le bon depot GitHub
 
-Sur Netlify : **Site configuration ? Build & deploy ? Continuous deployment**.
+Netlify : **Site configuration ? Build & deploy ? Continuous deployment**. Le depot doit etre **stmg-hub** (Vite + React).
 
-Le depot relie doit etre **`stmg-hub`** (React + Vite), pas un autre projet Vue ou ancien site.
+## 2. Retirer `pnpm-lock.yaml` si present
 
-## 2. Retirer un fichier `pnpm-lock.yaml` par erreur
+S'il existe a la racine sur GitHub, Netlify peut passer en pnpm. Garde seulement **`package-lock.json`**.
 
-Si quelqu'un a ajoute **`pnpm-lock.yaml`** sur GitHub, Netlify bascule en **pnpm**.
+## 3. Installer avec npm sur Netlify
 
-- Ouvre ton depot sur **github.com** : regarde a la racine.
-- Si tu vois **`pnpm-lock.yaml`**, supprime-le (sur GitHub ou depuis ton PC puis `push`).
-- Garde uniquement **`package-lock.json`**.
+**Site configuration ? Build & deploy ? Build settings** :
 
-## 3. Forcer l'installation avec npm dans Netlify
+- **Install command** : `npm ci` (ou laisser vide si Netlify detecte le lockfile)
+- **Build command** : celui du depot (`netlify.toml`) : `npm run build && node scripts/netlify-postbuild.cjs`
 
-Dans Netlify : **Site configuration ? Build & deploy ? Build settings ? Edit settings**.
+Puis **Deploys ? Trigger deploy ? Clear cache and deploy** si besoin.
 
-- **Install command** : `npm ci`
-- **Build command** : laisse ce que dit le depot (`netlify.toml`) ou en general :  
-  `npm ci && npm run build && node scripts/netlify-postbuild.cjs`
+## 4. Reseau / TLS (« downloadFailed »)
 
-Enregistre, puis **Deploys ? Trigger deploy ? Clear cache and deploy**.
+Reessaie **Retry** sur le deploy, ou plus tard.
 
-## 4. Erreur reseau / TLS (« downloadFailed »)
+## 5. « Command was cancelled » alors que Vite a reussi dans le log
 
-Parfois le registre npm est temporairement injoignable.
+Ca ne veut pas dire qu'il faut des **secrets GitHub** : le deploiement **normal** reste **Netlify relie au repo + push sur la branche de production** — **aucun** secret dans GitHub **Settings ? Actions** n'est requis pour ca.
 
-- Relance simplement le deploiement (**Retry**).
-- Si ca persiste plusieurs fois : reessaie plus tard ou change de reseau (box / 4G).
+Souvent Netlify annule un build si **un autre deploy** demarre pour le meme site (deux push rapproches, redeploy manuel, etc.). Regarde la liste **Deploys**.
 
-## 5. Build Netlify annule (« Command was cancelled ») alors que le build Vite a reussi
+En secours depuis ton PC : `npm run build` puis `npx netlify-cli deploy --prod --dir=dist`.
 
-Souvent : **deux deploiements en meme temps** (push Git + deploiement manuel, ou deux webhooks, ou build Netlify + autre outil). Netlify peut **annuler** le premier sans message detaille.
+## 6. Alternative : Firebase Hosting
 
-**Option fiable (recommandee)** : deploiement avec **GitHub Actions** comme en local (`netlify deploy --prod --dir=dist`), fichier **`.github/workflows/deploy-netlify.yml`**.
-
-1. Sur **GitHub** (depot `stmg-hub`) : **Settings ? Secrets and variables ? Actions**
-   - `NETLIFY_AUTH_TOKEN` : Netlify ? **User settings ? Applications ? Personal access tokens**
-   - `NETLIFY_SITE_ID` : **Site settings ? Site details ? Site ID**
-2. Pousse sur **`main`** : l'onglet **Actions** doit montrer le workflow **Deploy Netlify (production)** en vert.
-3. Pour eviter les doubles deploiements : sur **Netlify**, **Deploys ? Pause builds** (ou une seule source : soit le build Netlify depuis Git, soit ce workflow — pas les deux en concurrence).
-
-## 6. Alternative sans Netlify : Firebase Hosting
-
-Si Netlify continue a poser probleme :
-
-1. Sur ton PC : `npm run build`
-2. `firebase login` puis `firebase use` (choisir ton projet)
-3. `firebase deploy --only hosting`
-
-Le site sera sur **`https://<ton-projet>.web.app`** (deja configure dans `firebase.json` avec le dossier **`dist`**).
+`npm run build` puis `firebase deploy --only hosting` (dossier `dist` dans `firebase.json`).
