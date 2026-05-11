@@ -5,9 +5,9 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  # Scan secrets aprùs le build : timeouts / annulations observùs sur ce site ; les VITE_* sont
-  # dans le JS client par design ù dùsactiver ùvite lùùtape qui finit en "Command was cancelled".
+  # Scan secrets : desactive scan + smart detection (variables VITE_* dans le JS = faux positifs possibles).
   SECRETS_SCAN_ENABLED = "false"
+  SECRETS_SCAN_SMART_DETECTION_ENABLED = "false"
 
 # SPA : toutes les URLs servent index.html (evite 404 au rafraichissement si routes URL plus tard).
 [[redirects]]
