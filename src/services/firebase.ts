@@ -2,23 +2,21 @@ import { initializeApp, type FirebaseApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-/** Vite n’injecte les VITE_* en prod qu’en accès direct (pas import.meta.env[clé]). */
-function req(k: string, v: string | undefined): string {
-  if (typeof v !== "string" || !v.trim()) {
-    throw new Error(
-      `Variable d'environnement manquante : ${k}. Vérifiez .env (local) ou les variables VITE_ sur Netlify, puis redéployez.`
-    );
-  }
-  return v.trim();
-}
-
+/**
+ * Config Web Firebase du projet stmg-hub (identique à l’ancien firebase.js avant Vite).
+ * Ces valeurs sont publiques côté client (comme dans la console Firebase) ; la sécurité
+ * repose sur les règles Firestore / Auth, pas sur le secret de ce fichier.
+ *
+ * On ne lit pas import.meta.env ici : un build Netlify sans variables VITE_* injectait
+ * une clé vide / erronée → connexion Google impossible (auth/api-key-not-valid).
+ */
 const firebaseConfig = {
-  apiKey: req("VITE_FIREBASE_API_KEY", import.meta.env.VITE_FIREBASE_API_KEY),
-  authDomain: req("VITE_FIREBASE_AUTH_DOMAIN", import.meta.env.VITE_FIREBASE_AUTH_DOMAIN),
-  projectId: req("VITE_FIREBASE_PROJECT_ID", import.meta.env.VITE_FIREBASE_PROJECT_ID),
-  storageBucket: req("VITE_FIREBASE_STORAGE_BUCKET", import.meta.env.VITE_FIREBASE_STORAGE_BUCKET),
-  messagingSenderId: req("VITE_FIREBASE_MESSAGING_SENDER_ID", import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID),
-  appId: req("VITE_FIREBASE_APP_ID", import.meta.env.VITE_FIREBASE_APP_ID),
+  apiKey: "AIzaSyDYkmxm99cMZBp553EQM3rH_7H1sjzHGvg",
+  authDomain: "stmg-hub.firebaseapp.com",
+  projectId: "stmg-hub",
+  storageBucket: "stmg-hub.firebasestorage.app",
+  messagingSenderId: "270987336613",
+  appId: "1:270987336613:web:822d940bc5365e0646664c",
 };
 
 const app: FirebaseApp = initializeApp(firebaseConfig);
