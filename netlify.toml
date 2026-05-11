@@ -9,6 +9,12 @@
   SECRETS_SCAN_ENABLED = "false"
   SECRETS_SCAN_SMART_DETECTION_ENABLED = "false"
   SECRETS_SCAN_OMIT_KEYS = "VITE_FIREBASE_API_KEY,VITE_FIREBASE_AUTH_DOMAIN,VITE_FIREBASE_PROJECT_ID,VITE_FIREBASE_STORAGE_BUCKET,VITE_FIREBASE_MESSAGING_SENDER_ID,VITE_FIREBASE_APP_ID,VITE_GEMINI_API_KEY,VITE_GROQ_API_KEY,VITE_DS_ACCESS_CODE"
+  # Exclure tout le dossier publie (2e passe / scanner sur les .map ou bundles).
+  SECRETS_SCAN_OMIT_PATHS = "dist"
+
+# Desactive l'optimisation post-build Netlify (Vite a deja bundle/minify).
+[build.processing]
+  skip_processing = true
 
 # SPA : toutes les URLs servent index.html (evite 404 au rafraichissement si routes URL plus tard).
 [[redirects]]
