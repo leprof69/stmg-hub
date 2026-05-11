@@ -1,13 +1,20 @@
 # Vite sort les fichiers dans dist/ (pas build/).
+# Si le log dit "Command was cancelled" apres un build OK : ce n'est pas Vite. Souvent :
+# - un 2e deploy (push + CLI, ou option "annuler les builds obsoletes") annule le 1er ;
+# - image "noble-new-builds" : essayer une autre image (Netlify > Build > Build image selection).
 [build]
   command = "npm run build && node scripts/netlify-postbuild.cjs"
   publish = "dist"
+
+# Desactive l'optimisation d'assets Netlify (Vite le fait deja). Peut stabiliser la fin de pipeline.
+[build.processing]
+  skip_processing = true
 
 [build.environment]
   NODE_VERSION = "20"
   # Gros bundle Vite : evite les OOM sur les builders Linux.
   NODE_OPTIONS = "--max-old-space-size=8192"
-  # Config Firebase client (VITE_*) : volontairement dans le JS — le scan Netlify sinon echec "Exposed secrets".
+  # Config Firebase client (VITE_*) dans le JS ; scan Netlify sinon "Exposed secrets".
   SECRETS_SCAN_ENABLED = "false"
   SECRETS_SCAN_SMART_DETECTION_ENABLED = "false"
   SECRETS_SCAN_OMIT_KEYS = "VITE_FIREBASE_API_KEY,VITE_FIREBASE_AUTH_DOMAIN,VITE_FIREBASE_PROJECT_ID,VITE_FIREBASE_STORAGE_BUCKET,VITE_FIREBASE_MESSAGING_SENDER_ID,VITE_FIREBASE_APP_ID,VITE_GEMINI_API_KEY,VITE_GROQ_API_KEY,VITE_DS_ACCESS_CODE"
