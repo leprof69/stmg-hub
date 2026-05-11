@@ -1,6 +1,7 @@
 # Vite sort les fichiers dans dist/ (pas build/).
 [build]
-  command = "npm run build && node scripts/netlify-postbuild.cjs"
+  # npm ci : meme arbre de deps que le lockfile (evite surprises sur les serveurs Netlify).
+  command = "npm ci && npm run build && node scripts/netlify-postbuild.cjs"
   publish = "dist"
 
 [build.environment]
