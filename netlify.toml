@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build && node scripts/netlify-postbuild.cjs"
+  command = "npm ci && npm run build && node scripts/netlify-postbuild.cjs"
   publish = "dist"
 
 [build.processing]
