@@ -14,7 +14,8 @@
   # Smart detection inspecte aussi le *build output* : la cle Web client dans le bundle peut declencher
   # "Exposed secrets" meme si SECRETS_SCAN_ENABLED=false (politique compte / ordre d'application).
   # Valeur deja publique cote client (voir src/services/firebase.ts).
-  SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES = "AIzaSyDYkmxm99cMZBp553EQM3rH_7H1sjzHGvg"
+  # Plusieurs chaines du client Firebase (fichier + bundle) peuvent declencher la smart detection.
+  SECRETS_SCAN_SMART_DETECTION_OMIT_VALUES = "AIzaSyDYkmxm99cMZBp553EQM3rH_7H1sjzHGvg,1:270987336613:web:822d940bc5365e0646664c,stmg-hub.firebasestorage.app"
 
 # SPA : toutes les URLs servent index.html (evite 404 au rafraichissement si routes URL plus tard).
 [[redirects]]
