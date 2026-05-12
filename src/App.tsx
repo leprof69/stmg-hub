@@ -23,7 +23,6 @@ import Missions from "./pages/Missions";
 import Classement from "./pages/Classement";
 import Cartes from "./pages/Cartes";
 import ObjectifBac from "./pages/ObjectifBac";
-import DevoirSurTable from "./pages/DevoirSurTable";
 import Focus from "./pages/Focus";
 import Flashcards from "./pages/Flashcards";
 import "./App.css";
@@ -239,7 +238,6 @@ function App() {
     chapitres: "#2563eb",
     missions: "#f97316",
     "objectif-bac": "#e11d48",
-    "devoir-sur-table": "#b45309",
     focus: "#10b981",
     classement: "#f59e0b",
     cartes: "#06b6d4",
@@ -271,9 +269,6 @@ function App() {
         <button onClick={() => setPage("objectif-bac")} className={navBtnClass("objectif-bac")} style={{ "--nav-accent": NAV_ACCENTS["objectif-bac"] } as CSSProperties}>
           🎓 Objectif Bac
         </button>
-        <button onClick={() => setPage("devoir-sur-table")} className={navBtnClass("devoir-sur-table")} style={{ "--nav-accent": NAV_ACCENTS["devoir-sur-table"] } as CSSProperties}>
-          📝 Devoir sur table
-        </button>
         <button onClick={() => setPage("focus")} className={navBtnClass("focus")} style={{ "--nav-accent": NAV_ACCENTS.focus } as CSSProperties}>
           🎯 Focus
         </button>
@@ -300,7 +295,6 @@ function App() {
       {page === "chapitres" && <Chapitres profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "missions" && <Missions profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "objectif-bac" && <ObjectifBac profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
-      {page === "devoir-sur-table" && <DevoirSurTable profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "focus" && <Focus onXPGagne={() => chargerProfil(utilisateur)} />}
       {page === "classement" && <Classement profil={profil} />}
       {page === "cartes" && <Cartes profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
