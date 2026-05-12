@@ -50,6 +50,17 @@ type MissionExercise = {
   questions?: string[];
 };
 
+type MissionEvalResult = {
+  score: number;
+  pourcentageXP: number;
+  xpAccordee: number;
+  feedback: string;
+  pointsForts: string;
+  pointsFaibles: string;
+  propositionReponse: string;
+  source: "ai" | "local";
+};
+
 const MISSIONS_PROGRESS_VERSION = 1;
 
 const SDGN_CHAP7_EXERCISES: MissionExercise[] = [
@@ -205,6 +216,155 @@ const normalize = (value = "") =>
     .replace(/[\u0300-\u036f]/g, "")
     .trim();
 
+const normalizeText = (value = "") =>
+  String(value)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+const tokens = (value = "") => normalizeText(value).split(" ").filter((token) => token.length >= 4);
+
+const parseJson = (raw = "") => {
+  const cleaned = String(raw).replace(/```json|```/gi, "").trim();
+  const start = cleaned.indexOf("{");
+  const end = cleaned.lastIndexOf("}");
+  if (start === -1 || end === -1 || end <= start) return null;
+  try {
+    return JSON.parse(cleaned.slice(start, end + 1));
+  } catch {
+    return null;
+  }
+};
+
+const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
+
+const getScoreMood = (score: number) => {
+  if (score >= 9) return { emoji: "🤯", text: "Niveau genie", color: "#166534" };
+  if (score >= 8) return { emoji: "🔥", text: "Excellent", color: "#166534" };
+  if (score >= 7) return { emoji: "😎", text: "Tres solide", color: "#1D4ED8" };
+  if (score >= 6) return { emoji: "🙂", text: "Bon travail", color: "#0369A1" };
+  if (score >= 5) return { emoji: "🧐", text: "Correct mais perfectible", color: "#B45309" };
+  if (score >= 3) return { emoji: "😅", text: "On continue, tu progresses", color: "#B45309" };
+  return { emoji: "💪", text: "Ne rien lacher", color: "#B91C1C" };
+};
+
+const callGemini = async (prompt: string) => {
+  const key = import.meta.env.VITE_GEMINI_API_KEY;
+  if (!key) return null;
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.1, maxOutputTokens: 900, responseMimeType: "application/json" },
+    }),
+  });
+  if (!response.ok) return null;
+  const data = await response.json();
+  const text = data?.candidates?.[0]?.content?.parts?.map((part: { text?: string }) => part?.text || "").join("\n") || "";
+  return parseJson(text);
+};
+
+const callGroq = async (prompt: string) => {
+  const key = import.meta.env.VITE_GROQ_API_KEY;
+  if (!key) return null;
+  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
+    body: JSON.stringify({
+      model: "llama-3.3-70b-versatile",
+      messages: [{ role: "user", content: prompt }],
+      temperature: 0.1,
+      max_tokens: 900,
+    }),
+  });
+  if (!response.ok) return null;
+  const data = await response.json();
+  return parseJson(data?.choices?.[0]?.message?.content || "");
+};
+
+const localCorrection = (exercise: MissionExercise, answer: string): Omit<MissionEvalResult, "xpAccordee" | "pourcentageXP"> => {
+  const text = String(answer || "").trim();
+  if (!text) {
+    return {
+      score: 0,
+      feedback: "Reponse vide.",
+      pointsForts: "Aucun element exploitable.",
+      pointsFaibles: "Commencer par repondre avec des notions du chapitre.",
+      propositionReponse: exercise.attendu,
+      source: "local",
+    };
+  }
+  const expectedCorpus = `${exercise.consigne} ${exercise.attendu} ${(exercise.questions || []).join(" ")} ${exercise.support || ""}`;
+  const expected = new Set(tokens(expectedCorpus));
+  const learner = new Set(tokens(text));
+  let overlap = 0;
+  for (const token of learner) if (expected.has(token)) overlap += 1;
+  const ratio = expected.size ? overlap / Math.max(10, Math.min(50, expected.size)) : 0;
+  const hasStructure = /(\n|^-|•|1\.)/m.test(text);
+  const hasExample = /(exemple|cas|entreprise|document|donnee|outil|reseau|ia|intranet|extranet)/i.test(text);
+  const hasConclusion = /(donc|ainsi|en conclusion|on peut conclure)/i.test(text);
+  // Barème local prioritaire (fiable et stable).
+  // 0-5 : couverture notions attendues
+  // 0-2 : structure
+  // 0-2 : appuis concrets
+  // 0-1 : conclusion
+  const notions = Math.min(5, Math.round(Math.min(1, ratio) * 5 * 10) / 10);
+  const structure = hasStructure ? 2 : 0.8;
+  const appuis = hasExample ? 2 : 0.7;
+  const conclusion = hasConclusion ? 1 : 0.3;
+  let score = notions + structure + appuis + conclusion;
+  score = clamp(Math.round(score * 10) / 10, 0, 10);
+  return {
+    score,
+    feedback: "Evaluation locale basee sur les notions, la structure et l'argumentation.",
+    pointsForts: hasExample ? "La reponse contient deja des exemples exploitables." : "Base de reponse presente.",
+    pointsFaibles: "Mieux relier les notions du chapitre aux arguments et renforcer la conclusion.",
+    propositionReponse: exercise.attendu,
+    source: "local",
+  };
+};
+
+const buildReliableEvaluation = (
+  local: Omit<MissionEvalResult, "xpAccordee" | "pourcentageXP">,
+  ai: Record<string, unknown> | null,
+  exercise: MissionExercise
+): Omit<MissionEvalResult, "xpAccordee" | "pourcentageXP"> => {
+  if (!ai) return local;
+
+  const aiScoreRaw = Number(ai.score);
+  const aiScore = Number.isFinite(aiScoreRaw) ? clamp(aiScoreRaw, 0, 10) : local.score;
+  const aiFeedback = String(ai.feedback || "").trim();
+  const aiPlus = String(ai.points_forts || "").trim();
+  const aiMinus = String(ai.points_faibles || "").trim();
+  const aiAnswer = String(ai.proposition_reponse || "").trim();
+
+  // Garde-fou principal: l'IA peut ajuster la note locale mais uniquement dans une plage limitee.
+  // Cela evite les notes aberrantes et garde une correction stable.
+  const deltaMax = 1.5;
+  const minAllowed = clamp(local.score - deltaMax, 0, 10);
+  const maxAllowed = clamp(local.score + deltaMax, 0, 10);
+  const blendedScore = clamp(Math.round(((local.score * 0.75) + (aiScore * 0.25)) * 10) / 10, minAllowed, maxAllowed);
+
+  // Si reponse IA trop courte ou hors sujet, on garde l'attendu local.
+  const safeAnswer =
+    aiAnswer.length >= 80 && aiAnswer.length <= 2200
+      ? aiAnswer
+      : exercise.attendu;
+
+  return {
+    score: blendedScore,
+    feedback: aiFeedback.length >= 8 ? aiFeedback : local.feedback,
+    pointsForts: aiPlus.length >= 6 ? aiPlus : local.pointsForts,
+    pointsFaibles: aiMinus.length >= 6 ? aiMinus : local.pointsFaibles,
+    propositionReponse: safeAnswer,
+    source: "ai",
+  };
+};
+
 export default function Missions({ profil, onXPGagne }: MissionsProps) {
   const niveauxAccessibles = useMemo(
     () => (profil?.classe === "terminale" ? (["premiere", "terminale"] as const) : (["premiere"] as const)),
@@ -221,6 +381,7 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
   const [chargementChapitres, setChargementChapitres] = useState(false);
   const [claims, setClaims] = useState<Record<string, { lastClaimDate?: string; totalClaims?: number }>>({});
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [evaluations, setEvaluations] = useState<Record<string, MissionEvalResult>>({});
   const [uiMessage, setUiMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [savingId, setSavingId] = useState("");
 
@@ -293,7 +454,7 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
     [isSdgnChap7]
   );
 
-  const claimXP = async (exercise: MissionExercise) => {
+  const evaluateAndClaimXP = async (exercise: MissionExercise) => {
     const user = auth.currentUser;
     if (!user) {
       setUiMessage({ type: "error", text: "Session expiree. Reconnecte-toi pour valider l'XP." });
@@ -315,6 +476,35 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
 
     setSavingId(exercise.id);
     try {
+      const local = localCorrection(exercise, text);
+      const prompt = `Tu es correcteur STMG (Sciences de Gestion). Retourne UNIQUEMENT un JSON:
+{"score":number,"feedback":string,"points_forts":string,"points_faibles":string,"proposition_reponse":string}
+
+Exercice: ${exercise.title}
+Consigne: ${exercise.consigne}
+Support: ${exercise.support || "Aucun"}
+Questions: ${(exercise.questions || []).join(" | ")}
+Attendus: ${exercise.attendu}
+Reponse eleve: ${text}
+
+Regles:
+- score entier ou decimal entre 0 et 10
+- feedback court et pedagogique
+- points_forts et points_faibles explicites
+- proposition_reponse redigee, exploitable dans un cahier
+- aucun texte hors JSON`;
+      let ai = null;
+      try {
+        ai = await callGemini(prompt);
+        if (!ai) ai = await callGroq(prompt);
+      } catch {
+        ai = null;
+      }
+      const reliable = buildReliableEvaluation(local, ai, exercise);
+      const score = reliable.score;
+      const pourcentageXP = Math.max(0, Math.min(100, Math.round(score * 10)));
+      const xpAccordee = Math.round((exercise.xp * pourcentageXP) / 100);
+
       const ref = doc(db, "users", user.uid);
       const snap = await getDoc(ref);
       if (!snap.exists()) {
@@ -336,16 +526,40 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
         },
       };
       await updateDoc(ref, {
-        xp: (data.xp || 0) + exercise.xp,
+        xp: (data.xp || 0) + xpAccordee,
         missionsProgress: {
           ...(stored || {}),
           version: MISSIONS_PROGRESS_VERSION,
           chapter: "SDGN Chapitre 7",
-          claims: nextClaims,
+          claims: {
+            ...nextClaims,
+            [exercise.id]: {
+              ...(nextClaims[exercise.id] || {}),
+              lastScore: score,
+              lastPercent: pourcentageXP,
+              lastXpAwarded: xpAccordee,
+            },
+          },
         },
       });
       setClaims(nextClaims);
-      setUiMessage({ type: "success", text: `Mission validee: +${exercise.xp} XP.` });
+      setEvaluations((prev) => ({
+        ...prev,
+        [exercise.id]: {
+          score,
+          pourcentageXP,
+          xpAccordee,
+          feedback: reliable.feedback,
+          pointsForts: reliable.pointsForts,
+          pointsFaibles: reliable.pointsFaibles,
+          propositionReponse: reliable.propositionReponse,
+          source: reliable.source,
+        },
+      }));
+      setUiMessage({
+        type: "success",
+        text: `Correction terminee: ${score}/10 -> ${pourcentageXP}% XP, soit +${xpAccordee} XP.`,
+      });
       if (onXPGagne) onXPGagne();
     } catch (err) {
       console.error("Validation XP mission impossible", err);
@@ -518,6 +732,8 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
               <div style={{ display: "grid", gap: "12px" }}>
                 {SDGN_CHAP7_EXERCISES.map((exercise, index) => {
                   const answer = answers[exercise.id] || "";
+                  const evalResult = evaluations[exercise.id];
+                  const mood = evalResult ? getScoreMood(evalResult.score) : null;
                   const alreadyClaimed = claims[exercise.id]?.lastClaimDate === getTodayKey();
                   const canClaim = answer.trim().length >= exercise.minChars && !alreadyClaimed && savingId !== exercise.id;
                   return (
@@ -593,7 +809,7 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
                           {answer.trim().length} caracteres / {exercise.minChars} minimum
                         </p>
                         <button
-                          onClick={() => void claimXP(exercise)}
+                          onClick={() => void evaluateAndClaimXP(exercise)}
                           disabled={!canClaim}
                           style={{
                             border: "none",
@@ -605,9 +821,39 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
                             color: "white",
                           }}
                         >
-                          {alreadyClaimed ? "XP deja pris aujourd'hui" : savingId === exercise.id ? "Validation..." : `Valider +${exercise.xp} XP`}
+                          {alreadyClaimed ? "XP deja pris aujourd'hui" : savingId === exercise.id ? "Correction..." : "Corriger + calculer XP"}
                         </button>
                       </div>
+                      {evalResult && (
+                        <div style={{ marginTop: 10, background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 10, padding: 10 }}>
+                          <p style={{ margin: "0 0 4px", color: "#1E3A8A", fontWeight: 800 }}>
+                            Resultat: {evalResult.score}/10 {"->"} {evalResult.pourcentageXP}% XP = +{evalResult.xpAccordee} XP
+                          </p>
+                          {mood && (
+                            <p style={{ margin: "0 0 6px", color: mood.color, fontWeight: 800 }}>
+                              {mood.emoji} {mood.text}
+                            </p>
+                          )}
+                          <p style={{ margin: "0 0 4px", color: "#166534" }}>
+                            <strong>Points + :</strong> {evalResult.pointsForts}
+                          </p>
+                          <p style={{ margin: "0 0 4px", color: "#B45309" }}>
+                            <strong>Points - :</strong> {evalResult.pointsFaibles}
+                          </p>
+                          <p style={{ margin: "0 0 8px", color: "#334155" }}>
+                            <strong>Analyse:</strong> {evalResult.feedback}
+                          </p>
+                          <div style={{ background: "#ECFDF5", border: "1px solid #86EFAC", borderRadius: 8, padding: 8 }}>
+                            <p style={{ margin: "0 0 4px", color: "#166534", fontWeight: 800 }}>Reponse proposee (a noter dans le cahier)</p>
+                            <p style={{ margin: 0, color: "#14532D", whiteSpace: "pre-wrap", lineHeight: 1.5 }}>
+                              {evalResult.propositionReponse}
+                            </p>
+                          </div>
+                          <p style={{ margin: "6px 0 0", fontSize: 12, color: "#64748B" }}>
+                            Source correction: {evalResult.source === "ai" ? "IA + garde-fous locaux" : "Correction locale"}
+                          </p>
+                        </div>
+                      )}
                     </article>
                   );
                 })}
