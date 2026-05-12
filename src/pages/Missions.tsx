@@ -46,23 +46,151 @@ type MissionExercise = {
   consigne: string;
   attendu: string;
   minChars: number;
+  support?: string;
+  questions?: string[];
 };
 
 const MISSIONS_PROGRESS_VERSION = 1;
 
 const SDGN_CHAP7_EXERCISES: MissionExercise[] = [
-  { id: "sdgn7-e1", title: "QCM notions de base", type: "Exercice", difficulty: "Facile", xp: 120, minChars: 90, consigne: "Definis travail collaboratif, synchrone, asynchrone et TIC avec un exemple simple pour chacun.", attendu: "Definitions justes + au moins un exemple clair de situation professionnelle." },
-  { id: "sdgn7-e2", title: "Classer les outils numeriques", type: "Exercice", difficulty: "Facile", xp: 140, minChars: 120, consigne: "Classe des outils (visioconference, agenda partage, wiki, drive, forum, messagerie) en communication, organisation, stockage/partage, creation partagee.", attendu: "Classement coherent des 4 categories avec justification courte." },
-  { id: "sdgn7-e3", title: "Synchrone ou asynchrone", type: "Exercice", difficulty: "Facile", xp: 150, minChars: 110, consigne: "Donne 5 situations de travail et indique synchrone ou asynchrone avec une justification.", attendu: "Bon choix de modalite + argument pertinent." },
-  { id: "sdgn7-e4", title: "E-communication et communaute en ligne", type: "Exercice", difficulty: "Moyen", xp: 190, minChars: 160, consigne: "Propose 3 actions d'e-communication et explique comment elles construisent une communaute en ligne utile a l'organisation.", attendu: "Actions concretes reliees a la productivite/performance." },
-  { id: "sdgn7-e5", title: "Internet / Intranet / Extranet", type: "Exercice", difficulty: "Moyen", xp: 210, minChars: 150, consigne: "Explique les differences entre Internet, Intranet et Extranet puis donne un exemple d'usage pour chacun.", attendu: "Distinction nette des niveaux d'acces et des publics." },
-  { id: "sdgn7-e6", title: "RSE avantages et limites", type: "Exercice", difficulty: "Moyen", xp: 230, minChars: 170, consigne: "Analyse un reseau social d'entreprise: 4 avantages, 3 risques, 3 regles de bon usage.", attendu: "Vision equilibree fluidite des echanges / securite." },
-  { id: "sdgn7-e7", title: "Droits d'acces et responsabilites", type: "Exercice", difficulty: "Moyen", xp: 260, minChars: 190, consigne: "Construis une mini matrice C/M/D/C (creer, modifier, diffuser, consulter) pour 4 profils differents de l'entreprise.", attendu: "Droits coherents selon metier, utilite de l'information et confidentialite." },
-  { id: "sdgn7-e8", title: "Securiser l'acces a l'information", type: "Exercice", difficulty: "Difficile", xp: 320, minChars: 220, consigne: "Suite a une fuite d'information, propose 6 mesures correctives prioritaires (authentification, droits, partages, sensibilisation...).", attendu: "Plan d'action realiste et hierarchise." },
-  { id: "sdgn7-e9", title: "Intelligence collective en action", type: "Exercice", difficulty: "Difficile", xp: 360, minChars: 240, consigne: "Concois l'organisation d'un projet collaboratif a distance (outils, roles, regles, suivi) pour faire emerger l'intelligence collective.", attendu: "Lien explicite entre interactions, partage de connaissance et resolution de probleme." },
-  { id: "sdgn7-e10", title: "IA et performance organisationnelle", type: "Exercice", difficulty: "Tres difficile", xp: 420, minChars: 260, consigne: "Propose 2 usages IA dans une organisation et analyse effets sur productivite, limites et conditions de reussite humain + machine.", attendu: "Approche critique, pas seulement technocentree." },
-  { id: "sdgn7-cas1", title: "Etude de cas Decathlon", type: "Etude de cas", difficulty: "Tres difficile", xp: 560, minChars: 380, consigne: "Analyse le cas Decathlon: outils collaboratifs, synchro/asynchro, droits d'acces, intelligence collective. Termine par une reponse developpee argumentee.", attendu: "Mobilisation complete du chapitre 7 + argumentation structuree type bac." },
-  { id: "sdgn7-cas2", title: "Etude de cas L'Oreal", type: "Etude de cas", difficulty: "Tres difficile", xp: 620, minChars: 420, consigne: "Analyse le cas L'Oreal: e-communication, extranet, securite des acces, IA et performance. Termine par une reponse developpee avec esprit critique.", attendu: "Demonstration complete avec nuances sur les limites." },
+  {
+    id: "sdgn7-e1",
+    title: "QCM notions de base",
+    type: "Exercice",
+    difficulty: "Facile",
+    xp: 120,
+    minChars: 180,
+    consigne: "Donne une definition precise de chacun des termes suivants : travail collaboratif, communication synchrone, communication asynchrone, TIC. Ajoute un exemple concret de situation professionnelle pour chaque terme.",
+    attendu: "Vocabulaire exact du chapitre + exemples lies au travail en organisation.",
+  },
+  {
+    id: "sdgn7-e2",
+    title: "Classer les outils numeriques",
+    type: "Exercice",
+    difficulty: "Facile",
+    xp: 140,
+    minChars: 200,
+    consigne: "Classe les outils ci-dessous dans les 4 categories du chapitre : outils de communication, outils d'organisation, outils de stockage/partage, outils de creation partagee. Outils a classer : messagerie instantanee, reseau social d'entreprise, forum, visioconference, agenda partage, logiciel de gestion de projet, Google Drive, Dropbox, wiki, blog, page reseau social.",
+    attendu: "Classement juste + logique fonctionnelle correcte.",
+  },
+  {
+    id: "sdgn7-e3",
+    title: "Synchrone ou asynchrone",
+    type: "Exercice",
+    difficulty: "Facile",
+    xp: 150,
+    minChars: 180,
+    consigne: "Propose 10 situations de communication dans une organisation. Pour chacune, indique si elle releve du mode synchrone ou asynchrone puis justifie en une phrase.",
+    attendu: "Capacite a distinguer temps reel et differe avec justification.",
+  },
+  {
+    id: "sdgn7-e4",
+    title: "E-communication et communaute en ligne",
+    type: "Exercice",
+    difficulty: "Moyen",
+    xp: 190,
+    minChars: 220,
+    consigne: "Pour une petite entreprise, propose 3 actions d'e-communication sur Internet et les medias sociaux. Explique comment ces actions peuvent creer puis entretenir une communaute en ligne utile a l'organisation.",
+    attendu: "Lien clair entre communication numerique, interactions et performance.",
+  },
+  {
+    id: "sdgn7-e5",
+    title: "Internet / Intranet / Extranet",
+    type: "Exercice",
+    difficulty: "Moyen",
+    xp: 210,
+    minChars: 220,
+    consigne: "A partir d'un scenario d'organisation, explique a quoi servent Internet, Intranet et Extranet puis donne 8 exemples d'echanges d'informations en indiquant quel reseau est le plus adapte dans chaque cas.",
+    attendu: "Choix coherent du reseau selon ouverture, securite et public cible.",
+  },
+  {
+    id: "sdgn7-e6",
+    title: "RSE avantages et limites",
+    type: "Exercice",
+    difficulty: "Moyen",
+    xp: 230,
+    minChars: 240,
+    consigne: "Redige une mini-analyse d'un reseau social d'entreprise : 4 benefices attendus, 3 risques possibles, 3 regles de bon usage a appliquer.",
+    attendu: "Analyse equilibree entre collaboration, productivite et risques.",
+  },
+  {
+    id: "sdgn7-e7",
+    title: "Droits d'acces et responsabilites",
+    type: "Exercice",
+    difficulty: "Moyen",
+    xp: 260,
+    minChars: 260,
+    consigne: "Construis une matrice de droits (Creer, Modifier, Diffuser, Consulter) pour 5 profils : administrateur reseau, manager, RH, commercial, stagiaire. Justifie les choix selon utilite de l'information et confidentialite.",
+    attendu: "Attribution des droits en lien avec les responsabilites et la securite.",
+  },
+  {
+    id: "sdgn7-e8",
+    title: "Securiser l'acces a l'information",
+    type: "Exercice",
+    difficulty: "Difficile",
+    xp: 320,
+    minChars: 280,
+    consigne: "Etude de situation : une fuite de document interne a ete detectee. Identifie les causes probables (authentification, droits mal configures, partage excessif, mot de passe faible, etc.) puis propose 6 mesures correctives prioritaires.",
+    attendu: "Plan d'action priorise et realiste, conforme au chapitre.",
+  },
+  {
+    id: "sdgn7-e9",
+    title: "Intelligence collective en action",
+    type: "Exercice",
+    difficulty: "Difficile",
+    xp: 360,
+    minChars: 280,
+    consigne: "Concois une organisation complete pour un projet d'equipe a distance : outils utilises, roles des acteurs, regles de cooperation, suivi de l'avancement et mode de prise de decision.",
+    attendu: "Lien explicite entre collaboration numerique et intelligence collective.",
+  },
+  {
+    id: "sdgn7-e10",
+    title: "IA et performance organisationnelle",
+    type: "Exercice",
+    difficulty: "Tres difficile",
+    xp: 420,
+    minChars: 320,
+    consigne: "Propose 2 usages d'IA dans une organisation (automatisation de taches a faible valeur ajoutee + assistance au traitement d'information). Analyse ensuite les gains, les limites et les conditions de reussite de l'association humain + machine.",
+    attendu: "Raisonnement critique complet et argumente.",
+  },
+  {
+    id: "sdgn7-cas1",
+    title: "Etude de cas Decathlon",
+    type: "Etude de cas",
+    difficulty: "Tres difficile",
+    xp: 560,
+    minChars: 650,
+    support:
+      "Decathlon s'appuie sur des outils numeriques collaboratifs pour fluidifier le travail entre magasins, logistique et siege. Les equipes utilisent des espaces partages pour suivre les projets, des messageries d'equipe pour coordonner rapidement les actions, et des agendas communs pour planifier les lancements produits. Certaines informations sont accessibles a tous les collaborateurs, mais d'autres sont limitees selon les metiers (RH, finance, supply). Les droits d'acces sont geres par l'administrateur reseau afin de garantir confidentialite et securite. L'objectif est d'ameliorer la reactivite, de mieux partager les connaissances terrain, et de favoriser une intelligence collective entre les equipes reparties sur plusieurs sites.",
+    consigne: "Lis le support puis traite l'etude de cas complete avec une reponse redigee structuree type bac.",
+    questions: [
+      "Relever dans le texte 4 outils ou usages du travail collaboratif.",
+      "Distinguer 2 situations de communication synchrone et 2 situations asynchrones.",
+      "Expliquer pourquoi la gestion des droits d'acces est essentielle dans ce cas.",
+      "Montrer en quoi ces pratiques renforcent l'intelligence collective.",
+      "Reponse developpee (10 a 15 lignes) : Les technologies numeriques ameliorent-elles toujours la performance d'une organisation ?",
+    ],
+    attendu: "Mobilisation complete du chapitre 7, appui sur le texte et argumentation structuree.",
+  },
+  {
+    id: "sdgn7-cas2",
+    title: "Etude de cas L'Oreal",
+    type: "Etude de cas",
+    difficulty: "Tres difficile",
+    xp: 620,
+    minChars: 700,
+    support:
+      "L'Oreal coordonne ses activites avec des partenaires externes (agences, distributeurs, fournisseurs) via des plateformes numeriques securisees. Une partie des echanges se fait sur des espaces dedies, accessibles uniquement aux partenaires autorises, afin de partager documents marketing, calendriers de campagnes et indicateurs de suivi. En parallele, les equipes communication animent des communautes en ligne sur les reseaux sociaux pour dialoguer avec les clients. L'entreprise utilise aussi des solutions d'IA pour automatiser certaines taches (tri d'informations, suggestions de contenus, analyse de donnees), ce qui permet aux equipes de se concentrer sur des missions a plus forte valeur ajoutee. Cette transformation numerique exige cependant un cadre clair : securite, responsabilite des acteurs et qualite de l'information partagee.",
+    consigne: "Lis le support puis reponds a l'ensemble des questions d'analyse et de developpement.",
+    questions: [
+      "Identifier dans le texte ce qui releve de l'e-communication.",
+      "Expliquer pourquoi l'acces partenaires correspond a une logique d'extranet.",
+      "Montrer le role des droits d'acces et des responsabilites dans ce contexte.",
+      "Expliquer comment l'IA complete le travail humain.",
+      "Reponse developpee (12 a 18 lignes) : L'association humain + machine est-elle un levier durable de performance ?",
+    ],
+    attendu: "Demonstration complete avec esprit critique, exemples et nuances.",
+  },
 ];
 
 const getTodayKey = () => {
@@ -418,6 +546,23 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
                       <p style={{ margin: "0 0 6px", color: "#334155", lineHeight: 1.5 }}>
                         <strong>Consigne:</strong> {exercise.consigne}
                       </p>
+                      {exercise.support && (
+                        <p style={{ margin: "0 0 6px", color: "#475569", lineHeight: 1.5, background: "#FFF7ED", border: "1px solid #FED7AA", borderRadius: 8, padding: 8 }}>
+                          <strong>Support:</strong> {exercise.support}
+                        </p>
+                      )}
+                      {exercise.questions && exercise.questions.length > 0 && (
+                        <div style={{ margin: "0 0 8px", color: "#1F2937", lineHeight: 1.5 }}>
+                          <p style={{ margin: "0 0 4px", fontWeight: 800 }}>Questions a traiter:</p>
+                          <ol style={{ margin: 0, paddingLeft: 18 }}>
+                            {exercise.questions.map((question) => (
+                              <li key={question} style={{ marginBottom: 2 }}>
+                                {question}
+                              </li>
+                            ))}
+                          </ol>
+                        </div>
+                      )}
                       <p style={{ margin: "0 0 8px", color: "#0F766E", fontSize: 13, lineHeight: 1.5 }}>
                         <strong>Attendu:</strong> {exercise.attendu}
                       </p>
