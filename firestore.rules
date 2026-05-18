@@ -25,6 +25,17 @@ service cloud.firestore {
       return isSignedIn() && callerDocExists() && callerProfile().role == "admin";
     }
 
+    /** Un élève ne peut pas lui-même lever une suspension jetons (platformIntegrity). Seul un admin peut repasser xpSuspended à false. */
+    function ownerDoesNotClearXpSuspension() {
+      let beforeSus = resource.data.keys().hasAny(['platformIntegrity'])
+        && resource.data.platformIntegrity.keys().hasAny(['xpSuspended'])
+        && resource.data.platformIntegrity.xpSuspended == true;
+      let afterSus = request.resource.data.keys().hasAny(['platformIntegrity'])
+        && request.resource.data.platformIntegrity.keys().hasAny(['xpSuspended'])
+        && request.resource.data.platformIntegrity.xpSuspended == true;
+      return !beforeSus || afterSus;
+    }
+
     function onboardingRoleAllowed() {
       return !request.resource.data.keys().hasAny(["role"])
         || request.resource.data.role in ["free", "eleve"];
@@ -43,6 +54,7 @@ service cloud.firestore {
         || (
           isOwner(userId)
           && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(["role"]))
+          && ownerDoesNotClearXpSuspension()
         );
 
       allow delete: if isAdmin();
@@ -61,6 +73,51 @@ service cloud.firestore {
     match /badges/{docId} {
       allow read: if isSignedIn();
       allow write: if isAdmin();
+    }
+
+    /** Duels asynchrones : un run = fantome (QCM fige + score / temps de l'auteur).
+     *  Doit rester aligne avec src/data/duelQcmBank.ts : DUEL_QUESTIONS_PAR_PARTIE (8) et DUEL_TEMPS_TOTAL_SEC (72). */
+    match /duelRuns/{runId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+        && request.resource.data.authorUid == request.auth.uid
+        && request.resource.data.authorPrenom is string
+        && request.resource.data.authorPrenom.size() > 0
+        && request.resource.data.authorPrenom.size() <= 48
+        && request.resource.data.seasonId is string
+        && request.resource.data.durationLimitSec is int
+        && request.resource.data.durationLimitSec == 72
+        && request.resource.data.questions is list
+        && request.resource.data.questions.size() == 8
+        && request.resource.data.ghostCorrect is int
+        && request.resource.data.ghostCorrect >= 0
+        && request.resource.data.ghostCorrect <= 8
+        && request.resource.data.ghostTimeMs is int
+        && request.resource.data.ghostTimeMs >= 1
+        && request.resource.data.ghostTimeMs <= 300000;
+      allow update, delete: if false;
+    }
+
+    match /duelAttempts/{attemptId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+        && !exists(/databases/$(database)/documents/duelAttempts/$(attemptId))
+        && request.resource.data.playerUid == request.auth.uid
+        && request.resource.data.playerPrenom is string
+        && request.resource.data.playerPrenom.size() > 0
+        && request.resource.data.playerPrenom.size() <= 48
+        && request.resource.data.runId is string
+        && request.resource.data.seasonId is string
+        && request.resource.data.score is int
+        && request.resource.data.score >= 0
+        && request.resource.data.score <= 8
+        && request.resource.data.timeMs is int
+        && request.resource.data.timeMs >= 1
+        && request.resource.data.timeMs <= 300000
+        && exists(/databases/$(database)/documents/duelRuns/$(request.resource.data.runId))
+        && get(/databases/$(database)/documents/duelRuns/$(request.resource.data.runId)).data.authorUid != request.auth.uid
+        && get(/databases/$(database)/documents/duelRuns/$(request.resource.data.runId)).data.seasonId == request.resource.data.seasonId;
+      allow update, delete: if false;
     }
   }
 }

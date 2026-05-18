@@ -15,7 +15,7 @@ Dans le cadre de votre inscription, nous collectons :
 - Prénom, âge, classe, spécialité, nom du lycée
 - Adresse email (via Firebase Authentication)
 - Résultats au quiz de personnalité et Triple Totem
-- Progression pédagogique (chapitres, XP, badges, missions)
+- Progression pédagogique (chapitres, jetons, badges, missions)
 
 3. POURQUOI CES DONNÉES ?
 Ces données sont utilisées exclusivement pour :

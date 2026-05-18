@@ -116,7 +116,7 @@ export const createDefaultPet = (profil = {}) => {
     createdAt: new Date().toISOString(),
     pendingEvent: createEvent(
       "egg_received",
-      `Tu as recu un oeuf de ${familiar.nom} ! Gagne 300 XP de missions pour le faire eclore.`,
+      `Tu as recu un oeuf de ${familiar.nom} ! Gagne 300 jetons en missions pour le faire eclore.`,
       { familiar: familiar.nom }
     ),
   };

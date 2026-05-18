@@ -5,7 +5,10 @@ import {
   FLASHCARDS,
   FLASHCARDS_DATA_VERSION,
   type FlashcardItem,
+  type FlashcardProgramme,
 } from "../data/flashcardsData";
+import { formatJetons, formatJetonsDelta, motJetons } from "../lib/jetons";
+import { PLATFORM_XP_BLOCKED_MESSAGE, usePlatformIntegrity } from "../contexts/PlatformIntegrityContext";
 
 type Props = {
   profil: any;
@@ -20,9 +23,9 @@ const BADGE_MILESTONES = [10, 25, 50, 75, 100, 150, 200];
 const LEVEL_TITLES = [
   "Recrue STMG",
   "Apprenti Analyste",
-  "Strategiste Junior",
-  "Pilote de Donnees",
-  "Maitre Revision",
+  "Strat?giste Junior",
+  "Pilote de Donn?es",
+  "Ma?tre R?vision",
   "Boss du Bac",
 ];
 
@@ -33,18 +36,30 @@ const STOP_WORDS = new Set([
   "ces", "leur", "leurs", "on", "il", "elle", "ils", "elles", "ne", "pas",
 ]);
 
-type DeckCategory = "premiere" | "terminale" | "bac";
+type DeckCategory = FlashcardProgramme | "tous";
 
 const CATEGORY_LABELS: Record<DeckCategory, string> = {
-  premiere: "Programme 1ere",
-  terminale: "Programme terminale",
-  bac: "Tout niveau (bac)",
+  tous: "Toutes les mati?res",
+  management: "Management",
+  droit: "Droit",
+  economie: "?conomie",
+  sciences_gestion: "Sciences de Gestion",
+  gestion_finance: "Gestion & Finance",
+  mercatique: "Mercatique",
+  ressources_humaines: "Ressources Humaines",
+  numerique_si: "Num?rique & SI",
 };
 
 const CATEGORY_STYLES: Record<DeckCategory, { bg: string; border: string; text: string; glow: string }> = {
-  premiere: { bg: "#ECFEFF", border: "#67E8F9", text: "#0F766E", glow: "rgba(6, 182, 212, 0.25)" },
-  terminale: { bg: "#EEF2FF", border: "#A5B4FC", text: "#3730A3", glow: "rgba(99, 102, 241, 0.25)" },
-  bac: { bg: "#F5F3FF", border: "#C4B5FD", text: "#6D28D9", glow: "rgba(139, 92, 246, 0.25)" },
+  tous:                { bg: "#F5F3FF", border: "#C4B5FD", text: "#6D28D9", glow: "rgba(139, 92, 246, 0.25)" },
+  management:          { bg: "#EEF2FF", border: "#A5B4FC", text: "#3730A3", glow: "rgba(99, 102, 241, 0.25)" },
+  droit:               { bg: "#FFF7ED", border: "#FCD34D", text: "#92400E", glow: "rgba(245, 158, 11, 0.25)" },
+  economie:            { bg: "#DCFCE7", border: "#6EE7B7", text: "#065F46", glow: "rgba(16, 185, 129, 0.25)" },
+  sciences_gestion:    { bg: "#ECFEFF", border: "#67E8F9", text: "#0F766E", glow: "rgba(6, 182, 212, 0.25)" },
+  gestion_finance:     { bg: "#FFF1F2", border: "#FCA5A5", text: "#9F1239", glow: "rgba(239, 68, 68, 0.25)" },
+  mercatique:          { bg: "#FDF4FF", border: "#E879F9", text: "#7E22CE", glow: "rgba(168, 85, 247, 0.25)" },
+  ressources_humaines: { bg: "#FFF7ED", border: "#FB923C", text: "#C2410C", glow: "rgba(249, 115, 22, 0.25)" },
+  numerique_si:        { bg: "#F0FDF4", border: "#86EFAC", text: "#166534", glow: "rgba(34, 197, 94, 0.25)" },
 };
 
 function getLevelFromXp(totalXp: number) {
@@ -119,6 +134,7 @@ function isLearnerAnswerAccepted(expected: string, learner: string): boolean {
 }
 
 export default function Flashcards({ profil, onXPGagne }: Props) {
+  const { xpRewardsSuspended } = usePlatformIntegrity();
   const [validatedIds, setValidatedIds] = useState<Record<string, true>>({});
   const [deck, setDeck] = useState<FlashcardItem[]>([]);
   const [index, setIndex] = useState(0);
@@ -135,7 +151,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   const [level, setLevel] = useState(1);
   const [unlockedBadges, setUnlockedBadges] = useState<number[]>([]);
   const [justUnlockedBadge, setJustUnlockedBadge] = useState<number | null>(null);
-  const [category, setCategory] = useState<DeckCategory>("bac");
+  const [category, setCategory] = useState<DeckCategory>("tous");
   const [learnerAnswer, setLearnerAnswer] = useState("");
   const [answerChecked, setAnswerChecked] = useState(false);
   const [answerAccepted, setAnswerAccepted] = useState(false);
@@ -143,13 +159,8 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   const [pendingAutoAction, setPendingAutoAction] = useState<"mastered" | "retry" | null>(null);
 
   const cards = useMemo(() => {
-    if (category === "premiere") {
-      return FLASHCARDS.filter((c) => c.programme === "management_1ere");
-    }
-    if (category === "terminale") {
-      return FLASHCARDS.filter((c) => c.programme === "management_terminale" || c.programme === "sdgn");
-    }
-    return [...FLASHCARDS];
+    if (category === "tous") return [...FLASHCARDS];
+    return FLASHCARDS.filter((c) => c.programme === category);
   }, [category]);
   const remaining = useMemo(
     () => cards.filter((c) => !validatedIds[c.id]),
@@ -234,6 +245,12 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   const handleMastered = async (force = false) => {
     if (!current || (!force && (isActionBusy || transitioningCard))) return;
     if (validatedIds[current.id]) return;
+    if (xpRewardsSuspended) {
+      setBanner(PLATFORM_XP_BLOCKED_MESSAGE);
+      setIsActionBusy(false);
+      setTransitioningCard(false);
+      return;
+    }
     setIsActionBusy(true);
     setTransitioningCard(true);
     const nextValidated = { ...validatedIds, [current.id]: true as const };
@@ -255,8 +272,8 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
       }
       setBanner(
         bonusXp > 0
-          ? `+${current.xp} XP + bonus ${bonusXp} XP (x${currentMultiplier.toFixed(1)}) !`
-          : `+${current.xp} XP ! Carte maitrisee`
+          ? `${formatJetonsDelta(current.xp)} + bonus ${formatJetons(bonusXp)} (x${currentMultiplier.toFixed(1)}) !`
+          : `${formatJetonsDelta(current.xp)} ! Carte maitrisee`
       );
       setCardEmoji("\u{1F929}\u2705");
       setTimeout(() => setCardEmoji(""), 850);
@@ -318,11 +335,11 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     setAnswerChecked(true);
     setAnswerAccepted(accepted);
     if (accepted) {
-      setBanner("Bonne rùponse : lis la correction puis clique sur Continuer.");
+      setBanner("Bonne r?ponse : lis la correction puis clique sur Continuer.");
       setCardEmoji("\u2705");
       setPendingAutoAction("mastered");
     } else {
-      setBanner("Rùponse insuffisante : lis la correction puis clique sur Continuer.");
+      setBanner("R?ponse insuffisante : lis la correction puis clique sur Continuer.");
       setCardEmoji("\u{1F914}");
       setPendingAutoAction("retry");
     }
@@ -340,7 +357,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
 
   const handleToggleCard = () => {
     if (!answerChecked) {
-      setBanner("Rùponds d'abord puis clique sur 'Vùrifier ma rùponse' pour voir la correction.");
+      setBanner("R?ponds d'abord puis clique sur 'V?rifier ma r?ponse' pour voir la correction.");
       setCardEmoji("\u270D\uFE0F");
       setTimeout(() => setCardEmoji(""), 850);
       return;
@@ -358,9 +375,9 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     setValidatedIds(nextValidated);
     try {
       await persist(nextValidated, 0);
-      setBanner("Progression du pack rùinitialisùe.");
+      setBanner("Progression du pack r?initialis?e.");
     } catch {
-      setBanner("Reinitialisation locale effectuee.");
+      setBanner("R?initialisation locale effectu?e.");
     }
     setSessionGood(0);
     setSessionRetry(0);
@@ -382,7 +399,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
       if (!showAnswer) return;
       if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
         e.preventDefault();
-        setBanner("La validation est automatique aprùs vùrification de la rùponse.");
+        setBanner("La validation est automatique apr?s v?rification de la r?ponse.");
       }
     };
     window.addEventListener("keydown", onKeyDown);
@@ -413,16 +430,16 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
       <div className="max-w-3xl mx-auto" style={{ display: "grid", gap: 12 }}>
         <section style={{ background: "linear-gradient(145deg, rgba(255,255,255,0.96), rgba(240,249,255,0.94))", backdropFilter: "blur(10px)", borderRadius: 22, border: "1px solid #BFDBFE", padding: 16, boxShadow: "0 18px 45px rgba(30, 41, 59, 0.1)" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
-            <h1 style={{ margin: 0, fontSize: "1.7rem", color: "#1E1B4B" }}>Flashcards Bac - Entrainement actif</h1>
+            <h1 style={{ margin: 0, fontSize: "1.7rem", color: "#1E1B4B" }}>Flashcards Bac ? Entra?nement actif</h1>
             <button
               onClick={resetProgress}
               style={{ borderRadius: 10, border: "1px solid #FCA5A5", background: "#FFF1F2", color: "#9F1239", padding: "7px 11px", fontWeight: 700, cursor: "pointer" }}
             >
-              Reinitialiser le pack
+              R?initialiser le pack
             </button>
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
-            {(["premiere", "terminale", "bac"] as DeckCategory[]).map((cat) => {
+            {(["tous", "management", "droit", "economie", "sciences_gestion", "gestion_finance", "mercatique", "ressources_humaines", "numerique_si"] as DeckCategory[]).map((cat) => {
               const active = category === cat;
               const stylePreset = CATEGORY_STYLES[cat];
               return (
@@ -448,7 +465,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
           </div>
 
           <p style={{ color: categoryStyle.text, margin: "8px 0 10px", fontWeight: 600 }}>
-            {remaining.length} restantes / {cards.length} - XP potentiel restant: {estimatedXpLeft}
+            {remaining.length} restantes / {cards.length} ? jetons potentiels restants : {estimatedXpLeft} {motJetons(estimatedXpLeft)}
           </p>
 
           <div style={{ height: 10, borderRadius: 999, background: "#E2E8F0", overflow: "hidden" }}>
@@ -464,18 +481,18 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
             <span style={{ background: "#EEF2FF", color: "#4338CA", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Progression: {progressPct}%</span>
-            <span style={{ background: "#DCFCE7", color: "#166534", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Maitrisees : {masteredCount}</span>
-            <span style={{ background: "#FEF9C3", color: "#854D0E", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Serie : {streak}</span>
-            <span style={{ background: "#F1F5F9", color: "#334155", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Session OK: {sessionGood}</span>
-            <span style={{ background: "#FFF1F2", color: "#9F1239", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Session a revoir : {sessionRetry}</span>
+            <span style={{ background: "#DCFCE7", color: "#166534", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Ma?tris?es : {masteredCount}</span>
+            <span style={{ background: "#FEF9C3", color: "#854D0E", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>S?rie : {streak}</span>
+            <span style={{ background: "#F1F5F9", color: "#334155", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Session OK : {sessionGood}</span>
+            <span style={{ background: "#FFF1F2", color: "#9F1239", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>? revoir : {sessionRetry}</span>
             <span style={{ background: "#EDE9FE", color: "#5B21B6", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Niveau: {level}</span>
             <span style={{ background: "#F5F3FF", color: "#6D28D9", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Coef: x{getMultiplierFromLevel(level).toFixed(1)}</span>
-            <span style={{ background: "#ECFEFF", color: "#155E75", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>XP flashcards: {flashcardsTotalXp}</span>
+            <span style={{ background: "#ECFEFF", color: "#155E75", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Jetons flashcards : {flashcardsTotalXp}</span>
             <span style={{ background: "#FFF7ED", color: "#9A3412", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Rang: {levelTitle}</span>
           </div>
           <div style={{ marginTop: 10 }}>
             <p style={{ margin: "0 0 6px", color: "#475569", fontSize: 13 }}>
-              Prochain niveau dans {xpToNextLevel} XP
+              Prochain niveau dans {xpToNextLevel} {motJetons(xpToNextLevel)}
             </p>
             <div style={{ height: 8, borderRadius: 999, background: "#E2E8F0", overflow: "hidden" }}>
               <div style={{ width: `${levelProgressPct}%`, height: "100%", borderRadius: 999, background: "linear-gradient(90deg, #8B5CF6, #06B6D4)", transition: "width 300ms ease" }} />
@@ -497,7 +514,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
                     border: `1px solid ${unlocked ? "#F59E0B" : "#CBD5E1"}`,
                   }}
                 >
-                  {unlocked ? "Badge debloque" : "Badge verrouille"} - {m} cartes
+                  {unlocked ? "Badge d?bloqu?" : "Badge verrouill?"} ? {m} cartes
                 </span>
               );
             })}
@@ -505,7 +522,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
           {banner && <p style={{ marginTop: 10, color: "#0F766E", fontWeight: 700 }}>{banner}</p>}
           {justUnlockedBadge && (
             <p style={{ marginTop: 8, color: "#92400E", fontWeight: 800 }}>
-              Nouveau badge debloque : {justUnlockedBadge} cartes maitrisees !
+              Nouveau badge d?bloqu? : {justUnlockedBadge} cartes ma?tris?es !
             </p>
           )}
         </section>
@@ -513,13 +530,13 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
         {!current ? (
           <section style={{ background: "white", borderRadius: 20, border: "1px solid #DBEAFE", padding: 24, textAlign: "center", boxShadow: "0 10px 30px rgba(30, 41, 59, 0.06)" }}>
             <p style={{ fontSize: 28, margin: "0 0 8px" }}>Bravo !</p>
-            <p style={{ margin: 0, color: "#475569" }}>Tu as valide toutes les cartes du pack.</p>
+            <p style={{ margin: 0, color: "#475569" }}>Tu as valid? toutes les cartes du pack.</p>
           </section>
         ) : (
           <section style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)", borderRadius: 22, border: "1px solid #BFDBFE", padding: 14, boxShadow: "0 14px 34px rgba(30, 41, 59, 0.08)" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 8, flexWrap: "wrap" }}>
               <p style={{ margin: 0, color: categoryStyle.text, fontWeight: 800 }}>{current.notion}</p>
-              <span style={{ background: categoryStyle.bg, color: categoryStyle.text, borderRadius: 999, padding: "4px 10px", fontWeight: 700, fontSize: 12, border: `1px solid ${categoryStyle.border}` }}>+{current.xp} XP</span>
+              <span style={{ background: categoryStyle.bg, color: categoryStyle.text, borderRadius: 999, padding: "4px 10px", fontWeight: 700, fontSize: 12, border: `1px solid ${categoryStyle.border}` }}>{formatJetonsDelta(current.xp)}</span>
             </div>
             <div
               onClick={handleToggleCard}
@@ -590,7 +607,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
             </div>
             <div style={{ marginTop: 12, border: "1px solid #DBEAFE", background: "#F8FAFF", borderRadius: 14, padding: 12 }}>
               <label htmlFor="flashcards-answer" style={{ color: "#334155", fontWeight: 700, fontSize: 14 }}>
-                Ta rùponse (zone sous la carte) :
+                Ta r?ponse (zone sous la carte) :
               </label>
               <textarea
                 id="flashcards-answer"
@@ -601,7 +618,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
                   setAnswerAccepted(false);
                   setPendingAutoAction(null);
                 }}
-                placeholder="Ecris une definition courte avec les mots cles..."
+                placeholder="?cris une d?finition courte avec les mots cl?s..."
                 rows={3}
                 disabled={pendingAutoAction !== null || isActionBusy || transitioningCard}
                 style={{
@@ -631,11 +648,11 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
                     cursor: learnerAnswer.trim() && !isActionBusy && !transitioningCard && pendingAutoAction === null ? "pointer" : "not-allowed",
                   }}
                 >
-                  Verifier ma reponse
+                  V?rifier ma r?ponse
                 </button>
                 {answerChecked && (
                   <span style={{ color: answerAccepted ? "#166534" : "#9F1239", fontWeight: 700 }}>
-                    {answerAccepted ? "Reponse acceptee : carte validee a l'etape suivante." : "Reponse insuffisante : carte renvoyee a revoir a l'etape suivante."}
+                    {answerAccepted ? "R?ponse accept?e : carte valid?e ? l'?tape suivante." : "R?ponse insuffisante : carte renvoy?e ? revoir ? l'?tape suivante."}
                   </span>
                 )}
                 {pendingAutoAction && (
@@ -663,7 +680,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
               </div>
             )}
             <p style={{ margin: "10px 0 0", color: "#64748B", fontSize: 13 }}>
-              Ecris ta reponse puis clique sur Verifier ma reponse. Tu vois la correction, puis Continuer applique la decision automatique.
+              ?cris ta r?ponse puis clique sur ? V?rifier ma r?ponse ?. Tu vois la correction, puis ? Continuer ? applique la d?cision automatique.
             </p>
           </section>
         )}

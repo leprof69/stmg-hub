@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../services/firebase";
 import { getPetMoodLabel, normalizePet } from "../services/familiarPet";
+import { formatJetons } from "../lib/jetons";
 import AnimatedFamiliar2D from "./AnimatedFamiliar2D";
 
 const MOOD_EMOJI = {
@@ -246,13 +247,13 @@ export default function FamiliarCompanion({ profil }) {
                 <div style={{ width: `${pet.happiness}%`, height: "8px", borderRadius: "999px", background: pet.happiness >= 50 ? "#10B981" : "#EF4444", transition: "width 0.3s ease" }} />
               </div>
               <p style={{ margin: "6px 0 0", color: "#374151", fontSize: "0.75rem" }}>
-                {pet.happiness}% · {pet.mood === "triste" || pet.mood === "colere" ? "Malus XP actif" : "Bonus XP actif"}
+                {pet.happiness}% · {pet.mood === "triste" || pet.mood === "colere" ? "Malus jetons actif" : "Bonus jetons actif"}
               </p>
             </div>
             <div style={{ background: "#F9FAFB", borderRadius: "12px", padding: "10px 12px", border: "1px solid #E5E7EB" }}>
               <p style={{ margin: "0 0 3px", color: "#6B7280", fontSize: "0.75rem" }}>Age et progression</p>
               <p style={{ margin: 0, color: "#111827", fontWeight: 700 }}>
-                {pet.ageDays} jour(s) · {pet.totalXpFromMissions} XP mission cumules
+                {pet.ageDays} jour(s) · missions : {formatJetons(pet.totalXpFromMissions)}
               </p>
             </div>
             <button

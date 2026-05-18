@@ -3,9 +3,14 @@ import { useState, useEffect, useMemo } from "react";
 import { db } from "../services/firebase";
 import { doc, setDoc, collection, getDocs, deleteDoc, updateDoc, deleteField } from "firebase/firestore";
 import * as XLSX from "xlsx";
-import { jsPDF } from "jspdf";
 import { DS_EXAM_ID, DS_LOCK_TYPE, DS_EXERCISES } from "../services/devoirSurveilleExamData";
 import { COLLECTIONS } from "../services/collectionsData";
+import { formatJetons, formatJetonsDelta } from "../lib/jetons";
+import {
+  SDGN_MISSIONS_PROGRESS_VERSION,
+  compareSdgnExerciseIds,
+  getSdgnMissionMeta,
+} from "../data/sdgnMissionCatalog";
 
 const COLORS = {
   S: "#3B82F6", T: "#7C3AED", M: "#F97316",
@@ -46,7 +51,7 @@ const RECOMPENSES_FAMILLE = [
 
 const ONGLET_ADMIN = [
   { id: "reporting", label: "📊 Reporting élèves" },
-  { id: "recompenses", label: "🏆 Récompenses XP" },
+  { id: "recompenses", label: "🏆 Récompenses jetons" },
   { id: "imports", label: "📥 Imports & maintenance" },
   { id: "infos", label: "💡 Infos" },
 ];
@@ -151,6 +156,8 @@ export default function Admin() {
   const [filtreActivite, setFiltreActivite] = useState("tous");
   const [rechercheEleve, setRechercheEleve] = useState("");
   const [resetDsLoading, setResetDsLoading] = useState(false);
+  const [sdgnExpanded, setSdgnExpanded] = useState({});
+  const [quickJetons, setQuickJetons] = useState({});
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -192,6 +199,21 @@ export default function Admin() {
     setChargementEleves(false);
   };
 
+  const retablirJetonsAntiTriche = async (userId, nomAffiche) => {
+    if (!window.confirm(`Rétablir les jetons pour ${nomAffiche} ? (lève la suspension « changement d’onglet »)`)) return;
+    try {
+      await updateDoc(doc(db, "users", userId), {
+        "platformIntegrity.xpSuspended": false,
+        "platformIntegrity.clearedAt": new Date().toISOString(),
+        "platformIntegrity.clearedByAdmin": true,
+      });
+      await chargerEleves();
+    } catch (err) {
+      console.error(err);
+      window.alert("Échec : vérifie la connexion et que les règles Firestore sont déployées.");
+    }
+  };
+
   const distribuerXPIndividuel = async (userId, xp, prenom) => {
     if (!xp || xp <= 0) return;
     setRecompenseEnCours(true);
@@ -200,7 +222,7 @@ export default function Admin() {
       const user = snap.docs.find(d => d.id === userId);
       if (!user) return;
       await updateDoc(doc(db, "users", userId), { xp: (user.data().xp || 0) + xp });
-      setMessagesRecompense(prev => [...prev, `✅ +${xp} XP → ${prenom}`]);
+      setMessagesRecompense(prev => [...prev, `✅ ${formatJetonsDelta(xp)} → ${prenom}`]);
       await chargerEleves();
     } catch { setMessagesRecompense(prev => [...prev, `❌ Erreur pour ${prenom}`]); }
     setRecompenseEnCours(false);
@@ -208,7 +230,7 @@ export default function Admin() {
 
   const retirerXPIndividuel = async (userId, xp, prenom) => {
     if (!xp || xp <= 0) return;
-    if (!window.confirm(`Retirer ${xp} XP à ${prenom || "cet élève"} ?`)) return;
+    if (!window.confirm(`Retirer ${formatJetons(xp)} à ${prenom || "cet élève"} ?`)) return;
     setRecompenseEnCours(true);
     try {
       const snap = await getDocs(collection(db, "users"));
@@ -217,10 +239,10 @@ export default function Admin() {
       const xpActuel = user.data().xp || 0;
       const nouveauXP = Math.max(0, xpActuel - xp);
       await updateDoc(doc(db, "users", userId), { xp: nouveauXP });
-      setMessagesRecompense(prev => [...prev, `⚠️ -${xp} XP → ${prenom || "Élève"} (${xpActuel} → ${nouveauXP})`]);
+      setMessagesRecompense(prev => [...prev, `⚠️ ${formatJetonsDelta(-xp)} → ${prenom || "Élève"} (${formatJetons(xpActuel)} → ${formatJetons(nouveauXP)})`]);
       await chargerEleves();
     } catch {
-      setMessagesRecompense(prev => [...prev, `❌ Erreur retrait XP pour ${prenom || "Élève"}`]);
+      setMessagesRecompense(prev => [...prev, `❌ Erreur retrait jetons pour ${prenom || "Élève"}`]);
     }
     setRecompenseEnCours(false);
   };
@@ -234,14 +256,14 @@ export default function Admin() {
       for (const membre of membres) {
         await updateDoc(doc(db, "users", membre.id), { xp: (membre.data().xp || 0) + xpParMembre });
       }
-      setMessagesRecompense(prev => [...prev, `✅ +${xpParMembre} XP × ${membres.length} membres → Famille ${famille}`]);
+      setMessagesRecompense(prev => [...prev, `✅ ${formatJetonsDelta(xpParMembre)} × ${membres.length} membres → Famille ${famille}`]);
       await chargerEleves();
     } catch { setMessagesRecompense(prev => [...prev, `❌ Erreur famille ${famille}`]); }
     setRecompenseEnCours(false);
   };
 
   const distribuerTopIndividuel = async () => {
-    if (!window.confirm("Distribuer les XP bonus aux 5 premiers élèves ?")) return;
+    if (!window.confirm("Distribuer les jetons bonus aux 5 premiers élèves ?")) return;
     setMessagesRecompense([]);
     for (let i = 0; i < Math.min(5, eleves.length); i++) {
       await distribuerXPIndividuel(eleves[i].id, xpCustom[eleves[i].id] ?? RECOMPENSES_INDIVIDUEL[i].xp, eleves[i].prenom);
@@ -249,7 +271,7 @@ export default function Admin() {
   };
 
   const distribuerTopFamilles = async () => {
-    if (!window.confirm("Distribuer les XP bonus aux familles ?")) return;
+    if (!window.confirm("Distribuer les jetons bonus aux familles ?")) return;
     setMessagesRecompense([]);
     for (let i = 0; i < Math.min(5, famillesClassement.length); i++) {
       await distribuerXPFamille(famillesClassement[i].nom, RECOMPENSES_FAMILLE[i].xp);
@@ -288,6 +310,30 @@ export default function Admin() {
       const missionsHistorique = eleve.missionsHistorique || {};
       const missionEntries = Object.values(missionsHistorique);
       const missionsToday = missionEntries.filter((m) => m?.date === todayKey).length;
+
+      const mp = eleve.missionsProgress || {};
+      const mpClaims = mp.version === SDGN_MISSIONS_PROGRESS_VERSION ? (mp.claims || {}) : {};
+      const sdgnClaimEntries = Object.entries(mpClaims).filter(([id]) => String(id).startsWith("sdgn"));
+      const sdgnClaimsToday = sdgnClaimEntries.filter(([, c]) => c?.lastClaimDate === todayKey).length;
+      const sdgnExerciseCount = sdgnClaimEntries.length;
+      const sdgnTotalAttempts = sdgnClaimEntries.reduce((sum, [, c]) => sum + (Number(c?.totalClaims) || 0), 0);
+      const sdgnLastXpSum = sdgnClaimEntries.reduce((sum, [, c]) => sum + (Number(c?.lastXpAwarded) || 0), 0);
+      const sdgnRows = sdgnClaimEntries
+        .map(([exerciseId, c]) => {
+          const meta = getSdgnMissionMeta(exerciseId);
+          return {
+            exerciseId,
+            title: meta.title,
+            chapter: meta.chapter,
+            xpMax: meta.xpMax,
+            lastClaimDate: c?.lastClaimDate,
+            totalClaims: Number(c?.totalClaims) || 0,
+            lastScore: c?.lastScore,
+            lastPercent: c?.lastPercent,
+            lastXpAwarded: Number(c?.lastXpAwarded) || 0,
+          };
+        })
+        .sort((a, b) => compareSdgnExerciseIds(a.exerciseId, b.exerciseId));
       const antiCheatEvents = missionEntries.filter((m) => m?.antiCheatFlags?.tricheDetectee);
       const antiCheatToday = missionEntries.filter((m) => m?.date === todayKey && m?.antiCheatFlags?.tricheDetectee).length;
       const lastMissionDate = missionEntries
@@ -317,7 +363,8 @@ export default function Admin() {
       const lastCartesDay = parseDayKey(eleve.lastVisit);
       const createdAt = toDate(eleve.createdAt);
 
-      const allDates = [lastConnectionAt, lastConnectionDay, lastCartesDay, lastMissionDate, lastObjectifDate, lastFocusDate, createdAt].filter(Boolean);
+      const lastSdgnDates = sdgnRows.map((r) => parseDayKey(r.lastClaimDate)).filter(Boolean);
+      const allDates = [lastConnectionAt, lastConnectionDay, lastCartesDay, lastMissionDate, lastObjectifDate, lastFocusDate, createdAt, ...lastSdgnDates].filter(Boolean);
       const lastActivity = allDates.sort((a, b) => b - a)[0] || null;
       const joursSansActivite = joursEcoules(lastActivity);
 
@@ -331,9 +378,9 @@ export default function Admin() {
 
       const actionsToday = [];
       if (lastConnectionDay && toDayKey(lastConnectionDay) === todayKey) actionsToday.push("Connexion");
-      if (missionsToday > 0) actionsToday.push(`${missionsToday} mission(s)`);
+      if (sdgnClaimsToday > 0) actionsToday.push(`${sdgnClaimsToday} exo. SDGN`);
+      if (missionsToday > 0) actionsToday.push(`${missionsToday} mission(s) historique`);
       if (objectifToday > 0) actionsToday.push(`${objectifToday} entraînement(s) bac`);
-      if (focusToday > 0) actionsToday.push(`${focusToday} activité(s) Focus`);
       if (aFaitCartesToday) actionsToday.push("Cartes");
       if (!actionsToday.length) actionsToday.push("Aucune action détectée");
 
@@ -351,6 +398,12 @@ export default function Admin() {
         participationPoints,
         missionsToday,
         missionsTotal: missionEntries.length,
+        missionsProgressChapter: mp.chapter || "",
+        sdgnClaimsToday,
+        sdgnExerciseCount,
+        sdgnTotalAttempts,
+        sdgnLastXpSum,
+        sdgnRows,
         antiCheatEvents: antiCheatEvents.length,
         antiCheatToday,
         objectifToday,
@@ -381,6 +434,7 @@ export default function Admin() {
       if (filtreActivite === "inactifs") okActivite = eleve.joursSansActivite !== null && eleve.joursSansActivite > 7;
       if (filtreActivite === "focus") okActivite = (eleve.focusTotal || 0) > 0;
       if (filtreActivite === "pas_focus") okActivite = (eleve.focusTotal || 0) === 0;
+      if (filtreActivite === "sdgn") okActivite = (eleve.sdgnExerciseCount || 0) > 0;
 
       return okClasse && okLycee && okRecherche && okActivite;
     }).sort((a, b) => {
@@ -395,13 +449,35 @@ export default function Admin() {
     const actifsAujourdhui = reportingRows.filter((e) => e.estActifAujourdhui).length;
     const actifs7j = reportingRows.filter((e) => e.joursSansActivite !== null && e.joursSansActivite <= 7).length;
     const inactifs7j = reportingRows.filter((e) => e.joursSansActivite !== null && e.joursSansActivite > 7).length;
-    const actionsToday = reportingRows.reduce((sum, e) => sum + e.missionsToday + e.objectifToday + e.focusToday + (e.lastVisit === todayKey ? 1 : 0), 0);
+    const actionsToday = reportingRows.reduce(
+      (sum, e) =>
+        sum +
+        e.missionsToday +
+        (e.sdgnClaimsToday || 0) +
+        e.objectifToday +
+        e.focusToday +
+        (e.lastVisit === todayKey ? 1 : 0),
+      0
+    );
+    const sdgnValidationsToday = reportingRows.reduce((sum, e) => sum + (e.sdgnClaimsToday || 0), 0);
     const suspicions = reportingRows.reduce((sum, e) => sum + (e.antiCheatEvents || 0), 0);
     const sessionTodaySec = reportingRows.reduce((sum, e) => sum + (e.sessionTodaySec || 0), 0);
     const participationTotal = reportingRows.reduce((sum, e) => sum + (Number(e.participationPoints) || 0), 0);
     const elevesFocus = reportingRows.filter((e) => (e.focusTotal || 0) > 0).length;
     const focusTodayTotal = reportingRows.reduce((sum, e) => sum + (e.focusToday || 0), 0);
-    return { total, actifsAujourdhui, actifs7j, inactifs7j, actionsToday, suspicions, sessionTodaySec, participationTotal, elevesFocus, focusTodayTotal };
+    return {
+      total,
+      actifsAujourdhui,
+      actifs7j,
+      inactifs7j,
+      actionsToday,
+      sdgnValidationsToday,
+      suspicions,
+      sessionTodaySec,
+      participationTotal,
+      elevesFocus,
+      focusTodayTotal,
+    };
   }, [reportingRows, todayKey]);
 
   const dsCopiesRows = useMemo(() => {
@@ -433,11 +509,12 @@ export default function Admin() {
       .sort((a, b) => (a.nomAffiche || "").localeCompare(b.nomAffiche || "", "fr"));
   }, [usersAll, filtreClasse, filtreLycee, rechercheEleve]);
 
-  const exportAllDsCopiesPdf = () => {
+  const exportAllDsCopiesPdf = async () => {
     if (!dsCopiesRows.length) {
       alert("Aucune copie DS trouvée avec les filtres actuels.");
       return;
     }
+    const { jsPDF } = await import("jspdf");
     const docPdf = new jsPDF({ unit: "pt", format: "a4" });
     const page = { left: 40, right: 555, top: 42, bottom: 800 };
     const contentWidth = page.right - page.left;
@@ -780,6 +857,11 @@ export default function Admin() {
                 <p style={{ margin: 0, color: "#BE123C", fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem" }}>Signaux anti-triche (historique)</p>
                 <p style={{ margin: "4px 0 0", fontSize: "1.7rem", fontWeight: 900, color: "#0F172A" }}>{dashboardStats.suspicions}</p>
               </div>
+              <div style={{ background: "white", borderRadius: 14, padding: 14, border: "1px solid #DDD6FE" }}>
+                <p style={{ margin: 0, color: "#6D28D9", fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem" }}>Validations SDGN (jour)</p>
+                <p style={{ margin: "4px 0 0", fontSize: "1.7rem", fontWeight: 900, color: "#0F172A" }}>{dashboardStats.sdgnValidationsToday}</p>
+                <p style={{ margin: "2px 0 0", color: "#5B21B6", fontSize: "0.75rem", fontWeight: 700 }}>exercices corrigés aujourd’hui (tous élèves)</p>
+              </div>
               <div style={{ background: "white", borderRadius: 14, padding: 14, border: "1px solid #BAE6FD" }}>
                 <p style={{ margin: 0, color: "#0369A1", fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem" }}>Temps connecté aujourd’hui</p>
                 <p style={{ margin: "4px 0 0", fontSize: "1.7rem", fontWeight: 900, color: "#0F172A" }}>{formatDuration(dashboardStats.sessionTodaySec)}</p>
@@ -853,66 +935,296 @@ export default function Admin() {
                   <option value="inactifs">Inactifs +7 jours</option>
                   <option value="focus">Ont fait Focus</option>
                   <option value="pas_focus">N’ont pas fait Focus</option>
+                  <option value="sdgn">Au moins une mission SDGN</option>
                 </select>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {reportingFiltres.map((eleve) => (
-                  <div key={eleve.id} style={{ border: "1px solid #E2E8F0", borderRadius: 14, padding: "12px 14px", background: "white" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
-                      <div>
+                  <div
+                    key={eleve.id}
+                    style={{
+                      border: "1px solid #E2E8F0",
+                      borderRadius: 16,
+                      overflow: "hidden",
+                      background: "#FAFBFC",
+                      boxShadow: "0 1px 2px rgba(15,23,42,0.04)",
+                    }}
+                  >
+                    <div
+                      style={{
+                        padding: "14px 16px",
+                        background: "linear-gradient(90deg,#FFFFFF,#F1F5F9)",
+                        borderBottom: "1px solid #E2E8F0",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        gap: 12,
+                        flexWrap: "wrap",
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      <div style={{ flex: "1 1 220px", minWidth: 0 }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                          <p style={{ margin: 0, fontFamily: "'Fredoka One', cursive", color: "#0F172A", fontSize: "1rem" }}>{eleve.nomAffiche}</p>
-                          <span
-                            title="Au moins une activité Focus validée (récupération XP)"
-                            style={{
-                              borderRadius: 999,
-                              padding: "3px 10px",
-                              fontSize: "0.72rem",
-                              fontWeight: 800,
-                              background: (eleve.focusTotal || 0) > 0 ? "#DCFCE7" : "#F1F5F9",
-                              color: (eleve.focusTotal || 0) > 0 ? "#15803D" : "#64748B",
-                              border: `1px solid ${(eleve.focusTotal || 0) > 0 ? "#86EFAC" : "#CBD5E1"}`,
-                            }}
-                          >
-                            Focus {(eleve.focusTotal || 0) > 0 ? "✓ fait" : "✗ pas encore"}
-                          </span>
+                          <p style={{ margin: 0, fontFamily: "'Fredoka One', cursive", color: "#0F172A", fontSize: "1.02rem" }}>{eleve.nomAffiche}</p>
+                          {(eleve.sdgnExerciseCount || 0) > 0 ? (
+                            <span
+                              style={{
+                                borderRadius: 999,
+                                padding: "3px 10px",
+                                fontSize: "0.72rem",
+                                fontWeight: 800,
+                                background: "#EDE9FE",
+                                color: "#5B21B6",
+                                border: "1px solid #C4B5FD",
+                              }}
+                            >
+                              SDGN {eleve.sdgnExerciseCount} exo.
+                            </span>
+                          ) : null}
+                          {eleve.platformIntegrity?.xpSuspended ? (
+                            <span
+                              title="Suspension jetons après changement d'onglet — bouton « Rétablir » ci-dessous"
+                              style={{
+                                borderRadius: 999,
+                                padding: "3px 10px",
+                                fontSize: "0.72rem",
+                                fontWeight: 800,
+                                background: "#FEE2E2",
+                                color: "#991B1B",
+                                border: "1px solid #FECACA",
+                              }}
+                            >
+                              Jetons suspendus (onglet)
+                            </span>
+                          ) : null}
                         </div>
-                        <p style={{ margin: "2px 0 0", color: "#64748B", fontSize: "0.82rem" }}>{eleve.classe || "-"} · {eleve.lycee || "-"} · {eleve.email || "email non renseigné"}</p>
-                      </div>
-                      <div style={{ textAlign: "right" }}>
-                        <p style={{ margin: 0, color: "#1D4ED8", fontWeight: 800 }}>{(eleve.xp || 0).toLocaleString()} XP</p>
-                        <p style={{ margin: "2px 0 0", color: eleve.joursSansActivite !== null && eleve.joursSansActivite > 7 ? "#DC2626" : "#16A34A", fontSize: "0.8rem", fontWeight: 700 }}>
-                          {eleve.joursSansActivite === null ? "Aucune activité datée" : eleve.joursSansActivite === 0 ? "Actif aujourd’hui" : `${eleve.joursSansActivite} jour(s) sans activité`}
+                        <p style={{ margin: "6px 0 0", color: "#64748B", fontSize: "0.82rem" }}>
+                          {eleve.classe || "-"} · {eleve.lycee || "-"} · {eleve.email || "email non renseigné"}
                         </p>
+                        <p style={{ margin: "4px 0 0", color: eleve.joursSansActivite !== null && eleve.joursSansActivite > 7 ? "#DC2626" : "#16A34A", fontSize: "0.78rem", fontWeight: 700 }}>
+                          {eleve.joursSansActivite === null
+                            ? "Aucune activité datée"
+                            : eleve.joursSansActivite === 0
+                              ? "Actif aujourd'hui"
+                              : `${eleve.joursSansActivite} jour(s) sans activité`}
+                          {" · "}
+                          Dernière activité : <strong>{formatDateFr(eleve.lastActivity)}</strong>
+                        </p>
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8, flex: "0 0 auto" }}>
+                        <div style={{ textAlign: "right" }}>
+                          <p style={{ margin: 0, color: "#64748B", fontSize: "0.72rem", fontWeight: 700 }}>Solde jetons</p>
+                          <p style={{ margin: "2px 0 0", color: "#1D4ED8", fontWeight: 900, fontSize: "1.15rem" }}>{formatJetons(eleve.xp || 0)}</p>
+                        </div>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, justifyContent: "flex-end", alignItems: "center" }}>
+                          <input
+                            type="number"
+                            min={0}
+                            placeholder="Montant"
+                            value={quickJetons[eleve.id] ?? ""}
+                            onChange={(e) => setQuickJetons((prev) => ({ ...prev, [eleve.id]: e.target.value }))}
+                            style={{
+                              width: 88,
+                              padding: "6px 8px",
+                              borderRadius: 10,
+                              border: "1px solid #CBD5E1",
+                              fontSize: "0.88rem",
+                              textAlign: "center",
+                            }}
+                          />
+                          <Btn
+                            onClick={() => {
+                              const amt = parseInt(String(quickJetons[eleve.id] ?? "").trim(), 10) || 0;
+                              if (!amt) return;
+                              void distribuerXPIndividuel(eleve.id, amt, eleve.prenom || eleve.nomAffiche);
+                            }}
+                            color={COLORS.G}
+                            small
+                            disabled={recompenseEnCours}
+                          >
+                            + Ajouter
+                          </Btn>
+                          <Btn
+                            onClick={() => {
+                              const amt = parseInt(String(quickJetons[eleve.id] ?? "").trim(), 10) || 0;
+                              if (!amt) return;
+                              void retirerXPIndividuel(eleve.id, amt, eleve.prenom || eleve.nomAffiche);
+                            }}
+                            color={COLORS.H}
+                            small
+                            disabled={recompenseEnCours}
+                          >
+                            − Retirer
+                          </Btn>
+                        </div>
                       </div>
                     </div>
 
-                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 8 }}>
-                      {eleve.actionsToday.map((action) => (
-                        <span key={`${eleve.id}-${action}`} style={{ background: action === "Aucune action détectée" ? "#F1F5F9" : "#DBEAFE", color: action === "Aucune action détectée" ? "#64748B" : "#1D4ED8", borderRadius: 999, padding: "4px 10px", fontSize: "0.76rem", fontWeight: 700 }}>
+                    <div style={{ padding: "10px 16px 12px", display: "flex", gap: 8, flexWrap: "wrap", background: "#FFFFFF", borderBottom: "1px solid #F1F5F9" }}>
+                      {eleve.actionsToday.map((action, ai) => (
+                        <span
+                          key={`${eleve.id}-a-${ai}`}
+                          style={{
+                            background: action === "Aucune action détectée" ? "#F1F5F9" : "#DBEAFE",
+                            color: action === "Aucune action détectée" ? "#64748B" : "#1D4ED8",
+                            borderRadius: 999,
+                            padding: "4px 10px",
+                            fontSize: "0.76rem",
+                            fontWeight: 700,
+                          }}
+                        >
                           {action}
                         </span>
                       ))}
                     </div>
 
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 8, marginTop: 10 }}>
-                      <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Dernière activité : <strong>{formatDateFr(eleve.lastActivity)}</strong></p>
-                      <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Missions : <strong>{eleve.missionsTotal}</strong> (aujourd’hui {eleve.missionsToday})</p>
-                      <p style={{ margin: 0, color: (eleve.antiCheatEvents || 0) > 0 ? "#BE123C" : "#334155", fontSize: "0.8rem", fontWeight: (eleve.antiCheatEvents || 0) > 0 ? 700 : 400 }}>
-                        Anti-triche missions : <strong>{eleve.antiCheatEvents || 0}</strong> (aujourd’hui {eleve.antiCheatToday || 0})
-                      </p>
-                      <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Objectif Bac : <strong>{eleve.objectifTotal}</strong> (aujourd’hui {eleve.objectifToday})</p>
-                      <p style={{ margin: 0, color: "#166534", fontSize: "0.8rem", fontWeight: 700 }}>
-                        Focus : <strong>{eleve.focusTotal}</strong> (aujourd’hui {eleve.focusToday})
-                      </p>
-                      <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Cartes : <strong>{eleve.cartesTotal}</strong> ({eleve.cartesUniques} uniques)</p>
-                      <p style={{ margin: 0, color: "#B45309", fontSize: "0.8rem", fontWeight: 700 }}>
-                        Participation cartes rares : <strong>{Number(eleve.participationPoints || 0).toFixed(1)} pt(s)</strong>
-                      </p>
-                      <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Connexion aujourd’hui : <strong>{formatDuration(eleve.sessionTodaySec)}</strong></p>
-                      <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Temps cumulé : <strong>{formatDuration(eleve.sessionTotalSec)}</strong> ({eleve.sessionCount || 0} session(s))</p>
-                      <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>Dernière session : <strong>{formatDuration(eleve.lastSessionDurationSec)}</strong></p>
+                    <div style={{ padding: "14px 16px 16px", display: "flex", flexDirection: "column", gap: 12 }}>
+                      <div style={{ background: "#FFFFFF", borderRadius: 12, padding: 12, border: "1px solid #E2E8F0" }}>
+                        <p style={{ margin: "0 0 8px", fontFamily: "'Fredoka One', cursive", fontSize: "0.82rem", color: "#0369A1" }}>Temps de connexion</p>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(155px, 1fr))", gap: 8 }}>
+                          <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>
+                            Aujourd'hui : <strong>{formatDuration(eleve.sessionTodaySec)}</strong>
+                          </p>
+                          <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>
+                            Cumulé : <strong>{formatDuration(eleve.sessionTotalSec)}</strong> ({eleve.sessionCount || 0} session(s))
+                          </p>
+                          <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>
+                            Dernière session : <strong>{formatDuration(eleve.lastSessionDurationSec)}</strong>
+                          </p>
+                        </div>
+                      </div>
+
+                      <div style={{ background: "#FFFFFF", borderRadius: 12, padding: 12, border: "1px solid #DDD6FE" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+                          <div>
+                            <p style={{ margin: 0, fontFamily: "'Fredoka One', cursive", fontSize: "0.82rem", color: "#5B21B6" }}>Missions SDGN (page Missions)</p>
+                            <p style={{ margin: "4px 0 0", color: "#64748B", fontSize: "0.78rem" }}>
+                              Champ{" "}
+                              <span style={{ fontFamily: "ui-monospace, monospace", fontSize: "0.72rem", color: "#475569" }}>missionsProgress</span>
+                              {" · "}Dernière rubrique enregistrée : <strong>{eleve.missionsProgressChapter || "—"}</strong>
+                            </p>
+                          </div>
+                          <div style={{ textAlign: "right" }}>
+                            <p style={{ margin: 0, fontSize: "0.8rem", color: "#334155" }}>
+                              <strong>{eleve.sdgnExerciseCount || 0}</strong> exercice(s) · <strong>{eleve.sdgnTotalAttempts || 0}</strong> tentative(s)
+                            </p>
+                            <p style={{ margin: "4px 0 0", fontSize: "0.78rem", color: "#6D28D9", fontWeight: 700 }}>
+                              Somme des derniers jetons par exo. : {formatJetons(eleve.sdgnLastXpSum || 0)}
+                            </p>
+                            <p style={{ margin: "2px 0 0", fontSize: "0.72rem", color: "#64748B" }}>
+                              Validations aujourd'hui : {eleve.sdgnClaimsToday || 0}
+                            </p>
+                          </div>
+                        </div>
+                        {eleve.sdgnRows?.length ? (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => setSdgnExpanded((prev) => ({ ...prev, [eleve.id]: !prev[eleve.id] }))}
+                              style={{
+                                marginTop: 10,
+                                background: "#F5F3FF",
+                                border: "1px solid #C4B5FD",
+                                borderRadius: 10,
+                                padding: "8px 12px",
+                                fontWeight: 800,
+                                fontSize: "0.78rem",
+                                cursor: "pointer",
+                                fontFamily: "'Fredoka One', cursive",
+                                color: "#5B21B6",
+                              }}
+                            >
+                              {sdgnExpanded[eleve.id] ? "▲ Masquer le détail par exercice" : `▼ Détail des ${eleve.sdgnRows.length} exercice(s)`}
+                            </button>
+                            {sdgnExpanded[eleve.id] ? (
+                              <div style={{ marginTop: 10, overflowX: "auto", borderRadius: 10, border: "1px solid #EDE9FE" }}>
+                                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.76rem" }}>
+                                  <thead>
+                                    <tr style={{ background: "#F5F3FF", color: "#4C1D95", textAlign: "left" }}>
+                                      <th style={{ padding: "8px 10px", fontWeight: 800 }}>Chapitre</th>
+                                      <th style={{ padding: "8px 10px", fontWeight: 800 }}>Exercice</th>
+                                      <th style={{ padding: "8px 10px", fontWeight: 800 }}>Note</th>
+                                      <th style={{ padding: "8px 10px", fontWeight: 800 }}>%</th>
+                                      <th style={{ padding: "8px 10px", fontWeight: 800 }}>Jetons</th>
+                                      <th style={{ padding: "8px 10px", fontWeight: 800 }}>Tent.</th>
+                                      <th style={{ padding: "8px 10px", fontWeight: 800 }}>Dernière fois</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {eleve.sdgnRows.map((row) => (
+                                      <tr key={row.exerciseId} style={{ borderTop: "1px solid #EDE9FE", background: "#FFFFFF" }}>
+                                        <td style={{ padding: "8px 10px", color: "#475569", verticalAlign: "top", whiteSpace: "nowrap" }}>
+                                          {row.chapter.replace(/^SDGN\s+/i, "")}
+                                        </td>
+                                        <td style={{ padding: "8px 10px", color: "#0F172A", verticalAlign: "top" }}>
+                                          <span style={{ fontWeight: 700 }}>{row.title}</span>
+                                          <span style={{ display: "block", color: "#94A3B8", fontSize: "0.7rem", marginTop: 2 }}>{row.exerciseId}</span>
+                                        </td>
+                                        <td style={{ padding: "8px 10px", whiteSpace: "nowrap" }}>
+                                          {row.lastScore !== undefined && row.lastScore !== null ? `${row.lastScore}/10` : "—"}
+                                        </td>
+                                        <td style={{ padding: "8px 10px", whiteSpace: "nowrap" }}>
+                                          {row.lastPercent !== undefined && row.lastPercent !== null ? `${row.lastPercent}%` : "—"}
+                                        </td>
+                                        <td style={{ padding: "8px 10px", whiteSpace: "nowrap", fontWeight: 800 }}>
+                                          {formatJetons(row.lastXpAwarded || 0)}
+                                          {row.xpMax ? (
+                                            <span style={{ color: "#64748B", fontWeight: 600, fontSize: "0.72rem" }}> / {formatJetons(row.xpMax)}</span>
+                                          ) : null}
+                                        </td>
+                                        <td style={{ padding: "8px 10px", whiteSpace: "nowrap" }}>{row.totalClaims || 0}</td>
+                                        <td style={{ padding: "8px 10px", whiteSpace: "nowrap", color: "#475569" }}>{row.lastClaimDate || "—"}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            ) : null}
+                          </>
+                        ) : (
+                          <p style={{ margin: "10px 0 0", color: "#94A3B8", fontSize: "0.8rem" }}>Aucune mission SDGN validée pour cet élève.</p>
+                        )}
+                      </div>
+
+                      <div style={{ background: "#FFFFFF", borderRadius: 12, padding: 12, border: "1px solid #E2E8F0" }}>
+                        <p style={{ margin: "0 0 8px", fontFamily: "'Fredoka One', cursive", fontSize: "0.82rem", color: "#0F172A" }}>Autres activités</p>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 8 }}>
+                          <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>
+                            Missions (historique) : <strong>{eleve.missionsTotal}</strong> (aujourd'hui {eleve.missionsToday})
+                          </p>
+                          <p style={{ margin: 0, color: (eleve.antiCheatEvents || 0) > 0 ? "#BE123C" : "#334155", fontSize: "0.8rem", fontWeight: (eleve.antiCheatEvents || 0) > 0 ? 700 : 400 }}>
+                            Anti-triche (historique) : <strong>{eleve.antiCheatEvents || 0}</strong> (aujourd'hui {eleve.antiCheatToday || 0})
+                          </p>
+                          <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>
+                            Objectif Bac : <strong>{eleve.objectifTotal}</strong> (aujourd'hui {eleve.objectifToday})
+                          </p>
+                          <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>
+                            Cartes : <strong>{eleve.cartesTotal}</strong> ({eleve.cartesUniques} uniques)
+                          </p>
+                        </div>
+                      </div>
+
+                      {eleve.platformIntegrity?.xpSuspended ? (
+                        <div>
+                          <button
+                            type="button"
+                            onClick={() => void retablirJetonsAntiTriche(eleve.id, eleve.nomAffiche)}
+                            style={{
+                              background: "linear-gradient(135deg, #059669, #047857)",
+                              color: "white",
+                              border: "none",
+                              borderRadius: 10,
+                              padding: "8px 14px",
+                              fontWeight: 800,
+                              fontSize: "0.82rem",
+                              cursor: "pointer",
+                              fontFamily: "'Fredoka One', cursive",
+                            }}
+                          >
+                            Rétablir les jetons (annuler anti-onglet)
+                          </button>
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                 ))}
@@ -927,14 +1239,14 @@ export default function Admin() {
         {ongletActif === "recompenses" && (
           <div style={{ background: "white", borderRadius: "24px", padding: "24px", border: `2px solid ${COLORS.U}20`, boxShadow: `0 4px 20px ${COLORS.U}10` }}>
             <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.4rem", color: COLORS.U, marginBottom: "8px" }}>🏆 Récompenses du jour</h2>
-            <p style={{ color: "#6B7280", fontSize: "0.9rem", marginBottom: "18px" }}>Distribue des XP bonus aux meilleurs élèves et familles.</p>
+            <p style={{ color: "#6B7280", fontSize: "0.9rem", marginBottom: "18px" }}>Distribue des jetons bonus aux meilleurs élèves et familles.</p>
 
             <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "16px" }}>
               <div style={{ background: COLORS.U + "15", border: `1px solid ${COLORS.U}30`, borderRadius: "12px", padding: "8px 14px" }}>
                 <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.U, margin: 0, fontSize: "0.85rem" }}>👥 Élèves inscrits : {eleves.length}</p>
               </div>
               <div style={{ background: COLORS.S + "15", border: `1px solid ${COLORS.S}30`, borderRadius: "12px", padding: "8px 14px" }}>
-                <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.S, margin: 0, fontSize: "0.85rem" }}>⚡ XP total : {eleves.reduce((sum, e) => sum + (e.xp || 0), 0).toLocaleString()}</p>
+                <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.S, margin: 0, fontSize: "0.85rem" }}>⚡ Jetons total : {formatJetons(eleves.reduce((sum, e) => sum + (e.xp || 0), 0))}</p>
               </div>
             </div>
 
@@ -943,7 +1255,7 @@ export default function Admin() {
                 <p style={{ margin: "0 0 6px", fontFamily: "'Fredoka One', cursive", color: COLORS.S, fontSize: "0.85rem" }}>📚 Par classe</p>
                 {statsParClasse.slice(0, 4).map(item => (
                   <p key={item.classe} style={{ margin: "2px 0", color: "#6B7280", fontSize: "0.78rem" }}>
-                    {item.classe === "premiere" ? "Première" : item.classe === "terminale" ? "Terminale" : item.classe} · {item.eleves} élève(s) · {item.xp.toLocaleString()} XP
+                    {item.classe === "premiere" ? "Première" : item.classe === "terminale" ? "Terminale" : item.classe} · {item.eleves} élève(s) · {formatJetons(item.xp)}
                   </p>
                 ))}
               </div>
@@ -951,7 +1263,7 @@ export default function Admin() {
                 <p style={{ margin: "0 0 6px", fontFamily: "'Fredoka One', cursive", color: COLORS.T, fontSize: "0.85rem" }}>🏫 Par lycée</p>
                 {statsParLycee.slice(0, 4).map(item => (
                   <p key={item.lycee} style={{ margin: "2px 0", color: "#6B7280", fontSize: "0.78rem" }}>
-                    {item.lycee} {item.ville ? `(${item.ville})` : ""} · {item.eleves} élève(s) · {item.xp.toLocaleString()} XP
+                    {item.lycee} {item.ville ? `(${item.ville})` : ""} · {item.eleves} élève(s) · {formatJetons(item.xp)}
                   </p>
                 ))}
               </div>
@@ -959,7 +1271,7 @@ export default function Admin() {
 
             <div style={{ marginBottom: "20px" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px", flexWrap: "wrap", gap: "8px" }}>
-                <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1.05rem", margin: 0 }}>👤 Élèves (XP + cartes)</p>
+                <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1.05rem", margin: 0 }}>👤 Élèves (jetons + cartes)</p>
                 <Btn onClick={distribuerTopIndividuel} color={COLORS.U} disabled={recompenseEnCours} small>🚀 Distribuer Top 5</Btn>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -978,11 +1290,11 @@ export default function Admin() {
                           <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "0.98rem", margin: 0 }}>{eleve.prenom || eleve.nom || eleve.email || `Élève ${eleve.id.slice(0, 6)}`}</p>
                           <span style={{ background: couleurFamille + "20", color: couleurFamille, fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.68rem" }}>{familleEmojis[eleve.famille]} {eleve.famille}</span>
                         </div>
-                        <p style={{ color: "#9CA3AF", fontSize: "0.78rem", margin: "2px 0 0" }}>{(eleve.xp || 0).toLocaleString()} XP · 🃏 {cartesTotal} cartes ({cartesUniques} uniques)</p>
+                        <p style={{ color: "#9CA3AF", fontSize: "0.78rem", margin: "2px 0 0" }}>{formatJetons(eleve.xp || 0)} · 🃏 {cartesTotal} cartes ({cartesUniques} uniques)</p>
                       </div>
                       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                         <input type="number" value={xpCustom[eleve.id] ?? (recompense?.xp || 0)} onChange={e => setXpCustom(prev => ({ ...prev, [eleve.id]: parseInt(e.target.value) || 0 }))} style={{ width: "80px", padding: "6px 10px", borderRadius: "10px", border: `2px solid ${COLORS.U}30`, fontFamily: "'Fredoka One', cursive", fontSize: "0.9rem", textAlign: "center", outline: "none" }} />
-                        <Btn onClick={() => distribuerXPIndividuel(eleve.id, xpCustom[eleve.id] ?? recompense?.xp, eleve.prenom)} color={recompense ? recompense.couleur : COLORS.S} disabled={recompenseEnCours} small>{recompense ? recompense.label : "+XP"}</Btn>
+                        <Btn onClick={() => distribuerXPIndividuel(eleve.id, xpCustom[eleve.id] ?? recompense?.xp, eleve.prenom)} color={recompense ? recompense.couleur : COLORS.S} disabled={recompenseEnCours} small>{recompense ? recompense.label : "+jetons"}</Btn>
                         <Btn onClick={() => retirerXPIndividuel(eleve.id, xpCustom[eleve.id] ?? recompense?.xp, eleve.prenom)} color={COLORS.H} disabled={recompenseEnCours} small>Retirer</Btn>
                       </div>
                     </div>
@@ -1006,11 +1318,11 @@ export default function Admin() {
                       <span style={{ fontSize: "1.45rem" }}>{familleEmojis[famille.nom]}</span>
                       <div style={{ flex: 1 }}>
                         <p style={{ fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "0.98rem", margin: 0 }}>{famille.nom}</p>
-                        <p style={{ color: "#9CA3AF", fontSize: "0.78rem", margin: "2px 0 0" }}>{famille.membres} membres · {famille.xp.toLocaleString()} XP total</p>
+                        <p style={{ color: "#9CA3AF", fontSize: "0.78rem", margin: "2px 0 0" }}>{famille.membres} membres · {formatJetons(famille.xp)} total</p>
                       </div>
                       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                        <span style={{ fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "0.86rem" }}>+{recompense?.xp || 0} XP/membre</span>
-                        <Btn onClick={() => distribuerXPFamille(famille.nom, recompense?.xp || 0)} color={couleur} disabled={recompenseEnCours} small>{recompense ? recompense.label : "+XP"}</Btn>
+                        <span style={{ fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "0.86rem" }}>{formatJetonsDelta(recompense?.xp || 0)}/membre</span>
+                        <Btn onClick={() => distribuerXPFamille(famille.nom, recompense?.xp || 0)} color={couleur} disabled={recompenseEnCours} small>{recompense ? recompense.label : "+jetons"}</Btn>
                       </div>
                     </div>
                   );
@@ -1037,7 +1349,7 @@ export default function Admin() {
           <>
             <div style={{ background: "white", borderRadius: "24px", padding: "24px", marginBottom: "16px", border: `2px solid ${COLORS.S}20` }}>
               <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.35rem", color: COLORS.S, marginBottom: "8px" }}>📚 Importer les chapitres</h2>
-              <p style={{ color: "#9CA3AF", fontSize: "0.8rem", marginBottom: "16px" }}>Colonnes : ID, Matière, Classe, Ordre, Thème, Titre, Question, Notions, Compétences, URL app, URL fiche, XP.</p>
+              <p style={{ color: "#9CA3AF", fontSize: "0.8rem", marginBottom: "16px" }}>Colonnes : ID, Matière, Classe, Ordre, Thème, Titre, Question, Notions, Compétences, URL app, URL fiche, xp (jetons côté élève).</p>
               <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
                 <input type="file" accept=".xlsx" onChange={e => setFichierChapitres(e.target.files[0])} style={{ flex: 1, padding: "10px 14px", borderRadius: "12px", border: `2px solid ${COLORS.S}30`, fontFamily: "'Nunito', sans-serif", fontSize: "0.9rem" }} />
                 <Btn onClick={importerChapitres} color={COLORS.S} disabled={!fichierChapitres || importChapitres.loading}>{importChapitres.loading ? "⏳ Import..." : "📥 Importer"}</Btn>
@@ -1051,7 +1363,7 @@ export default function Admin() {
 
             <div style={{ background: "white", borderRadius: "24px", padding: "24px", border: `2px solid ${COLORS.T}20` }}>
               <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.35rem", color: COLORS.T, marginBottom: "8px" }}>🎯 Importer les missions</h2>
-              <p style={{ color: "#9CA3AF", fontSize: "0.8rem", marginBottom: "16px" }}>Colonnes : id, niveau, difficulte, matiere, theme, chapitre, ordre, titre, contexte, question, mots_cles, correction, xp.</p>
+              <p style={{ color: "#9CA3AF", fontSize: "0.8rem", marginBottom: "16px" }}>Colonnes : id, niveau, difficulte, matiere, theme, chapitre, ordre, titre, contexte, question, mots_cles, correction, xp (récompense en jetons).</p>
               <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
                 <input type="file" accept=".xlsx" onChange={e => setFichierMissions(e.target.files[0])} style={{ flex: 1, padding: "10px 14px", borderRadius: "12px", border: `2px solid ${COLORS.T}30`, fontFamily: "'Nunito', sans-serif", fontSize: "0.9rem" }} />
                 <Btn onClick={importerMissions} color={COLORS.T} disabled={!fichierMissions || importMissions.loading}>{importMissions.loading ? "⏳ Import..." : "📥 Importer"}</Btn>
@@ -1073,8 +1385,8 @@ export default function Admin() {
             <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.35rem", color: COLORS.G, marginBottom: "16px" }}>💡 Informations</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               {[
-                { emoji: "📊", texte: "Reporting élèves : activité du jour, dernière activité, volume de missions/Objectif Bac, cartes.", couleur: COLORS.B },
-                { emoji: "🏆", texte: "Récompenses : charge le classement puis distribue les XP bonus en 1 clic.", couleur: COLORS.U },
+                { emoji: "📊", texte: "Reporting élèves : temps de connexion, missions SDGN (notes, %, jetons par exercice), Objectif Bac, Focus, cartes, anti-triche historique, ajustement jetons.", couleur: COLORS.B },
+                { emoji: "🏆", texte: "Récompenses : charge le classement puis distribue les jetons bonus en 1 clic.", couleur: COLORS.U },
                 { emoji: "📚", texte: "Chapitres : supporte les colonnes françaises avec URL Application et URL Fiche.", couleur: COLORS.S },
                 { emoji: "🎯", texte: "Missions : la colonne correction sert de référence à la correction IA.", couleur: COLORS.T },
                 { emoji: "🔒", texte: "Cette page reste réservée aux comptes admin.", couleur: COLORS.H },

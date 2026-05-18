@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { auth, db } from "../services/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { formatJetons, formatJetonsDelta } from "../lib/jetons";
+import { PLATFORM_XP_BLOCKED_MESSAGE, usePlatformIntegrity } from "../contexts/PlatformIntegrityContext";
 
 const COLORS = {
   page: "#F1F5F9",
@@ -646,7 +648,7 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
         <span style={{ borderRadius: 999, padding: "4px 10px", background: "#EEF2FF", color: COLORS.violet, fontWeight: 700, fontSize: 12 }}>Activité {index + 1}/{total}</span>
         <span style={{ borderRadius: 999, padding: "4px 10px", background: "#DBEAFE", color: "#1D4ED8", fontWeight: 700, fontSize: 12 }}>Niveau {exercise.difficulty}</span>
         <span style={{ borderRadius: 999, padding: "4px 10px", background: modeStyle.bg, color: modeStyle.border, fontWeight: 800, fontSize: 12 }}>{modeStyle.label}</span>
-        <span style={{ borderRadius: 999, padding: "4px 10px", background: "#DCFCE7", color: "#166534", fontWeight: 700, fontSize: 12 }}>+{exercise.xp} XP</span>
+        <span style={{ borderRadius: 999, padding: "4px 10px", background: "#DCFCE7", color: "#166534", fontWeight: 700, fontSize: 12 }}>{formatJetonsDelta(exercise.xp)}</span>
       </div>
       <h3 style={{ margin: "0 0 8px", color: COLORS.text }}>{exercise.title}</h3>
       {exercise.contexte && (
@@ -950,11 +952,11 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
           Corriger
         </button>
         <button onClick={claimXp} disabled={!canClaim || loading} style={{ border: "none", borderRadius: 10, padding: "9px 12px", fontWeight: 700, background: canClaim ? COLORS.green : "#CBD5E1", color: "white", cursor: canClaim ? "pointer" : "not-allowed" }}>
-          {alreadyClaimed ? "XP déjà pris" : loading ? "Validation..." : `Valider +${exercise.xp} XP`}
+          {alreadyClaimed ? "Jetons déjà pris" : loading ? "Validation..." : `Valider ${formatJetonsDelta(exercise.xp)}`}
         </button>
       </div>
-      {(localInfo || (alreadyClaimed && "XP déjà validés aujourd'hui pour cet exercice.")) && (
-        <p style={{ margin: "6px 0 0", color: "#64748B", fontSize: 12 }}>{localInfo || "XP déjà validés aujourd'hui pour cet exercice."}</p>
+      {(localInfo || (alreadyClaimed && "Jetons déjà validés aujourd'hui pour cet exercice.")) && (
+        <p style={{ margin: "6px 0 0", color: "#64748B", fontSize: 12 }}>{localInfo || "Jetons déjà validés aujourd'hui pour cet exercice."}</p>
       )}
 
       {result && (
@@ -972,6 +974,7 @@ function FocusCard({ exercise, claim, onClaimXP, index, total }) {
 }
 
 export default function Focus({ onXPGagne }) {
+  const { xpRewardsSuspended } = usePlatformIntegrity();
   const [claims, setClaims] = useState({});
   const [banner, setBanner] = useState(null);
   const [chapitreSelectionne, setChapitreSelectionne] = useState("Chapitre 6");
@@ -1005,6 +1008,10 @@ export default function Focus({ onXPGagne }) {
       setBanner({ type: "error", text: "Session expirée. Reconnecte-toi." });
       return false;
     }
+    if (xpRewardsSuspended) {
+      setBanner({ type: "error", text: PLATFORM_XP_BLOCKED_MESSAGE });
+      return false;
+    }
     try {
       const today = getTodayKey();
       const ref = doc(db, "users", user.uid);
@@ -1014,7 +1021,7 @@ export default function Focus({ onXPGagne }) {
       const stored = data.focusProgress || {};
       const prev = stored?.version === FOCUS_PROGRESS_VERSION ? (stored.claims || {}) : {};
       if (prev[exerciseId]?.lastClaimDate === today) {
-        setBanner({ type: "error", text: "XP déjà validés aujourd'hui pour cet exercice." });
+        setBanner({ type: "error", text: "Jetons déjà validés aujourd'hui pour cet exercice." });
         return false;
       }
       const nextClaims = { ...prev, [exerciseId]: { lastClaimDate: today, totalClaims: (prev[exerciseId]?.totalClaims || 0) + 1 } };
@@ -1023,11 +1030,11 @@ export default function Focus({ onXPGagne }) {
         focusProgress: { ...(stored || {}), version: FOCUS_PROGRESS_VERSION, chapter: `SDGN 1ère - ${chapitreSelectionne}`, claims: nextClaims },
       });
       setClaims(nextClaims);
-      setBanner({ type: "success", text: `+${xp} XP gagnés sur le cahier de vacances.` });
+      setBanner({ type: "success", text: `${formatJetonsDelta(xp)} gagnés sur le cahier de vacances.` });
       if (onXPGagne) onXPGagne();
       return true;
     } catch (err) {
-      console.error("Validation XP Focus impossible", err);
+      console.error("Validation jetons Focus impossible", err);
       setBanner({ type: "error", text: "Validation impossible pour le moment." });
       return false;
     }
@@ -1051,7 +1058,7 @@ export default function Focus({ onXPGagne }) {
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <span style={{ background: "rgba(255,255,255,0.16)", borderRadius: 999, padding: "6px 12px", fontWeight: 700 }}>{chapterUI.notions}</span>
-            <span style={{ background: "rgba(16,185,129,0.25)", borderRadius: 999, padding: "6px 12px", fontWeight: 700 }}>XP potentiel: +{xpPotential}</span>
+            <span style={{ background: "rgba(16,185,129,0.25)", borderRadius: 999, padding: "6px 12px", fontWeight: 700 }}>Jetons potentiels : {formatJetonsDelta(xpPotential)}</span>
             <span style={{ background: "rgba(124,58,237,0.25)", borderRadius: 999, padding: "6px 12px", fontWeight: 700 }}>{total} activités</span>
           </div>
           <div style={{ marginTop: 12, background: "rgba(255,255,255,0.2)", borderRadius: 999, height: 10 }}>

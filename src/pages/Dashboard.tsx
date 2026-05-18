@@ -2,11 +2,17 @@
 import { useState } from "react";
 import { auth, db } from "../services/firebase";
 import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+import {
+  getPrestigePourNiveau,
+  getPrestigeTotal,
+  PRESTIGE_PAR_NIVEAU,
+} from "../services/userProfileService";
+import { formatJetons } from "../lib/jetons";
 
 const motivations = {
   Architecte: "Chaque grand projet commence par un plan. Tu es celui qui transforme le chaos en stratégie. Continue à construire.",
   Visionnaire: "Les plus grandes révolutions ont commencé dans la tête d'un seul individu. Cette tête, c'est la tienne.",
-  Challenger: "Tu ne joues pas pour participer. Tu joues pour gagner. Chaque point d'XP est une victoire de plus.",
+  Challenger: "Tu ne joues pas pour participer. Tu joues pour gagner. Chaque jeton gagné est une victoire de plus.",
   Explorateur: "La connaissance est la seule richesse qu'on ne peut pas te voler. Continue à explorer.",
   Influenceur: "Ton énergie est contagieuse. Les grands leaders ne naissent pas, ils se forment. Tu es en train de te former.",
 };
@@ -39,10 +45,15 @@ export default function Dashboard({ profil }) {
   const [dateEvenement, setDateEvenement] = useState("");
   const [ajoutVisible, setAjoutVisible] = useState(false);
 
-  const xpPourNiveauSuivant = (profil.xp || 0) < 500 ? 500 :
-    Math.ceil((profil.xp || 0) / 500) * 500;
-  const niveau = Math.floor((profil.xp || 0) / 500) + 1;
-  const progression = ((profil.xp || 0) % 500) / 500 * 100;
+  const xpWallet = profil.xp || 0;
+  const prestigeClassement = getPrestigeTotal(profil);
+  const prestigeNiveau = getPrestigePourNiveau(profil);
+  const niveau = Math.floor(prestigeNiveau / PRESTIGE_PAR_NIVEAU) + 1;
+  const palierBas = (niveau - 1) * PRESTIGE_PAR_NIVEAU;
+  const palierHaut = niveau * PRESTIGE_PAR_NIVEAU;
+  const progression =
+    palierHaut > palierBas ? ((prestigeNiveau - palierBas) / (palierHaut - palierBas)) * 100 : 0;
+  const pointsVersPalier = Math.max(0, palierHaut - prestigeNiveau);
   const todayKey = getTodayKey();
   const hasConnectedToday = profil?.lastConnectionDay === todayKey;
   const hasFocusToday = Boolean(
@@ -90,24 +101,26 @@ export default function Dashboard({ profil }) {
             <div className="text-right">
               <p className="text-slate-500 text-sm">Niveau</p>
               <p className="text-3xl font-bold" style={{ color: "#F59E0B" }}>{niveau}</p>
-              <p className="text-slate-500 text-sm">{profil.xp || 0} XP</p>
+              <p className="text-slate-500 text-sm">👑 {prestigeClassement.toLocaleString()} prestige</p>
+              <p className="text-slate-400 text-xs mt-0.5">{formatJetons(xpWallet)} en poche (boutique)</p>
             </div>
           </div>
 
-          {/* BARRE XP */}
+          {/* Barre : niveau = prestige ; sans pack, progression ≈ jetons gagnés / 10 */}
           <div className="mt-4">
+            <p className="text-slate-400 text-xs mb-1 text-center">Progression (prestige — même logique que le classement)</p>
             <div className="flex justify-between text-sm text-slate-500 mb-1">
-              <span>{profil.xp || 0} XP</span>
-              <span>{xpPourNiveauSuivant} XP</span>
+              <span>{palierBas.toLocaleString()} pts</span>
+              <span>{palierHaut.toLocaleString()} pts</span>
             </div>
             <div className="w-full bg-slate-200 rounded-full h-3">
               <div
                 className="h-3 rounded-full transition-all"
-                style={{ background: "linear-gradient(90deg, #0EA5E9, #2563EB)", width: `${progression}%` }}
+                style={{ background: "linear-gradient(90deg, #A855F7, #7C3AED)", width: `${progression}%` }}
               />
             </div>
             <p className="text-slate-500 text-sm mt-1 text-center">
-              Encore {xpPourNiveauSuivant - (profil.xp || 0)} XP pour le niveau {niveau + 1}
+              Encore {pointsVersPalier} pt{pointsVersPalier === 1 ? "" : "s"} pour le niveau {niveau + 1}
             </p>
           </div>
         </div>

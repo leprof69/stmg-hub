@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, type CSSProperties } from "react";
+import { useState, useEffect, useRef, useCallback, lazy, Suspense, type CSSProperties } from "react";
 import type { User } from "firebase/auth";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "./services/firebase";
@@ -13,18 +13,21 @@ import {
 } from "./services/userProfileService";
 import Login from "./pages/Login";
 import Onboarding from "./pages/Onboarding";
-import Dashboard from "./pages/Dashboard";
-import Chapitres from "./pages/Chapitres";
-import Badges from "./pages/MesBadges";
-import Admin from "./pages/Admin";
-import Profil from "./pages/Profil";
 import Accueil from "./pages/Accueil";
-import Missions from "./pages/Missions";
-import Classement from "./pages/Classement";
-import Cartes from "./pages/Cartes";
-import ObjectifBac from "./pages/ObjectifBac";
-import Focus from "./pages/Focus";
-import Flashcards from "./pages/Flashcards";
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Chapitres = lazy(() => import("./pages/Chapitres"));
+const Badges = lazy(() => import("./pages/MesBadges"));
+const Admin = lazy(() => import("./pages/Admin"));
+const Profil = lazy(() => import("./pages/Profil"));
+const Missions = lazy(() => import("./pages/Missions"));
+const Classement = lazy(() => import("./pages/Classement"));
+const Cartes = lazy(() => import("./pages/Cartes"));
+const ObjectifBac = lazy(() => import("./pages/ObjectifBac"));
+const Flashcards = lazy(() => import("./pages/Flashcards"));
+const Duel = lazy(() => import("./pages/Duel"));
+const Jeux = lazy(() => import("./pages/Jeux"));
+const VisiteSalon = lazy(() => import("./pages/VisiteSalon"));
+import { PlatformIntegrityProvider } from "./contexts/PlatformIntegrityContext";
 import "./App.css";
 
 function App() {
@@ -32,6 +35,7 @@ function App() {
   const [profil, setProfil] = useState<UserProfile | null>(null);
   const [chargement, setChargement] = useState(true);
   const [page, setPage] = useState("dashboard");
+  const [visitedUid, setVisitedUid] = useState<string | null>(null);
   const [afficherLogin, setAfficherLogin] = useState(false);
   const [afficherAccueil, setAfficherAccueil] = useState(false);
   /** Tant que true (défaut), on affiche la page d'accueil publique même si Firebase a une session. */
@@ -48,6 +52,10 @@ function App() {
     setProfil(p);
     setChargement(false);
   };
+
+  const onAfterPlatformIntegrityViolation = useCallback(() => {
+    if (utilisateur) void chargerProfil(utilisateur);
+  }, [utilisateur]);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
@@ -238,17 +246,24 @@ function App() {
     chapitres: "#2563eb",
     missions: "#f97316",
     "objectif-bac": "#e11d48",
-    focus: "#10b981",
     classement: "#f59e0b",
     cartes: "#06b6d4",
     flashcards: "#8b5cf6",
     badges: "#14b8a6",
     profil: "#3b82f6",
+    duel: "#facc15",
+    jeux: "#a78bfa",
     admin: "#ef4444",
   };
 
   return (
-    <div className="app-shell">
+    <PlatformIntegrityProvider
+      userId={utilisateur?.uid ?? null}
+      isAdmin={profil?.role === "admin"}
+      xpSuspendedFromProfile={Boolean(profil?.platformIntegrity?.xpSuspended)}
+      onAfterViolation={onAfterPlatformIntegrityViolation}
+    >
+      <div className="app-shell">
       <nav className="top-nav">
         <button onClick={() => setAfficherAccueil(true)} className="nav-brand">
           🎓 STMG HUB
@@ -266,11 +281,11 @@ function App() {
         <button onClick={() => setPage("missions")} className={navBtnClass("missions")} style={{ "--nav-accent": NAV_ACCENTS.missions } as CSSProperties}>
           🎯 Missions
         </button>
+        <button onClick={() => setPage("jeux")} className={navBtnClass("jeux")} style={{ "--nav-accent": NAV_ACCENTS.jeux } as CSSProperties}>
+          🎮 Jeux
+        </button>
         <button onClick={() => setPage("objectif-bac")} className={navBtnClass("objectif-bac")} style={{ "--nav-accent": NAV_ACCENTS["objectif-bac"] } as CSSProperties}>
           🎓 Objectif Bac
-        </button>
-        <button onClick={() => setPage("focus")} className={navBtnClass("focus")} style={{ "--nav-accent": NAV_ACCENTS.focus } as CSSProperties}>
-          🎯 Focus
         </button>
         <button onClick={() => setPage("classement")} className={navBtnClass("classement")} style={{ "--nav-accent": NAV_ACCENTS.classement } as CSSProperties}>
           🏆 Classement
@@ -291,24 +306,37 @@ function App() {
         )}
       </nav>
 
-      {page === "dashboard" && <Dashboard profil={profil} />}
-      {page === "chapitres" && <Chapitres profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
-      {page === "missions" && <Missions profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
-      {page === "objectif-bac" && <ObjectifBac profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
-      {page === "focus" && <Focus onXPGagne={() => chargerProfil(utilisateur)} />}
-      {page === "classement" && <Classement profil={profil} />}
-      {page === "cartes" && <Cartes profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
-      {page === "flashcards" && <Flashcards profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
-      {page === "badges" && <Badges profil={profil} />}
-      {page === "profil" && (
-        <Profil
-          profil={profil}
-          onRefaire={() => setProfil(null)}
-          onDeconnexion={() => void signOut(auth)}
-        />
-      )}
-      {page === "admin" && <Admin />}
-    </div>
+      <Suspense
+        fallback={
+          <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+            <p className="text-white text-xl">Chargement...</p>
+          </div>
+        }
+      >
+        {page === "dashboard" && <Dashboard profil={profil} />}
+        {page === "chapitres" && <Chapitres profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
+        {page === "missions" && <Missions profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
+        {page === "duel" && <Duel profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
+        {page === "jeux" && <Jeux profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
+        {page === "objectif-bac" && <ObjectifBac profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
+        {page === "classement" && <Classement profil={profil} onVisiterProfil={(uid:string)=>{ setVisitedUid(uid); setPage("visite"); }} />}
+        {page === "visite" && visitedUid && (
+          <VisiteSalon visitedUid={visitedUid} myProfil={profil} onBack={()=>{ setPage("classement"); setVisitedUid(null); }}/>
+        )}
+        {page === "cartes" && <Cartes profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
+        {page === "flashcards" && <Flashcards profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
+        {page === "badges" && <Badges profil={profil} />}
+        {page === "profil" && (
+          <Profil
+            profil={profil}
+            onRefaire={() => setProfil(null)}
+            onDeconnexion={() => void signOut(auth)}
+          />
+        )}
+        {page === "admin" && <Admin />}
+      </Suspense>
+      </div>
+    </PlatformIntegrityProvider>
   );
 }
 

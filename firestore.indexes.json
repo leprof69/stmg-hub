@@ -1,0 +1,21 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "duelRuns",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "seasonId", "order": "ASCENDING" },
+        { "fieldPath": "createdAt", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "duelAttempts",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "playerUid", "order": "ASCENDING" },
+        { "fieldPath": "runId", "order": "ASCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

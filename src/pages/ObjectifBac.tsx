@@ -2,7 +2,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../services/firebase";
-import { jsPDF } from "jspdf";
+import { formatJetons, formatJetonsDelta } from "../lib/jetons";
+import { PLATFORM_XP_BLOCKED_MESSAGE, usePlatformIntegrity } from "../contexts/PlatformIntegrityContext";
+import {
+  buildObjectifBacAIPrompt,
+  buildReliableObjectifBacEvaluation,
+  callGeminiCorrection,
+  callGroqCorrection,
+  localCorrectionObjectifBac,
+} from "../services/correctionIA";
 
 const COLORS = {
   page: "#F8FAFC",
@@ -308,16 +316,6 @@ const DS_ACCESS_CODE = (import.meta.env.VITE_DS_ACCESS_CODE || "STMG13").trim();
 const DS_EXAM_ID = "chapitre13_1h_2026";
 const normalizeAccessCode = (value = "") => String(value).trim().toUpperCase();
 
-const normalizeText = (text = "") => String(text)
-  .toLowerCase()
-  .normalize("NFD")
-  .replace(/[\u0300-\u036f]/g, "")
-  .replace(/[^a-z0-9\s]/g, " ")
-  .replace(/\s+/g, " ")
-  .trim();
-
-const tokens = (text = "") => normalizeText(text).split(" ").filter((t) => t.length >= 4);
-
 const getTodayKey = () => {
   const now = new Date();
   return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
@@ -349,85 +347,6 @@ const getMasteryLevel = (totalClaims) => {
   return { label: "Échauffement", color: "#64748B" };
 };
 
-const localCorrection = (exercise, answer) => {
-  const text = String(answer || "").trim();
-  if (!text) {
-    return {
-      score: 0,
-      feedback: "Réponse vide.",
-      points_forts: "Aucun pour le moment.",
-      a_ameliorer: "Commence par une réponse courte mais structurée.",
-      elements_reperes: [],
-      source: "local",
-    };
-  }
-  const expected = new Set(tokens(`${exercise.consigne} ${exercise.grille.join(" ")} ${exercise.correctionPartielle}`));
-  const rep = new Set(tokens(text));
-  let overlap = 0;
-  for (const tk of rep) if (expected.has(tk)) overlap += 1;
-  const ratio = expected.size ? overlap / Math.max(10, Math.min(35, expected.size)) : 0;
-  const hasStructure = /(\n|^-|•|1\.)/m.test(text);
-  const hasExample = /(exemple|dans le cas|document|dossier|chiffre|%|€)/i.test(text);
-  const hasConclusion = /(donc|en conclusion|on peut conclure|ainsi)/i.test(text);
-  let score = 2 + (Math.min(1, ratio) * 4.2) + (hasStructure ? 1 : 0) + (hasExample ? 1 : 0) + (hasConclusion ? 1 : 0);
-  score = Math.max(0, Math.min(10, Math.round(score)));
-  return {
-    score,
-    feedback: "Évaluation locale basée sur structure, notions et justification.",
-    points_forts: hasExample ? "Tu appuies déjà ta réponse avec des éléments concrets." : "Réponse exploitable.",
-    a_ameliorer: "Rends ton argumentation plus explicite et ajoute davantage de liens avec les notions du cours.",
-    elements_reperes: [exercise.grille[0], exercise.grille[1]].filter(Boolean),
-    source: "local",
-  };
-};
-
-const parseJson = (raw = "") => {
-  const clean = String(raw).replace(/```json|```/gi, "").trim();
-  const start = clean.indexOf("{");
-  const end = clean.lastIndexOf("}");
-  if (start === -1 || end === -1 || end <= start) return null;
-  try {
-    return JSON.parse(clean.slice(start, end + 1));
-  } catch {
-    return null;
-  }
-};
-
-const callGemini = async (prompt) => {
-  const key = import.meta.env.VITE_GEMINI_API_KEY;
-  if (!key) return null;
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.1, maxOutputTokens: 700, responseMimeType: "application/json" },
-    }),
-  });
-  if (!response.ok) return null;
-  const data = await response.json();
-  const text = data?.candidates?.[0]?.content?.parts?.map((p) => p?.text || "").join("\n") || "";
-  return parseJson(text);
-};
-
-const callGroq = async (prompt) => {
-  const key = import.meta.env.VITE_GROQ_API_KEY;
-  if (!key) return null;
-  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
-    body: JSON.stringify({
-      model: "llama-3.3-70b-versatile",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0.1,
-      max_tokens: 700,
-    }),
-  });
-  if (!response.ok) return null;
-  const data = await response.json();
-  return parseJson(data?.choices?.[0]?.message?.content || "");
-};
-
 function ExerciseCard({
   exercise,
   status,
@@ -452,9 +371,9 @@ function ExerciseCard({
   const canClaim = !forceZero && !isDsExercise && length >= exercise.minChars && !alreadyClaimed && !loadingXP;
   const canEval = !forceZero && !isDsExercise && length >= Math.max(80, Math.floor(exercise.minChars * 0.6)) && !loadingEval && !answerLocked;
   const claimHint = alreadyClaimed
-    ? "XP déjà validés aujourd’hui pour cet exercice."
+    ? "Jetons déjà validés aujourd’hui pour cet exercice."
     : length < exercise.minChars
-      ? `Réponse trop courte pour valider l’XP (${exercise.minChars} caractères mini).`
+      ? `Réponse trop courte pour valider les jetons (${exercise.minChars} caractères mini).`
       : "";
 
   const claimXP = async () => {
@@ -499,7 +418,7 @@ function ExerciseCard({
     <article style={{ ...SHELL_CARD, padding: 18 }}>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 8 }}>
         <span style={{ background: "#DBEAFE", color: "#1D4ED8", borderRadius: 999, padding: "4px 10px", fontWeight: 700, fontSize: 12 }}>{exercise.type}</span>
-        <span style={{ background: "#DCFCE7", color: "#166534", borderRadius: 999, padding: "4px 10px", fontWeight: 700, fontSize: 12 }}>+{exercise.xp} XP</span>
+        <span style={{ background: "#DCFCE7", color: "#166534", borderRadius: 999, padding: "4px 10px", fontWeight: 700, fontSize: 12 }}>{formatJetonsDelta(exercise.xp)}</span>
         <span style={{ background: "#FEF3C7", color: "#92400E", borderRadius: 999, padding: "4px 10px", fontWeight: 700, fontSize: 12 }}>{exercise.niveau}</span>
       </div>
 
@@ -569,7 +488,7 @@ function ExerciseCard({
         </p>
       )}
       <p style={{ margin: "6px 0 0", color: "#64748B", fontSize: 12 }}>
-        Longueur recommandée pour validation XP : {exercise.minChars} caractères minimum.
+        Longueur recommandée pour valider les jetons : {exercise.minChars} caractères minimum.
       </p>
 
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
@@ -595,7 +514,7 @@ function ExerciseCard({
               disabled={!canClaim}
               style={{ border: "none", borderRadius: 10, padding: "9px 12px", cursor: canClaim ? "pointer" : "not-allowed", background: canClaim ? COLORS.blue : "#CBD5E1", color: "white", fontWeight: 700 }}
             >
-              {loadingXP ? "Validation..." : alreadyClaimed ? "XP déjà gagné aujourd’hui" : `Valider et gagner ${exercise.xp} XP`}
+              {loadingXP ? "Validation..." : alreadyClaimed ? "Jetons déjà gagnés aujourd’hui" : `Valider et gagner ${formatJetons(exercise.xp)}`}
             </button>
             <button
               onClick={() => setShowCorrection((v) => !v)}
@@ -741,6 +660,7 @@ function DsExerciseCard({
 const ONGLET_IDS = ["vue", "examen", "entrainements", "methodo"];
 
 export default function ObjectifBac({ profil, onXPGagne, initialActiveTab = "vue" }) {
+  const { xpRewardsSuspended } = usePlatformIntegrity();
   const [activeTab, setActiveTab] = useState(() =>
     ONGLET_IDS.includes(initialActiveTab) ? initialActiveTab : "vue"
   );
@@ -966,13 +886,17 @@ export default function ObjectifBac({ profil, onXPGagne, initialActiveTab = "vue
   const handleClaimXP = async (exerciseId, xpAmount) => {
     const user = auth.currentUser;
     if (!user) {
-      setBanner({ type: "error", text: "Session expirée. Reconnecte-toi pour valider l’XP." });
+      setBanner({ type: "error", text: "Session expirée. Reconnecte-toi pour valider tes jetons." });
+      return false;
+    }
+    if (xpRewardsSuspended) {
+      setBanner({ type: "error", text: PLATFORM_XP_BLOCKED_MESSAGE });
       return false;
     }
     try {
       const exercise = EXERCISES.find((item) => item.id === exerciseId);
       if (exercise?.type === DS_LOCK_TYPE && dsForcedZero) {
-        setBanner({ type: "error", text: "DS disqualifié : sortie de page détectée, aucun XP validable." });
+        setBanner({ type: "error", text: "DS disqualifié : sortie de page détectée, aucun jeton validable." });
         return false;
       }
       const today = getTodayKey();
@@ -985,7 +909,7 @@ export default function ObjectifBac({ profil, onXPGagne, initialActiveTab = "vue
       const data = snap.data();
       const claims = data.objectifBacProgress?.claims || {};
       if (claims?.[exerciseId]?.lastClaimDate === today) {
-        setBanner({ type: "error", text: "XP déjà gagnés aujourd’hui pour cet exercice." });
+        setBanner({ type: "error", text: "Jetons déjà gagnés aujourd’hui pour cet exercice." });
         return false;
       }
       const nextClaims = {
@@ -1003,11 +927,11 @@ export default function ObjectifBac({ profil, onXPGagne, initialActiveTab = "vue
         },
       });
       setClaimState(nextClaims);
-      setBanner({ type: "success", text: `+${xpAmount} XP ajoutés !` });
+      setBanner({ type: "success", text: `${formatJetonsDelta(xpAmount)} ajoutés !` });
       if (onXPGagne) onXPGagne();
       return true;
     } catch (err) {
-      console.error("Validation XP Objectif Bac impossible", err);
+      console.error("Validation jetons Objectif Bac impossible", err);
       setBanner({ type: "error", text: "Validation impossible pour le moment. Vérifie la connexion puis réessaie." });
       return false;
     }
@@ -1027,43 +951,26 @@ export default function ObjectifBac({ profil, onXPGagne, initialActiveTab = "vue
         };
       }
     }
-    const local = localCorrection(exercise, answer);
-    const prompt = `Tu es correcteur Bac STMG Management.
-Retourne UNIQUEMENT un JSON:
-{"score":number,"feedback":string,"points_forts":string,"a_ameliorer":string,"elements_reperes":string[]}
-
-Consigne: ${exercise.consigne}
-Grille: ${exercise.grille.join(" | ")}
-Référence partielle: ${exercise.correctionPartielle}
-Réponse élève: ${answer}
-
-Règles:
-- score entier 0..10
-- pas de texte hors JSON
-- 2 à 3 éléments repérés max`;
+    const exerciseBase = {
+      title: exercise.title,
+      consigne: exercise.consigne,
+      attendu: "",
+      minChars: exercise.minChars,
+      context: exercise.context,
+      grille: exercise.grille,
+      correctionPartielle: exercise.correctionPartielle,
+    };
+    const local = localCorrectionObjectifBac(exerciseBase, answer);
+    const prompt = buildObjectifBacAIPrompt(exerciseBase, answer);
 
     let ai = null;
     try {
-      ai = await callGemini(prompt);
-      if (!ai) ai = await callGroq(prompt);
+      ai = await callGeminiCorrection(prompt);
+      if (!ai) ai = await callGroqCorrection(prompt);
     } catch {
       ai = null;
     }
-    if (!ai) return local;
-
-    const aiScore = Number(ai.score);
-    const score = Number.isFinite(aiScore)
-      ? Math.max(0, Math.min(10, Math.round((aiScore * 0.65) + (local.score * 0.35))))
-      : local.score;
-
-    return {
-      score,
-      feedback: String(ai.feedback || local.feedback),
-      points_forts: String(ai.points_forts || local.points_forts),
-      a_ameliorer: String(ai.a_ameliorer || local.a_ameliorer),
-      elements_reperes: Array.isArray(ai.elements_reperes) && ai.elements_reperes.length ? ai.elements_reperes.slice(0, 3) : local.elements_reperes,
-      source: "ai",
-    };
+    return buildReliableObjectifBacEvaluation(local, ai, exerciseBase);
   };
 
   const validateVerbQuiz = () => {
@@ -1185,7 +1092,7 @@ Règles:
     }
   };
 
-  const downloadDsPdf = () => {
+  const downloadDsPdf = async () => {
     const hasCopies = dsExercises.some((e) => {
       const submission = dsSubmissions[e.id];
       if (!submission) return false;
@@ -1199,6 +1106,7 @@ Règles:
     }
 
     const studentName = `${profil?.prenom || ""} ${profil?.nom || ""}`.trim() || "Eleve";
+    const { jsPDF } = await import("jspdf");
     const docPdf = new jsPDF({ unit: "pt", format: "a4" });
     const left = 40;
     const right = 555;
@@ -1278,8 +1186,8 @@ Règles:
             Un espace clair, ludique et exigeant pour préparer l’épreuve écrite : méthode, entraînement sur cas, simulation 4h, correction IA et progression personnalisée.
           </p>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
-            <span style={{ background: "#1D4ED8", color: "white", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>XP actuel : {profil?.xp || 0}</span>
-            <span style={{ background: "#16A34A", color: "white", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>Potentiel / jour : +{dailyXpPotential} XP</span>
+            <span style={{ background: "#1D4ED8", color: "white", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>Jetons en poche : {formatJetons(profil?.xp || 0)}</span>
+            <span style={{ background: "#16A34A", color: "white", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>Potentiel / jour : {formatJetonsDelta(dailyXpPotential)}</span>
             <span style={{ background: "#EA580C", color: "white", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>Objectif : méthodo automatisée</span>
             <span style={{ background: mastery.color, color: "white", borderRadius: 999, padding: "5px 11px", fontWeight: 700 }}>Niveau : {mastery.label}</span>
           </div>

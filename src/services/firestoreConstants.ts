@@ -4,4 +4,6 @@ export const FS = {
   chapitres: "chapitres",
   missions: "missions",
   badges: "badges",
+  duelRuns: "duelRuns",
+  duelAttempts: "duelAttempts",
 } as const;

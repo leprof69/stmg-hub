@@ -364,11 +364,11 @@ export default function Accueil({
               <span style={{ fontSize: "0.9em" }}>😴</span>
             </h2>
             <p style={{ fontSize: "1.1rem", color: "#6B7280", maxWidth: "600px", margin: "0 auto" }}>
-              Chaque chapitre du programme STMG devient une expérience interactive. Tu joues, tu apprends, tu gagnes de l'XP !
+              Chaque chapitre du programme STMG devient une expérience interactive. Tu joues, tu apprends, tu gagnes des jetons !
             </p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px" }}>
-            <CardEmoji emoji="🎮" couleur={COLORS.T} bg="#F5F3FF" titre="Applications gamifiées" desc="Chaque chapitre a sa propre appli interactive. Tu apprends en faisant, pas en lisant. Et tu gagnes de l'XP à chaque session !" tag="+50 XP par chapitre" />
+            <CardEmoji emoji="🎮" couleur={COLORS.T} bg="#F5F3FF" titre="Applications gamifiées" desc="Chaque chapitre a sa propre appli interactive. Tu apprends en faisant, pas en lisant. Et tu gagnes des jetons à chaque session !" tag="+50 jetons par chapitre" />
             <CardEmoji emoji="🗺️" couleur={COLORS.S} bg="#EFF6FF" titre="Cartes mentales interactives" desc="Visualise les notions clés avec des cartes mentales dynamiques. Les connexions entre concepts deviennent évidentes et mémorables !" tag="Mémorisation x3 🧠" />
             <CardEmoji emoji="📄" couleur={COLORS.G} bg="#ECFDF5" titre="Fiches clés en main" desc="Des fiches synthétiques pour chaque chapitre. Notions, compétences, questions de gestion — tout en un coup d'œil avant l'exam !" tag="100% programme officiel ✅" />
           </div>
@@ -388,7 +388,7 @@ export default function Accueil({
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px" }}>
             <CardEtape num="01" emoji="🧬" titre="Découvre ta famille" desc="Quiz de personnalité → ta famille révélée → ton Triple Totem unique créé. Tout ça en 5 minutes !" couleur={COLORS.T} />
-            <CardEtape num="02" emoji="🎮" titre="Apprends en jouant" desc="Lance les apps gamifiées, explore les cartes mentales, consulte les fiches. Tu gagnes de l'XP à chaque action !" couleur={COLORS.S} />
+            <CardEtape num="02" emoji="🎮" titre="Apprends en jouant" desc="Lance les apps gamifiées, explore les cartes mentales, consulte les fiches. Tu gagnes des jetons à chaque action !" couleur={COLORS.S} />
             <CardEtape num="03" emoji="🚀" titre="Monte en puissance" desc="Débloque des badges, grimpe dans le classement et propulse ton lycée N°1 de France. Des nouveaux défis chaque mois !" couleur={COLORS.M} />
           </div>
         </div>
@@ -406,11 +406,11 @@ export default function Accueil({
                 <span style={{ color: "#1A1A2E" }}>de France 🇫🇷</span>
               </h2>
               <p style={{ fontSize: "1.1rem", color: "#6B7280", marginBottom: "32px", lineHeight: 1.8 }}>
-                Chaque XP que tu gagnes compte pour ton lycée dans le classement national. Plus tu bosses, plus ton lycée monte. C'est du sport collectif version STMG ! 💪
+                Chaque jeton que tu gagnes compte pour ton lycée dans le classement national. Plus tu bosses, plus ton lycée monte. C'est du sport collectif version STMG ! 💪
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                 <CardCompet emoji="📊" titre="Classement en temps réel" desc="La position de ton lycée parmi tous les lycées STMG de France" couleur={COLORS.S} />
-                <CardCompet emoji="🥇" titre="Champion du mois" desc="Le lycée avec le plus d'XP chaque mois remporte le titre" couleur={COLORS.U} />
+                <CardCompet emoji="🥇" titre="Champion du mois" desc="Le lycée avec le plus de jetons chaque mois remporte le titre" couleur={COLORS.U} />
                 <CardCompet emoji="⚡" titre="Nouveaux défis réguliers" desc="Des défis et challenges ajoutés chaque mois pour garder la flamme 🔥" couleur={COLORS.M} />
                 <CardCompet emoji="🎖️" titre="Badges de champion" desc="Des badges exclusifs pour les meilleurs du classement national" couleur={COLORS.T} />
               </div>
@@ -434,7 +434,7 @@ export default function Accueil({
                     <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "0.95rem" }}>{item.lycee}</p>
                     <p style={{ fontSize: "0.8rem", color: "#9CA3AF" }}>{item.ville}</p>
                   </div>
-                  <div style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.M, fontSize: "0.95rem" }}>{item.xp} XP</div>
+                  <div style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.M, fontSize: "0.95rem" }}>{item.xp} jetons</div>
                 </div>
               ))}
               <p style={{ textAlign: "center", color: "#9CA3AF", fontSize: "0.75rem", marginTop: "12px", fontStyle: "italic" }}>
@@ -535,7 +535,7 @@ export default function Accueil({
             ))}
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "20px" }}>
-            <CardRecompense emoji="⭐" titre="XP" desc="Gagne de l'XP en complétant des chapitres et des missions" couleur={COLORS.U} />
+            <CardRecompense emoji="⭐" titre="Jetons" desc="Gagne des jetons en complétant des chapitres et des missions" couleur={COLORS.U} />
             <CardRecompense emoji="📚" titre="Chapitres" desc="Complète des chapitres pour débloquer des badges exclusifs" couleur={COLORS.S} />
             <CardRecompense emoji="🔥" titre="Streak" desc="Connecte-toi plusieurs jours de suite pour les badges de fidélité" couleur={COLORS.H} />
             <CardRecompense emoji="🏆" titre="Classement" desc="Les badges les plus rares sont réservés aux meilleurs nationaux" couleur={COLORS.T} />

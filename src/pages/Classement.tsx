@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { db } from "../services/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { COLLECTIONS } from "../services/collectionsData";
+import { getPrestigeTotal } from "../services/userProfileService";
 
 const COLORS = {
   S: "#3B82F6", T: "#0284C7", M: "#F97316",
@@ -49,9 +50,7 @@ const getNbCartesRares = (cartes) => {
   ).length;
 };
 
-const getPrestigeTotal = (user = {}) => (Number(user.prestigeBase) || 0) + (Number(user.prestige) || 0);
-
-export default function Classement({ profil }) {
+export default function Classement({ profil, onVisiterProfil }) {
   const [onglet, setOnglet] = useState("xp");
   const [classementEleves, setClassementEleves] = useState([]);
   const [classementCollection, setClassementCollection] = useState([]);
@@ -194,7 +193,7 @@ export default function Classement({ profil }) {
               <div style={{ background: "white", borderRadius: "24px", padding: "24px", boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
                 <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.5rem", color: "#A855F7", marginBottom: "8px" }}>👑 Top Élèves - Prestige</h2>
                 <p style={{ color: "#9CA3AF", fontSize: "0.82rem", marginBottom: "20px" }}>
-                  Le prestige augmente quand l'XP est depensee dans la boutique.
+                  Le prestige augmente quand tu dépenses des jetons dans la boutique.
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   {classementEleves.map((eleve, i) => {
@@ -209,7 +208,11 @@ export default function Classement({ profil }) {
                         borderRadius: "16px", padding: "14px 16px",
                         border: estMoi ? "2px solid #A855F7" : "2px solid transparent",
                         display: "flex", alignItems: "center", gap: "12px",
-                      }}>
+                        cursor: !estMoi ? "pointer" : "default",
+                        transition: "all 0.15s",
+                      }}
+                        onClick={() => !estMoi && onVisiterProfil && onVisiterProfil(eleve.id)}
+                      >
                         <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: rang <= 3 ? "1.6rem" : "1rem", width: "40px", textAlign: "center", color: "#9CA3AF" }}>
                           {medaille(rang)}
                         </div>
@@ -225,11 +228,18 @@ export default function Classement({ profil }) {
                             {eleve.lycee} • {niveau.emoji} {niveau.nom}
                           </p>
                         </div>
-                        <div style={{ fontFamily: "'Fredoka One', cursive", color: "#A855F7", fontSize: "1.1rem", flexShrink: 0 }}>
-                          {prestigeTotal.toLocaleString()} prestige
-                          <p style={{ margin: "2px 0 0", color: "#94A3B8", fontSize: "0.72rem", fontFamily: "'Nunito', sans-serif", textAlign: "right" }}>
-                            {(eleve.xp || 0).toLocaleString()} XP
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "4px", flexShrink: 0 }}>
+                          <div style={{ fontFamily: "'Fredoka One', cursive", color: "#A855F7", fontSize: "1.05rem" }}>
+                            {prestigeTotal.toLocaleString()} prestige
+                          </div>
+                          <p style={{ margin: 0, color: "#94A3B8", fontSize: "0.72rem", fontFamily: "'Nunito', sans-serif" }}>
+                            {(eleve.xp || 0).toLocaleString()} jetons
                           </p>
+                          {!estMoi && (
+                            <span style={{ background: "#A855F715", color: "#A855F7", border: "1px solid #A855F730", borderRadius: "8px", padding: "2px 8px", fontSize: "0.62rem", fontWeight: 700 }}>
+                              🏠 Visiter
+                            </span>
+                          )}
                         </div>
                       </div>
                     );
@@ -311,7 +321,7 @@ export default function Classement({ profil }) {
                             <p style={{ color: "#9CA3AF", fontSize: "0.8rem", margin: "2px 0 0" }}>{lycee.ville} • {lycee.eleves} élève{lycee.eleves > 1 ? "s" : ""}</p>
                           </div>
                           <div style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.M, fontSize: "1.1rem", flexShrink: 0 }}>
-                            {lycee.xp.toLocaleString()} XP
+                            {lycee.xp.toLocaleString()} jetons
                           </div>
                         </div>
                       );
@@ -348,7 +358,7 @@ export default function Classement({ profil }) {
                               </p>
                               {estMaFamille && <span style={{ background: couleur, color: "white", fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.7rem" }}>Ma famille</span>}
                             </div>
-                            <p style={{ color: "#9CA3AF", fontSize: "0.8rem", margin: "2px 0 0" }}>{famille.eleves} membre{famille.eleves > 1 ? "s" : ""} • {famille.xp.toLocaleString()} XP</p>
+                            <p style={{ color: "#9CA3AF", fontSize: "0.8rem", margin: "2px 0 0" }}>{famille.eleves} membre{famille.eleves > 1 ? "s" : ""} • {famille.xp.toLocaleString()} jetons</p>
                           </div>
                           <div style={{ fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "1.1rem", flexShrink: 0 }}>{pourcentage}%</div>
                         </div>

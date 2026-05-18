@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { auth, db } from "../services/firebase";
 import { collection, query, where, getDocs, orderBy, doc, getDoc, updateDoc } from "firebase/firestore";
+import { formatJetonsDelta } from "../lib/jetons";
+import { PLATFORM_XP_BLOCKED_MESSAGE, usePlatformIntegrity } from "../contexts/PlatformIntegrityContext";
 
 const matieres = [
   { nom: "Management", emoji: "🏢" },
@@ -13,6 +15,7 @@ const matieres = [
 ];
 
 export default function Chapitres({ profil, onXPGagne }) {
+  const { xpRewardsSuspended } = usePlatformIntegrity();
   const XP_PAR_ACTION = { application: 12, fiche: 8 };
   const [matiereSelectionnee, setMatiereSelectionnee] = useState("Management");
   const [classeSelectionnee, setClasseSelectionnee] = useState(profil.classe);
@@ -51,18 +54,23 @@ export default function Chapitres({ profil, onXPGagne }) {
     try {
       const user = auth.currentUser;
       if (!user) return;
+      if (xpRewardsSuspended) {
+        setNotifXP(PLATFORM_XP_BLOCKED_MESSAGE);
+        setTimeout(() => setNotifXP(null), 4200);
+        return;
+      }
       const xpGain = XP_PAR_ACTION[actionType] || 5;
       const userRef = doc(db, "users", user.uid);
       const snap = await getDoc(userRef);
       if (!snap.exists()) return;
       const data = snap.data();
       await updateDoc(userRef, { xp: (data.xp || 0) + xpGain });
-      setNotifXP(`⚡ +${xpGain} XP gagnés !`);
+      setNotifXP(`${formatJetonsDelta(xpGain)} gagnés !`);
       if (onXPGagne) onXPGagne();
       setTimeout(() => setNotifXP(null), 2200);
     } catch (err) {
       console.error(err);
-      setNotifXP("❌ Ressource ouverte, mais XP non attribués.");
+      setNotifXP("❌ Ressource ouverte, mais jetons non attribués.");
       setTimeout(() => setNotifXP(null), 2200);
     }
   };
@@ -137,7 +145,7 @@ export default function Chapitres({ profil, onXPGagne }) {
                         <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded-full font-bold whitespace-nowrap">
                           Chap. {chapitre.ordre}
                         </span>
-                        <span className="text-yellow-400 text-xs font-semibold">+{chapitre.xp} XP</span>
+                        <span className="text-yellow-400 text-xs font-semibold">{formatJetonsDelta(chapitre.xp)}</span>
                       </div>
                       <span className="text-slate-400 text-lg">{estOuvert ? "▲" : "▼"}</span>
                     </div>
@@ -194,13 +202,13 @@ export default function Chapitres({ profil, onXPGagne }) {
                           onClick={() => ouvrirAppEtGagnerXP(chapitre.url_app, "application")}
                           className={`flex-1 font-bold py-3 px-4 rounded-lg transition-all ${chapitre.url_app ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-gray-700 text-gray-500 cursor-not-allowed"}`}
                         >
-                          🎮 {chapitre.url_app ? "Lancer l'application (+12 XP)" : "Bientôt disponible"}
+                          🎮 {chapitre.url_app ? `Lancer l'application (${formatJetonsDelta(XP_PAR_ACTION.application)})` : "Bientôt disponible"}
                         </button>
                         <button
                           onClick={() => ouvrirAppEtGagnerXP(chapitre.url_fiche, "fiche")}
                           className={`flex-1 font-bold py-3 px-4 rounded-lg transition-all ${chapitre.url_fiche ? "bg-cyan-600 hover:bg-cyan-700 text-white" : "bg-slate-200 text-slate-400 cursor-not-allowed"}`}
                         >
-                          📄 {chapitre.url_fiche ? "Carte mentale / fiche (+8 XP)" : "Bientôt disponible"}
+                          📄 {chapitre.url_fiche ? `Carte mentale / fiche (${formatJetonsDelta(XP_PAR_ACTION.fiche)})` : "Bientôt disponible"}
                         </button>
                       </div>
                     </div>

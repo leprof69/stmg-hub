@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { db } from "../services/firebase";
 import { collection, getDocs } from "firebase/firestore";
+import { formatJetons } from "../lib/jetons";
+import { getXpTotalePourNiveau } from "../services/userProfileService";
 
 const rareteColors = {
   "Commun": "#9ca3af",
@@ -13,13 +15,13 @@ const rareteColors = {
 const rareteOrder = ["Commun", "Peu commun", "Rare", "Épique", "Légendaire"];
 
 const verifierCondition = (badge, profil) => {
-  const xp = profil.xp || 0;
+  const jetonsCumules = getXpTotalePourNiveau(profil);
   const chapitres = (profil.chapitresCompletes || []).length;
   const missions = (profil.missionsCompletes || []).length;
   const connexions = profil.connexions_consecutives || 0;
 
   switch (badge.condition_type) {
-    case "xp": return xp >= badge.condition_valeur;
+    case "xp": return jetonsCumules >= badge.condition_valeur;
     case "chapitres": return chapitres >= badge.condition_valeur;
     case "missions": return missions >= badge.condition_valeur;
     case "connexions": return connexions >= badge.condition_valeur;
@@ -30,7 +32,7 @@ const verifierCondition = (badge, profil) => {
 
 const getConditionTexte = (badge) => {
   switch (badge.condition_type) {
-    case "xp": return `Atteindre ${badge.condition_valeur} XP`;
+    case "xp": return `Atteindre ${badge.condition_valeur} jetons cumulés (boutique comprise)`;
     case "chapitres": return `Compléter ${badge.condition_valeur} chapitre${badge.condition_valeur > 1 ? "s" : ""}`;
     case "missions": return `Compléter ${badge.condition_valeur} mission${badge.condition_valeur > 1 ? "s" : ""}`;
     case "connexions": return `Se connecter ${badge.condition_valeur} jours de suite`;
@@ -172,7 +174,8 @@ export default function MesBadges({ profil }) {
                   <p className="font-semibold" style={{ color: "#0f172a" }}>{getConditionTexte(badgeSelectionne)}</p>
                   {badgeSelectionne.condition_type === "xp" && (
                     <p className="text-sm mt-2" style={{ color: "#d97706" }}>
-                      Tu as {profil.xp || 0} XP — encore {badgeSelectionne.condition_valeur - (profil.xp || 0)} XP !
+                      Tu as cumulé {formatJetons(getXpTotalePourNiveau(profil))} — encore{" "}
+                      {formatJetons(Math.max(0, badgeSelectionne.condition_valeur - getXpTotalePourNiveau(profil)))} !
                     </p>
                   )}
                   {badgeSelectionne.condition_type === "chapitres" && (
