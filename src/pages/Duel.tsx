@@ -172,7 +172,7 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
   const [ghostRows, setGhostRows] = useState<{ id: string; data: DuelRunDoc }[]>([]);
   const [ghostOutcome, setGhostOutcome] = useState<"win" | "lose" | "draw" | null>(null);
   const [xpDelta, setXpDelta] = useState<number | null>(null);
-  /** Jetons non cr\u00E9dit\u00E9s alors que le fant\u00F4me est en ligne (ex. erreur update profil). */
+  /** Jetons non crédités alors que le fantôme est en ligne (ex. erreur update profil). */
   const [publishWarn, setPublishWarn] = useState<string | null>(null);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);

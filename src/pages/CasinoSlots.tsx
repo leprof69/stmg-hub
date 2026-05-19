@@ -350,7 +350,7 @@ function Reel({ mid, spinning, finalMid, spinDuration }: { mid:string; spinning:
       border:"1.5px solid rgba(255,255,255,0.07)",
       boxShadow:!spinning?`0 0 24px ${sym.glow}`:"none", transition:"box-shadow 0.4s" }}>
 
-      {/* top/bottom fade ù creates slot-machine depth */}
+      {/* top/bottom fade ÔøΩ creates slot-machine depth */}
       <div style={{ position:"absolute", top:0, left:0, right:0, height:CELL_H*0.72, zIndex:3, background:"linear-gradient(to bottom,#0b0409 18%,transparent)", pointerEvents:"none" }}/>
       <div style={{ position:"absolute", bottom:0, left:0, right:0, height:CELL_H*0.72, zIndex:3, background:"linear-gradient(to top,#0b0409 18%,transparent)", pointerEvents:"none" }}/>
 
@@ -454,7 +454,7 @@ export default function CasinoSlots({ profil, onXPGagne }: Props) {
     if (!currentQ) return;
     const ok = i===currentQ.ok;
     setLastCorrect(ok);
-    setCoins(c => c + (ok ? 3 : 1));   // NO cap ù accumulate freely
+    setCoins(c => c + (ok ? 3 : 1));   // NO cap ÔøΩ accumulate freely
     setQuizPhase("answered");
   };
 
@@ -480,14 +480,14 @@ export default function CasinoSlots({ profil, onXPGagne }: Props) {
           </h1>
           <p className="mt-2 text-sm text-slate-400">
             Salut <span className="font-semibold text-amber-300">{prenom}</span> {E.hype}{" "}
-            ù gagne des pi\u00e8ces et tente ta chance !
+            ÔøΩ gagne des pi\u00e8ces et tente ta chance !
           </p>
         </header>
 
-        {/* Coins ù no limit, show as number */}
+        {/* Coins ÔøΩ no limit, show as number */}
         <div className="mb-5 flex items-center justify-between rounded-2xl border border-amber-400/20 bg-amber-500/8 px-5 py-4 backdrop-blur-xl">
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-amber-400/70">Pi\u00e8ces Casino</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-amber-400/70">Pi√®ces Casino</p>
             <div className="mt-1 flex items-baseline gap-1.5">
               <span className="text-4xl font-black tabular-nums text-amber-300" style={{ animation: coins>0?"coinPop 0.3s ease-out":"none" }}>{coins}</span>
               <span className="text-sm text-amber-500/60">pi\u00e8ce{coins>1?"s":""}</span>
@@ -506,7 +506,7 @@ export default function CasinoSlots({ profil, onXPGagne }: Props) {
             <span className="select-none">{E.slot}</span>
           </div>
 
-          {/* Reels ù no win-line bar */}
+          {/* Reels ÔøΩ no win-line bar */}
           <div className="mx-4 mb-4 flex gap-2 rounded-2xl p-3"
             style={{ background:"linear-gradient(180deg,#0a0210 0%,#070110 100%)", border:"1.5px solid rgba(255,255,255,0.05)", boxShadow:"inset 0 2px 14px rgba(0,0,0,0.85)" }}>
             {([0,1,2] as const).map(i=>(
@@ -543,7 +543,7 @@ export default function CasinoSlots({ profil, onXPGagne }: Props) {
 
         {/* Legend */}
         <div className="mb-5 rounded-2xl border border-white/8 bg-white/[0.03] p-3 backdrop-blur-xl">
-          <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-600">Table des gains (3x) + carte bonus al\u00e9atoire possible</p>
+          <p className="mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-600">Table des gains (3x) + carte bonus al√©atoire possible</p>
           <div className="grid grid-cols-3 gap-1.5">
             {[
               { s:E.rainbow, l:"Prismatique", g:"Carte+100j+200p", c:"#e879f9" },
@@ -566,15 +566,15 @@ export default function CasinoSlots({ profil, onXPGagne }: Props) {
         <div className="rounded-[1.35rem] border border-violet-400/25 backdrop-blur-2xl"
           style={{ background:"linear-gradient(135deg,rgba(124,58,237,0.12) 0%,rgba(15,5,25,0.88) 60%)", boxShadow:"0 0 60px -22px rgba(139,92,246,0.4)" }}>
           <div className="p-4">
-            <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.2em] text-violet-300/80">Gagner des pi\u00e8ces</p>
-            <p className="text-sm text-slate-400">Bonne r\u00e9ponse : <span className="font-bold text-amber-300">+3 pi\u00e8ces</span>{" \u2022 "}Mauvaise : <span className="font-semibold text-slate-300">+1 pi\u00e8ce</span>{" \u2022 "}<span className="text-slate-500">Pas de limite !</span></p>
+            <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.2em] text-violet-300/80">Gagner des pi√®ces</p>
+            <p className="text-sm text-slate-400">Bonne r√©ponse : <span className="font-bold text-amber-300">+3 pi√®ces</span>{" \u2022 "}Mauvaise : <span className="font-semibold text-slate-300">+1 pi√®ce</span>{" \u2022 "}<span className="text-slate-500">Pas de limite !</span></p>
           </div>
 
           {quizPhase==="idle" && (
             <div className="px-4 pb-4">
               <button type="button" onClick={drawQuestion}
                 className="w-full rounded-2xl border border-violet-400/30 bg-violet-500/15 py-3 text-sm font-bold text-violet-100 transition hover:bg-violet-500/22">
-                Tirer une question \u2192
+                Tirer une question ‚Üí
               </button>
             </div>
           )}
@@ -599,11 +599,11 @@ export default function CasinoSlots({ profil, onXPGagne }: Props) {
                 <p className={`font-bold ${lastCorrect?"text-emerald-300":"text-rose-300"}`}>
                   {lastCorrect?`${E.ok} Correct ! +3 pi\u00e8ces`:`${E.nok} Mauvaise r\u00e9ponse +1 pi\u00e8ce`}
                 </p>
-                {!lastCorrect && <p className="mt-1 text-xs text-slate-400">R\u00e9ponse : <span className="font-semibold text-slate-200">{currentQ.choices[currentQ.ok]}</span></p>}
+                {!lastCorrect && <p className="mt-1 text-xs text-slate-400">R√©ponse : <span className="font-semibold text-slate-200">{currentQ.choices[currentQ.ok]}</span></p>}
               </div>
               <button type="button" onClick={()=>{ setQuizPhase("idle"); setCurrentQ(null); }}
                 className="w-full rounded-2xl border border-violet-400/30 bg-violet-500/15 py-3 text-sm font-bold text-violet-100 transition hover:bg-violet-500/22">
-                Autre question \u2192
+                Autre question ‚Üí
               </button>
             </div>
           )}

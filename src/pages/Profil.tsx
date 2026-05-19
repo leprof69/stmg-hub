@@ -1099,7 +1099,7 @@ function SalonEditor({
                 </div>
                 {local.deco.length===0 ? (
                   <div style={{ background:"rgba(255,255,255,0.03)",borderRadius:"12px",padding:"16px 12px",border:"1px dashed rgba(255,255,255,0.1)",textAlign:"center" }}>
-                    <span style={{ fontSize:"0.72rem",color:"#334155" }}>Aucune d\u00e9co s\u00e9lectionn\u00e9e — choisis des stickers ci-dessous !</span>
+                    <span style={{ fontSize:"0.72rem",color:"#334155" }}>Aucune déco sélectionnée — choisis des stickers ci-dessous !</span>
                   </div>
                 ) : (
                   <div style={{ display:"flex",gap:"8px",flexWrap:"wrap",background:"rgba(255,255,255,0.03)",borderRadius:"12px",padding:"8px",border:"1px dashed rgba(255,255,255,0.08)" }}>
@@ -1715,7 +1715,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion }: { profil: R
               </button>
             </>
           ) : (
-            <p style={{ color:"#9CA3AF",fontSize:"0.85rem" }}>Tu as d\u00e9j\u00e0 utilis\u00e9 ton joker. Plus disponible !</p>
+            <p style={{ color:"#9CA3AF",fontSize:"0.85rem" }}>Tu as déjà utilisé ton joker. Plus disponible !</p>
           )}
         </div>
 

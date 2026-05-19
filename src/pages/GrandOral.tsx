@@ -469,8 +469,8 @@ export default function GrandOral({ profil, onXPGagne }: Props) {
               Le Grand Oral
             </h1>
             <p className="mt-2.5 text-sm leading-relaxed text-slate-400">
-              Salut <span className="font-semibold text-blue-300">{prenom}</span> ! Choisis ton jury et d\u00e9fends tes connaissances STMG.<br/>
-              Monte la jauge d'approbation \u00e0 <span className="font-bold text-emerald-300">100%</span> pour valider ton oral.
+              Salut <span className="font-semibold text-blue-300">{prenom}</span> ! Choisis ton jury et défends tes connaissances STMG.<br/>
+              Monte la jauge d'approbation à <span className="font-bold text-emerald-300">100%</span> pour valider ton oral.
             </p>
           </header>
 
@@ -529,7 +529,7 @@ export default function GrandOral({ profil, onXPGagne }: Props) {
 
           {/* Rewards preview */}
           <div className="mt-6 rounded-2xl border border-white/8 bg-white/[0.03] p-4">
-            <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-slate-600">R\u00e9compenses selon la mention</p>
+            <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-slate-600">Récompenses selon la mention</p>
             <div className="grid grid-cols-2 gap-2">
               {[
                 { m:"Tr\u00e8s Bien",  j:100, p:100, c:"#fbbf24", card:true },
@@ -539,7 +539,7 @@ export default function GrandOral({ profil, onXPGagne }: Props) {
               ].map(({ m,j,p,c,card })=>(
                 <div key={m} className="rounded-xl border border-white/8 bg-black/20 p-2.5">
                   <p className="text-xs font-black mb-0.5" style={{ color:c }}>{m}</p>
-                  <p className="text-[10px] text-slate-500">{j}j � {p}p{card?` � ${E.card} carte`:""}</p>
+                  <p className="text-[10px] text-slate-500">{j}j � {p}p{card?` � ${E.card} carte`:""}</p>
                 </div>
               ))}
             </div>
@@ -623,7 +623,7 @@ export default function GrandOral({ profil, onXPGagne }: Props) {
           {answered && (
             <div className="mb-4 rounded-[1.4rem] border border-white/8 bg-white/[0.025] p-8 text-center">
               <div className="text-3xl mb-2 select-none">{reaction==="pleased"?E.clap:E.sweat}</div>
-              <p className="text-sm text-slate-400">Pr\u00e9paration de la question suivante...</p>
+              <p className="text-sm text-slate-400">Préparation de la question suivante...</p>
             </div>
           )}
 
@@ -661,7 +661,7 @@ export default function GrandOral({ profil, onXPGagne }: Props) {
         {/* Rewards */}
         <div className="mb-6 rounded-[1.5rem] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-xl"
           style={{ animation:"goSlideIn 0.5s 0.15s both" }}>
-          <p className="mb-4 text-[10px] font-bold uppercase tracking-widest text-slate-600">R\u00e9compenses</p>
+          <p className="mb-4 text-[10px] font-bold uppercase tracking-widest text-slate-600">Récompenses</p>
           <div className="grid grid-cols-2 gap-3">
             <div className="rounded-2xl border border-amber-400/25 bg-amber-400/10 p-4 text-center" style={{ animation:"goHeartbeat 1.5s 0.5s ease-in-out infinite" }}>
               <div className="text-3xl mb-1 select-none">{E.coins}</div>
@@ -682,7 +682,7 @@ export default function GrandOral({ profil, onXPGagne }: Props) {
               <p className="text-base font-black" style={{ color:"#fbbf24" }}>
                 {result.card==="mention_tb" ? "Carte Mention Tr\u00e8s Bien" : "Carte Mention Bien"}
               </p>
-              <p className="text-xs text-slate-500">Ajout\u00e9e \u00e0 ton profil</p>
+              <p className="text-xs text-slate-500">Ajoutée à ton profil</p>
             </div>
           )}
 

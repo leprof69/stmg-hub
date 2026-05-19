@@ -55,7 +55,7 @@ const CHEEK_MAP:Record<string,CheekCfg>={
 };
 
 // ---------------------------------------------------------------------------
-// STICKERS — Iconify (Solar Duotone + Noto Google)
+// STICKERS ï¿½ Iconify (Solar Duotone + Noto Google)
 // ---------------------------------------------------------------------------
 type StickerDef={icon:string;top:string;left:string;sz:number;rotation?:string;color?:string};
 const STICKER_CFG:Record<string,StickerDef|null>={
@@ -549,7 +549,7 @@ function randomAvatar():AvatarConfig{
 }
 
 // ---------------------------------------------------------------------------
-// MAIN COMPONENT — layout mobile-first avec bottom nav
+// MAIN COMPONENT ï¿½ layout mobile-first avec bottom nav
 // ---------------------------------------------------------------------------
 type Props={profil:UserProfile;onXPGagne:()=>void};
 export default function AvatarCreator({profil,onXPGagne}:Props){
@@ -721,7 +721,7 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
                 <span style={{fontSize:"0.9rem"}}>{p.emoji}</span><span>{p.name}</span>
               </button>
             ))}
-            <button onClick={()=>setShowSpring(false)} style={{background:"none",border:"none",color:"#334155",fontSize:"0.9rem",cursor:"pointer",padding:"0 4px",lineHeight:1}}>{"×"}</button>
+            <button onClick={()=>setShowSpring(false)} style={{background:"none",border:"none",color:"#334155",fontSize:"0.9rem",cursor:"pointer",padding:"0 4px",lineHeight:1}}>{"ï¿½"}</button>
           </div>
         )}
 
@@ -767,7 +767,7 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
                 ))}
                 <button onClick={()=>{setAvatar(randomAvatar());setPreviewKey(k=>k+1);}} style={{background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.09)",borderRadius:"10px",padding:"6px 4px",color:"#475569",display:"flex",flexDirection:"column",alignItems:"center",gap:"2px",cursor:"pointer"}}>
                   <span style={{fontSize:"1.1rem"}}>{"\u{1F3B2}"}</span>
-                  <span style={{fontSize:"0.52rem",color:"#475569",textAlign:"center",lineHeight:1.1}}>Al\u00e9a</span>
+                  <span style={{fontSize:"0.52rem",color:"#475569",textAlign:"center",lineHeight:1.1}}>AlÃ©a</span>
                 </button>
               </div>
             </div>

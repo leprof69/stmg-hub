@@ -306,7 +306,7 @@ export default function CalculExpress({ profil, onXPGagne }: Props) {
         <div style={{ textAlign:"center", marginBottom:"32px" }}>
           <div style={{ fontSize:"4.5rem", marginBottom:"12px" }}>{E.calc}</div>
           <h1 style={{ color:"white", fontSize:"2.4rem", fontWeight:900, margin:"0 0 8px", background:"linear-gradient(135deg,#4ade80,#22d3ee,#818cf8)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>Calcul Express</h1>
-          <p style={{ color:"#64748b", fontSize:"1rem", margin:0 }}>Calculs STMG \u00e0 la vitesse de l'\u00e9clair !</p>
+          <p style={{ color:"#64748b", fontSize:"1rem", margin:0 }}>Calculs STMG à la vitesse de l'éclair !</p>
         </div>
 
         <div style={{ background:"rgba(255,255,255,0.04)", borderRadius:"20px", border:"1px solid rgba(255,255,255,0.08)", padding:"24px", marginBottom:"24px" }}>
@@ -348,7 +348,7 @@ export default function CalculExpress({ profil, onXPGagne }: Props) {
       <style>{CE_CSS}</style>
       <div style={{ textAlign:"center", animation:"ceCountIn 0.6s both" }}>
         <div style={{ fontSize:"9rem", fontWeight:900, color:"#4ade80", lineHeight:1, animation:"ceCountIn 0.6s both", textShadow:"0 0 60px #4ade80" }}>{countdown}</div>
-        <p style={{ color:"#64748b", fontSize:"1.2rem", marginTop:"16px" }}>Pr\u00e9pare-toi !</p>
+        <p style={{ color:"#64748b", fontSize:"1.2rem", marginTop:"16px" }}>Prépare-toi !</p>
       </div>
     </div>
   );
@@ -387,7 +387,7 @@ export default function CalculExpress({ profil, onXPGagne }: Props) {
 
           {reward && (
             <div style={{ background:"linear-gradient(135deg,rgba(74,222,128,0.1),rgba(34,211,238,0.1))", border:"1px solid rgba(74,222,128,0.25)", borderRadius:"20px", padding:"20px", textAlign:"center", marginBottom:"20px" }}>
-              <div style={{ color:"#94a3b8", fontSize:"0.75rem", fontWeight:700, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:"12px" }}>R\u00e9compenses gagn\u00e9es</div>
+              <div style={{ color:"#94a3b8", fontSize:"0.75rem", fontWeight:700, letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:"12px" }}>Récompenses gagnées</div>
               <div style={{ display:"flex", justifyContent:"center", gap:"24px" }}>
                 <div>
                   <div style={{ fontSize:"2rem" }}>{E.coin}</div>
@@ -510,7 +510,7 @@ export default function CalculExpress({ profil, onXPGagne }: Props) {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKey}
-            placeholder="Votre r\u00e9ponse..."
+            placeholder="Votre réponse..."
             style={{ flex:1, background:"rgba(255,255,255,0.06)", border:"2px solid rgba(255,255,255,0.12)", borderRadius:"16px", padding:"16px 20px", color:"white", fontSize:"1.25rem", fontWeight:700, outline:"none", fontFamily:"'Courier New',monospace" }}
           />
           <button onClick={checkAnswer} style={{ background:"linear-gradient(135deg,#4ade80,#22d3ee)", color:"#03080f", fontWeight:900, padding:"16px 22px", borderRadius:"16px", border:"none", cursor:"pointer", fontSize:"1.2rem", flexShrink:0 }}>

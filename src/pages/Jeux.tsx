@@ -235,8 +235,8 @@ export default function Jeux({ profil, onXPGagne }: Props) {
         </div>
 
         <div className="mt-6 rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-4 text-center text-xs leading-relaxed text-slate-500">
-          <p>Nouveaux jeux \u00e0 venir {EJ.sparkle} \u2014 vote pour le prochain dans les missions\u00a0!</p>
-          <p className="mt-1">Les jetons gagn\u00e9s ici comptent dans le classement {EJ.trophy}</p>
+          <p>Nouveaux jeux à venir {EJ.sparkle} — vote pour le prochain dans les missions !</p>
+          <p className="mt-1">Les jetons gagnés ici comptent dans le classement {EJ.trophy}</p>
         </div>
       </div>
     </div>
