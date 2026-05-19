@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useState, useEffect } from "react";
 import { db } from "../services/firebase";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { COLLECTIONS } from "../services/collectionsData";
 import { getPrestigeTotal } from "../services/userProfileService";
 
@@ -71,8 +71,12 @@ export default function Classement({ profil, onVisiterProfil }) {
     setChargement(true);
     setErreurClassement("");
     try {
-      const snapshot = await getDocs(collection(db, "users"));
-      const users = snapshot.docs.map(d => ({ id: d.id, ...d.data() })).filter(u => u.role !== "admin");
+      // Requête filtrée : sans ça, Firestore refuse la liste si un doc admin existe
+      // (un élève ne peut pas lire role === "admin", donc getDocs(users) entier échoue).
+      const snapshot = await getDocs(
+        query(collection(db, "users"), where("role", "!=", "admin"))
+      );
+      const users = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
 
       // Prestige
       const elevesClasses = users
