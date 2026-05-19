@@ -275,10 +275,18 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
           prestigeDonBonus: ((mySnap.data().prestigeDonBonus)||0)+amount*2,
         });
         const herSnap = await tx.get(herRef);
-        tx.update(herRef, { prestigeGifted: ((herSnap.data()?.prestigeGifted)||0)+amount });
+        tx.update(herRef, {
+          prestigeGifted: (Number(herSnap.data()?.prestigeGifted) || 0) + amount,
+          lastPrestigeGift: {
+            fromUid: auth.currentUser!.uid,
+            fromPrenom: myProfil.prenom,
+            amount,
+            at: Date.now(),
+          },
+        });
       });
       setMyJetons(j=>j-cost);
-      showToast(`\u{1F451} ${amount} prestige offerts ! Vous gagnez ${amount*2} en retour !`);
+      showToast("\u{1F381} Surprise envoy\u00e9e !");
       setSheet(null);
     }catch(e){ showToast((e instanceof Error?e.message:"Erreur"),false); }
   };
@@ -410,7 +418,7 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
                 const c = vitrine[i];
                 if(!c) return(
                   <div key={i} style={{ flex:1,maxWidth:120,borderRadius:"12px",border:"2px dashed #E5E7EB",padding:"24px 0",display:"flex",alignItems:"center",justifyContent:"center",color:"#9CA3AF",fontSize:"0.7rem" }}>
-                    {"ó"}
+                    {"ù"}
                   </div>
                 );
                 const col = (RARETE_CFG[c.rarete]||{couleur:"#9CA3AF"}).couleur;
@@ -451,28 +459,18 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
 
             <button className="vs-act-btn" onClick={()=>setSheet("prestige")}
               disabled={!canAffordPrestige}
-              style={{ background:"rgba(192,132,252,0.12)",border:"1px solid rgba(192,132,252,0.28)",color:"white",opacity:canAffordPrestige?1:0.4,animation:canAffordPrestige?"vsPulse 2.5s infinite":"none" }}>
-              <span style={{ fontSize:"1.8rem",lineHeight:1 }}>{"\u{1F451}"}</span>
-              <span style={{ fontSize:"0.7rem",fontWeight:800,color:"#c084fc" }}>{"Prestige"}</span>
-              <span style={{ fontSize:"0.58rem",color:"#64748b",textAlign:"center",lineHeight:1.3 }}>{"Tu gagnes x2 !"}</span>
+              style={{ background:"rgba(192,132,252,0.12)",border:"1px solid rgba(192,132,252,0.28)",color:"white",opacity:canAffordPrestige?1:0.4 }}>
+              <span style={{ fontSize:"1.8rem",lineHeight:1 }}>{"\u{1F381}"}</span>
+              <span style={{ fontSize:"0.7rem",fontWeight:800,color:"#c084fc" }}>{"Surprise"}</span>
+              <span style={{ fontSize:"0.58rem",color:"#64748b",textAlign:"center",lineHeight:1.3 }}>{"Offrir une surprise"}</span>
             </button>
           </div>
 
-          <div style={{ marginTop:"12px",background:"rgba(192,132,252,0.07)",borderRadius:"10px",padding:"10px 12px",border:"1px solid rgba(192,132,252,0.12)" }}>
-            <p style={{ fontSize:"0.68rem",color:"#94a3b8",margin:0,lineHeight:1.7 }}>
-              {"\u{1F451} "}
-              <strong style={{ color:"#c084fc" }}>{"Don de prestige"}</strong>
-              {" : offre du prestige \u00e0 "}{data.prenom as string}
-              {" et re\u00e7ois "}
-              <strong style={{ color:"#fbbf24" }}>{"le double"}</strong>
-              {" en retour ! Co\u00fbt : "}{PRESTIGE_COST}{"j par point."}
-            </p>
-          </div>
         </div>
 
-        <div style={{ textAlign:"center",padding:"6px",color:"#1e293b",fontSize:"0.65rem" }}>
+        <p style={{ textAlign:"center",padding:"6px",color:"#1e293b",fontSize:"0.65rem",margin:0 }}>
           {"\u{1F507} Mode visite \u2014 aucun message, interactions seulement"}
-        </div>
+        </p>
       </div>
 
       {/* ?? SHEETS ???????????????????????????????????????????????????? */}
@@ -487,10 +485,10 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
       )}
       {sheet==="prestige"&&(
         <AmountSheet
-          label={`Don de prestige \u00e0 ${data.prenom}`}
-          emoji={"\u{1F451}"}
+          label={`Surprise pour ${data.prenom}`}
+          emoji={"\u{1F381}"}
           maxAmount={Math.max(0,Math.floor(myJetons/PRESTIGE_COST))}
-          description={`1 prestige = ${PRESTIGE_COST}j \u2022 Tu re\u00e7ois 2x en retour !`}
+          description={"\u00c0 toi de choisir l\u2019intensit\u00e9"}
           confirm={donnerPrestige}
           onClose={()=>setSheet(null)}/>
       )}

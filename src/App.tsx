@@ -46,7 +46,6 @@ function App() {
   const sessionActive = useRef(false);
   const sessionStartMs = useRef(0);
   const lastSessionFlushMs = useRef(0);
-
   const chargerProfil = async (user: User) => {
     const p = await fetchUserProfile(user.uid);
     setProfil(p);

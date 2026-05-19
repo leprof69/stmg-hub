@@ -280,7 +280,7 @@ const CARD_STYLE: Record<string,{label:string;price:number;desc:string}> = {
 
 const NAME_EFFECT: Record<string,{label:string;price:number;style:React.CSSProperties}> = {
   defaut:   { label:"Normal",           price:0,   style:{} },
-  gradient: { label:"\u{1F308} Dgrad\u00e9",price:100, style:{background:"linear-gradient(90deg,#a78bfa,#ec4899,#f59e0b)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"} },
+  gradient: { label:"\u{1F308} D\u00e9grad\u00e9",price:100, style:{background:"linear-gradient(90deg,#a78bfa,#ec4899,#f59e0b)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"} },
   neon:     { label:"\u{1F4A1} N\u00e9on",  price:150, style:{color:"#00f5ff",textShadow:"0 0 20px #00f5ff,0 0 40px #00f5ff88"} },
   gold:     { label:"\u{1F31F} Or",         price:120, style:{background:"linear-gradient(90deg,#f59e0b,#fef08a,#d97706)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"} },
   shadow:   { label:"\u{1F5A4} Shadow",     price:80,  style:{textShadow:"0 4px 16px rgba(0,0,0,0.7),0 0 40px rgba(0,0,0,0.4)"} },
@@ -1094,7 +1094,7 @@ function SalonEditor({
               {/* ── Sélection actuelle */}
               <div style={{ marginBottom:"14px" }}>
                 <div style={{ display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:"7px" }}>
-                  <span style={{ fontSize:"0.78rem",color:"white",fontWeight:800 }}>Tes d\u00e9cos ({local.deco.length}/5)</span>
+                  <span style={{ fontSize:"0.78rem",color:"white",fontWeight:800 }}>Tes décos ({local.deco.length}/5)</span>
                   <span style={{ fontSize:"0.62rem",color:"#64748b" }}>Clique pour retirer</span>
                 </div>
                 {local.deco.length===0 ? (

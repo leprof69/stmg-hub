@@ -106,3 +106,4 @@ export async function trackNavigation(uid: string, page: string): Promise<void> 
     [`activityCounters.${page}`]: increment(1),
   });
 }
+

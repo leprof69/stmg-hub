@@ -490,7 +490,7 @@ export default function CasinoSlots({ profil, onXPGagne }: Props) {
             <p className="text-[10px] font-bold uppercase tracking-widest text-amber-400/70">Pièces Casino</p>
             <div className="mt-1 flex items-baseline gap-1.5">
               <span className="text-4xl font-black tabular-nums text-amber-300" style={{ animation: coins>0?"coinPop 0.3s ease-out":"none" }}>{coins}</span>
-              <span className="text-sm text-amber-500/60">pi\u00e8ce{coins>1?"s":""}</span>
+              <span className="text-sm text-amber-500/60">pièce{coins>1?"s":""}</span>
             </div>
           </div>
           <div className="text-5xl select-none" style={{ filter:"drop-shadow(0 0 12px #fbbf24)" }}>{E.coins}</div>

@@ -7,7 +7,7 @@ import {
   type FlashcardItem,
   type FlashcardProgramme,
 } from "../data/flashcardsData";
-import { formatJetons, formatJetonsDelta, motJetons } from "../lib/jetons";
+import { formatJetons, formatJetonsDelta } from "../lib/jetons";
 import { PLATFORM_XP_BLOCKED_MESSAGE, usePlatformIntegrity } from "../contexts/PlatformIntegrityContext";
 
 type Props = {
@@ -16,18 +16,8 @@ type Props = {
 };
 
 const STORAGE_KEY = "flashcardsProgress";
-const LEVEL_STEP_XP = 250;
 const BONUS_STREAK_STEP = 5;
-const BADGE_MILESTONES = [10, 25, 50, 75, 100, 150, 200];
-
-const LEVEL_TITLES = [
-  "Recrue STMG",
-  "Apprenti Analyste",
-  "Strat?giste Junior",
-  "Pilote de Donn?es",
-  "Ma?tre R?vision",
-  "Boss du Bac",
-];
+const BONUS_STREAK_JETONS = 15;
 
 const STOP_WORDS = new Set([
   "le", "la", "les", "de", "des", "du", "un", "une", "et", "ou", "pour", "par",
@@ -49,43 +39,6 @@ const CATEGORY_LABELS: Record<DeckCategory, string> = {
   ressources_humaines: "Ressources Humaines",
   numerique_si: "Num?rique & SI",
 };
-
-const CATEGORY_STYLES: Record<DeckCategory, { bg: string; border: string; text: string; glow: string }> = {
-  tous:                { bg: "#F5F3FF", border: "#C4B5FD", text: "#6D28D9", glow: "rgba(139, 92, 246, 0.25)" },
-  management:          { bg: "#EEF2FF", border: "#A5B4FC", text: "#3730A3", glow: "rgba(99, 102, 241, 0.25)" },
-  droit:               { bg: "#FFF7ED", border: "#FCD34D", text: "#92400E", glow: "rgba(245, 158, 11, 0.25)" },
-  economie:            { bg: "#DCFCE7", border: "#6EE7B7", text: "#065F46", glow: "rgba(16, 185, 129, 0.25)" },
-  sciences_gestion:    { bg: "#ECFEFF", border: "#67E8F9", text: "#0F766E", glow: "rgba(6, 182, 212, 0.25)" },
-  gestion_finance:     { bg: "#FFF1F2", border: "#FCA5A5", text: "#9F1239", glow: "rgba(239, 68, 68, 0.25)" },
-  mercatique:          { bg: "#FDF4FF", border: "#E879F9", text: "#7E22CE", glow: "rgba(168, 85, 247, 0.25)" },
-  ressources_humaines: { bg: "#FFF7ED", border: "#FB923C", text: "#C2410C", glow: "rgba(249, 115, 22, 0.25)" },
-  numerique_si:        { bg: "#F0FDF4", border: "#86EFAC", text: "#166534", glow: "rgba(34, 197, 94, 0.25)" },
-};
-
-function getLevelFromXp(totalXp: number) {
-  return Math.max(1, Math.floor(totalXp / LEVEL_STEP_XP) + 1);
-}
-
-function getMultiplierFromLevel(level: number) {
-  return 1 + (level - 1) * 0.1;
-}
-
-function getLevelTitle(level: number) {
-  return LEVEL_TITLES[Math.min(LEVEL_TITLES.length - 1, Math.floor((level - 1) / 2))];
-}
-
-function getXpInCurrentLevel(totalXp: number) {
-  return ((totalXp % LEVEL_STEP_XP) + LEVEL_STEP_XP) % LEVEL_STEP_XP;
-}
-
-function getXpToNextLevel(totalXp: number) {
-  const inLevel = getXpInCurrentLevel(totalXp);
-  return inLevel === 0 ? LEVEL_STEP_XP : LEVEL_STEP_XP - inLevel;
-}
-
-function computeUnlockedBadges(masteredCount: number): number[] {
-  return BADGE_MILESTONES.filter((m) => masteredCount >= m);
-}
 
 function shuffleArray<T>(arr: T[]): T[] {
   const copy = [...arr];
@@ -142,15 +95,9 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   const [banner, setBanner] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [sessionGood, setSessionGood] = useState(0);
-  const [sessionRetry, setSessionRetry] = useState(0);
-  const [streak, setStreak] = useState(0);
   const [isActionBusy, setIsActionBusy] = useState(false);
   const [cardEmoji, setCardEmoji] = useState("");
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
-  const [flashcardsTotalXp, setFlashcardsTotalXp] = useState(0);
-  const [level, setLevel] = useState(1);
-  const [unlockedBadges, setUnlockedBadges] = useState<number[]>([]);
-  const [justUnlockedBadge, setJustUnlockedBadge] = useState<number | null>(null);
   const [category, setCategory] = useState<DeckCategory>("tous");
   const [learnerAnswer, setLearnerAnswer] = useState("");
   const [answerChecked, setAnswerChecked] = useState(false);
@@ -169,11 +116,6 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   const current = deck[index] || null;
   const masteredCount = cards.length - remaining.length;
   const progressPct = cards.length ? Math.round((masteredCount / cards.length) * 100) : 0;
-  const estimatedXpLeft = remaining.reduce((sum, c) => sum + (Number(c.xp) || 0), 0);
-  const levelTitle = getLevelTitle(level);
-  const xpToNextLevel = getXpToNextLevel(flashcardsTotalXp);
-  const levelProgressPct = Math.round((getXpInCurrentLevel(flashcardsTotalXp) / LEVEL_STEP_XP) * 100);
-  const categoryStyle = CATEGORY_STYLES[category];
 
   useEffect(() => {
     setDeck(shuffleArray(remaining));
@@ -201,10 +143,6 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
         const stored = data?.[STORAGE_KEY];
         if (stored?.version === FLASHCARDS_DATA_VERSION && stored?.validatedIds) {
           setValidatedIds(stored.validatedIds);
-          const storedTotalXp = Number(stored.totalXpEarned || 0);
-          setFlashcardsTotalXp(storedTotalXp);
-          setLevel(getLevelFromXp(storedTotalXp));
-          setUnlockedBadges(Array.isArray(stored.badges) ? stored.badges : []);
         }
       } catch (err) {
         console.error("Chargement flashcards impossible", err);
@@ -222,24 +160,14 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     const snap = await getDoc(ref);
     if (!snap.exists()) return;
     const data = snap.data();
-    const previousStored = data?.[STORAGE_KEY] || {};
-    const nextTotalXp = Number(previousStored.totalXpEarned || 0) + xpGain;
-    const nextMasteredCount = cards.length - (cards.filter((c) => !nextValidated[c.id]).length);
-    const nextBadges = computeUnlockedBadges(nextMasteredCount);
     await updateDoc(ref, {
       xp: (data.xp || 0) + xpGain,
       [STORAGE_KEY]: {
         version: FLASHCARDS_DATA_VERSION,
         validatedIds: nextValidated,
-        totalXpEarned: nextTotalXp,
-        level: getLevelFromXp(nextTotalXp),
-        badges: nextBadges,
         updatedAt: Date.now(),
       },
     });
-    setFlashcardsTotalXp(nextTotalXp);
-    setLevel(getLevelFromXp(nextTotalXp));
-    setUnlockedBadges(nextBadges);
   };
 
   const handleMastered = async (force = false) => {
@@ -256,29 +184,20 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     const nextValidated = { ...validatedIds, [current.id]: true as const };
     try {
       const nextSessionGood = sessionGood + 1;
-      const currentMultiplier = getMultiplierFromLevel(level);
       let bonusXp = 0;
       if (nextSessionGood % BONUS_STREAK_STEP === 0) {
-        bonusXp = Math.round(15 * currentMultiplier);
+        bonusXp = BONUS_STREAK_JETONS;
       }
       const totalGain = current.xp + bonusXp;
-      const previousLevel = level;
       await persist(nextValidated, totalGain);
-      const projectedTotalXp = flashcardsTotalXp + totalGain;
-      const nextLevel = getLevelFromXp(projectedTotalXp);
-      if (nextLevel > previousLevel) {
-        setCardEmoji("Niveau +1");
-        setBanner((prev) => `${prev}  Niveau ${nextLevel} atteint !`);
-      }
       setBanner(
         bonusXp > 0
-          ? `${formatJetonsDelta(current.xp)} + bonus ${formatJetons(bonusXp)} (x${currentMultiplier.toFixed(1)}) !`
-          : `${formatJetonsDelta(current.xp)} ! Carte maitrisee`
+          ? `${formatJetonsDelta(current.xp)} + ${formatJetons(bonusXp)} bonus serie !`
+          : `${formatJetonsDelta(current.xp)} ? carte validee`
       );
       setCardEmoji("\u{1F929}\u2705");
       setTimeout(() => setCardEmoji(""), 850);
       setSessionGood(nextSessionGood);
-      setStreak((v) => v + 1);
       setLearnerAnswer("");
       setAnswerChecked(false);
       setAnswerAccepted(false);
@@ -287,13 +206,6 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
         setValidatedIds(nextValidated);
         setTransitioningCard(false);
       }, 520);
-      const nextMastered = masteredCount + 1;
-      const nextBadges = computeUnlockedBadges(nextMastered);
-      const freshBadge = nextBadges.find((b) => !unlockedBadges.includes(b));
-      if (freshBadge) {
-        setJustUnlockedBadge(freshBadge);
-        setTimeout(() => setJustUnlockedBadge(null), 1800);
-      }
       if (onXPGagne) onXPGagne();
     } catch (err) {
       console.error("Validation flashcard impossible", err);
@@ -324,8 +236,6 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     setCardEmoji("\u{1F622}\u{1F4DA}");
     setTimeout(() => setCardEmoji(""), 850);
     setTransitioningCard(false);
-    setSessionRetry((v) => v + 1);
-    setStreak(0);
   };
 
   const handleCheckAnswer = () => {
@@ -357,7 +267,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
 
   const handleToggleCard = () => {
     if (!answerChecked) {
-      setBanner("R?ponds d'abord puis clique sur 'V?rifier ma r?ponse' pour voir la correction.");
+      setBanner("R?ponds d'abord puis clique sur ? V?rifier ma r?ponse ? pour voir la correction.");
       setCardEmoji("\u270D\uFE0F");
       setTimeout(() => setCardEmoji(""), 850);
       return;
@@ -380,12 +290,6 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
       setBanner("R?initialisation locale effectu?e.");
     }
     setSessionGood(0);
-    setSessionRetry(0);
-    setStreak(0);
-    setFlashcardsTotalXp(0);
-    setLevel(1);
-    setUnlockedBadges([]);
-    setJustUnlockedBadge(null);
   };
 
   useEffect(() => {
@@ -426,36 +330,41 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   }
 
   return (
-    <div className="min-h-screen p-3" style={{ background: "radial-gradient(circle at 15% 10%, #DBEAFE 0%, #EEF2FF 36%, #F8FAFC 100%)", fontFamily: "Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" }}>
+    <div className="min-h-screen p-3" style={{ background: "#F1F5F9", fontFamily: "Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" }}>
       <div className="max-w-3xl mx-auto" style={{ display: "grid", gap: 12 }}>
-        <section style={{ background: "linear-gradient(145deg, rgba(255,255,255,0.96), rgba(240,249,255,0.94))", backdropFilter: "blur(10px)", borderRadius: 22, border: "1px solid #BFDBFE", padding: 16, boxShadow: "0 18px 45px rgba(30, 41, 59, 0.1)" }}>
+        <section style={{ background: "#fff", borderRadius: 16, border: "1px solid #E2E8F0", padding: 16, boxShadow: "0 4px 20px rgba(15, 23, 42, 0.06)" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
-            <h1 style={{ margin: 0, fontSize: "1.7rem", color: "#1E1B4B" }}>Flashcards Bac ? Entra?nement actif</h1>
+            <div>
+              <h1 style={{ margin: 0, fontSize: "1.5rem", color: "#0F172A", fontWeight: 800 }}>Flashcards</h1>
+              <p style={{ margin: "4px 0 0", color: "#64748B", fontSize: 14 }}>
+                {masteredCount} / {cards.length} cartes validees ? {remaining.length} restantes
+              </p>
+            </div>
             <button
+              type="button"
               onClick={resetProgress}
-              style={{ borderRadius: 10, border: "1px solid #FCA5A5", background: "#FFF1F2", color: "#9F1239", padding: "7px 11px", fontWeight: 700, cursor: "pointer" }}
+              style={{ borderRadius: 8, border: "1px solid #E2E8F0", background: "#F8FAFC", color: "#64748B", padding: "6px 10px", fontWeight: 600, fontSize: 13, cursor: "pointer" }}
             >
-              R?initialiser le pack
+              Reinitialiser
             </button>
           </div>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 14 }}>
             {(["tous", "management", "droit", "economie", "sciences_gestion", "gestion_finance", "mercatique", "ressources_humaines", "numerique_si"] as DeckCategory[]).map((cat) => {
               const active = category === cat;
-              const stylePreset = CATEGORY_STYLES[cat];
               return (
                 <button
                   key={cat}
+                  type="button"
                   onClick={() => setCategory(cat)}
                   style={{
-                    borderRadius: 999,
-                    border: active ? `1px solid ${stylePreset.border}` : "1px solid #CBD5E1",
-                    background: active ? stylePreset.bg : "#F8FAFC",
-                    color: active ? stylePreset.text : "#334155",
-                    padding: "7px 12px",
-                    fontWeight: 700,
+                    borderRadius: 8,
+                    border: active ? "1px solid #4F46E5" : "1px solid #E2E8F0",
+                    background: active ? "#EEF2FF" : "#fff",
+                    color: active ? "#4338CA" : "#475569",
+                    padding: "6px 11px",
+                    fontWeight: active ? 700 : 500,
+                    fontSize: 13,
                     cursor: "pointer",
-                    boxShadow: active ? `0 6px 16px ${stylePreset.glow}` : "none",
-                    transition: "all 220ms ease",
                   }}
                 >
                   {CATEGORY_LABELS[cat]}
@@ -464,67 +373,24 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
             })}
           </div>
 
-          <p style={{ color: categoryStyle.text, margin: "8px 0 10px", fontWeight: 600 }}>
-            {remaining.length} restantes / {cards.length} ? jetons potentiels restants : {estimatedXpLeft} {motJetons(estimatedXpLeft)}
-          </p>
-
-          <div style={{ height: 10, borderRadius: 999, background: "#E2E8F0", overflow: "hidden" }}>
-            <div
-              style={{
-                width: `${progressPct}%`,
-                height: "100%",
-                borderRadius: 999,
-                background: "linear-gradient(90deg, #22C55E, #0EA5E9, #8B5CF6)",
-                transition: "width 350ms ease",
-              }}
-            />
-          </div>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 10 }}>
-            <span style={{ background: "#EEF2FF", color: "#4338CA", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Progression: {progressPct}%</span>
-            <span style={{ background: "#DCFCE7", color: "#166534", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Ma?tris?es : {masteredCount}</span>
-            <span style={{ background: "#FEF9C3", color: "#854D0E", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>S?rie : {streak}</span>
-            <span style={{ background: "#F1F5F9", color: "#334155", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Session OK : {sessionGood}</span>
-            <span style={{ background: "#FFF1F2", color: "#9F1239", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>? revoir : {sessionRetry}</span>
-            <span style={{ background: "#EDE9FE", color: "#5B21B6", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Niveau: {level}</span>
-            <span style={{ background: "#F5F3FF", color: "#6D28D9", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Coef: x{getMultiplierFromLevel(level).toFixed(1)}</span>
-            <span style={{ background: "#ECFEFF", color: "#155E75", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Jetons flashcards : {flashcardsTotalXp}</span>
-            <span style={{ background: "#FFF7ED", color: "#9A3412", borderRadius: 999, padding: "6px 10px", fontWeight: 700, fontSize: 13 }}>Rang: {levelTitle}</span>
-          </div>
-          <div style={{ marginTop: 10 }}>
-            <p style={{ margin: "0 0 6px", color: "#475569", fontSize: 13 }}>
-              Prochain niveau dans {xpToNextLevel} {motJetons(xpToNextLevel)}
-            </p>
+          <div style={{ marginTop: 14 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, fontSize: 13, color: "#64748B" }}>
+              <span>Progression du pack</span>
+              <span style={{ fontWeight: 700, color: "#334155" }}>{progressPct}%</span>
+            </div>
             <div style={{ height: 8, borderRadius: 999, background: "#E2E8F0", overflow: "hidden" }}>
-              <div style={{ width: `${levelProgressPct}%`, height: "100%", borderRadius: 999, background: "linear-gradient(90deg, #8B5CF6, #06B6D4)", transition: "width 300ms ease" }} />
+              <div
+                style={{
+                  width: `${progressPct}%`,
+                  height: "100%",
+                  borderRadius: 999,
+                  background: "#4F46E5",
+                  transition: "width 350ms ease",
+                }}
+              />
             </div>
           </div>
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 10 }}>
-            {BADGE_MILESTONES.map((m) => {
-              const unlocked = unlockedBadges.includes(m);
-              return (
-                <span
-                  key={`badge-${m}`}
-                  style={{
-                    borderRadius: 999,
-                    padding: "5px 9px",
-                    fontWeight: 700,
-                    fontSize: 12,
-                    background: unlocked ? "#FEF3C7" : "#F1F5F9",
-                    color: unlocked ? "#92400E" : "#64748B",
-                    border: `1px solid ${unlocked ? "#F59E0B" : "#CBD5E1"}`,
-                  }}
-                >
-                  {unlocked ? "Badge d?bloqu?" : "Badge verrouill?"} ? {m} cartes
-                </span>
-              );
-            })}
-          </div>
           {banner && <p style={{ marginTop: 10, color: "#0F766E", fontWeight: 700 }}>{banner}</p>}
-          {justUnlockedBadge && (
-            <p style={{ marginTop: 8, color: "#92400E", fontWeight: 800 }}>
-              Nouveau badge d?bloqu? : {justUnlockedBadge} cartes ma?tris?es !
-            </p>
-          )}
         </section>
 
         {!current ? (
@@ -533,10 +399,10 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
             <p style={{ margin: 0, color: "#475569" }}>Tu as valid? toutes les cartes du pack.</p>
           </section>
         ) : (
-          <section style={{ background: "linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%)", borderRadius: 22, border: "1px solid #BFDBFE", padding: 14, boxShadow: "0 14px 34px rgba(30, 41, 59, 0.08)" }}>
+          <section style={{ background: "#fff", borderRadius: 16, border: "1px solid #E2E8F0", padding: 14, boxShadow: "0 4px 20px rgba(15, 23, 42, 0.06)" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 8, flexWrap: "wrap" }}>
-              <p style={{ margin: 0, color: categoryStyle.text, fontWeight: 800 }}>{current.notion}</p>
-              <span style={{ background: categoryStyle.bg, color: categoryStyle.text, borderRadius: 999, padding: "4px 10px", fontWeight: 700, fontSize: 12, border: `1px solid ${categoryStyle.border}` }}>{formatJetonsDelta(current.xp)}</span>
+              <p style={{ margin: 0, color: "#334155", fontWeight: 800 }}>{current.notion}</p>
+              <span style={{ background: "#F8FAFC", color: "#334155", borderRadius: 999, padding: "4px 10px", fontWeight: 700, fontSize: 12, border: "1px solid #E2E8F0" }}>{formatJetonsDelta(current.xp)}</span>
             </div>
             <div
               onClick={handleToggleCard}
@@ -564,17 +430,17 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
                   style={{
                     position: "absolute",
                     inset: 0,
-                    border: `1px solid ${categoryStyle.border}`,
+                    border: "1px solid #E2E8F0",
                     borderRadius: 16,
                     padding: 22,
-                    background: `linear-gradient(180deg, #FFFFFF 0%, ${categoryStyle.bg} 100%)`,
+                    background: "#FFFFFF",
                     backfaceVisibility: "hidden",
                     display: "grid",
                     alignContent: "center",
-                    boxShadow: `0 8px 24px ${categoryStyle.glow}`,
+                    boxShadow: "0 4px 16px rgba(15,23,42,0.06)",
                   }}
                 >
-                  <p style={{ margin: "0 0 8px", color: categoryStyle.text, fontSize: 12, fontWeight: 800, letterSpacing: 0.4, textTransform: "uppercase" }}>
+                  <p style={{ margin: "0 0 8px", color: "#334155", fontSize: 12, fontWeight: 800, letterSpacing: 0.4, textTransform: "uppercase" }}>
                     Question
                   </p>
                   <p style={{ margin: 0, color: "#0F172A", lineHeight: 1.65, fontSize: "1.05rem", fontWeight: 700 }}>
@@ -585,10 +451,10 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
                   style={{
                     position: "absolute",
                     inset: 0,
-                    border: `1px solid ${categoryStyle.border}`,
+                    border: "1px solid #E2E8F0",
                     borderRadius: 16,
                     padding: 22,
-                    background: `linear-gradient(180deg, ${categoryStyle.bg} 0%, #E0F2FE 100%)`,
+                    background: "#F8FAFC",
                     transform: "rotateY(180deg)",
                     backfaceVisibility: "hidden",
                     display: "grid",
@@ -596,7 +462,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
                     boxShadow: "0 8px 24px rgba(30, 41, 59, 0.08)",
                   }}
                 >
-                  <p style={{ margin: "0 0 8px", color: categoryStyle.text, fontSize: 12, fontWeight: 800, letterSpacing: 0.4, textTransform: "uppercase" }}>
+                  <p style={{ margin: "0 0 8px", color: "#334155", fontSize: 12, fontWeight: 800, letterSpacing: 0.4, textTransform: "uppercase" }}>
                     Correction
                   </p>
                   <p style={{ margin: 0, color: "#1E293B", lineHeight: 1.65, fontSize: "1.02rem" }}>

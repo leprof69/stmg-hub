@@ -123,6 +123,21 @@ export default function Dashboard({ profil }) {
               Encore {pointsVersPalier} pt{pointsVersPalier === 1 ? "" : "s"} pour le niveau {niveau + 1}
             </p>
           </div>
+          {(() => {
+            const g = profil?.lastPrestigeGift as { fromPrenom?: string; amount?: number } | undefined;
+            if (!g?.fromPrenom || !g?.amount) return null;
+            return (
+              <p className="text-center text-sm mt-3 py-2 px-3 rounded-xl border border-violet-200 bg-violet-50 text-violet-900">
+                {"\u{1F451} "}
+                <strong>{g.fromPrenom}</strong>
+                {" t'a offert "}
+                {g.amount}
+                {" point"}
+                {g.amount > 1 ? "s" : ""}
+                {" de prestige !"}
+              </p>
+            );
+          })()}
         </div>
 
         {/* MESSAGE MOTIVATION */}
