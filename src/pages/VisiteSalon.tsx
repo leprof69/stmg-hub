@@ -8,6 +8,7 @@ import {
 import { COLLECTIONS } from "../services/collectionsData";
 import { AvatarSVG, DEFAULT_AVATAR } from "./AvatarCreator";
 import type { AvatarConfig } from "./AvatarCreator";
+import SalonDecoSticker from "../components/SalonDecoSticker";
 
 // ?? types ????????????????????????????????????????????????????????????????????
 type SalonCfg = { theme:string; titre:string; motto:string; deco:string[] };
@@ -371,10 +372,9 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
             {salon.deco.map((em,i)=>(
               <div key={i} style={{ position:"absolute",pointerEvents:"none",lineHeight:1,
                 ...Object.fromEntries(Object.entries(DECO_POS[i]).filter(([k])=>k!=="fontSize")),
-                fontSize:DECO_POS[i].fontSize,
                 animation:`vsDecoFloat ${2.5+i*0.4}s ease-in-out ${i*0.3}s infinite`,
                 filter:"drop-shadow(0 2px 8px rgba(0,0,0,0.35))",zIndex:0 }}>
-                {em}
+                <SalonDecoSticker em={em} fontSize={DECO_POS[i].fontSize} accentColor={couleurFamille}/>
               </div>
             ))}
             <div style={{ position:"absolute",bottom:"10px",left:"14px",fontSize:"0.58rem",fontWeight:700,color:theme.dark?"rgba(255,255,255,0.35)":"rgba(0,0,0,0.3)",letterSpacing:"0.1em",textTransform:"uppercase" }}>
@@ -418,7 +418,7 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
                 const c = vitrine[i];
                 if(!c) return(
                   <div key={i} style={{ flex:1,maxWidth:120,borderRadius:"12px",border:"2px dashed #E5E7EB",padding:"24px 0",display:"flex",alignItems:"center",justifyContent:"center",color:"#9CA3AF",fontSize:"0.7rem" }}>
-                    {"ù"}
+                    {"\u2014"}
                   </div>
                 );
                 const col = (RARETE_CFG[c.rarete]||{couleur:"#9CA3AF"}).couleur;
