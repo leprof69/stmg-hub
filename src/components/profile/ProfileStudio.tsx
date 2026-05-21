@@ -495,7 +495,7 @@ export default function ProfileStudio({
             {tab === "salon" && (
               <div className="ps-bento">
                 {Object.entries(SALON_THEMES).map(([k, t]) => {
-                  const price = THEME_PRICES[k] || 0;
+                  const price = themeShopPrice(k);
                   const owned = isThemeOwned(k);
                   const active = localSalon.theme === k;
                   const canBuy = !owned && jetons >= price;
