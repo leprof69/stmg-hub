@@ -8,10 +8,13 @@
   },
   "scripts": {
     "dev": "npx vite",
-    "build": "npx vite build",
+    "build": "npm run check:encoding && npx vite build",
     "preview": "npx vite preview",
-    "typecheck": "tsc --noEmit -p tsconfig.app.json",
+    "typecheck": "npm run check:encoding && tsc --noEmit -p tsconfig.app.json",
+    "check:encoding": "node scripts/check-encoding.mjs",
+    "fix:encoding": "node scripts/fix-all-fffd.mjs && node scripts/fix-correctionIA-encoding.mjs",
     "generate:duel-qcm": "node scripts/generate-duel-qcm-bank.mjs",
+    "generate:sdgn-qcm": "python scripts/generate_sdgn_mission_qcm.py",
     "accent:duel-qcm": "node scripts/apply-duel-accents.mjs"
   },
   "dependencies": {

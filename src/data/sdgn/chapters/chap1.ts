@@ -1,0 +1,213 @@
+import type { SdgnMissionExercise } from "../types";
+
+
+export const SDGN_CHAP1_EXERCISES: SdgnMissionExercise[] = [
+  {
+    id: "sdgn1-e1",
+    title: "Caractéristiques de l'action collective organisée",
+    type: "Exercice",
+    difficulty: "Facile",
+    xp: 120,
+    minChars: 120,
+    support: "À Lyon, huit lycéens de terminale STMG lancent un projet commun : organiser une journée portes ouvertes thématique « entrepreneuriat » dans leur établissement. Ils fixent un objectif commun (accueillir 200 visiteurs), se répartissent les tâches (communication, accueil, ateliers, budget), mobilisent des ressources (salle, matériel audiovisuel, budget de 800 € prêté par l'association des parents) et adoptent des règles simples (réunions hebdomadaires, compte-rendu partagé). Lorsqu'un conflit surgit sur la priorité entre stands, ils votent en groupe. Le projet dure trois mois et se termine par un bilan chiffré : 215 visiteurs, 12 partenaires locaux mobilisés, trois élèves engagés en BTS grâce aux rencontres. Aucune personne morale n'a été créée : le groupe reste informel, même si l'action est structurée.",
+    consigne: "À partir du support, mobilise la notion d'action collective organisée et explique en quoi ce projet en est un exemple, sans confondre avec une organisation au sens juridique.",
+    questions: [
+      "Définis l'action collective organisée en t'appuyant sur le cours.",
+      "Identifie dans le texte au moins quatre éléments qui caractérisent cette action collective organisée.",
+      "Pourquoi ce groupe n'est-il pas encore une organisation au sens du manuel ?"
+    ],
+    correctionModele: "1) Définition de l'action collective organisée :\nL'action collective organisée suppose un groupe d'individus partageant un ou plusieurs objectifs communs. Ces individus se coordonnent, se répartissent les tâches selon leurs capacités et mobilisent des ressources (humaines, financières, matérielles, immatérielles) pour atteindre les objectifs fixés.\n\n2) Éléments repérés dans le support :\n— Objectif commun : accueillir 200 visiteurs.\n— Coordination et répartition des tâches : communication, accueil, ateliers, budget.\n— Mobilisation de ressources : salle, matériel, budget de 800 €.\n— Règles et prise de décision : réunions hebdomadaires, vote en cas de conflit.\n\n3) Absence d'organisation juridique :\nLe groupe n'a pas constitué de personne morale distincte de ses membres. L'action est limitée dans le temps (trois mois) et ne vise pas une pérennité indéterminée. Il n'y a pas de statuts juridiques ni d'existence reconnue par les tiers comme entité autonome.",
+    attendu: "Définition précise, repérage dans le texte, distinction action collective / organisation.",
+  },
+  {
+    id: "sdgn1-e2",
+    title: "De l'action collective à la personne morale",
+    type: "Exercice",
+    difficulty: "Facile",
+    xp: 130,
+    minChars: 140,
+    support: "Trois artisans boulangers de Bretagne, confrontés à la hausse des matières premières, décident de mutualiser leurs achats de farine et leurs livraisons. Après un an de coopération informelle réussie, ils créent la société coopérative « Farine & Partage », immatriculée au registre du commerce. La coopérative possède un capital social, un siège à Rennes, des statuts précisant l'objet social (achat groupé et logistique partagée pour boulangers indépendants) et une durée de vie indéterminée. Chaque associé dispose d'une voix en assemblée générale, quel que soit le nombre de parts détenues. Les contrats avec les fournisseurs sont signés au nom de la coopérative, non plus au nom personnel des boulangers.",
+    consigne: "Explique le passage de l'action collective organisée à l'organisation en mobilisant les notions de personne morale, statuts juridiques et pérennité.",
+    questions: [
+      "Qu'est-ce qu'une personne morale ? Illustre avec l'exemple de la coopérative.",
+      "Quel rôle jouent les statuts juridiques dans cette création ?",
+      "Pourquoi la durée indéterminée et l'immatriculation marquent-elles le passage à l'organisation ?"
+    ],
+    correctionModele: "1) Personne morale :\nUne personne morale est une entité juridique distincte des individus qui la composent, reconnue par les tiers. « Farine & Partage » peut contracter, posséder un capital et être poursuivie en son nom propre, indépendamment des boulangers fondateurs.\n\n2) Statuts juridiques :\nLes statuts fixent les règles de fonctionnement adaptées aux objectifs : objet social, mode de gouvernance (une voix par associé), répartition des responsabilités. Ils mettent le groupe en conformité avec les contraintes juridiques obligatoires.\n\n3) Pérennité et immatriculation :\nL'action collective initiale était limitée et informelle. La création d'une société coopérative avec durée indéterminée traduit une volonté de pérennité. L'immatriculation au RCS confère une existence juridique officielle : l'organisation peut mener des actions collectives dans la durée.",
+    attendu: "Articulation claire action collective ? organisation, vocabulaire juridique exact.",
+  },
+  {
+    id: "sdgn1-e3",
+    title: "Objet social et finalités",
+    type: "Exercice",
+    difficulty: "Facile",
+    xp: 140,
+    minChars: 150,
+    support: "Compare trois structures citées dans le manuel :\n— LVMH (entreprise privée) : fusion de maisons de luxe, objectif de croissance rentable et de création de valeur pour les actionnaires.\n— L'hôpital public de Tours : établissement public, mission de soins accessibles à tous, financé par l'État et les cotisations sociales, sans recherche de profit.\n— Les Restos du Cœur : association loi 1901, mission sociale d'aide alimentaire aux plus démunis ; les éventuels excédents sont réinvestis dans l'action, jamais distribués à des propriétaires privés.",
+    consigne: "Pour chaque structure, précise l'objet social, la finalité (lucrative ou non lucrative) et le type d'organisation. Utilise le vocabulaire du référentiel.",
+    questions: [
+      "Définis l'objet social et explique son rôle pour une organisation.",
+      "Classe LVMH, l'hôpital public et Les Restos du Cœur selon leur finalité et leur type.",
+      "Pourquoi une entreprise peut-elle avoir des buts non lucratifs compatibles avec son activité ?"
+    ],
+    correctionModele: "1) Objet social :\nL'objet social est la déclaration juridique définissant la finalité de l'organisation. Il conditionne les activités autorisées pour réaliser cette finalité.\n\n2) Classification :\n— LVMH : entreprise à finalité lucrative ; objet social lié à la production et la commercialisation de produits de luxe ; but principal = profit et pérennité.\n— Hôpital public : organisation publique à finalité non lucrative ; objet social = mission de santé publique et intérêt général.\n— Restos du Cœur : association à finalité non lucrative ; objet social = aide sociale alimentaire ; bénéfices réinvestis, pas de distribution de profit.\n\n3) Buts non lucratifs compatibles dans une entreprise :\nUne entreprise peut poursuivre des objectifs RSE, mécénat ou qualité de vie au travail sans renoncer à sa finalité lucrative principale, tant que ces actions restent compatibles avec son activité économique.",
+    attendu: "Trois cas distincts, finalités et types correctement nommés.",
+  },
+  {
+    id: "sdgn1-e4",
+    title: "Entreprise, association et organisation publique",
+    type: "Exercice",
+    difficulty: "Moyen",
+    xp: 180,
+    minChars: 160,
+    support: "La PME familiale « Terre & Goût » transforme et commercialise des confitures bio en Normandie : 45 salariés, chiffre d'affaires de 3,2 M€, résultat distribué en partie aux actionnaires familiaux. À côté, l'association « Jardins partagés 27 » anime des parcelles collectives pour 320 adhérents ; elle vend quelques paniers solidaires mais reverse l'intégralité des recettes à l'entretien des jardins. Enfin, la région Normandie gère le lycée agricole voisin : les élèves ne paient pas de « profit » à la région, mais bénéficient d'un service public d'éducation financé par impôts et subventions.",
+    consigne: "Distingue entreprise, association et organisation publique à partir du support. Mobilise les notions de but lucratif, but non lucratif et propriété publique.",
+    questions: [
+      "Quel type d'organisation est « Terre & Goût » ? Justifie par son but et son fonctionnement.",
+      "En quoi « Jardins partagés 27 » est-elle une association au sens du cours ?",
+      "Pourquoi le lycée agricole relève-t-il d'une organisation publique ?"
+    ],
+    correctionModele: "1) Terre & Goût = entreprise :\nOrganisation à but lucratif : elle commercialise des produits, génère un chiffre d'affaires et distribue un résultat aux actionnaires. Sa finalité est la création de profit pour assurer pérennité et développement.\n\n2) Jardins partagés 27 = association :\nOrganisation à but non lucratif au service de ses adhérents et de l'intérêt général local. Les recettes éventuelles sont réinvesties dans l'activité, sans distribution de profit à des propriétaires privés.\n\n3) Lycée agricole = organisation publique :\nPropriété de la collectivité (région), mission de service public (éducation), finalité non lucrative visant l'intérêt général. Financé par fonds publics, pas par la recherche de bénéfices commerciaux.",
+    attendu: "Trois types identifiés avec critères de but et de propriété.",
+  },
+  {
+    id: "sdgn1-e5",
+    title: "Structure de propriété et assemblée générale",
+    type: "Exercice",
+    difficulty: "Moyen",
+    xp: 190,
+    minChars: 180,
+    support: "La société anonyme « Mobilité Verte SA » compte 12 000 actionnaires. Le fondateur détient 8 % du capital mais 42 % des droits de vote grâce à des actions à double droit de vote. Les salariés possèdent 3 % via un actionnariat salarié. Chaque année, l'assemblée générale ordinaire approuve les comptes, nomme ou révoque les administrateurs et vote la rémunération du directeur général. Lors de l'AGO de 2025, 61 % des actionnaires présents ou représentés ont approuvé la stratégie ; les minoritaires ont exprimé leurs réserves sur la transition vers le tout-électrique.",
+    consigne: "Explique la structure de propriété et le gouvernement de l'organisation en mobilisant les notions d'actionnaires, d'actions et d'assemblée générale.",
+    questions: [
+      "Qu'est-ce que la structure de propriété dans une entreprise ?",
+      "Comment la répartition du capital crée-t-elle une hiérarchie entre actionnaires chez Mobilité Verte ?",
+      "Quel est le rôle de l'assemblée générale ordinaire selon le support et le cours ?"
+    ],
+    correctionModele: "1) Structure de propriété :\nC'est la répartition du pouvoir de décision entre les propriétaires de l'organisation. Chez une SA, chaque actionnaire détient des parts du capital (actions) de tailles variables.\n\n2) Hiérarchie entre actionnaires :\nLe fondateur détient peu de capital (8 %) mais domine les votes (42 %) grâce aux actions à double droit de vote. Les salariés-actionnaires (3 %) ont une influence limitée. La structure de propriété n'est donc pas proportionnelle au seul pourcentage de capital.\n\n3) Assemblée générale :\nLes actionnaires se réunissent régulièrement en AGO pour prendre les décisions stratégiques de façon collégiale : approbation des comptes, nomination/révocation des dirigeants, vote de la rémunération du DG. C'est l'organe de gouvernement des actionnaires.",
+    attendu: "Lien capital / pouvoir / AGO clairement expliqué.",
+  },
+  {
+    id: "sdgn1-e6",
+    title: "Gouvernement des associations et organisations publiques",
+    type: "Exercice",
+    difficulty: "Moyen",
+    xp: 210,
+    minChars: 180,
+    support: "L'association sportive « Sprint 78 », comptant 1 200 adhérents, tient une assemblée générale annuelle où sont élus le président, approuvés les comptes et votés les projets (tournois, équipements). Parallèlement, la mairie de Versailles nomme le directeur de la régie municipale des eaux après validation par le conseil municipal ; les élus représentent la population. Un usager conteste une hausse de tarif : il s'adresse à sa mairie et, au niveau national, la Cour des comptes contrôle la bonne utilisation des fonds publics.",
+    consigne: "Compare le gouvernement et le contrôle dans une association et dans une organisation publique. Mobilise assemblée générale des adhérents, élus et modes de contrôle.",
+    questions: [
+      "Qui détient le pouvoir dans l'association « Sprint 78 » et comment les décisions sont-elles prises ?",
+      "Qui détient le pouvoir dans l'organisation publique décrite et sur quelle légitimité ?",
+      "Cite deux modes de contrôle des dirigeants d'organisations publiques mentionnés ou du cours."
+    ],
+    correctionModele: "1) Association Sprint 78 :\nLe pouvoir appartient à l'ensemble des adhérents. Ils se réunissent en assemblée générale pour élire le bureau, approuver les comptes et voter les projets. Gouvernement collégial des adhérents.\n\n2) Organisation publique :\nLe pouvoir est détenu par les élus (conseil municipal) représentant la population. Ils nomment le directeur de la régie et organisent les services publics.\n\n3) Modes de contrôle (organisations publiques) :\n— La Cour des comptes vérifie la bonne utilisation de l'argent public.\n— Les électeurs valident ou sanctionnent les élus par leur vote.\n— Contrôle citoyen indirect : l'usager conteste les tarifs auprès de la mairie.",
+    attendu: "Comparaison association / secteur public, contrôle citoyen et institutionnel.",
+  },
+  {
+    id: "sdgn1-e7",
+    title: "Contrôle des dirigeants dans l'entreprise",
+    type: "Exercice",
+    difficulty: "Moyen",
+    xp: 230,
+    minChars: 200,
+    support: "En 2024, le groupe Danone fait face à une baisse de 12 % de son cours de Bourse après l'annonce d'un plan de délestage de 2 000 postes. L'assemblée générale refuse la rémunération variable du PDG ; l'expert-comptable certifie les comptes mais émet une réserve sur une provision. Le CSE déclenche une alerte économique. Parallèlement, des consommateurs boycottent une marque de yaourt jugée trop sucrée : les ventes chutent de 8 % en trimestre. La direction accélère un plan de produits « mieux-être » pour regagner la confiance des actionnaires et des clients.",
+    consigne: "Identifie et explique plusieurs modes de contrôle des dirigeants dans une entreprise à partir du support (actionnaires, marché, CSE, clients).",
+    questions: [
+      "Qu'est-ce que le contrôle des dirigeants ?",
+      "Repère dans le texte au moins quatre modes de contrôle et explique comment chacun agit sur la direction.",
+      "Pourquoi les propriétaires ne dirigent pas toujours l'entreprise au quotidien ?"
+    ],
+    correctionModele: "1) Contrôle des dirigeants :\nEnsemble d'actions du gouvernement permettant aux propriétaires de contrôler les dirigeants lorsque la politique menée ne défend pas leurs intérêts.\n\n2) Modes repérés :\n— Assemblée générale : refuse la rémunération variable du PDG, nomme/révoque les dirigeants.\n— Cours de Bourse : baisse de 12 % signale l'insatisfaction des actionnaires qui vendent.\n— Expert-comptable : certification des comptes avec réserve, contrôle financier externe.\n— CSE : droit d'alerte économique sur le plan social.\n— Clients : boycott et baisse des ventes, pression indirecte sur la stratégie produit.\n\n3) Séparation propriété / direction :\nLes actionnaires sont propriétaires mais délèguent la gestion quotidienne à des dirigeants salariés, d'où la nécessité de mécanismes de contrôle pour aligner leurs intérêts.",
+    attendu: "Quatre modes distincts, mécanismes expliqués, pas de confusion propriété/direction.",
+  },
+  {
+    id: "sdgn1-e8",
+    title: "Synthèse des types et du gouvernement",
+    type: "Exercice",
+    difficulty: "Difficile",
+    xp: 260,
+    minChars: 220,
+    support: "Un jeune diplômé hésite entre créer une SAS de conseil en RSE, rejoindre une association de protection des océans ou postuler à l'ADEME (agence publique). La SAS permettrait de rémunérer des associés et d'accueillir des investisseurs ; l'association vivrait des cotisations et subventions, avec AG des membres ; l'ADEME serait financée par l'État, dirigée par des hauts fonctionnaires nommés, contrôlée par le Parlement et la Cour des comptes. Il doit rédiger un mémo pour son professeur comparant gouvernement, finalité et contrôle.",
+    consigne: "Aide le diplômé en rédigeant une synthèse structurée : pour chaque option, indique le type d'organisation, la finalité, le gouvernement et un mode de contrôle des dirigeants.",
+    questions: [
+      "Remplis un tableau comparatif (SAS / association / agence publique) sur : finalité, gouvernement, contrôle.",
+      "Quel statut juridique correspond à la SAS et pourquoi est-il adapté à une activité lucrative ?",
+      "Quel conseil lui donnerais-tu selon son objectif principal (gagner sa vie / militantisme / service public) ?"
+    ],
+    correctionModele: "1) Tableau comparatif :\nSAS : finalité lucrative ; gouvernement = associés/actionnaires en AG ; contrôle = AG, comptes certifiés, marché.\nAssociation : finalité non lucrative ; gouvernement = adhérents en AG ; contrôle = AG approuve comptes, nomme/révoque le bureau.\nAgence publique : finalité non lucrative, intérêt général ; gouvernement = État, élus ; contrôle = Cour des comptes, vote des électeurs, tutelle ministérielle.\n\n2) Statuts juridiques :\nLa SAS est une forme de société commerciale adaptée à une activité lucrative, avec souplesse statutaire et possibilité d'accueillir des investisseurs.\n\n3) Conseil selon l'objectif :\n— Revenu et développement économique ? SAS.\n— Engagement militant sans distribution de profit ? association.\n— Mission d'intérêt général et stabilité de l'emploi public ? ADEME.",
+    attendu: "Comparaison structurée des trois types, conseil argumenté.",
+  },
+  {
+    id: "sdgn1-e9",
+    title: "Action collective durable et conformité juridique",
+    type: "Exercice",
+    difficulty: "Difficile",
+    xp: 280,
+    minChars: 240,
+    support: "Des commerçants d'un centre-ville créent d'abord un collectif informel « Vivre le centre » pour organiser des animations communes. Après deux ans, ils créent une association loi 1901 afin de signer des conventions avec la mairie et d'obtenir des subventions. Un an plus tard, cinq d'entre eux lancent en parallèle une SARL de logistique partagée (livraisons groupées) avec un objet social commercial distinct. Les statuts de l'association interdisent la distribution de bénéfices ; la SARL, elle, rémunère ses associés. Le préfet exige un registre des traitements de données pour les fichiers clients de la SARL.",
+    consigne: "Analyse la coexistence de l'action collective, de l'association et de l'entreprise. Mobilise statuts juridiques, objet social et personne morale.",
+    questions: [
+      "À quels moments le collectif devient-il successivement action collective organisée, association, entreprise ?",
+      "Pourquoi deux personnes morales distinctes sont-elles nécessaires ici ?",
+      "Quel risque juridique si l'association distribuait des bénéfices à ses membres ?"
+    ],
+    correctionModele: "1) Étapes :\n— Phase 1 : action collective organisée informelle (animations, pas de personne morale).\n— Phase 2 : association = personne morale non lucrative, conventions et subventions.\n— Phase 3 : SARL = personne morale lucrative, objet social commercial de logistique.\n\n2) Deux personnes morales :\nFinalités différentes : mission associative (animation du centre, non lucratif) vs activité économique de livraison (lucratif). Séparer les entités clarifie comptabilité, responsabilités et statuts.\n\n3) Risque de distribution par l'association :\nViolation du régime associatif : les bénéfices doivent être réinvestis. Distribution = requalification possible, sanctions, perte de confiance des financeurs publics.",
+    attendu: "Enchaînement logique, distinction des finalités, argument juridique.",
+  },
+  {
+    id: "sdgn1-e10",
+    title: "Propriété, gouvernement et intérêts des parties prenantes",
+    type: "Exercice",
+    difficulty: "Tres difficile",
+    xp: 360,
+    minChars: 260,
+    support: "La coopérative « BioCoop Ouest » regroupe 180 magasins détenus par des sociétaires (adhérents-propriétaires). Chaque sociétaire a une voix en AG, quel que soit son capital. Les salariés ne sont pas tous sociétaires. En 2025, les sociétaires refusent une fusion avec un groupe privé ; les salariés manifestent leur soutien à la direction coopérative. Un fonds d'investissement détient 4 % d'une filiale logistique créée pour financer des entrepôts : il exige un siège au conseil d'administration. Le médiateur interne reçoit des signalements sur la surcharge de travail dans deux magasins.",
+    consigne: "Analyse structure de propriété, gouvernement et contrôle des dirigeants dans cette configuration hybride (coopérative + filiale).",
+    questions: [
+      "Quelle structure de propriété caractérise la coopérative BioCoop Ouest ?",
+      "Comment le refus de fusion illustre-t-il le gouvernement par l'assemblée générale ?",
+      "Quels conflits d'intérêts entre sociétaires, salariés et fonds d'investissement peux-tu identifier ?"
+    ],
+    correctionModele: "1) Structure de propriété coopérative :\nPouvoir réparti entre sociétaires avec règle démocratique « une personne = une voix », indépendamment du capital. Hiérarchie atténuée entre petits et gros propriétaires.\n\n2) Gouvernement par l'AG :\nLa fusion stratégique est soumise au vote des sociétaires, qui refusent la cession au groupe privé : décision collégiale des propriétaires sur l'orientation.\n\n3) Conflits d'intérêts :\n— Sociétaires vs fonds : le fonds veut rentabilité financière, les sociétaires défendent le modèle coopératif.\n— Salariés vs sociétaires : soutien à la direction mais alertes surcharge (conditions de travail).\n— Fonds en filiale logistique : exige un siège au CA, pression sur les dirigeants pour des décisions court-termistes.",
+    attendu: "Analyse fine propriété/gouvernement/conflits, vocabulaire coopératif maîtrisé.",
+  },
+  {
+    id: "sdgn1-cas1",
+    title: "Étude de cas : LVMH et la gouvernance actionnariale",
+    type: "Etude de cas",
+    difficulty: "Difficile",
+    xp: 560,
+    minChars: 400,
+    support: "LVMH, groupe de luxe coté en Bourse, rassemble 75 maisons (Louis Vuitton, Dior, Sephora…). La famille Arnault contrôle environ 48 % des droits de vote via une holding. L'assemblée générale annuelle approuve les comptes consolidés (79 Md€ de chiffre d'affaires en 2024), nomme les administrateurs et valide la stratégie « création de valeur long terme ». L'expert-comptable certifie sans réserve. Le cours de l'action progresse de 15 % sur un an. Parallèlement, LVMH mène des actions de mécénat culturel (Fondation Louis Vuitton) et affirme des objectifs environnementaux, tout en distribuant des dividendes record aux actionnaires. Un syndicat alerte sur la pression commerciale dans certaines boutiques ; des influenceurs critiquent la hausse des prix. Le CAC 40 suit attentivement chaque annonce du PDG Bernard Arnault.",
+    consigne: "Rédige une réponse type bac en mobilisant : entreprise, finalité lucrative, structure de propriété, assemblée générale, contrôle des dirigeants. Nomme explicitement chaque notion.",
+    questions: [
+      "Caractérise LVMH comme type d'organisation (finalité, objet social, buts secondaires non lucratifs).",
+      "Analyse la structure de propriété et le gouvernement : qui décide quoi ?",
+      "Présente au moins quatre modes de contrôle des dirigeants visibles dans le cas.",
+      "Les actions de mécénat contredisent-elles la finalité lucrative ? Argumente.",
+      "Synthèse (12-15 lignes) : comment une grande entreprise concilie profit, image et contrôle des dirigeants ?"
+    ],
+    correctionModele: "1) Type d'organisation :\nLVMH est une entreprise à finalité lucrative : création de profit, dividendes, croissance. Objet social : conception et commercialisation de produits de luxe. Buts secondaires non lucratifs compatibles : mécénat, RSE environnementale.\n\n2) Structure de propriété et gouvernement :\nActionnariat dispersé mais contrôle familial (48 % des droits de vote). AG annuelle : comptes, administrateurs, stratégie. Direction opérationnelle déléguée au PDG.\n\n3) Modes de contrôle :\n— AG : approbation comptes et stratégie.\n— Cours de Bourse : indicateur de satisfaction (+15 %).\n— Expert-comptable : certification sans réserve.\n— CSE/syndicats : alerte conditions de travail.\n— Clients/influenceurs : pression sur l'image et les prix.\n\n4) Mécénat et finalité lucrative :\nPas de contradiction : le mécénat renforce l'image de marque et la valeur perçue, compatible avec une stratégie lucrative long terme.\n\n5) Synthèse :\nLVMH illustre une entreprise cotée où les actionnaires contrôlent via AG et marché, tandis que dirigeants et managers opèrent au quotidien. La performance financière (dividendes, cours) reste centrale, mais l'organisation intègre des objectifs non lucratifs compatibles pour légitimer son pouvoir face aux parties prenantes.",
+    attendu: "Cas LVMH analysé avec toutes les notions du chapitre 1, synthèse argumentée.",
+  },
+  {
+    id: "sdgn1-cas2",
+    title: "Étude de cas : Restos du Cœur et hôpital public",
+    type: "Etude de cas",
+    difficulty: "Tres difficile",
+    xp: 620,
+    minChars: 450,
+    support: "Les Restos du Cœur distribuent 140 millions de repas par an grâce à 72 000 bénévoles et 1 900 salariés. L'association est présidée par un bureau élu en AG ; les comptes sont approuvés par les membres. Les dons et subventions publiques financent l'activité ; aucun profit n'est distribué. En partenariat, l'AP-HP (hôpital public parisien) accueille des personnes en précarité pour des soins : mission de santé publique, financement par l'État et l'assurance maladie, direction nommée par les autorités, contrôle de la Cour des comptes sur les dépenses. En 2024, une polémique médiatique questionne la gestion d'un fonds associatif ; l'AG extraordinaire révoque un responsable. À l'hôpital, une pétition citoyenne demande plus de lits psychiatriques ; le ministre annonce un plan d'investissement.",
+    consigne: "Compare association et organisation publique : finalité, gouvernement, contrôle des dirigeants. Appuie-toi sur les deux structures du support.",
+    questions: [
+      "Compare finalité et objet social des Restos du Cœur et de l'AP-HP.",
+      "Compare le gouvernement (qui détient le pouvoir, quels organes décident).",
+      "Compare au moins trois modes de contrôle des dirigeants pour chaque structure.",
+      "Quel rôle jouent les bénévoles dans l'association ? Sont-ils des « propriétaires » ?",
+      "Synthèse (15-18 lignes) : pourquoi ces deux formes non lucratives coexistent-elles dans l'économie sociale ?"
+    ],
+    correctionModele: "1) Finalités :\nRestos du Cœur : association, aide alimentaire aux démunis, intérêt général social, non lucratif.\nAP-HP : organisation publique, mission de santé, service public, non lucratif.\n\n2) Gouvernement :\nRestos : adhérents/membres en AG, bureau élu.\nAP-HP : État, tutelle ministérielle, direction nommée, élus représentent la population.\n\n3) Contrôles :\nAssociation : AG approuve comptes, révoque responsables ; contrôle médiatique/donateurs.\nPublic : Cour des comptes, vote électoral, pression citoyenne (pétition), tutelle.\n\n4) Bénévoles :\nIls ne sont pas propriétaires au sens capitalistique mais participent à l'action collective organisée ; certains sont adhérents avec voix en AG.\n\n5) Synthèse :\nLes deux structures poursuent l'intérêt général sans distribution de profit, mais l'association repose sur l'engagement civique et l'AG des membres, tandis que l'hôpital public relève de la souveraineté étatique et du contrôle démocratique institutionnel. Elles se complètent dans la chaîne sociale et sanitaire.",
+    attendu: "Comparaison systématique association / public, synthèse sur l'économie sociale.",
+  },
+];

@@ -907,7 +907,7 @@ export default function Admin() {
                   <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                     {elevesSuspects.map((e) => (
                       <span key={`suspect-${e.id}`} style={{ background: "#BE123C", color: "white", borderRadius: 999, padding: "4px 9px", fontSize: "0.75rem", fontWeight: 700 }}>
-                        {e.nomAffiche} · {e.antiCheatEvents} signalement(s)
+                        {e.nomAffiche} ? {e.antiCheatEvents} signalement(s)
                       </span>
                     ))}
                   </div>
@@ -999,7 +999,7 @@ export default function Admin() {
                           ) : null}
                         </div>
                         <p style={{ margin: "6px 0 0", color: "#64748B", fontSize: "0.82rem" }}>
-                          {eleve.classe || "-"} · {eleve.lycee || "-"} · {eleve.email || "email non renseigné"}
+                          {eleve.classe || "-"} ? {eleve.lycee || "-"} ? {eleve.email || "email non renseigné"}
                         </p>
                         <p style={{ margin: "4px 0 0", color: eleve.joursSansActivite !== null && eleve.joursSansActivite > 7 ? "#DC2626" : "#16A34A", fontSize: "0.78rem", fontWeight: 700 }}>
                           {eleve.joursSansActivite === null
@@ -1007,7 +1007,7 @@ export default function Admin() {
                             : eleve.joursSansActivite === 0
                               ? "Actif aujourd'hui"
                               : `${eleve.joursSansActivite} jour(s) sans activité`}
-                          {" · "}
+                          {" ? "}
                           Dernière activité : <strong>{formatDateFr(eleve.lastActivity)}</strong>
                         </p>
                       </div>
@@ -1101,12 +1101,12 @@ export default function Admin() {
                             <p style={{ margin: "4px 0 0", color: "#64748B", fontSize: "0.78rem" }}>
                               Champ{" "}
                               <span style={{ fontFamily: "ui-monospace, monospace", fontSize: "0.72rem", color: "#475569" }}>missionsProgress</span>
-                              {" · "}Dernière rubrique enregistrée : <strong>{eleve.missionsProgressChapter || "—"}</strong>
+                              {" ? "}Dernière rubrique enregistrée : <strong>{eleve.missionsProgressChapter || "—"}</strong>
                             </p>
                           </div>
                           <div style={{ textAlign: "right" }}>
                             <p style={{ margin: 0, fontSize: "0.8rem", color: "#334155" }}>
-                              <strong>{eleve.sdgnExerciseCount || 0}</strong> exercice(s) · <strong>{eleve.sdgnTotalAttempts || 0}</strong> tentative(s)
+                              <strong>{eleve.sdgnExerciseCount || 0}</strong> exercice(s) ? <strong>{eleve.sdgnTotalAttempts || 0}</strong> tentative(s)
                             </p>
                             <p style={{ margin: "4px 0 0", fontSize: "0.78rem", color: "#6D28D9", fontWeight: 700 }}>
                               Somme des derniers jetons par exo. : {formatJetons(eleve.sdgnLastXpSum || 0)}
@@ -1255,7 +1255,7 @@ export default function Admin() {
                 <p style={{ margin: "0 0 6px", fontFamily: "'Fredoka One', cursive", color: COLORS.S, fontSize: "0.85rem" }}>📚 Par classe</p>
                 {statsParClasse.slice(0, 4).map(item => (
                   <p key={item.classe} style={{ margin: "2px 0", color: "#6B7280", fontSize: "0.78rem" }}>
-                    {item.classe === "premiere" ? "Première" : item.classe === "terminale" ? "Terminale" : item.classe} · {item.eleves} élève(s) · {formatJetons(item.xp)}
+                    {item.classe === "premiere" ? "Première" : item.classe === "terminale" ? "Terminale" : item.classe} ? {item.eleves} élève(s) ? {formatJetons(item.xp)}
                   </p>
                 ))}
               </div>
@@ -1263,7 +1263,7 @@ export default function Admin() {
                 <p style={{ margin: "0 0 6px", fontFamily: "'Fredoka One', cursive", color: COLORS.T, fontSize: "0.85rem" }}>🏫 Par lycée</p>
                 {statsParLycee.slice(0, 4).map(item => (
                   <p key={item.lycee} style={{ margin: "2px 0", color: "#6B7280", fontSize: "0.78rem" }}>
-                    {item.lycee} {item.ville ? `(${item.ville})` : ""} · {item.eleves} élève(s) · {formatJetons(item.xp)}
+                    {item.lycee} {item.ville ? `(${item.ville})` : ""} ? {item.eleves} élève(s) ? {formatJetons(item.xp)}
                   </p>
                 ))}
               </div>
@@ -1290,7 +1290,7 @@ export default function Admin() {
                           <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "0.98rem", margin: 0 }}>{eleve.prenom || eleve.nom || eleve.email || `Élève ${eleve.id.slice(0, 6)}`}</p>
                           <span style={{ background: couleurFamille + "20", color: couleurFamille, fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.68rem" }}>{familleEmojis[eleve.famille]} {eleve.famille}</span>
                         </div>
-                        <p style={{ color: "#9CA3AF", fontSize: "0.78rem", margin: "2px 0 0" }}>{formatJetons(eleve.xp || 0)} · 🃏 {cartesTotal} cartes ({cartesUniques} uniques)</p>
+                        <p style={{ color: "#9CA3AF", fontSize: "0.78rem", margin: "2px 0 0" }}>{formatJetons(eleve.xp || 0)} ? 🃏 {cartesTotal} cartes ({cartesUniques} uniques)</p>
                       </div>
                       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                         <input type="number" value={xpCustom[eleve.id] ?? (recompense?.xp || 0)} onChange={e => setXpCustom(prev => ({ ...prev, [eleve.id]: parseInt(e.target.value) || 0 }))} style={{ width: "80px", padding: "6px 10px", borderRadius: "10px", border: `2px solid ${COLORS.U}30`, fontFamily: "'Fredoka One', cursive", fontSize: "0.9rem", textAlign: "center", outline: "none" }} />
@@ -1318,7 +1318,7 @@ export default function Admin() {
                       <span style={{ fontSize: "1.45rem" }}>{familleEmojis[famille.nom]}</span>
                       <div style={{ flex: 1 }}>
                         <p style={{ fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "0.98rem", margin: 0 }}>{famille.nom}</p>
-                        <p style={{ color: "#9CA3AF", fontSize: "0.78rem", margin: "2px 0 0" }}>{famille.membres} membres · {formatJetons(famille.xp)} total</p>
+                        <p style={{ color: "#9CA3AF", fontSize: "0.78rem", margin: "2px 0 0" }}>{famille.membres} membres ? {formatJetons(famille.xp)} total</p>
                       </div>
                       <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
                         <span style={{ fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "0.86rem" }}>{formatJetonsDelta(recompense?.xp || 0)}/membre</span>

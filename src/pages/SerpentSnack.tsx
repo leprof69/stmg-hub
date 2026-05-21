@@ -3,6 +3,7 @@ import { auth, db } from "../services/firebase";
 import { doc, runTransaction } from "firebase/firestore";
 import { formatJetonsDelta } from "../lib/jetons";
 import { PLATFORM_XP_BLOCKED_MESSAGE, usePlatformIntegrity } from "../contexts/PlatformIntegrityContext";
+import { pickRandomGameQcm } from "../lib/gameQcmPool";
 
 type Props = { profil: { prenom?: string }; onXPGagne?: () => void };
 
@@ -42,28 +43,14 @@ type Particle = { x: number; y: number; vx: number; vy: number; life: number; ma
 type Star = { x: number; y: number; r: number; a: number; twink: number };
 type EatSignal = { gx: number; gy: number; kind: Food["kind"]; mult?: number };
 
-// ?? QUIZ DATA ??????????????????????????????????????????????????????????????
-const QUIZ_POOL: QuizQ[] = [
-  { q: "En SDGN, que signifie souvent la lettre C dans la triade CIA ?", choices: ["Continuit\u00e9","Confidentialit\u00e9","Convivialit\u00e9","Centralisation"], ok: 1 },
-  { q: "Une donn\u00e9e brute devient une information quand elle est :", choices: ["effac\u00e9e","contextualis\u00e9e et utile","crypt\u00e9e","doubl\u00e9e"], ok: 1 },
-  { q: "Un intranet est surtout :", choices: ["public mondial","r\u00e9serv\u00e9 aux membres de l'organisation","un jeu en ligne","un antivirus"], ok: 1 },
-  { q: "Le RGPD prot\u00e8ge surtout :", choices: ["les serveurs physiques","les donn\u00e9es personnelles","les logos","les stocks"], ok: 1 },
-  { q: "La marge brute se rapproche de :", choices: ["CA \u2212 co\u00fbt d'achat / co\u00fbt des ventes","charges fixes seules","effectif RH","dividendes"], ok: 0 },
-  { q: "Un KPI est :", choices: ["un logiciel de paie","un indicateur de performance","un type de serveur","une sanction"], ok: 1 },
-  { q: "L'intelligence collective, c'est plut\u00f4t :", choices: ["un seul expert","des interactions et des id\u00e9es combin\u00e9es","supprimer les r\u00e9unions","un robot seul"], ok: 1 },
-  { q: "Le t\u00e9l\u00e9travail + outils collaboratifs illustrent souvent :", choices: ["la fin du management","le travail \u00e0 distance coordonn\u00e9 par le num\u00e9rique","l'absence d'Internet","la suppression du serveur"], ok: 1 },
-  { q: "Un CRM sert surtout \u00e0 :", choices: ["payer les fournisseurs","centraliser la relation client","r\u00e9parer le mat\u00e9riel","bloquer le Wi-Fi"], ok: 1 },
-  { q: "La segmentation marketing consiste \u00e0 :", choices: ["couper les prix","d\u00e9couper le march\u00e9 en groupes homog\u00e8nes","supprimer la pub","fusionner deux pays"], ok: 1 },
-  { q: "Un avantage concurrentiel, c'est :", choices: ["un bug","un atout durable face aux concurrents","une panne","une obligation l\u00e9gale"], ok: 1 },
-  { q: "La RSE int\u00e8gre notamment :", choices: ["uniquement la finance","des enjeux sociaux et environnementaux","les salaires des concurrents","le m\u00e9t\u00e9o"], ok: 1 },
-];
-
 const STORAGE_KEY = "serpentSnackMeta";
 const DAILY_XP_CAP = 140;
 
 // ?? GAME LOGIC ?????????????????????????????????????????????????????????????
 function todayKey() { const d = new Date(); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; }
-function pickQuizBatch() { return [...QUIZ_POOL].sort(() => Math.random() - 0.5).slice(0, 3); }
+function pickQuizBatch(): QuizQ[] {
+  return pickRandomGameQcm(3).map(({ q, choices, ok }) => ({ q, choices, ok }));
+}
 
 function randomEmptyCell(snake: Cell[], foods: Food[]): Cell {
   for (let k = 0; k < 400; k++) {
@@ -450,7 +437,7 @@ function drawFoodItem(ctx: CanvasRenderingContext2D, f: Food, cw: number, ts: nu
   if (f.kind === "super" && f.mult) {
     ctx.font = `700 ${Math.max(8, Math.floor(cw * 0.17))}px ui-sans-serif,system-ui,sans-serif`;
     ctx.fillStyle = f.mult >= 3 ? "rgba(251,191,36,0.95)" : "rgba(196,181,253,0.95)";
-    ctx.fillText(`\u00d7${f.mult}`, cx, cy + cw * 0.33);
+    ctx.fillText(`√ó${f.mult}`, cx, cy + cw * 0.33);
   }
   if (f.kind === "power" && f.power) {
     const tags: Record<PowerId, string> = { wrap: "TUN", magnet: "AIM", shield: "BOU" };
@@ -683,7 +670,7 @@ export default function SerpentSnack({ profil, onXPGagne }: Props) {
 
   const terminerEtCrediter = useCallback(async (scoreFinal: number) => {
     const user = auth.currentUser;
-    if (!user) { setMessage("Connecte-toi pour r\u00e9cup\u00e9rer tes jetons."); return; }
+    if (!user) { setMessage("Connecte-toi pour r√©cup√©rer tes jetons."); return; }
     if (xpRewardsSuspended) {
       setMessage(PLATFORM_XP_BLOCKED_MESSAGE);
       setGainAffiche(0);
@@ -760,15 +747,15 @@ export default function SerpentSnack({ profil, onXPGagne }: Props) {
         {/* ?? Header ????????????????????????????????????????????????? */}
         <header className="mb-6 text-center">
           <div className="mb-3 inline-flex items-center gap-2">
-            <span className="rounded-full border border-teal-400/25 bg-teal-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-teal-200/90">Arcade rùvisions</span>
+            <span className="rounded-full border border-teal-400/25 bg-teal-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-teal-200/90">Arcade r√©visions</span>
             <span className="rounded-full border border-violet-400/25 bg-violet-400/10 px-2.5 py-1 text-[10px] font-semibold text-violet-200/80">v4</span>
           </div>
           <h1 className="text-4xl font-black tracking-tight sm:text-5xl" style={{ background: "linear-gradient(135deg, #5eead4 0%, #22d3ee 35%, #818cf8 70%, #c084fc 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
             Snack Serpent
           </h1>
           <p className="mt-2.5 text-sm leading-relaxed text-slate-400">
-            Salut <span className="font-semibold text-teal-300">{prenom}</span> ù mange des snacks, gùre ton{" "}
-            <span className="font-semibold text-amber-300">ùnergie</span>, chope des{" "}
+            Salut <span className="font-semibold text-teal-300">{prenom}</span> √† mange des snacks, g√®re ton{" "}
+            <span className="font-semibold text-amber-300">‚Äînergie</span>, chope des{" "}
             <span className="font-semibold text-violet-300">super snacks</span> et des{" "}
             <span className="font-semibold text-cyan-300">pouvoirs</span>. Max {DAILY_XP_CAP} jetons/jour.
           </p>
@@ -779,7 +766,7 @@ export default function SerpentSnack({ profil, onXPGagne }: Props) {
           {/* Energy */}
           <div className="rounded-2xl border border-white/8 bg-white/[0.045] p-3.5 backdrop-blur-xl">
             <div className="mb-2 flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">ùnergie</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">‚Äînergie</span>
               <span className="font-mono text-xs font-semibold text-white/75">{Math.round(energyPct)}%</span>
             </div>
             <div className="relative h-3 overflow-hidden rounded-full bg-black/50 ring-1 ring-white/8">
@@ -791,7 +778,7 @@ export default function SerpentSnack({ profil, onXPGagne }: Props) {
           <div className="rounded-2xl border border-white/8 bg-white/[0.045] p-3.5 text-right backdrop-blur-xl">
             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Score</p>
             <p className="mt-0.5 text-3xl font-black tabular-nums tracking-tight text-white">{game.score}</p>
-            <p className="mt-0.5 text-xs text-slate-500">{game.manges} snacks{game.superManges > 0 ? <><span className="text-violet-400"> ù {game.superManges}</span> super</> : null}</p>
+            <p className="mt-0.5 text-xs text-slate-500">{game.manges} snacks{game.superManges > 0 ? <><span className="text-violet-400"> √† {game.superManges}</span> super</> : null}</p>
           </div>
         </div>
 
@@ -804,7 +791,7 @@ export default function SerpentSnack({ profil, onXPGagne }: Props) {
           {showCombo ? (
             <div className="flex items-center gap-1.5 rounded-full border border-fuchsia-400/40 bg-fuchsia-500/15 px-3 py-1 text-xs font-bold text-fuchsia-100" style={{ boxShadow: "0 0 20px rgba(217,70,239,0.3)" }}>
               <span className="opacity-80">Combo</span>
-              <span className="tabular-nums">ù{game.comboMul}</span>
+              <span className="tabular-nums">‚Äî{game.comboMul}</span>
               <span className="font-normal opacity-60">({game.comboMovesLeft})</span>
             </div>
           ) : (
@@ -822,7 +809,7 @@ export default function SerpentSnack({ profil, onXPGagne }: Props) {
               { emoji: "\u{1F6E1}", label: `Bouclier ${game.biteShields}/2`, val: game.biteShields, col: "border-amber-400/40 bg-amber-500/12 text-amber-200" },
             ].map(({ emoji, label, val, col }) => (
               <span key={label} className={`rounded-xl border px-2.5 py-1 text-[11px] font-semibold tabular-nums transition-all ${val > 0 ? col : "border-white/8 bg-black/20 text-slate-600"}`}>
-                {emoji} {label}{typeof val === "number" && label !== `Bouclier ${game.biteShields}/2` ? (val > 0 ? ` ù ${val}` : " ù") : ""}
+                {emoji} {label}{typeof val === "number" && label !== `Bouclier ${game.biteShields}/2` ? (val > 0 ? ` √† ${val}` : " ‚Äî") : ""}
               </span>
             ))}
           </div>
@@ -850,8 +837,8 @@ export default function SerpentSnack({ profil, onXPGagne }: Props) {
               </span>
             </button>
             <div className="rounded-2xl border border-white/8 bg-white/[0.03] px-4 py-3 text-center text-xs leading-relaxed text-slate-500">
-              <p>Flùches clavier ou pad tactile ci-dessous</p>
-              <p className="mt-1">{String.fromCodePoint(0x1f300)} tunnel ù {String.fromCodePoint(0x1f9f2)} aimant ù {String.fromCodePoint(0x1f6e1)} bouclier ù {String.fromCodePoint(0x1f31f)} combo</p>
+              <p>Fl‚Äôches clavier ou pad tactile ci-dessous</p>
+              <p className="mt-1">{String.fromCodePoint(0x1f300)} tunnel √† {String.fromCodePoint(0x1f9f2)} aimant √† {String.fromCodePoint(0x1f6e1)} bouclier √† {String.fromCodePoint(0x1f31f)} combo</p>
             </div>
           </div>
         )}
@@ -871,7 +858,7 @@ export default function SerpentSnack({ profil, onXPGagne }: Props) {
         {phase === "quiz" && quiz[quizIndex] && (
           <div className="rounded-[1.35rem] border border-amber-400/30 p-5 backdrop-blur-2xl sm:p-6"
             style={{ background: "linear-gradient(135deg, rgba(251,191,36,0.12) 0%, rgba(15,23,42,0.88) 50%, rgba(3,7,14,0.92) 100%)", boxShadow: "0 0 60px -20px rgba(251,191,36,0.4)" }}>
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-amber-200/85">Recharge Ènergie ∑ question {quizIndex + 1}/3</p>
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-amber-200/85">Recharge ‚Äînergie √† question {quizIndex + 1}/3</p>
             <p className="mt-4 text-base font-semibold leading-snug text-white sm:text-lg">{quiz[quizIndex].q}</p>
             <div className="mt-4 grid gap-2.5">
               {quiz[quizIndex].choices.map((c, i) => (

@@ -239,7 +239,7 @@ export default function CalculExpress({ profil, onXPGagne }: Props) {
           setStreak(0);
           setWrong(w => { localWrong = w + 1; return w + 1; });
           setFlash("bad");
-          setPopText("-5s \u23F1");
+          setPopText("-5s ⏱");
           setTimeout(() => { setFlash(null); setPopText(null); }, 700);
           nextQ();
           return QUESTION_TIME;
@@ -280,7 +280,7 @@ export default function CalculExpress({ profil, onXPGagne }: Props) {
       setShake(true);
       setFlash("bad");
       setTimeLeft(tl => Math.max(1, tl - 5));
-      setPopText(`${E.cross} \u221210pts \u22125s`);
+      setPopText(`${E.cross} −10pts −5s`);
       setHistory(h => [...h, { category: q.category, ok: false, pts: 0 }]);
       setTimeout(() => { setShake(false); setFlash(null); setPopText(null); }, 700);
       setInput("");
@@ -356,7 +356,7 @@ export default function CalculExpress({ profil, onXPGagne }: Props) {
   // ?? RESULT ????????????????????????????????????????????????????????????????
   if (phase === "result") {
     const acc = correct + wrong > 0 ? Math.round(correct / (correct + wrong) * 100) : 0;
-    const mention = score >= 800 ? "EXCEPTIONNEL" : score >= 500 ? "EXCELLENT" : score >= 300 ? "TR\u00c8S BIEN" : score >= 150 ? "BIEN" : "EN PROGR\u00c8S";
+    const mention = score >= 800 ? "EXCEPTIONNEL" : score >= 500 ? "EXCELLENT" : score >= 300 ? "TRÈS BIEN" : score >= 150 ? "BIEN" : "EN PROGRÈS";
     const mentionColor = score >= 800 ? "#fbbf24" : score >= 500 ? "#a78bfa" : score >= 300 ? "#4ade80" : score >= 150 ? "#22d3ee" : "#94a3b8";
 
     return (
@@ -519,7 +519,7 @@ export default function CalculExpress({ profil, onXPGagne }: Props) {
         </div>
 
         <button onClick={() => setShowHint(h => !h)} style={{ marginTop:"12px", background:"none", border:"1px solid rgba(129,140,248,0.25)", color:"#818cf8", fontSize:"0.8rem", padding:"6px 16px", borderRadius:"10px", cursor:"pointer" }}>
-          {showHint ? "Masquer" : E.brain+" Afficher"} l&apos;indice (sans penalt\u00e9)
+          {showHint ? "Masquer" : E.brain+" Afficher"} l&apos;indice (sans penalté)
         </button>
 
         {/* Stats row */}

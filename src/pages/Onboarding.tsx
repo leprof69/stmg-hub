@@ -404,7 +404,7 @@ export default function Onboarding({ onTermine }) {
             </div>
 
             <div>
-              <label className="text-slate-500 text-sm">Âge *</label>
+              <label className="text-slate-500 text-sm">âge *</label>
               <input type="number" value={age} onChange={e => setAge(e.target.value)}
                 placeholder="Ton âge" min="13" max="20"
                 className="w-full bg-white border border-slate-300 text-slate-900 rounded-lg px-4 py-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500" />

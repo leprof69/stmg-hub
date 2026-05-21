@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import Lottie from "lottie-react";
+import { resolveLottieFetchUrl } from "../lib/fluent3dAssets";
 
 function iconStyleForId(iconId: string, accentColor?: string): React.CSSProperties {
   if (iconId.startsWith("solar:") || iconId.startsWith("line-md:")) {
@@ -9,12 +10,16 @@ function iconStyleForId(iconId: string, accentColor?: string): React.CSSProperti
   return {};
 }
 
-function LottieItem({ url, size = 40 }: { url: string; size?: number }) {
+function LottieItem({ em, size = 40 }: { em: string; size?: number }) {
+  const url = resolveLottieFetchUrl(em);
   const [data, setData] = useState<object | null>(null);
   useEffect(() => {
-    fetch(url).then((r) => r.json()).then(setData).catch(() => setData(null));
+    fetch(url)
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then(setData)
+      .catch(() => setData(null));
   }, [url]);
-  if (!data) return <span style={{ fontSize: size * 0.6, opacity: 0.3 }}>{"\u2728"}</span>;
+  if (!data) return <span style={{ fontSize: size * 0.6, opacity: 0.35 }}>{"\u2728"}</span>;
   return <Lottie animationData={data} loop autoplay style={{ width: size, height: size }} />;
 }
 
@@ -24,12 +29,49 @@ type Props = {
   accentColor?: string;
 };
 
-/** Affiche une déco salon (emoji:, lottie:, icon:, gif:) comme sur le profil. */
+/** Affiche une dÃ©co salon (fluent3d:, lottie:, icon:, gif:, emoji: legacy) */
 export default function SalonDecoSticker({ em, fontSize = "1.9rem", accentColor }: Props) {
   const px = Math.round(parseFloat(fontSize) * 16) || 30;
 
+  if (em.startsWith("fluent3d:")) {
+    return (
+      <img
+        src={em.slice(9)}
+        alt=""
+        loading="lazy"
+        draggable={false}
+        style={{
+          width: px + 14,
+          height: px + 14,
+          objectFit: "contain",
+          filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.35))",
+        }}
+      />
+    );
+  }
   if (em.startsWith("lottie:")) {
-    return <LottieItem url={em.slice(7)} size={px + 12} />;
+    const m = em.match(/\/Animated\/([^/?#.]+)\.json/i);
+    if (m) {
+      const id = decodeURIComponent(m[1]);
+      return (
+        <img
+          src={`/fluent-3d/${id}.png`}
+          alt=""
+          loading="lazy"
+          draggable={false}
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = "none";
+          }}
+          style={{
+            width: px + 14,
+            height: px + 14,
+            objectFit: "contain",
+            filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.35))",
+          }}
+        />
+      );
+    }
+    return <LottieItem em={em} size={px + 12} />;
   }
   if (em.startsWith("gif:")) {
     return (

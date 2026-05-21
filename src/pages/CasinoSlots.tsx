@@ -3,6 +3,7 @@ import { auth, db } from "../services/firebase";
 import { doc, runTransaction } from "firebase/firestore";
 import { formatJetonsDelta } from "../lib/jetons";
 import { PLATFORM_XP_BLOCKED_MESSAGE, usePlatformIntegrity } from "../contexts/PlatformIntegrityContext";
+import { GAME_QCM_POOL } from "../lib/gameQcmPool";
 
 // ?? Unicode emoji constants ?????????????????????????????????????????????????
 const E = {
@@ -40,7 +41,7 @@ type Props = { profil: { prenom?: string }; onXPGagne?: () => void };
 const SYMBOLS = [
   { emoji: E.lemon,   name: "Citron",       weight: 30, color: "#fde047", glow: "rgba(253,224,71,0.75)",  tier: 0 },
   { emoji: E.cherry,  name: "Cerise",        weight: 24, color: "#f87171", glow: "rgba(248,113,113,0.75)", tier: 1 },
-  { emoji: E.grad,    name: "Dipl\u00f4me",  weight: 18, color: "#fb923c", glow: "rgba(251,146,60,0.75)",  tier: 2 },
+  { emoji: E.grad,    name: "Diplôme",  weight: 18, color: "#fb923c", glow: "rgba(251,146,60,0.75)",  tier: 2 },
   { emoji: E.moneym,  name: "Jackpot",       weight: 12, color: "#4ade80", glow: "rgba(74,222,128,0.8)",   tier: 3 },
   { emoji: E.gem,     name: "Diamant",       weight:  9, color: "#38bdf8", glow: "rgba(56,189,248,0.85)",  tier: 4 },
   { emoji: E.rainbow, name: "Prismatique",   weight:  7, color: "#e879f9", glow: "rgba(232,121,249,0.9)",  tier: 5 },
@@ -63,22 +64,22 @@ function symNeighbor(e: string, delta: number): string {
 type CasinoCard = { id: string; name: string; desc: string; emoji: string; color: string };
 const CASINO_CARDS: CasinoCard[] = [
   { id:"cc_pdg",    name:"PDG en Herbe",       desc:"La gouvernance n'a plus de secrets",           emoji:E.tie,    color:"#fbbf24" },
-  { id:"cc_va",     name:"Expert Valeur Aj.",   desc:"Valeur Ajout\u00e9e maximale",                 emoji:E.chart,  color:"#4ade80" },
-  { id:"cc_mkt",    name:"As du Marketing",     desc:"Les 4P ma\u00eet ris\u00e9s",                  emoji:E.mega,   color:"#f87171" },
-  { id:"cc_strat",  name:"Strat\u00e8ge SWOT",  desc:"Analyse strat\u00e9gique au top",              emoji:E.brain,  color:"#a78bfa" },
-  { id:"cc_compta", name:"Comptable Furtif",    desc:"Le bilan ? Connais par c\u0153ur",             emoji:E.brief,  color:"#38bdf8" },
-  { id:"cc_lucky",  name:"Lucky Star",          desc:"La chance sourit aux pr\u00e9par\u00e9s",      emoji:E.star,   color:"#fde047" },
-  { id:"cc_gold",   name:"Carte Dor\u00e9e",    desc:"R\u00e9compense sp\u00e9ciale casino",         emoji:E.medal,  color:"#f97316" },
-  { id:"cc_inv",    name:"Investisseur Fou",    desc:"Risque calcul\u00e9\u2026 ou presque",         emoji:E.money2, color:"#10b981" },
-  { id:"cc_ceo",    name:"Future Ministre",     desc:"Ton discours sur la VA \u00e9tait parfait",    emoji:"\u{1F3DB}\u{FE0F}", color:"#ec4899" },
-  { id:"cc_ninja",  name:"Ninja du Bilan",      desc:"Actif = Passif, tu dormiras bien",             emoji:"\u{1F977}", color:"#06b6d4" },
+  { id:"cc_va",     name:"Expert Valeur Aj.",   desc:"Valeur Ajoutée maximale",                 emoji:E.chart,  color:"#4ade80" },
+  { id:"cc_mkt",    name:"As du Marketing",     desc:"Les 4P maît risés",                  emoji:E.mega,   color:"#f87171" },
+  { id:"cc_strat",  name:"Stratège SWOT",  desc:"Analyse stratégique au top",              emoji:E.brain,  color:"#a78bfa" },
+  { id:"cc_compta", name:"Comptable Furtif",    desc:"Le bilan ? Connais par cœur",             emoji:E.brief,  color:"#38bdf8" },
+  { id:"cc_lucky",  name:"Lucky Star",          desc:"La chance sourit aux préparés",      emoji:E.star,   color:"#fde047" },
+  { id:"cc_gold",   name:"Carte Dorée",    desc:"Récompense spéciale casino",         emoji:E.medal,  color:"#f97316" },
+  { id:"cc_inv",    name:"Investisseur Fou",    desc:"Risque calculé… ou presque",         emoji:E.money2, color:"#10b981" },
+  { id:"cc_ceo",    name:"Future Ministre",     desc:"Ton discours sur la VA était parfait",    emoji:"🏛️", color:"#ec4899" },
+  { id:"cc_ninja",  name:"Ninja du Bilan",      desc:"Actif = Passif, tu dormiras bien",             emoji:"🥷", color:"#06b6d4" },
 ];
 
 // ?? WIN EVALUATION ????????????????????????????????????????????????????????????
 type WinResult = { jetons: number; prestige: number; prismatic: boolean; label: string; rank: number; card?: CasinoCard };
 const FUNNY_MISS = [
-  "Pas de chance\u2026 \u{1F622}", "Presque ! \u{1F62C}",
-  "C'est pour la prochaine ! \u{1F4AA}", "Retry ? \u{1F3B0}", "Presque parfait ! \u{1F615}",
+  "Pas de chance… 😢", "Presque ! 😬",
+  "C'est pour la prochaine ! 💪", "Retry ? 🎰", "Presque parfait ! 😕",
 ];
 
 function pickCard(rank: number): CasinoCard | undefined {
@@ -92,13 +93,13 @@ function evalWin(s0: string, s1: string, s2: string): WinResult {
   if (all3) {
     const rank6 = s0===E.rainbow ? 6 : s0===E.gem ? 5 : s0===E.moneym ? 4 : s0===E.grad ? 3 : s0===E.cherry ? 2 : 1;
     const base: Omit<WinResult,"card"> = s0===E.rainbow
-      ? { jetons:100, prestige:200, prismatic:true,  label:"JACKPOT \u2014 Carte Prismatique !", rank:6 }
+      ? { jetons:100, prestige:200, prismatic:true,  label:"JACKPOT — Carte Prismatique !", rank:6 }
       : s0===E.gem
-      ? { jetons:50,  prestige:50,  prismatic:false, label:"SUPER WIN \u2014 Prestige !",         rank:5 }
+      ? { jetons:50,  prestige:50,  prismatic:false, label:"SUPER WIN — Prestige !",         rank:5 }
       : s0===E.moneym
       ? { jetons:30,  prestige:20,  prismatic:false, label:`CA VA CHAUFFER ${E.moneym} !`,         rank:4 }
       : s0===E.grad
-      ? { jetons:15,  prestige:0,   prismatic:false, label:`WIN ! ${E.grad} Dipl\u00f4m\u00e9 !`,  rank:3 }
+      ? { jetons:15,  prestige:0,   prismatic:false, label:`WIN ! ${E.grad} Diplômé !`,  rank:3 }
       : s0===E.cherry
       ? { jetons:8,   prestige:0,   prismatic:false, label:`Cerise ${E.cherry} +8j`,               rank:2 }
       : { jetons:5,   prestige:0,   prismatic:false, label:`Citron ${E.lemon} +5j`,                rank:1 };
@@ -114,24 +115,9 @@ function evalWin(s0: string, s1: string, s2: string): WinResult {
 }
 
 // ?? QUIZ ??????????????????????????????????????????????????????????????????????
-type QuizQ = { q: string; choices: [string,string,string,string]; ok: number };
-const CASINO_QUIZ: QuizQ[] = [
-  { q:"Le chiffre d'affaires correspond \u00e0 :", choices:["Total des d\u00e9penses","Total des ventes HT","B\u00e9n\u00e9fice net","Capital social"], ok:1 },
-  { q:"Un flux descendant part :", choices:["Des employ\u00e9s vers la hi\u00e9rarchie","De la direction vers les employ\u00e9s","Entre coll\u00e8gues","De l'ext\u00e9rieur vers l'interne"], ok:1 },
-  { q:"Le seuil de rentabilit\u00e9 est le CA o\u00f9 :", choices:["Le profit est maximum","Les charges fixes = 0","R\u00e9sultat = 0","Les ventes doublent"], ok:2 },
-  { q:"Management participatif =", choices:["D\u00e9cisions solitaires","Bureaucratie","Implication des collaborateurs","Suppression des r\u00e9unions"], ok:2 },
-  { q:"Valeur ajout\u00e9e (VA) = CA \u2212 :", choices:["Salaires","Imp\u00f4ts","Consommations interm\u00e9diaires","Dividendes"], ok:2 },
-  { q:"Un organigramme repr\u00e9sente :", choices:["Le bilan","La structure hi\u00e9rarchique","Le compte de r\u00e9sultat","Le march\u00e9 cible"], ok:1 },
-  { q:"Int\u00e9gration verticale =", choices:["Racheter un concurrent","Contr\u00f4ler fournisseurs OU clients","Fusion internationale","D\u00e9localisation"], ok:1 },
-  { q:"Oligopole = march\u00e9 domin\u00e9 par :", choices:["Un seul vendeur","Deux acheteurs","Quelques vendeurs dominants","Infinit\u00e9 de petits acteurs"], ok:2 },
-  { q:"Strat\u00e9gie de diff\u00e9renciation =", choices:["Baisser les prix","Se distinguer de la concurrence","Copier les leaders","R\u00e9duire les stocks"], ok:1 },
-  { q:"SWOT : forces, faiblesses, opportunit\u00e9s et :", choices:["Strat\u00e9gies","Tendances","Menaces","Synergies"], ok:2 },
-  { q:"Marketing mix \u2014 1er P =", choices:["Prix","Promotion","Produit","Place"], ok:2 },
-  { q:"ONG =", choices:["Entreprise priv\u00e9e","Organisme gouvernemental","Organisme non-gouvernemental \u00e0 but non lucratif","Banque centrale"], ok:2 },
-  { q:"Maslow \u2014 besoins de base :", choices:["D'estime","De s\u00e9curit\u00e9","Physiologiques","D'appartenance"], ok:2 },
-  { q:"Le bilan comptable recense :", choices:["Ventes du mois","Actif et passif \u00e0 une date","Liste des salari\u00e9s","Nombre de clients"], ok:1 },
-  { q:"Une entreprise individuelle :", choices:["Est une SA","= Une seule personne \u00e0 la t\u00eate","Est forc\u00e9ment multinationale","Est une coop\u00e9rative"], ok:1 },
-];
+type QuizQ = { q: string; choices: [string, string, string, string]; ok: number };
+/** QCM issus de tous les chapitres du pack Missions SDGN. */
+const CASINO_QUIZ: QuizQ[] = GAME_QCM_POOL.map(({ q, choices, ok }) => ({ q, choices, ok }));
 
 // ?? CSS ANIMATIONS ????????????????????????????????????????????????????????????
 const CASINO_CSS = `
@@ -350,7 +336,7 @@ function Reel({ mid, spinning, finalMid, spinDuration }: { mid:string; spinning:
       border:"1.5px solid rgba(255,255,255,0.07)",
       boxShadow:!spinning?`0 0 24px ${sym.glow}`:"none", transition:"box-shadow 0.4s" }}>
 
-      {/* top/bottom fade � creates slot-machine depth */}
+      {/* top/bottom fade à creates slot-machine depth */}
       <div style={{ position:"absolute", top:0, left:0, right:0, height:CELL_H*0.72, zIndex:3, background:"linear-gradient(to bottom,#0b0409 18%,transparent)", pointerEvents:"none" }}/>
       <div style={{ position:"absolute", bottom:0, left:0, right:0, height:CELL_H*0.72, zIndex:3, background:"linear-gradient(to top,#0b0409 18%,transparent)", pointerEvents:"none" }}/>
 
@@ -454,7 +440,7 @@ export default function CasinoSlots({ profil, onXPGagne }: Props) {
     if (!currentQ) return;
     const ok = i===currentQ.ok;
     setLastCorrect(ok);
-    setCoins(c => c + (ok ? 3 : 1));   // NO cap � accumulate freely
+    setCoins(c => c + (ok ? 3 : 1));   // NO cap à accumulate freely
     setQuizPhase("answered");
   };
 
@@ -480,11 +466,11 @@ export default function CasinoSlots({ profil, onXPGagne }: Props) {
           </h1>
           <p className="mt-2 text-sm text-slate-400">
             Salut <span className="font-semibold text-amber-300">{prenom}</span> {E.hype}{" "}
-            � gagne des pi\u00e8ces et tente ta chance !
+            à gagne des pi\u00e8ces et tente ta chance !
           </p>
         </header>
 
-        {/* Coins � no limit, show as number */}
+        {/* Coins à no limit, show as number */}
         <div className="mb-5 flex items-center justify-between rounded-2xl border border-amber-400/20 bg-amber-500/8 px-5 py-4 backdrop-blur-xl">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-widest text-amber-400/70">Pièces Casino</p>
@@ -506,7 +492,7 @@ export default function CasinoSlots({ profil, onXPGagne }: Props) {
             <span className="select-none">{E.slot}</span>
           </div>
 
-          {/* Reels � no win-line bar */}
+          {/* Reels à no win-line bar */}
           <div className="mx-4 mb-4 flex gap-2 rounded-2xl p-3"
             style={{ background:"linear-gradient(180deg,#0a0210 0%,#070110 100%)", border:"1.5px solid rgba(255,255,255,0.05)", boxShadow:"inset 0 2px 14px rgba(0,0,0,0.85)" }}>
             {([0,1,2] as const).map(i=>(
@@ -559,7 +545,7 @@ export default function CasinoSlots({ profil, onXPGagne }: Props) {
               </div>
             ))}
           </div>
-          <p className="mt-2 text-[9px] text-slate-700">Paire = 3j &nbsp;&bull;&nbsp; {E.rainbow} solo = 5j &nbsp;&bull;&nbsp; {E.card} Carte al\u00e9atoire sur certains gains</p>
+          <p className="mt-2 text-[9px] text-slate-700">Paire = 3j &nbsp;&bull;&nbsp; {E.rainbow} solo = 5j &nbsp;&bull;&nbsp; {E.card} Carte aléatoire sur certains gains</p>
         </div>
 
         {/* Quiz */}

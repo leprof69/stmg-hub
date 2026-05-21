@@ -239,7 +239,7 @@ export default function FamiliarCompanion({ profil }) {
             </div>
             <div style={{ background: "#F9FAFB", borderRadius: "12px", padding: "10px 12px", border: "1px solid #E5E7EB" }}>
               <p style={{ margin: "0 0 3px", color: "#6B7280", fontSize: "0.75rem" }}>Stade</p>
-              <p style={{ margin: 0, fontWeight: 800, color: "#111827" }}>{STAGE_LABEL[pet.stage]} · {getPetMoodLabel(pet.mood)}</p>
+              <p style={{ margin: 0, fontWeight: 800, color: "#111827" }}>{STAGE_LABEL[pet.stage]} ? {getPetMoodLabel(pet.mood)}</p>
             </div>
             <div style={{ background: "#F9FAFB", borderRadius: "12px", padding: "10px 12px", border: "1px solid #E5E7EB" }}>
               <p style={{ margin: "0 0 3px", color: "#6B7280", fontSize: "0.75rem" }}>Bonheur</p>
@@ -247,13 +247,13 @@ export default function FamiliarCompanion({ profil }) {
                 <div style={{ width: `${pet.happiness}%`, height: "8px", borderRadius: "999px", background: pet.happiness >= 50 ? "#10B981" : "#EF4444", transition: "width 0.3s ease" }} />
               </div>
               <p style={{ margin: "6px 0 0", color: "#374151", fontSize: "0.75rem" }}>
-                {pet.happiness}% · {pet.mood === "triste" || pet.mood === "colere" ? "Malus jetons actif" : "Bonus jetons actif"}
+                {pet.happiness}% ? {pet.mood === "triste" || pet.mood === "colere" ? "Malus jetons actif" : "Bonus jetons actif"}
               </p>
             </div>
             <div style={{ background: "#F9FAFB", borderRadius: "12px", padding: "10px 12px", border: "1px solid #E5E7EB" }}>
               <p style={{ margin: "0 0 3px", color: "#6B7280", fontSize: "0.75rem" }}>Age et progression</p>
               <p style={{ margin: 0, color: "#111827", fontWeight: 700 }}>
-                {pet.ageDays} jour(s) · missions : {formatJetons(pet.totalXpFromMissions)}
+                {pet.ageDays} jour(s) ? missions : {formatJetons(pet.totalXpFromMissions)}
               </p>
             </div>
             <button

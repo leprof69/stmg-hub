@@ -1,5 +1,5 @@
 /**
- * Libellés UI pour la monnaie « jetons » (Firestore conserve les champs `xp`, `xpDepensee`, etc.).
+ * Libellâ€™s UI pour la monnaie Ã  jetons Ã  (Firestore conserve les champs `xp`, `xpDepensee`, etc.).
  */
 
 const LOCALE = "fr-FR";

@@ -9,6 +9,9 @@ import { COLLECTIONS } from "../services/collectionsData";
 import { AvatarSVG, DEFAULT_AVATAR } from "./AvatarCreator";
 import type { AvatarConfig } from "./AvatarCreator";
 import SalonDecoSticker from "../components/SalonDecoSticker";
+import { DECO_POSITIONS } from "../lib/profileCustomization";
+import { sanitizeSalonDeco } from "../lib/profileDecoUtils";
+import { avatarFrameStyles } from "../lib/profilTheme";
 
 // ?? types ????????????????????????????????????????????????????????????????????
 type SalonCfg = { theme:string; titre:string; motto:string; deco:string[] };
@@ -31,25 +34,17 @@ const THEMES: Record<string,{gradient:string;dark:boolean}> = {
   glacier:{ gradient:"linear-gradient(135deg,#0c4a6e,#075985,#38bdf8)", dark:true  },
 };
 
-const DECO_POS = [
-  { top:"12%",  left:"6%",   fontSize:"1.9rem" },
-  { top:"8%",   right:"6%",  fontSize:"1.7rem" },
-  { bottom:"18%",left:"5%",  fontSize:"1.6rem" },
-  { bottom:"16%",right:"5%", fontSize:"1.8rem" },
-  { top:"6%",   left:"42%",  fontSize:"1.5rem" },
-];
-
 const RARETE_CFG: Record<string,{couleur:string;label:string}> = {
   commune:     { couleur:"#9CA3AF", label:"Commune"     },
   peu_commune: { couleur:"#10B981", label:"Peu commune" },
   rare:        { couleur:"#3B82F6", label:"Rare"        },
-  epique:      { couleur:"#0284C7", label:"\u00c9pique" },
-  legendaire:  { couleur:"#F59E0B", label:"L\u00e9gendaire" },
+  epique:      { couleur:"#0284C7", label:"Épique" },
+  legendaire:  { couleur:"#F59E0B", label:"Légendaire" },
   ultra_rare:  { couleur:"#EF4444", label:"Ultra Rare"  },
 };
 
 const FAM_COLORS: Record<string,string> = { Architecte:"#3B82F6",Visionnaire:"#0EA5E9",Challenger:"#F97316",Explorateur:"#10B981",Influenceur:"#EF4444" };
-const FAM_EMOJIS: Record<string,string> = { Architecte:"\u{1F9E0}",Visionnaire:"\u{1F3A8}",Challenger:"\u26A1",Explorateur:"\u{1F52C}",Influenceur:"\u{1F525}" };
+const FAM_EMOJIS: Record<string,string> = { Architecte:"??",Visionnaire:"??",Challenger:"?",Explorateur:"??",Influenceur:"??" };
 
 const toutesCartes = COLLECTIONS.flatMap(c => c.cartes);
 const PRESTIGE_COST = 50;
@@ -164,7 +159,7 @@ function ExchangeSheet({ myCards, theirCards, toPrenom, onPropose, onClose }: {
               <button key={k} onClick={()=>setStep(k as "mine"|"theirs")}
                 style={{ flex:1,padding:"8px",borderRadius:"10px",border:"none",fontWeight:800,fontSize:"0.78rem",cursor:"pointer",
                   background:step===k?"rgba(167,139,250,0.25)":"rgba(255,255,255,0.05)",color:step===k?"#c084fc":"#475569" }}>
-                {l}{k==="mine"&&mySel?" \u2713":""}{k==="theirs"&&theirSel?" \u2713":""}
+                {l}{k==="mine"&&mySel?" ?":""}{k==="theirs"&&theirSel?" ?":""}
               </button>
             ))}
           </div>
@@ -256,7 +251,7 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
         tx.update(herRef, { xp:(herSnap.data()?.xp||0)+amount });
       });
       setMyJetons(j=>j-amount);
-      showToast(`\u{1F4B0} ${amount} jetons envoy\u00e9s \u00e0 ${data?.prenom} !`);
+      showToast(`?? ${amount} jetons envoy—s à ${data?.prenom} !`);
       setSheet(null);
     }catch(e){ showToast((e instanceof Error?e.message:"Erreur lors du don"),false); }
   };
@@ -287,7 +282,7 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
         });
       });
       setMyJetons(j=>j-cost);
-      showToast("\u{1F381} Surprise envoy\u00e9e !");
+      showToast("?? Surprise envoy—e !");
       setSheet(null);
     }catch(e){ showToast((e instanceof Error?e.message:"Erreur"),false); }
   };
@@ -304,7 +299,7 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
         status:    "pending",
         createdAt: serverTimestamp(),
       });
-      showToast(`\u{1F4E8} Proposition envoy\u00e9e \u00e0 ${data?.prenom} !`);
+      showToast(`?? Proposition envoy—e à ${data?.prenom} !`);
       setSheet(null);
     }catch(e){ showToast("Erreur lors de la proposition",false); }
   };
@@ -328,10 +323,13 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
   );
 
   const salon: SalonCfg = { ...DEF_SALON, ...(data.salon||{}) };
+  const salonDecos = sanitizeSalonDeco(salon.deco);
   const theme = THEMES[salon.theme]||THEMES.defaut;
   const avatarCfg: AvatarConfig = { ...DEFAULT_AVATAR, ...(data.avatar||{}) };
-  const vitrine: {image:string;nom:string;rarete:string}[] = (data.vitrine||[]) as {image:string;nom:string;rarete:string}[];
   const couleurFamille = FAM_COLORS[data.famille as string]||"#0EA5E9";
+  const avatarFrameKey = ((data.pageStyle as { avatarFrame?: string })?.avatarFrame) || "defaut";
+  const afStyles = avatarFrameStyles(avatarFrameKey, couleurFamille);
+  const vitrine: {image:string;nom:string;rarete:string}[] = (data.vitrine||[]) as {image:string;nom:string;rarete:string}[];
   const salonTitre = salon.titre || `Le Salon de ${data.prenom}`;
   const myOwnedCards = toutesCartes.filter(c=>(myProfil.cartes||{})[c.id]>0);
   const theirCartes  = (data.cartes||{}) as Record<string,number>;
@@ -369,20 +367,30 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
         {/* ?? SALON CARD ??????????????????????????????????????????? */}
         <div style={{ borderRadius:"24px",overflow:"hidden",boxShadow:"0 12px 40px rgba(0,0,0,0.4)",animation:"vsIn 0.3s both" }}>
           <div style={{ background:theme.gradient,padding:"24px",position:"relative",overflow:"hidden" }}>
-            {salon.deco.map((em,i)=>(
+            {salonDecos.map((em,i)=>{
+              const pos = DECO_POSITIONS[i];
+              if (!pos) return null;
+              const posStyle = Object.fromEntries(
+                Object.entries(pos).filter(([k]) => k !== "animation" && k !== "fontSize")
+              );
+              return (
               <div key={i} style={{ position:"absolute",pointerEvents:"none",lineHeight:1,
-                ...Object.fromEntries(Object.entries(DECO_POS[i]).filter(([k])=>k!=="fontSize")),
+                ...posStyle,
                 animation:`vsDecoFloat ${2.5+i*0.4}s ease-in-out ${i*0.3}s infinite`,
                 filter:"drop-shadow(0 2px 8px rgba(0,0,0,0.35))",zIndex:0 }}>
-                <SalonDecoSticker em={em} fontSize={DECO_POS[i].fontSize} accentColor={couleurFamille}/>
+                <SalonDecoSticker em={em} fontSize={pos.fontSize} accentColor={couleurFamille}/>
               </div>
-            ))}
+            );})}
             <div style={{ position:"absolute",bottom:"10px",left:"14px",fontSize:"0.58rem",fontWeight:700,color:theme.dark?"rgba(255,255,255,0.35)":"rgba(0,0,0,0.3)",letterSpacing:"0.1em",textTransform:"uppercase" }}>
               {"\u{1F3E0} "}{salonTitre}
             </div>
             <div style={{ position:"relative",zIndex:1,textAlign:"center",paddingBottom:"14px" }}>
-              <div style={{ display:"flex",justifyContent:"center",marginBottom:"12px" }}>
-                <AvatarSVG config={avatarCfg} size={100}/>
+              <div style={{ display:"flex",justifyContent:"center",marginBottom:"12px",filter:"drop-shadow(0 12px 24px rgba(0,0,0,0.35))" }}>
+                <div style={afStyles.ring}>
+                  <div style={afStyles.inner}>
+                    <AvatarSVG config={avatarCfg} size={100}/>
+                  </div>
+                </div>
               </div>
               <p style={{ fontFamily:"'Fredoka One',cursive",color:theme.dark?"white":"#0f172a",fontSize:"1.6rem",margin:"0 0 6px",textShadow:theme.dark?"0 2px 12px rgba(0,0,0,0.5)":"none" }}>
                 {data.prenom as string}

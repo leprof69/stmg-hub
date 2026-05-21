@@ -1,4 +1,4 @@
-/** Décode les séquences littérales \\uXXXX et \\u{...} (souvent visibles si mal placées en JSX). */
+/** Dâ€”code les sâ€”quences littâ€”rales \\uXXXX et \\u{...} (souvent visibles si mal placâ€”es en JSX). */
 export function decodeUnicodeEscapes(value = ""): string {
   let s = String(value);
   if (!/\\u/i.test(s)) return s;
@@ -10,7 +10,7 @@ export function decodeUnicodeEscapes(value = ""): string {
   return s;
 }
 
-/** Texte affiché à l'écran (feedback IA, libellés, etc.). */
+/** Texte affichÃ© Ã  l'Ã©cran (feedback IA, libellâ€™s, etc.). */
 export function fixDisplayText(value: unknown): string {
   return decodeUnicodeEscapes(String(value ?? ""));
 }

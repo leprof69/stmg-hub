@@ -1,11 +1,11 @@
 import { decodeUnicodeEscapes } from "../lib/decodeUnicode";
 
 /**
- * Correction IA / locale harmonise pour Missions, Objectif Bac et futurs crans.
- * Priorité au fond (idées + notions), pas aux mots exacts — scoring sémantique léger (racines / synonymes).
+ * Correction IA / locale harmonisÂe pour Missions, Objectif Bac et futurs Âcrans.
+ * PrioritÃ© au fond (idÃ©es + notions), pas aux mots exacts Â— scoring sÃ©mantique lÃ©ger (racines / synonymes).
  */
 
-/** Tableaux optionnels affichés dans les missions (compte de résultat, bilan, etc.). */
+/** Tableaux optionnels affichÃ©s dans les missions (compte de rÃ©sultat, bilan, etc.). */
 export type ExerciseSupportTable = {
   title?: string;
   columns: string[];
@@ -15,15 +15,17 @@ export type ExerciseSupportTable = {
 export type CorrectionExerciseBase = {
   title: string;
   consigne: string;
-  /** Résumé p—dagogique ; peut être vide si la grille / reference suffisent (ex. Objectif Bac). */
+  /** RÃ©sumÃ© pÂ—dagogique ; peut Ãªtre vide si la grille / reference suffisent (ex. Objectif Bac). */
   attendu: string;
   minChars: number;
   support?: string;
-  /** Données structurées (injectées dans le corpus de correction comme texte). */
+  /** DonnÃ©es structurÃ©es (injectÃ©es dans le corpus de correction comme texte). */
   supportTables?: ExerciseSupportTable[];
   questions?: string[];
   correctionModele?: string;
-  /** Objectif Bac et assimilés */
+  referentielNotions?: string[];
+  referentielCompetences?: string[];
+  /** Objectif Bac et assimilÃ©s */
   context?: string;
   grille?: string[];
   correctionPartielle?: string;
@@ -165,6 +167,8 @@ export function buildExerciseKeywordCorpus(ex: CorrectionExerciseBase): string {
     ex.correctionPartielle || "",
     ex.consigne || "",
     ex.correctionModele || "",
+    (ex.referentielNotions || []).join(" "),
+    (ex.referentielCompetences || []).join(" "),
   ]
     .filter(Boolean)
     .join(" ");
@@ -182,24 +186,24 @@ export function buildExpectedKeywords(exercise: CorrectionExerciseBase): string[
   return ordered.length ? ordered : raw.slice(0, 14);
 }
 
-/** Réponse de secours affich—e si aucune correction détaillée n'est fournie dans les donn—es. */
+/** RÃ©ponse de secours affichÂ—e si aucune correction dÃ©taillÃ©e n'est fournie dans les donnÂ—es. */
 export function buildPerfectAnswerLocal(exercise: CorrectionExerciseBase): string {
   if (exercise.correctionModele?.trim()) {
     return exercise.correctionModele.trim();
   }
   const lines: string[] = [];
-  lines.push(`Réponse modèle — ${exercise.title}`);
+  lines.push(`RÃ©ponse modÃ¨le Â— ${exercise.title}`);
   lines.push("");
   if (exercise.questions?.length) {
     lines.push("Correction type (question par question) :");
     lines.push("");
-    lines.push("Questions — traiter :");
+    lines.push("Questions Â— traiter :");
     exercise.questions.forEach((q, i) => {
       lines.push(`${i + 1}) ${q}`);
     });
     lines.push("");
   } else if (exercise.grille?.length) {
-    lines.push("Repères de correction :");
+    lines.push("RepÃ¨res de correction :");
     exercise.grille.forEach((g, i) => {
       lines.push(`${i + 1}. ${g}`);
     });
@@ -211,36 +215,36 @@ export function buildPerfectAnswerLocal(exercise: CorrectionExerciseBase): strin
   }
   const attendu = exercise.attendu?.trim();
   if (attendu) {
-    lines.push(`Réponse attendue : ${attendu}`);
+    lines.push(`RÃ©ponse attendue : ${attendu}`);
   } else if (!exercise.grille?.length) {
     lines.push("Voir la consigne et les documents du sujet pour la correction attendue.");
   }
   return lines.join("\n");
 }
 
-/** Formulation volontairement p—dagogique à conserver pour l'élève (feedback utile). */
+/** Formulation volontairement pÂ—dagogique Ã  conserver pour l'Ã©lÃ¨ve (feedback utile). */
 export function buildDeveloppementLocal(score: number, ratio: number, missing: string[]) {
   const lignes: string[] = [];
-  lignes.push(`Évaluation du fond : ${score}/10.`);
+  lignes.push(`Ã‰valuation du fond : ${score}/10.`);
   if (ratio >= 0.7) {
-    lignes.push("Tu as bien couvert les idées attendues. La majorit— des éléments de réponse est présente.");
+    lignes.push("Tu as bien couvert les idÃ©es attendues. La majoritÂ— des Ã©lÃ©ments de rÃ©ponse est prÃ©sente.");
   } else if (ratio >= 0.5) {
-    lignes.push("Ta réponse est globalement juste, mais il manque encore quelques éléments importants.");
+    lignes.push("Ta rÃ©ponse est globalement juste, mais il manque encore quelques Ã©lÃ©ments importants.");
   } else if (ratio >= 0.3) {
-    lignes.push("Ta réponse aborde le sujet mais une partie importante du contenu attendu n'appara—t pas encore.");
+    lignes.push("Ta rÃ©ponse aborde le sujet mais une partie importante du contenu attendu n'apparaÂ—t pas encore.");
   } else {
-    lignes.push("Ta réponse est trop courte ou trop éloignée des notions attendues. Relis le cours et la consigne.");
+    lignes.push("Ta rÃ©ponse est trop courte ou trop Ã©loignÃ©e des notions attendues. Relis le cours et la consigne.");
   }
   if (missing.length) {
-    lignes.push(`éléments — ajouter pour te rapprocher de la réponse parfaite : ${missing.join(", ")}.`);
+    lignes.push(`Ã©lÃ©ments Â— ajouter pour te rapprocher de la rÃ©ponse parfaite : ${missing.join(", ")}.`);
   }
   return lignes.join("\n\n");
 }
 
 export function buildConseilsLocal(missing: string[]) {
   return missing.length
-    ? `Ajoute en priorité ces éléments : ${missing.join(", ")}.`
-    : "Relis ta réponse et v—rifie que chaque question est trait—e explicitement.";
+    ? `Ajoute en prioritÃ© ces Ã©lÃ©ments : ${missing.join(", ")}.`
+    : "Relis ta rÃ©ponse et vÂ—rifie que chaque question est traitÂ—e explicitement.";
 }
 
 type SemanticBundle = {
@@ -284,13 +288,13 @@ function computeSemanticBundle(exercise: CorrectionExerciseBase, text: string): 
     analyseBlock,
     conseils,
     pointsForts: coverage >= 0.6
-      ? "Plusieurs idées attendues sont bien présentes dans ta réponse."
+      ? "Plusieurs idÃ©es attendues sont bien prÃ©sentes dans ta rÃ©ponse."
       : coverage >= 0.35
-      ? "Tu as commencé — traiter certains aspects du sujet."
-      : "Réponse trop éloignée des notions attendues.",
+      ? "Tu as commencÃ© Â— traiter certains aspects du sujet."
+      : "RÃ©ponse trop Ã©loignÃ©e des notions attendues.",
     pointsFaibles: missing.length
-      ? `éléments manquants ou trop peu développés : ${missing.join(", ")}.`
-      : "Peu d'éléments manquants repérés.",
+      ? `Ã©lÃ©ments manquants ou trop peu dÃ©veloppÃ©s : ${missing.join(", ")}.`
+      : "Peu d'Ã©lÃ©ments manquants repÃ©rÃ©s.",
   };
 }
 
@@ -299,11 +303,11 @@ export function localCorrectionMissions(exercise: CorrectionExerciseBase, answer
   if (!text) {
     return {
       score: 0,
-      feedback: "Réponse vide : impossible d'évaluer le contenu.",
-      analyseDeveloppee: "Saisis une première version en r—pondant point par point — la consigne.",
-      pointsForts: "Aucun —l—ment exploitable pour le moment.",
-      pointsFaibles: "Réponse absente.",
-      conseilsProgression: "Relis la consigne et r—ponds point par point.",
+      feedback: "RÃ©ponse vide : impossible d'Ã©valuer le contenu.",
+      analyseDeveloppee: "Saisis une premiÃ¨re version en rÂ—pondant point par point Â— la consigne.",
+      pointsForts: "Aucun Â—lÂ—ment exploitable pour le moment.",
+      pointsFaibles: "RÃ©ponse absente.",
+      conseilsProgression: "Relis la consigne et rÂ—ponds point par point.",
       propositionReponse: buildPerfectAnswerLocal(exercise),
       source: "local",
     };
@@ -313,11 +317,11 @@ export function localCorrectionMissions(exercise: CorrectionExerciseBase, answer
   if (!bundle) {
     return {
       score: 0,
-      feedback: "Réponse vide : impossible d'évaluer le contenu.",
-      analyseDeveloppee: "Saisis une première version en r—pondant point par point — la consigne.",
-      pointsForts: "Aucun —l—ment exploitable pour le moment.",
-      pointsFaibles: "Réponse absente.",
-      conseilsProgression: "Relis la consigne et r—ponds point par point.",
+      feedback: "RÃ©ponse vide : impossible d'Ã©valuer le contenu.",
+      analyseDeveloppee: "Saisis une premiÃ¨re version en rÂ—pondant point par point Â— la consigne.",
+      pointsForts: "Aucun Â—lÂ—ment exploitable pour le moment.",
+      pointsFaibles: "RÃ©ponse absente.",
+      conseilsProgression: "Relis la consigne et rÂ—ponds point par point.",
       propositionReponse: buildPerfectAnswerLocal(exercise),
       source: "local",
     };
@@ -325,7 +329,7 @@ export function localCorrectionMissions(exercise: CorrectionExerciseBase, answer
 
   return {
     score: bundle.score,
-    feedback: "Correction centr—e sur le fond de ta réponse.",
+    feedback: "Correction centrÂ—e sur le fond de ta rÃ©ponse.",
     analyseDeveloppee: bundle.analyseBlock,
     pointsForts: bundle.pointsForts,
     pointsFaibles: bundle.pointsFaibles,
@@ -340,9 +344,9 @@ export function localCorrectionObjectifBac(exercise: CorrectionExerciseBase, ans
   if (!text) {
     return {
       score: 0,
-      feedback: "Réponse vide.",
+      feedback: "RÃ©ponse vide.",
       points_forts: "Aucun pour le moment.",
-      a_ameliorer: "Commence par une réponse courte mais structurée.",
+      a_ameliorer: "Commence par une rÃ©ponse courte mais structurÃ©e.",
       elements_reperes: [],
       source: "local",
     };
@@ -352,36 +356,36 @@ export function localCorrectionObjectifBac(exercise: CorrectionExerciseBase, ans
   if (!bundle) {
     return {
       score: 0,
-      feedback: "Réponse vide.",
+      feedback: "RÃ©ponse vide.",
       points_forts: "Aucun pour le moment.",
-      a_ameliorer: "Commence par une réponse courte mais structurée.",
+      a_ameliorer: "Commence par une rÃ©ponse courte mais structurÃ©e.",
       elements_reperes: [],
       source: "local",
     };
   }
 
   const hasStructure = /(\n|^-|:|1\.)/m.test(text);
-  const hasExample = /(exemple|dans le cas|document|dossier|chiffre|%|—)/i.test(text);
+  const hasExample = /(exemple|dans le cas|document|dossier|chiffre|%|Â—)/i.test(text);
   const hasConclusion = /(donc|en conclusion|on peut conclure|ainsi)/i.test(text);
   let adjusted = bundle.score + (hasStructure ? 0.2 : 0) + (hasExample ? 0.2 : 0) + (hasConclusion ? 0.1 : 0);
   adjusted = clamp(Math.round(adjusted * 10) / 10, 0, 10);
 
   const elements_reperes =
     bundle.missing.length > 0
-      ? bundle.missing.slice(0, 3).map((w) => `Idée ou notion — mieux mobiliser : ${w}`)
+      ? bundle.missing.slice(0, 3).map((w) => `IdÃ©e ou notion Â— mieux mobiliser : ${w}`)
       : (exercise.grille || []).slice(0, 2).filter(Boolean);
 
   return {
     score: adjusted,
-    feedback: "Évaluation locale alignée sur le fond : idées attendues, structure et exemples.",
+    feedback: "Ã‰valuation locale alignÃ©e sur le fond : idÃ©es attendues, structure et exemples.",
     points_forts: hasExample
-      ? "Tu appuies déjà ta réponse avec des éléments concrets."
+      ? "Tu appuies dÃ©jÃ  ta rÃ©ponse avec des Ã©lÃ©ments concrets."
       : bundle.coverage >= 0.5
-      ? "Plusieurs notions attendues sont abordées."
-      : "Réponse à développer davantage.",
+      ? "Plusieurs notions attendues sont abordÃ©es."
+      : "RÃ©ponse Ã  dÃ©velopper davantage.",
     a_ameliorer: bundle.missing.length
       ? `Renforce surtout : ${bundle.missing.slice(0, 5).join(", ")}.`
-      : "Rends ton argumentation plus explicite et relie-la davantage aux critères de la grille.",
+      : "Rends ton argumentation plus explicite et relie-la davantage aux critÃ¨res de la grille.",
     elements_reperes,
     source: "local",
   };
@@ -463,15 +467,15 @@ export function buildReliableObjectifBacEvaluation(
 }
 
 const IA_RULES_MISSIONS = `
-Règles :
-- Évalue le fond et les idées mobilis—es ; accepte les synonymes et reformulations fid—les (pas besoin des mots exacts).
-- Ne pénalise pas la forme si le contenu est correct ; reste bienveillant et précis.
-- score entre 0 et 10 (nombre, entier ou décimal)
-- feedback : synthèse courte et bienveillante
+RÃ¨gles :
+- Ã‰value le fond et les idÃ©es mobilisÂ—es ; accepte les synonymes et reformulations fidÂ—les (pas besoin des mots exacts).
+- Ne pÃ©nalise pas la forme si le contenu est correct ; reste bienveillant et prÃ©cis.
+- score entre 0 et 10 (nombre, entier ou dÃ©cimal)
+- feedback : synthÃ¨se courte et bienveillante
 - analyse_developpee : dire clairement ce qui est juste et ce qui manque, sans juger la forme
 - conseils_progression : actions simples sur le contenu
 - points_forts / points_faibles : explicites
-- proposition_reponse : réponse modèle complète (version attendue la plus proche d'une copie parfaite)
+- proposition_reponse : rÃ©ponse modÃ¨le complÃ¨te (version attendue la plus proche d'une copie parfaite)
 - aucun texte hors JSON`;
 
 export function buildMissionsAIPrompt(exercise: CorrectionExerciseBase, studentAnswer: string): string {
@@ -481,20 +485,22 @@ export function buildMissionsAIPrompt(exercise: CorrectionExerciseBase, studentA
 Exercice : ${exercise.title}
 Consigne : ${exercise.consigne}
 Support : ${exercise.support || "Aucun"}
-Données (tableaux, r—sum— textuel) : ${stringifySupportTables(exercise.supportTables) || "—"}
+DonnÃ©es (tableaux, rÂ—sumÂ— textuel) : ${stringifySupportTables(exercise.supportTables) || "Â—"}
 Questions : ${(exercise.questions || []).join(" | ")}
-Correction modèle (référence p—dagogique, ne pas recopier mot pour mot) : ${exercise.correctionModele || exercise.attendu}
-Réponse élève : ${studentAnswer}
+Notions referentiel chapitre : ${(exercise.referentielNotions || []).join(" | ") || "-"}
+Competences attendues : ${(exercise.referentielCompetences || []).join(" | ") || "-"}
+Correction modÃ¨le (rÃ©fÃ©rence pÂ—dagogique, ne pas recopier mot pour mot) : ${exercise.correctionModele || exercise.attendu}
+RÃ©ponse Ã©lÃ¨ve : ${studentAnswer}
 ${IA_RULES_MISSIONS}`;
 }
 
 const IA_RULES_OBJECTIF_BAC = `
-Règles :
-- Évalue le fond : respect du verbe, notions, preuves et structure ; accepte synonymes et reformulations.
+RÃ¨gles :
+- Ã‰value le fond : respect du verbe, notions, preuves et structure ; accepte synonymes et reformulations.
 - score entre 0 et 10 (nombre)
-- feedback : synthèse courte
-- points_forts / a_ameliorer : explicites et orientés contenu
-- elements_reperes : 2 à 6 courtes pistes (idées ou critères), pas une liste de mots isol—s
+- feedback : synthÃ¨se courte
+- points_forts / a_ameliorer : explicites et orientÃ©s contenu
+- elements_reperes : 2 Ã  6 courtes pistes (idÃ©es ou critÃ¨res), pas une liste de mots isolÂ—s
 - aucun texte hors JSON`;
 
 export function buildObjectifBacAIPrompt(exercise: CorrectionExerciseBase, studentAnswer: string): string {
@@ -502,11 +508,11 @@ export function buildObjectifBacAIPrompt(exercise: CorrectionExerciseBase, stude
 {"score":number,"feedback":string,"points_forts":string,"a_ameliorer":string,"elements_reperes":string[]}
 
 Exercice : ${exercise.title}
-Contexte : ${exercise.context || "—"}
+Contexte : ${exercise.context || "Â—"}
 Consigne : ${exercise.consigne}
 Grille : ${(exercise.grille || []).join(" | ")}
-R—f—rence partielle (rep—res, ne pas exiger la recopie) : ${exercise.correctionPartielle || "—"}
-Réponse élève : ${studentAnswer}
+RÂ—fÂ—rence partielle (repÂ—res, ne pas exiger la recopie) : ${exercise.correctionPartielle || "Â—"}
+RÃ©ponse Ã©lÃ¨ve : ${studentAnswer}
 ${IA_RULES_OBJECTIF_BAC}`;
 }
 

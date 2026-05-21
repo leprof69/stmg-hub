@@ -651,7 +651,7 @@ export default function Cartes({ profil, onXPGagne }) {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px", marginBottom: "20px" }}>
             <div>
               <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2.2rem", color: "#FFD700", margin: "0 0 4px", textShadow: "0 0 30px #FFD70050" }}>🃏 Mes Cartes</h1>
-              <p style={{ color: "#7C3AED", margin: 0, fontSize: "0.9rem" }}>Collectionne · Révise · Progresse</p>
+              <p style={{ color: "#7C3AED", margin: 0, fontSize: "0.9rem" }}>Collectionne ? Révise ? Progresse</p>
             </div>
             <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
               <div style={{ background: "#F59E0B15", border: "1px solid #F59E0B30", borderRadius: "12px", padding: "7px 16px", fontFamily: "'Fredoka One', cursive", color: "#FBBF24", fontSize: "0.9rem" }}>🔥 {streak} jour{streak > 1 ? "s" : ""}</div>
@@ -759,7 +759,7 @@ export default function Cartes({ profil, onXPGagne }) {
                   <div style={{ background: col.gradient || "linear-gradient(135deg, #0f0521, #1e0a45)", padding: "20px 24px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
                     <div>
                       <p style={{ fontFamily: "'Fredoka One', cursive", color: "white", fontSize: "1.25rem", margin: 0 }}>{col.emoji || "🃏"} {col.nom}</p>
-                      <p style={{ color: "rgba(255,255,255,0.65)", fontSize: "0.82rem", margin: "2px 0 0" }}>{getCollectionMatiere(col)} · {getCollectionTheme(col)} · {col.description || ""}</p>
+                      <p style={{ color: "rgba(255,255,255,0.65)", fontSize: "0.82rem", margin: "2px 0 0" }}>{getCollectionMatiere(col)} ? {getCollectionTheme(col)} ? {col.description || ""}</p>
                     </div>
                     <span style={{ background: "rgba(255,255,255,0.15)", color: "white", fontFamily: "'Fredoka One', cursive", padding: "6px 16px", borderRadius: "100px", fontSize: "0.85rem" }}>
                       {obtenues}/{col.cartes.length} obtenues
@@ -810,7 +810,7 @@ export default function Cartes({ profil, onXPGagne }) {
                         <div>
                           <p style={{ fontFamily: "'Fredoka One', cursive", color: ouverte ? "white" : (col.couleur || "#FFD700"), fontSize: "1.15rem", margin: 0 }}>{col.nom}</p>
                           <p style={{ color: ouverte ? "rgba(255,255,255,0.6)" : "#475569", fontSize: "0.8rem", margin: "2px 0 0" }}>
-                            {getCollectionMatiere(col)} · {getCollectionTheme(col)} · {cartesPossedees.length}/{col.cartes.length} cartes
+                            {getCollectionMatiere(col)} ? {getCollectionTheme(col)} ? {cartesPossedees.length}/{col.cartes.length} cartes
                           </p>
                         </div>
                       </div>
@@ -844,7 +844,7 @@ export default function Cartes({ profil, onXPGagne }) {
                         </div>
                       ) : (
                         <>
-                          <p style={{ color: "#475569", fontSize: "0.78rem", margin: "0 0 14px" }}>💡 Clique pour agrandir · ♻️ Doublons recyclables contre 10 jetons</p>
+                          <p style={{ color: "#475569", fontSize: "0.78rem", margin: "0 0 14px" }}>💡 Clique pour agrandir ? ♻️ Doublons recyclables contre 10 jetons</p>
                           <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
                             {cartesPossedees.map((carte, idx) => {
                               const nb = maCollection[carte.id] || 0;

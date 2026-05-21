@@ -9,9 +9,16 @@ Créez un fichier `.env` à partir de `.env.example` et renseignez les variables
 ## Scripts
 
 - `npm run dev` — serveur de développement (http://localhost:3000)
-- `npm run build` — bundle de production dans `dist/`
+- `npm run build` — vérifie l’encodage UTF-8 puis bundle de production dans `dist/`
 - `npm run preview` — prévisualisation du build
-- `npm run typecheck` — vérification TypeScript
+- `npm run typecheck` — encodage + vérification TypeScript
+- `npm run check:encoding` — refuse les caractères cassés (U+FFFD) dans `src/`
+- `npm run fix:encoding` — réparation automatique des accents (à contrôler après coup)
+
+### Encodage français
+
+Les fichiers source doivent rester en **UTF-8** (accents corrects, pas de symboles ``).
+Consignes détaillées pour les agents : **`AGENTS.md`** et **`.cursor/rules/encoding-francais-utf8.mdc`**.
 
 ## Déploiement Firebase Hosting
 

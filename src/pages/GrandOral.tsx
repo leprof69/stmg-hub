@@ -3,6 +3,7 @@ import { auth, db } from "../services/firebase";
 import { doc, runTransaction } from "firebase/firestore";
 import { formatJetonsDelta } from "../lib/jetons";
 import { PLATFORM_XP_BLOCKED_MESSAGE, usePlatformIntegrity } from "../contexts/PlatformIntegrityContext";
+import { GAME_QCM_POOL } from "../lib/gameQcmPool";
 
 // ?? Emoji constants ?????????????????????????????????????????????????????????
 const E = {
@@ -43,7 +44,7 @@ const JURORS: Juror[] = [
     id:"moreau",
     name:"Prof. Moreau",
     title:"Expert Comptable",
-    desc:"Pr\u00e9cis et m\u00e9ticuleux. Il v\u00e9rifie chaque centimes.",
+    desc:"Précis et méticuleux. Il vérifie chaque centimes.",
     difficulty:1,
     suitColor:"#1e3a5f", tieColor:"#ef4444", skinTone:"#f5e6c8", hairColor:"#aaa",
     hasGlasses:true, isWoman:false,
@@ -52,9 +53,9 @@ const JURORS: Juror[] = [
   },
   {
     id:"lefebvre",
-    name:"Mme Lef\u00e8bvre",
+    name:"Mme Lefèbvre",
     title:"Directrice Marketing",
-    desc:"Brillante et exigeante. Elle adore les bonnes strat\u00e9gies.",
+    desc:"Brillante et exigeante. Elle adore les bonnes stratégies.",
     difficulty:2,
     suitColor:"#7c1c2e", tieColor:"#f97316", skinTone:"#fde8c8", hairColor:"#3d1f0f",
     hasGlasses:false, isWoman:true,
@@ -63,9 +64,9 @@ const JURORS: Juror[] = [
   },
   {
     id:"supreme",
-    name:"Le Jury Supr\u00eame",
+    name:"Le Jury Suprême",
     title:"Jury d'Excellence",
-    desc:"Les trois l\u00e9gendes de STMG. Seuls les meilleurs passent.",
+    desc:"Les trois légendes de STMG. Seuls les meilleurs passent.",
     difficulty:3,
     suitColor:"#2d1b00", tieColor:"#fbbf24", skinTone:"#f5e6c8", hairColor:"#888",
     hasGlasses:false, isWoman:false,
@@ -188,30 +189,13 @@ function JurorBody({ j, reaction }: { j: Juror; reaction: Reaction }) {
 // ?? QUIZ POOL ????????????????????????????????????????????????????????????????
 type Q = { q: string; choices: [string,string,string,string]; ok: number; cat: string };
 
-const QUIZ_POOL: Q[] = [
-  { q:"La valeur ajout\u00e9e (VA) = CA \u2212 :", choices:["Salaires","Imp\u00f4ts","Consommations interm\u00e9diaires","Dividendes"], ok:2, cat:"Compta" },
-  { q:"Le seuil de rentabilit\u00e9 est :", choices:["Le CA maximum","Le CA o\u00f9 r\u00e9sultat = 0","Le point mort","B et C \u00e0 la fois"], ok:3, cat:"Compta" },
-  { q:"Le bilan recense actif et passif :", choices:["Sur l'ann\u00e9e","Au 31 d\u00e9cembre uniquement","\u00c0 une date donn\u00e9e","Chaque semestre"], ok:2, cat:"Compta" },
-  { q:"Les charges fixes sont :", choices:["Variables selon l'activit\u00e9","Ind\u00e9pendantes du volume","Toujours nulles","Li\u00e9es aux mati\u00e8res premi\u00e8res"], ok:1, cat:"Compta" },
-  { q:"CAF = Capacit\u00e9 d'auto-financement. Elle mesure :", choices:["Le b\u00e9n\u00e9fice net","Les flux de tr\u00e9sorerie potentiels","La valeur ajout\u00e9e","Le chiffre d'affaires"], ok:1, cat:"Compta" },
-  { q:"Le marketing mix comprend :", choices:["2 variables","3 variables","4 variables (4P)","5 variables"], ok:2, cat:"Marketing" },
-  { q:"La diff\u00e9renciation consiste \u00e0 :", choices:["Baisser ses prix","Se distinguer de la concurrence","Copier le leader","Fusionner avec un concurrent"], ok:1, cat:"Marketing" },
-  { q:"La strat\u00e9gie de p\u00e9n\u00e9tration fixe un prix :", choices:["\u00c9lev\u00e9","Moyen","Bas","Variable"], ok:2, cat:"Marketing" },
-  { q:"Le positionnement d'un produit = :", choices:["Sa place en rayon","L'image voulue dans l'esprit du consommateur","Son prix de vente","Sa date de lancement"], ok:1, cat:"Marketing" },
-  { q:"Un march\u00e9 oligopolistique est domin\u00e9 par :", choices:["Un seul vendeur","Quelques grandes entreprises","Des milliers de PME","L'\u00c9tat uniquement"], ok:1, cat:"Marketing" },
-  { q:"Le management participatif implique :", choices:["Des d\u00e9cisions uniquement hi\u00e9rarchiques","La participation des employ\u00e9s aux d\u00e9cisions","Une gestion centralis\u00e9e","La suppression des syndicats"], ok:1, cat:"Management" },
-  { q:"Un organigramme repr\u00e9sente :", choices:["Le bilan","La structure hi\u00e9rarchique","Le compte de r\u00e9sultat","Le march\u00e9"], ok:1, cat:"Management" },
-  { q:"L'int\u00e9gration verticale consiste \u00e0 :", choices:["Racheter un concurrent","Acqu\u00e9rir fournisseurs ou distributeurs","Ouvrir \u00e0 l'international","Cr\u00e9er une franchise"], ok:1, cat:"Management" },
-  { q:"La DPO (Direction par Objectifs) est une m\u00e9thode de :", choices:["Comptabilit\u00e9","Management","Marketing","Finance"], ok:1, cat:"Management" },
-  { q:"La RSE (Responsabilit\u00e9 Sociale Entreprise) concerne :", choices:["Uniquement les grandes entreprises","Les impacts \u00e9conomiques, sociaux et environnementaux","Seulement les aspects financiers","Le recrutement uniquement"], ok:1, cat:"Management" },
-  { q:"SWOT analyse forces, faiblesses, opportunit\u00e9s et :", choices:["Strat\u00e9gies","Synergies","Menaces","Tendances"], ok:2, cat:"Strat\u00e9gie" },
-  { q:"Une fusion-acquisition vise \u00e0 :", choices:["R\u00e9duire les co\u00fbts salariaux","Prendre le contr\u00f4le d'une autre entreprise","Lancer un nouveau produit","Prospecter \u00e0 l'export"], ok:1, cat:"Strat\u00e9gie" },
-  { q:"Une entreprise en croissance externe :", choices:["Grandit seule par ses ventes","Grossit via rachat, fusion","R\u00e9duit ses effectifs","Externalise ses activit\u00e9s"], ok:1, cat:"Strat\u00e9gie" },
-  { q:"Le BFR (Besoin en Fonds de Roulement) augmente quand :", choices:["Les ventes diminuent","Les stocks augmentent","Les dettes fournisseurs augmentent","La tr\u00e9sorerie s'am\u00e9liore"], ok:1, cat:"Finance" },
-  { q:"Un effet de levier financier positif signifie :", choices:["L'entreprise est endett\u00e9e","La dette am\u00e9liore la rentabilit\u00e9 des capitaux propres","Les int\u00e9r\u00eats sont nuls","La capacit\u00e9 d'auto-financement est nulle"], ok:1, cat:"Finance" },
-  { q:"La mondialisation favorise :", choices:["Les \u00e9changes nationaux","L'ouverture des fronti\u00e8res et les flux internationaux","La protection des march\u00e9s locaux","La r\u00e9duction des importations"], ok:1, cat:"Mondialisation" },
-  { q:"Une joint-venture est :", choices:["Un type de franchise","Une coentreprise entre 2 soci\u00e9t\u00e9s","Une fusion compl\u00e8te","Un rachat hostile"], ok:1, cat:"Mondialisation" },
-];
+/** QCM issus de tous les chapitres du pack Missions SDGN. */
+const QUIZ_POOL: Q[] = GAME_QCM_POOL.map((item) => ({
+  q: item.q,
+  choices: item.choices,
+  ok: item.ok,
+  cat: `SDGN ch. ${item.chapter}`,
+}));
 
 // ?? CSS ANIMATIONS ????????????????????????????????????????????????????????????
 const GO_CSS = `
@@ -400,7 +384,7 @@ export default function GrandOral({ profil, onXPGagne }: Props) {
       });
       setReaction("displeased");
       setJurorAnim("shake"); setTimeout(() => setJurorAnim("none"), 800);
-      const miss = choiceIdx === -1 ? `Temps \u00e9coul\u00e9 ${E.sweat} \u221218%` : `-18% ${E.cross}`;
+      const miss = choiceIdx === -1 ? `Temps écoulé ${E.sweat} −18%` : `-18% ${E.cross}`;
       setFeedback({ text:miss, color:"#ef4444", id:pid });
     }
 
@@ -411,7 +395,7 @@ export default function GrandOral({ profil, onXPGagne }: Props) {
   const endBattle = useCallback((isWin: boolean, wc: number) => {
     if (timerRef.current) window.clearInterval(timerRef.current);
     const mention = isWin
-      ? wc===0 ? "Tr\u00e8s Bien" : wc<=2 ? "Bien" : wc<=5 ? "Assez Bien" : "Passable"
+      ? wc===0 ? "Très Bien" : wc<=2 ? "Bien" : wc<=5 ? "Assez Bien" : "Passable"
       : "\u00c9ch\u00e9c";
     const jetons   = isWin ? (wc===0?100:wc<=2?60:wc<=5?35:20) : 8;
     const prestige = isWin ? (wc===0?100:wc<=2?50:wc<=5?20:0)  : 0;
@@ -518,7 +502,7 @@ export default function GrandOral({ profil, onXPGagne }: Props) {
                       <button type="button" onClick={() => startBattle(j)}
                         className="rounded-xl px-4 py-2 text-xs font-black text-slate-950 transition active:scale-[0.97]"
                         style={{ background:`linear-gradient(135deg,${j.accentColor},${j.tieColor})`, boxShadow:`0 6px 20px -6px ${j.accentColor}` }}>
-                        D\u00e9buter {E.micro}
+                        Débuter {E.micro}
                       </button>
                     </div>
                   </div>
@@ -539,7 +523,7 @@ export default function GrandOral({ profil, onXPGagne }: Props) {
               ].map(({ m,j,p,c,card })=>(
                 <div key={m} className="rounded-xl border border-white/8 bg-black/20 p-2.5">
                   <p className="text-xs font-black mb-0.5" style={{ color:c }}>{m}</p>
-                  <p className="text-[10px] text-slate-500">{j}j � {p}p{card?` � ${E.card} carte`:""}</p>
+                  <p className="text-[10px] text-slate-500">{j}j à {p}p{card?` à ${E.card} carte`:""}</p>
                 </div>
               ))}
             </div>
@@ -633,7 +617,7 @@ export default function GrandOral({ profil, onXPGagne }: Props) {
   }
 
   // ?? RESULT ????????????????????????????????????????????????????????????????
-  const isWin = result.mention !== "\u00c9chec";
+  const isWin = result.mention !== "Échec";
   return (
     <div className="relative min-h-screen overflow-x-hidden pb-28 text-slate-100"
       style={{ background:isWin?"radial-gradient(ellipse 100% 60% at 50% 0%,rgba(0,100,40,0.35) 0%,transparent 65%),#030814":"radial-gradient(ellipse 100% 60% at 50% 0%,rgba(100,0,20,0.35) 0%,transparent 65%),#030814" }}>

@@ -11,9 +11,9 @@ import {
 import { doc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../services/firebase";
 
-/** Message affichù lorsque les jetons sont bloquùs (persistant jusqu'ù action admin). */
+/** Message affich√© lorsque les jetons sont bloqu√©s (persistant jusqu‚Äô√† action admin). */
 export const PLATFORM_XP_BLOCKED_MESSAGE =
-  "Changement d'onglet ou une autre fenùtre au premier plan a ùtù dùtectù : tu ne peux plus gagner de jetons tant que l'ùquipe ne rùtablit pas ton accùs (contacte ton prof en cas d'erreur). Recharger la page ne suffit pas.";
+  "Changement d'onglet ou une autre fen√™tre au premier plan a √ât√© d√©tect√© : tu ne peux plus gagner de jetons tant que l'‚Äîquipe ne r‚Äîtablit pas ton acc‚Äîs (contacte ton prof en cas d'erreur). Recharger la page ne suffit pas.";
 
 type PlatformIntegrityContextValue = {
   xpRewardsSuspended: boolean;
@@ -43,7 +43,7 @@ export function PlatformIntegrityProvider({
   const armedRef = useRef(false);
   const hadVisibleFocusRef = useRef(false);
   const pendingReturnWallRef = useRef(false);
-  /** Mis ù true dùs la premiùre sortie d'onglet (sync, avant re-render React). */
+  /** Mis √† true d‚Äôs la premi√®re sortie d'onglet (sync, avant re-render React). */
   const sessionViolatedRef = useRef(false);
   const profileSuspendedRef = useRef(xpSuspendedFromProfile);
   profileSuspendedRef.current = xpSuspendedFromProfile;
@@ -177,9 +177,9 @@ export function PlatformIntegrityProvider({
               Jetons suspendus
             </h2>
             <p style={{ margin: "0 0 14px", fontWeight: 700, fontSize: "0.96rem", lineHeight: 1.55, color: "#334155" }}>
-              Tu as quittù cet onglet ou affichù une autre fenùtre au premier plan :{" "}
-              <strong>tu ne peux plus gagner de jetons</strong> sur STMG Hub tant que ton professeur ne rùtablit pas ton accùs
-              (anti-triche ou levùe en cas de bug).
+              Tu as quitt√† cet onglet ou affich√© une autre fen√™tre au premier plan :{" "}
+              <strong>tu ne peux plus gagner de jetons</strong> sur STMG Hub tant que ton professeur ne r‚Äîtablit pas ton acc‚Äîs
+              (anti-triche ou lev‚Äîe en cas de bug).
             </p>
             <button
               type="button"

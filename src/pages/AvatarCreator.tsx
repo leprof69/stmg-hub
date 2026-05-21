@@ -47,15 +47,15 @@ const CHEEK_MAP:Record<string,CheekCfg>={
   blushPeach:{leftBg:"rgba(255,160,80,0.44)", rightBg:"rgba(255,160,80,0.44)"},
   blushLilac:{leftBg:"rgba(180,100,255,0.38)",rightBg:"rgba(180,100,255,0.38)"},
   blushBlue: {leftBg:"rgba(80,160,255,0.38)", rightBg:"rgba(80,160,255,0.38)"},
-  freckles:  {text:"\u00b7  \u00b7  \u00b7",textTop:"54%"},
-  beautyMark:{text:"\u2022",textTop:"62%"},
-  sparkle:   {text:"\u2728",textTop:"56%"},
-  star:      {text:"\u2B50",textTop:"56%"},
-  diamond:   {text:"\u{1F48E}",textTop:"56%"},
+  freckles:  {text:"?  ?  ?",textTop:"54%"},
+  beautyMark:{text:"•",textTop:"62%"},
+  sparkle:   {text:"✨",textTop:"56%"},
+  star:      {text:"⭐",textTop:"56%"},
+  diamond:   {text:"💎",textTop:"56%"},
 };
 
 // ---------------------------------------------------------------------------
-// STICKERS � Iconify (Solar Duotone + Noto Google)
+// STICKERS à Iconify (Solar Duotone + Noto Google)
 // ---------------------------------------------------------------------------
 type StickerDef={icon:string;top:string;left:string;sz:number;rotation?:string;color?:string};
 const STICKER_CFG:Record<string,StickerDef|null>={
@@ -262,9 +262,9 @@ const RS:Record<Rarity,{text:string;border:string;bg:string;label:string}>={
   gratuit:  {text:"#64748b",border:"rgba(100,116,139,0.2)", bg:"rgba(100,116,139,0.06)",label:"Gratuit"},
   commun:   {text:"#4ade80",border:"rgba(34,197,94,0.22)",  bg:"rgba(34,197,94,0.07)",  label:"Commun"},
   rare:     {text:"#60a5fa",border:"rgba(59,130,246,0.22)", bg:"rgba(59,130,246,0.07)", label:"Rare"},
-  epique:   {text:"#c084fc",border:"rgba(168,85,247,0.25)", bg:"rgba(168,85,247,0.08)", label:"\u00c9pique"},
-  legendaire:{text:"#fbbf24",border:"rgba(251,191,36,0.3)", bg:"rgba(251,191,36,0.08)", label:"L\u00e9gendaire"},
-  prestige: {text:"#ffd700",border:"rgba(255,215,0,0.35)",  bg:"rgba(255,215,0,0.10)",  label:"Prestige \u{1F451}"},
+  epique:   {text:"#c084fc",border:"rgba(168,85,247,0.25)", bg:"rgba(168,85,247,0.08)", label:"Épique"},
+  legendaire:{text:"#fbbf24",border:"rgba(251,191,36,0.3)", bg:"rgba(251,191,36,0.08)", label:"Légendaire"},
+  prestige: {text:"#ffd700",border:"rgba(255,215,0,0.35)",  bg:"rgba(255,215,0,0.10)",  label:"Prestige 👑"},
 };
 
 type CatMeta={label:string;icon:string};
@@ -290,33 +290,33 @@ const CAT_ORDER:Category[]=["skinColor","top","hairColor","clothing","clothesCol
 // ---------------------------------------------------------------------------
 type Preset={emoji:string;name:string;tag?:string;cfg:AvatarConfig};
 const PRESETS:Preset[]=[
-  {emoji:"\u{1F338}",name:"F\u00e9minin",   cfg:{skinColor:"edb98a",top:"longButNotTooLong",hairColor:"b58143",accessories:"none",       facialHair:"none",      clothing:"shirtScoopNeck",   clothesColor:"ff488e",eyes:"happy",   eyebrows:"raisedExcitedNatural",mouth:"smile",   bgColor:"ffd5dc",bgType:"solid",        frame:"none",  nose:"blushRose",   sticker:"none"}},
-  {emoji:"\u{1F4AA}",name:"Masculin",       cfg:{skinColor:"d08b5b",top:"shortFlat",        hairColor:"2c1b18",accessories:"none",       facialHair:"none",      clothing:"shirtVNeck",        clothesColor:"25557c",eyes:"default", eyebrows:"default",             mouth:"serious", bgColor:"b1e2ff",bgType:"solid",        frame:"none",  nose:"none",        sticker:"none"}},
-  {emoji:"\u{1F98B}",name:"Y2K",tag:"\u{1F4C5}",cfg:{skinColor:"edb98a",top:"bun",         hairColor:"f59797",accessories:"prescription01",facialHair:"none",    clothing:"blazerAndSweater",  clothesColor:"ffafb9",eyes:"wink",    eyebrows:"raisedExcited",       mouth:"smile",   bgColor:"c0aede",bgType:"solid",        frame:"neon",  nose:"blushRose",   sticker:"butterfly"}},
-  {emoji:"\u{1F34F}",name:"Brat",tag:"\u{1F525}",cfg:{skinColor:"ffdbb4",top:"straightAndStrand",hairColor:"2c1b18",accessories:"none",  facialHair:"none",      clothing:"graphicShirt",      clothesColor:"8cc63f",eyes:"squint",  eyebrows:"angry",               mouth:"grimace", bgColor:"8cc63f",bgType:"solid",        frame:"brat",  nose:"none",        sticker:"lightning"}},
-  {emoji:"\u{1F33F}",name:"Clean Girl",     cfg:{skinColor:"edb98a",top:"bun",              hairColor:"b58143",accessories:"none",       facialHair:"none",      clothing:"collarAndSweater",  clothesColor:"e6e6e6",eyes:"default", eyebrows:"defaultNatural",      mouth:"smile",   bgColor:"f8fafc",bgType:"solid",        frame:"none",  nose:"blushPeach",  sticker:"none"}},
-  {emoji:"\u{1F4DA}",name:"Dark Academia", cfg:{skinColor:"ae5d29",top:"straight01",       hairColor:"4a312c",accessories:"prescription01",facialHair:"none",   clothing:"blazerAndSweater",  clothesColor:"3c4f5c",eyes:"default", eyebrows:"angryNatural",        mouth:"serious", bgColor:"0f172a",bgType:"solid",        frame:"galaxy",nose:"none",        sticker:"diploma"}},
-  {emoji:"\u{1F916}",name:"Cyber",tag:"\u{1F4A5}",cfg:{skinColor:"ffdbb4",top:"shortCurly",hairColor:"f59797",accessories:"prescription02",facialHair:"none",  clothing:"graphicShirt",      clothesColor:"65c9ff",eyes:"winkWacky",eyebrows:"raisedExcited",      mouth:"twinkle", bgColor:"1e1b4b",bgType:"solid",        frame:"neon",  nose:"sparkle",     sticker:"controller"}},
-  {emoji:"\u{1F3B8}",name:"Rock",           cfg:{skinColor:"ffdbb4",top:"shaggyMullet",    hairColor:"2c1b18",accessories:"sunglasses",   facialHair:"beardLight",clothing:"graphicShirt",     clothesColor:"262e33",eyes:"squint",  eyebrows:"angry",               mouth:"grimace", bgColor:"1e1b4b",bgType:"solid",        frame:"fire",  nose:"none",        sticker:"micro"}},
-  {emoji:"\u{1F30A}",name:"Surf",           cfg:{skinColor:"fd9841",top:"dreads01",         hairColor:"d6b370",accessories:"sunglasses",   facialHair:"none",      clothing:"hoodie",            clothesColor:"65c9ff",eyes:"squint",  eyebrows:"raisedExcited",       mouth:"twinkle", bgColor:"3b82f6,22d3ee",bgType:"gradientLinear",frame:"ice",nose:"blushPeach",sticker:"none"}},
-  {emoji:"\u2728",   name:"Glam",           cfg:{skinColor:"edb98a",top:"curly",            hairColor:"f59797",accessories:"wayfarers",    facialHair:"none",      clothing:"blazerAndSweater",  clothesColor:"ff488e",eyes:"wink",    eyebrows:"raisedExcited",       mouth:"smile",   bgColor:"a78bfa,ec4899",bgType:"gradientLinear",frame:"rainbow",nose:"blushRose",sticker:"crown"}},
-  {emoji:"\u{1F338}",name:"Printemps",tag:"\u{1F340}",cfg:{skinColor:"edb98a",top:"frida",  hairColor:"a55728",accessories:"none",        facialHair:"none",      clothing:"shirtScoopNeck",    clothesColor:"a7ffc4",eyes:"happy",   eyebrows:"raisedExcitedNatural",mouth:"twinkle", bgColor:"56ab2f,f093fb",bgType:"gradientLinear",frame:"spring",nose:"blushRose",sticker:"sakura"}},
-  {emoji:"\u{1F9D1}",name:"Afro King",      cfg:{skinColor:"614335",top:"fro",              hairColor:"2c1b18",accessories:"wayfarers",    facialHair:"beardMedium",clothing:"blazerAndShirt",  clothesColor:"f7971e",eyes:"default", eyebrows:"raisedExcited",       mouth:"smile",   bgColor:"fbbf24,f97316",bgType:"gradientLinear",frame:"gold",nose:"none",       sticker:"medal"}},
+  {emoji:"🌸",name:"Féminin",   cfg:{skinColor:"edb98a",top:"longButNotTooLong",hairColor:"b58143",accessories:"none",       facialHair:"none",      clothing:"shirtScoopNeck",   clothesColor:"ff488e",eyes:"happy",   eyebrows:"raisedExcitedNatural",mouth:"smile",   bgColor:"ffd5dc",bgType:"solid",        frame:"none",  nose:"blushRose",   sticker:"none"}},
+  {emoji:"💪",name:"Masculin",       cfg:{skinColor:"d08b5b",top:"shortFlat",        hairColor:"2c1b18",accessories:"none",       facialHair:"none",      clothing:"shirtVNeck",        clothesColor:"25557c",eyes:"default", eyebrows:"default",             mouth:"serious", bgColor:"b1e2ff",bgType:"solid",        frame:"none",  nose:"none",        sticker:"none"}},
+  {emoji:"🦋",name:"Y2K",tag:"📅",cfg:{skinColor:"edb98a",top:"bun",         hairColor:"f59797",accessories:"prescription01",facialHair:"none",    clothing:"blazerAndSweater",  clothesColor:"ffafb9",eyes:"wink",    eyebrows:"raisedExcited",       mouth:"smile",   bgColor:"c0aede",bgType:"solid",        frame:"neon",  nose:"blushRose",   sticker:"butterfly"}},
+  {emoji:"🍏",name:"Brat",tag:"🔥",cfg:{skinColor:"ffdbb4",top:"straightAndStrand",hairColor:"2c1b18",accessories:"none",  facialHair:"none",      clothing:"graphicShirt",      clothesColor:"8cc63f",eyes:"squint",  eyebrows:"angry",               mouth:"grimace", bgColor:"8cc63f",bgType:"solid",        frame:"brat",  nose:"none",        sticker:"lightning"}},
+  {emoji:"🌿",name:"Clean Girl",     cfg:{skinColor:"edb98a",top:"bun",              hairColor:"b58143",accessories:"none",       facialHair:"none",      clothing:"collarAndSweater",  clothesColor:"e6e6e6",eyes:"default", eyebrows:"defaultNatural",      mouth:"smile",   bgColor:"f8fafc",bgType:"solid",        frame:"none",  nose:"blushPeach",  sticker:"none"}},
+  {emoji:"📚",name:"Dark Academia", cfg:{skinColor:"ae5d29",top:"straight01",       hairColor:"4a312c",accessories:"prescription01",facialHair:"none",   clothing:"blazerAndSweater",  clothesColor:"3c4f5c",eyes:"default", eyebrows:"angryNatural",        mouth:"serious", bgColor:"0f172a",bgType:"solid",        frame:"galaxy",nose:"none",        sticker:"diploma"}},
+  {emoji:"🤖",name:"Cyber",tag:"💥",cfg:{skinColor:"ffdbb4",top:"shortCurly",hairColor:"f59797",accessories:"prescription02",facialHair:"none",  clothing:"graphicShirt",      clothesColor:"65c9ff",eyes:"winkWacky",eyebrows:"raisedExcited",      mouth:"twinkle", bgColor:"1e1b4b",bgType:"solid",        frame:"neon",  nose:"sparkle",     sticker:"controller"}},
+  {emoji:"🎸",name:"Rock",           cfg:{skinColor:"ffdbb4",top:"shaggyMullet",    hairColor:"2c1b18",accessories:"sunglasses",   facialHair:"beardLight",clothing:"graphicShirt",     clothesColor:"262e33",eyes:"squint",  eyebrows:"angry",               mouth:"grimace", bgColor:"1e1b4b",bgType:"solid",        frame:"fire",  nose:"none",        sticker:"micro"}},
+  {emoji:"🌊",name:"Surf",           cfg:{skinColor:"fd9841",top:"dreads01",         hairColor:"d6b370",accessories:"sunglasses",   facialHair:"none",      clothing:"hoodie",            clothesColor:"65c9ff",eyes:"squint",  eyebrows:"raisedExcited",       mouth:"twinkle", bgColor:"3b82f6,22d3ee",bgType:"gradientLinear",frame:"ice",nose:"blushPeach",sticker:"none"}},
+  {emoji:"✨",   name:"Glam",           cfg:{skinColor:"edb98a",top:"curly",            hairColor:"f59797",accessories:"wayfarers",    facialHair:"none",      clothing:"blazerAndSweater",  clothesColor:"ff488e",eyes:"wink",    eyebrows:"raisedExcited",       mouth:"smile",   bgColor:"a78bfa,ec4899",bgType:"gradientLinear",frame:"rainbow",nose:"blushRose",sticker:"crown"}},
+  {emoji:"🌸",name:"Printemps",tag:"🍀",cfg:{skinColor:"edb98a",top:"frida",  hairColor:"a55728",accessories:"none",        facialHair:"none",      clothing:"shirtScoopNeck",    clothesColor:"a7ffc4",eyes:"happy",   eyebrows:"raisedExcitedNatural",mouth:"twinkle", bgColor:"56ab2f,f093fb",bgType:"gradientLinear",frame:"spring",nose:"blushRose",sticker:"sakura"}},
+  {emoji:"🧑",name:"Afro King",      cfg:{skinColor:"614335",top:"fro",              hairColor:"2c1b18",accessories:"wayfarers",    facialHair:"beardMedium",clothing:"blazerAndShirt",  clothesColor:"f7971e",eyes:"default", eyebrows:"raisedExcited",       mouth:"smile",   bgColor:"fbbf24,f97316",bgType:"gradientLinear",frame:"gold",nose:"none",       sticker:"medal"}},
 ];
 
 const SPRING_PRESETS:Preset[]=[
-  {emoji:"\u{1F338}",name:"Sakura",          cfg:{skinColor:"edb98a",top:"froBand",hairColor:"a55728",accessories:"none",facialHair:"none",clothing:"shirtScoopNeck",  clothesColor:"ffafb9",eyes:"happy",  eyebrows:"raisedExcitedNatural",mouth:"smile",  bgColor:"56ab2f,f093fb",bgType:"gradientLinear",frame:"spring",nose:"blushRose", sticker:"sakura"}},
-  {emoji:"\u{1F337}",name:"Champ de fleurs", cfg:{skinColor:"fd9841",top:"frida",   hairColor:"b58143",accessories:"none",facialHair:"none",clothing:"shirtScoopNeck",  clothesColor:"a7ffc4",eyes:"happy",  eyebrows:"defaultNatural",      mouth:"twinkle",bgColor:"a8e063,f7971e",bgType:"gradientLinear",frame:"spring",nose:"blushPeach",sticker:"sunflower"}},
-  {emoji:"\u{1F33F}",name:"Herbe fra\u00eeche",cfg:{skinColor:"d08b5b",top:"curly",hairColor:"4a312c",accessories:"none",facialHair:"none",clothing:"hoodie",           clothesColor:"bbf7d0",eyes:"default",eyebrows:"defaultNatural",     mouth:"smile",  bgColor:"d4fc79,96e6a1",bgType:"gradientLinear",frame:"spring",nose:"blushPeach",sticker:"leaf"}},
+  {emoji:"🌸",name:"Sakura",          cfg:{skinColor:"edb98a",top:"froBand",hairColor:"a55728",accessories:"none",facialHair:"none",clothing:"shirtScoopNeck",  clothesColor:"ffafb9",eyes:"happy",  eyebrows:"raisedExcitedNatural",mouth:"smile",  bgColor:"56ab2f,f093fb",bgType:"gradientLinear",frame:"spring",nose:"blushRose", sticker:"sakura"}},
+  {emoji:"🌷",name:"Champ de fleurs", cfg:{skinColor:"fd9841",top:"frida",   hairColor:"b58143",accessories:"none",facialHair:"none",clothing:"shirtScoopNeck",  clothesColor:"a7ffc4",eyes:"happy",  eyebrows:"defaultNatural",      mouth:"twinkle",bgColor:"a8e063,f7971e",bgType:"gradientLinear",frame:"spring",nose:"blushPeach",sticker:"sunflower"}},
+  {emoji:"🌿",name:"Herbe fraîche",cfg:{skinColor:"d08b5b",top:"curly",hairColor:"4a312c",accessories:"none",facialHair:"none",clothing:"hoodie",           clothesColor:"bbf7d0",eyes:"default",eyebrows:"defaultNatural",     mouth:"smile",  bgColor:"d4fc79,96e6a1",bgType:"gradientLinear",frame:"spring",nose:"blushPeach",sticker:"leaf"}},
 ];
 
 // ---------------------------------------------------------------------------
 // MYSTERY CHESTS
 // ---------------------------------------------------------------------------
 const CHESTS=[
-  {id:"common",   emoji:"\u{1F4E6}",name:"Coffre Commun",       price:50, color:"#4ade80",weights:{gratuit:5,commun:55,rare:35,epique:5,legendaire:0,prestige:0}},
-  {id:"epic",     emoji:"\u{1F7EA}",name:"Coffre \u00c9pique",   price:150,color:"#c084fc",weights:{gratuit:0,commun:20,rare:40,epique:35,legendaire:5,prestige:0}},
-  {id:"legendary",emoji:"\u{1F947}",name:"Coffre L\u00e9gendaire",price:300,color:"#fbbf24",weights:{gratuit:0,commun:0,rare:20,epique:60,legendaire:18,prestige:2}},
+  {id:"common",   emoji:"📦",name:"Coffre Commun",       price:50, color:"#4ade80",weights:{gratuit:5,commun:55,rare:35,epique:5,legendaire:0,prestige:0}},
+  {id:"epic",     emoji:"🟪",name:"Coffre Épique",   price:150,color:"#c084fc",weights:{gratuit:0,commun:20,rare:40,epique:35,legendaire:5,prestige:0}},
+  {id:"legendary",emoji:"🥇",name:"Coffre Légendaire",price:300,color:"#fbbf24",weights:{gratuit:0,commun:0,rare:20,epique:60,legendaire:18,prestige:2}},
 ];
 function pickRandom(weights:Record<Rarity,number>,owned:string[],profil:UserProfile):ShopItem|null{
   const pool=ALL_ITEMS.filter(i=>{
@@ -335,49 +335,49 @@ function pickRandom(weights:Record<Rarity,number>,owned:string[],profil:UserProf
 // ---------------------------------------------------------------------------
 export const ALL_ITEMS:ShopItem[]=[
   // PEAU
-  {id:"614335",category:"skinColor",name:"\u00c9b\u00e8ne",          price:0, rarity:"gratuit",previewColor:"#614335"},
-  {id:"ae5d29",category:"skinColor",name:"Brun fonc\u00e9",           price:0, rarity:"gratuit",previewColor:"#ae5d29"},
+  {id:"614335",category:"skinColor",name:"Ébène",          price:0, rarity:"gratuit",previewColor:"#614335"},
+  {id:"ae5d29",category:"skinColor",name:"Brun foncé",           price:0, rarity:"gratuit",previewColor:"#ae5d29"},
   {id:"d08b5b",category:"skinColor",name:"Brun",                      price:0, rarity:"gratuit",previewColor:"#d08b5b"},
   {id:"edb98a",category:"skinColor",name:"Beige",                     price:0, rarity:"gratuit",previewColor:"#edb98a"},
-  {id:"f8d25c",category:"skinColor",name:"Dor\u00e9",                 price:0, rarity:"gratuit",previewColor:"#f8d25c"},
-  {id:"fd9841",category:"skinColor",name:"Hal\u00e9",                 price:0, rarity:"gratuit",previewColor:"#fd9841"},
+  {id:"f8d25c",category:"skinColor",name:"Doré",                 price:0, rarity:"gratuit",previewColor:"#f8d25c"},
+  {id:"fd9841",category:"skinColor",name:"Halé",                 price:0, rarity:"gratuit",previewColor:"#fd9841"},
   {id:"ffdbb4",category:"skinColor",name:"Clair",                     price:0, rarity:"gratuit",previewColor:"#ffdbb4"},
   // COIFFURES (laicite : hijab et turban retires)
-  {id:"shortFlat",           category:"top",name:"Court plat",          price:0, rarity:"gratuit",previewEmoji:"\u2702\ufe0f"},
-  {id:"shortRound",          category:"top",name:"Court arrondi",        price:0, rarity:"gratuit",previewEmoji:"\u{1F466}"},
-  {id:"shortCurly",          category:"top",name:"Boucl\u00e9 court",    price:0, rarity:"gratuit",previewEmoji:"\u{1F31F}"},
-  {id:"sides",               category:"top",name:"C\u00f4t\u00e9s",     price:0, rarity:"gratuit",previewEmoji:"\u{1F9D1}"},
-  {id:"none",                category:"top",name:"Chauve",               price:0, rarity:"gratuit",previewEmoji:"\u{1F95A}"},
-  {id:"longButNotTooLong",   category:"top",name:"Mi-long",              price:0, rarity:"gratuit",previewEmoji:"\u{1F467}"},
-  {id:"straight01",          category:"top",name:"Long lisse",           price:0, rarity:"gratuit",previewEmoji:"\u{1F9CF}"},
-  {id:"bob",                 category:"top",name:"Bob trendy",           price:10,rarity:"commun", previewEmoji:"\u{1F469}"},
-  {id:"bun",                 category:"top",name:"Bun \u00e9l\u00e9gant",price:12,rarity:"commun", previewEmoji:"\u{1F481}"},
-  {id:"shortWaved",          category:"top",name:"Wavy court",           price:10,rarity:"commun", previewEmoji:"\u{1F4AB}"},
-  {id:"straightAndStrand",   category:"top",name:"Long + m\u00e8che",   price:15,rarity:"commun", previewEmoji:"\u{1F469}"},
-  {id:"straight02",          category:"top",name:"Long structur\u00e9",  price:10,rarity:"commun", previewEmoji:"\u{1F9D6}"},
-  {id:"theCaesar",           category:"top",name:"C\u00e9sar cut",       price:15,rarity:"commun", previewEmoji:"\u{1F3DB}\ufe0f"},
-  {id:"theCaesarAndSidePart",category:"top",name:"C\u00e9sar + raie",   price:18,rarity:"commun", previewEmoji:"\u{1F3DB}\ufe0f"},
-  {id:"frizzle",             category:"top",name:"Fris\u00e9 textur\u00e9",price:15,rarity:"commun",previewEmoji:"\u26A1"},
-  {id:"shaggy",              category:"top",name:"Shaggy 70s",           price:15,rarity:"commun", previewEmoji:"\u{1F3B8}"},
-  {id:"hat",                 category:"top",name:"Bucket hat",           price:15,rarity:"commun", previewEmoji:"\u{1F3A9}"},
-  {id:"winterHat1",          category:"top",name:"Bonnet",               price:12,rarity:"commun", previewEmoji:"\u{1F9E3}"},
-  {id:"winterHat02",         category:"top",name:"Bonnet pompom",        price:18,rarity:"rare",   previewEmoji:"\u2744\ufe0f"},
-  {id:"winterHat03",         category:"top",name:"Beanie skate",         price:18,rarity:"rare",   previewEmoji:"\u2744\ufe0f"},
-  {id:"shaggyMullet",        category:"top",name:"Mulet Y2K",            price:20,rarity:"rare",   previewEmoji:"\u{1F918}"},
-  {id:"dreads01",            category:"top",name:"Dreads courts",         price:25,rarity:"rare",   previewEmoji:"\u{1F3B5}"},
-  {id:"dreads02",            category:"top",name:"Dreads torsad\u00e9s", price:25,rarity:"rare",   previewEmoji:"\u{1F3B6}"},
-  {id:"curly",               category:"top",name:"Curly fro",             price:25,rarity:"rare",   previewEmoji:"\u{1F33F}"},
-  {id:"curvy",               category:"top",name:"Ondul\u00e9 beach",    price:22,rarity:"rare",   previewEmoji:"\u{1F30A}"},
-  {id:"fro",                 category:"top",name:"Afro naturel",          price:20,rarity:"rare",   previewEmoji:"\u{1F4A5}"},
-  {id:"froBand",             category:"top",name:"Afro + bandeau",        price:30,rarity:"epique", previewEmoji:"\u{1F31E}"},
-  {id:"bigHair",             category:"top",name:"Big Volume",            price:30,rarity:"epique", previewEmoji:"\u{1F4A5}"},
-  {id:"dreads",              category:"top",name:"Dreads longs",          price:30,rarity:"epique", previewEmoji:"\u{1F981}"},
-  {id:"miaWallace",          category:"top",name:"Mia Wallace",           price:38,rarity:"epique", previewEmoji:"\u{1F3AC}"},
-  {id:"shavedSides",         category:"top",name:"Undercut",              price:32,rarity:"epique", previewEmoji:"\u{1F5E1}\ufe0f"},
-  {id:"frida",               category:"top",name:"Couronne de fleurs",    price:20,rarity:"rare",   previewEmoji:"\u{1F338}"},
+  {id:"shortFlat",           category:"top",name:"Court plat",          price:0, rarity:"gratuit",previewEmoji:"✂️"},
+  {id:"shortRound",          category:"top",name:"Court arrondi",        price:0, rarity:"gratuit",previewEmoji:"👦"},
+  {id:"shortCurly",          category:"top",name:"Bouclé court",    price:0, rarity:"gratuit",previewEmoji:"🌟"},
+  {id:"sides",               category:"top",name:"Côtés",     price:0, rarity:"gratuit",previewEmoji:"🧑"},
+  {id:"none",                category:"top",name:"Chauve",               price:0, rarity:"gratuit",previewEmoji:"🥚"},
+  {id:"longButNotTooLong",   category:"top",name:"Mi-long",              price:0, rarity:"gratuit",previewEmoji:"👧"},
+  {id:"straight01",          category:"top",name:"Long lisse",           price:0, rarity:"gratuit",previewEmoji:"🧏"},
+  {id:"bob",                 category:"top",name:"Bob trendy",           price:10,rarity:"commun", previewEmoji:"👩"},
+  {id:"bun",                 category:"top",name:"Bun élégant",price:12,rarity:"commun", previewEmoji:"💁"},
+  {id:"shortWaved",          category:"top",name:"Wavy court",           price:10,rarity:"commun", previewEmoji:"💫"},
+  {id:"straightAndStrand",   category:"top",name:"Long + mèche",   price:15,rarity:"commun", previewEmoji:"👩"},
+  {id:"straight02",          category:"top",name:"Long structuré",  price:10,rarity:"commun", previewEmoji:"🧖"},
+  {id:"theCaesar",           category:"top",name:"César cut",       price:15,rarity:"commun", previewEmoji:"🏛️"},
+  {id:"theCaesarAndSidePart",category:"top",name:"César + raie",   price:18,rarity:"commun", previewEmoji:"🏛️"},
+  {id:"frizzle",             category:"top",name:"Frisé texturé",price:15,rarity:"commun",previewEmoji:"⚡"},
+  {id:"shaggy",              category:"top",name:"Shaggy 70s",           price:15,rarity:"commun", previewEmoji:"🎸"},
+  {id:"hat",                 category:"top",name:"Bucket hat",           price:15,rarity:"commun", previewEmoji:"🎩"},
+  {id:"winterHat1",          category:"top",name:"Bonnet",               price:12,rarity:"commun", previewEmoji:"🧣"},
+  {id:"winterHat02",         category:"top",name:"Bonnet pompom",        price:18,rarity:"rare",   previewEmoji:"❄️"},
+  {id:"winterHat03",         category:"top",name:"Beanie skate",         price:18,rarity:"rare",   previewEmoji:"❄️"},
+  {id:"shaggyMullet",        category:"top",name:"Mulet Y2K",            price:20,rarity:"rare",   previewEmoji:"🤘"},
+  {id:"dreads01",            category:"top",name:"Dreads courts",         price:25,rarity:"rare",   previewEmoji:"🎵"},
+  {id:"dreads02",            category:"top",name:"Dreads torsadés", price:25,rarity:"rare",   previewEmoji:"🎶"},
+  {id:"curly",               category:"top",name:"Curly fro",             price:25,rarity:"rare",   previewEmoji:"🌿"},
+  {id:"curvy",               category:"top",name:"Ondulé beach",    price:22,rarity:"rare",   previewEmoji:"🌊"},
+  {id:"fro",                 category:"top",name:"Afro naturel",          price:20,rarity:"rare",   previewEmoji:"💥"},
+  {id:"froBand",             category:"top",name:"Afro + bandeau",        price:30,rarity:"epique", previewEmoji:"🌞"},
+  {id:"bigHair",             category:"top",name:"Big Volume",            price:30,rarity:"epique", previewEmoji:"💥"},
+  {id:"dreads",              category:"top",name:"Dreads longs",          price:30,rarity:"epique", previewEmoji:"🦁"},
+  {id:"miaWallace",          category:"top",name:"Mia Wallace",           price:38,rarity:"epique", previewEmoji:"🎬"},
+  {id:"shavedSides",         category:"top",name:"Undercut",              price:32,rarity:"epique", previewEmoji:"🗡️"},
+  {id:"frida",               category:"top",name:"Couronne de fleurs",    price:20,rarity:"rare",   previewEmoji:"🌸"},
   // CHEVEUX
   {id:"2c1b18",category:"hairColor",name:"Noir profond",    price:0, rarity:"gratuit",    previewColor:"#2c1b18"},
-  {id:"4a312c",category:"hairColor",name:"Brun fonc\u00e9", price:0, rarity:"gratuit",    previewColor:"#4a312c"},
+  {id:"4a312c",category:"hairColor",name:"Brun foncé", price:0, rarity:"gratuit",    previewColor:"#4a312c"},
   {id:"724133",category:"hairColor",name:"Brun naturel",    price:0, rarity:"gratuit",    previewColor:"#724133"},
   {id:"a55728",category:"hairColor",name:"Auburn",          price:8, rarity:"commun",     previewColor:"#a55728"},
   {id:"b58143",category:"hairColor",name:"Blond sable",     price:8, rarity:"commun",     previewColor:"#b58143"},
@@ -387,15 +387,15 @@ export const ALL_ITEMS:ShopItem[]=[
   {id:"ecdcbf",category:"hairColor",name:"Platine glam",    price:22,rarity:"epique",     previewColor:"#ecdcbf"},
   {id:"e8e1e1",category:"hairColor",name:"Gris acier",      price:28,rarity:"legendaire", previewColor:"#e8e1e1"},
   // TENUES
-  {id:"shirtCrewNeck",   category:"clothing",name:"T-shirt basic",       price:0, rarity:"gratuit",previewEmoji:"\u{1F455}"},
-  {id:"hoodie",          category:"clothing",name:"Hoodie oversized",    price:0, rarity:"gratuit",previewEmoji:"\u{1F9E5}"},
-  {id:"shirtScoopNeck",  category:"clothing",name:"D\u00e9collet\u00e9", price:0, rarity:"gratuit",previewEmoji:"\u{1F457}"},
-  {id:"shirtVNeck",      category:"clothing",name:"Col V slim",          price:12,rarity:"commun", previewEmoji:"\u{1F454}"},
-  {id:"collarAndSweater",category:"clothing",name:"Pull Preppy",         price:18,rarity:"commun", previewEmoji:"\u{1F9F6}"},
-  {id:"graphicShirt",    category:"clothing",name:"T-shirt graphique",   price:22,rarity:"commun", previewEmoji:"\u{1F3A8}"},
-  {id:"overall",         category:"clothing",name:"Salopette",           price:28,rarity:"rare",   previewEmoji:"\u{1F455}"},
-  {id:"blazerAndShirt",  category:"clothing",name:"Blazer chemise",      price:32,rarity:"epique", previewEmoji:"\u{1F576}\ufe0f"},
-  {id:"blazerAndSweater",category:"clothing",name:"Blazer pull",         price:38,rarity:"epique", previewEmoji:"\u{1F4BC}"},
+  {id:"shirtCrewNeck",   category:"clothing",name:"T-shirt basic",       price:0, rarity:"gratuit",previewEmoji:"👕"},
+  {id:"hoodie",          category:"clothing",name:"Hoodie oversized",    price:0, rarity:"gratuit",previewEmoji:"🧥"},
+  {id:"shirtScoopNeck",  category:"clothing",name:"Décolleté", price:0, rarity:"gratuit",previewEmoji:"👗"},
+  {id:"shirtVNeck",      category:"clothing",name:"Col V slim",          price:12,rarity:"commun", previewEmoji:"👔"},
+  {id:"collarAndSweater",category:"clothing",name:"Pull Preppy",         price:18,rarity:"commun", previewEmoji:"🧶"},
+  {id:"graphicShirt",    category:"clothing",name:"T-shirt graphique",   price:22,rarity:"commun", previewEmoji:"🎨"},
+  {id:"overall",         category:"clothing",name:"Salopette",           price:28,rarity:"rare",   previewEmoji:"👕"},
+  {id:"blazerAndShirt",  category:"clothing",name:"Blazer chemise",      price:32,rarity:"epique", previewEmoji:"🕶️"},
+  {id:"blazerAndSweater",category:"clothing",name:"Blazer pull",         price:38,rarity:"epique", previewEmoji:"💼"},
   // COULEURS TENUE
   {id:"3c4f5c",category:"clothesColor",name:"Noir",         price:0, rarity:"gratuit",previewColor:"#3c4f5c"},
   {id:"262e33",category:"clothesColor",name:"Noir mat",     price:0, rarity:"gratuit",previewColor:"#262e33"},
@@ -406,10 +406,10 @@ export const ALL_ITEMS:ShopItem[]=[
   {id:"65c9ff",category:"clothesColor",name:"Ciel",         price:8, rarity:"commun", previewColor:"#65c9ff"},
   {id:"ff5c5c",category:"clothesColor",name:"Rouge",        price:8, rarity:"commun", previewColor:"#ff5c5c"},
   {id:"ff488e",category:"clothesColor",name:"Rose vif",     price:8, rarity:"commun", previewColor:"#ff488e"},
-  {id:"e6e6e6",category:"clothesColor",name:"Chin\u00e9",  price:8, rarity:"commun", previewColor:"#e6e6e6"},
+  {id:"e6e6e6",category:"clothesColor",name:"Chiné",  price:8, rarity:"commun", previewColor:"#e6e6e6"},
   {id:"b1e2ff",category:"clothesColor",name:"Bleu pastel",  price:8, rarity:"commun", previewColor:"#b1e2ff"},
   {id:"a7ffc4",category:"clothesColor",name:"Vert pastel",  price:8, rarity:"commun", previewColor:"#a7ffc4"},
-  {id:"ffdeb5",category:"clothesColor",name:"P\u00eache",  price:8, rarity:"commun", previewColor:"#ffdeb5"},
+  {id:"ffdeb5",category:"clothesColor",name:"Pêche",  price:8, rarity:"commun", previewColor:"#ffdeb5"},
   {id:"ffafb9",category:"clothesColor",name:"Rose tendre",  price:8, rarity:"commun", previewColor:"#ffafb9"},
   {id:"ffffb1",category:"clothesColor",name:"Jaune doux",   price:8, rarity:"commun", previewColor:"#ffffb1"},
   {id:"8cc63f",category:"clothesColor",name:"Brat green",   price:18,rarity:"rare",   previewColor:"#8cc63f"},
@@ -420,69 +420,69 @@ export const ALL_ITEMS:ShopItem[]=[
   {id:"default",  category:"eyes",name:"Naturel",          price:0, rarity:"gratuit"},
   {id:"happy",    category:"eyes",name:"Joyeux",           price:0, rarity:"gratuit"},
   {id:"surprised",category:"eyes",name:"Surpris",          price:8, rarity:"commun"},
-  {id:"squint",   category:"eyes",name:"Pliss\u00e9s",     price:10,rarity:"commun"},
-  {id:"wink",     category:"eyes",name:"Clin d'\u0153il",  price:12,rarity:"commun"},
-  {id:"side",     category:"eyes",name:"De c\u00f4t\u00e9",price:8, rarity:"commun"},
-  {id:"eyeRoll",  category:"eyes",name:"Lev\u00e9s",       price:12,rarity:"rare"},
-  {id:"xDizzy",   category:"eyes",name:"\u00c9tourdis",    price:15,rarity:"rare"},
+  {id:"squint",   category:"eyes",name:"Plissés",     price:10,rarity:"commun"},
+  {id:"wink",     category:"eyes",name:"Clin d'œil",  price:12,rarity:"commun"},
+  {id:"side",     category:"eyes",name:"De côté",price:8, rarity:"commun"},
+  {id:"eyeRoll",  category:"eyes",name:"Levés",       price:12,rarity:"rare"},
+  {id:"xDizzy",   category:"eyes",name:"Étourdis",    price:15,rarity:"rare"},
   {id:"cry",      category:"eyes",name:"Larmes",           price:15,rarity:"rare"},
   {id:"hearts",   category:"eyes",name:"Amoureux",         price:20,rarity:"epique"},
   {id:"winkWacky",category:"eyes",name:"Loufoque",         price:20,rarity:"epique"},
-  {id:"closed",   category:"eyes",name:"Ferm\u00e9s",      price:12,rarity:"rare"},
+  {id:"closed",   category:"eyes",name:"Fermés",      price:12,rarity:"rare"},
   // SOURCILS
   {id:"default",             category:"eyebrows",name:"Naturels",         price:0, rarity:"gratuit"},
   {id:"defaultNatural",      category:"eyebrows",name:"Doux",             price:0, rarity:"gratuit"},
-  {id:"raisedExcited",       category:"eyebrows",name:"Lev\u00e9s",       price:8, rarity:"commun"},
-  {id:"raisedExcitedNatural",category:"eyebrows",name:"Lev\u00e9s doux",  price:8, rarity:"commun"},
-  {id:"angry",               category:"eyebrows",name:"Col\u00e8re",      price:8, rarity:"commun"},
-  {id:"angryNatural",        category:"eyebrows",name:"Col\u00e8re doux", price:8, rarity:"commun"},
+  {id:"raisedExcited",       category:"eyebrows",name:"Levés",       price:8, rarity:"commun"},
+  {id:"raisedExcitedNatural",category:"eyebrows",name:"Levés doux",  price:8, rarity:"commun"},
+  {id:"angry",               category:"eyebrows",name:"Colère",      price:8, rarity:"commun"},
+  {id:"angryNatural",        category:"eyebrows",name:"Colère doux", price:8, rarity:"commun"},
   {id:"sadConcerned",        category:"eyebrows",name:"Inquiet",          price:8, rarity:"commun"},
   {id:"sadConcernedNatural", category:"eyebrows",name:"Inquiet doux",     price:8, rarity:"commun"},
   {id:"upDown",              category:"eyebrows",name:"En vague",         price:12,rarity:"rare"},
   {id:"upDownNatural",       category:"eyebrows",name:"Vague douce",      price:12,rarity:"rare"},
   {id:"unibrowNatural",      category:"eyebrows",name:"Monobrow",         price:18,rarity:"rare"},
   {id:"flatNatural",         category:"eyebrows",name:"Plats",            price:8, rarity:"commun"},
-  {id:"frownNatural",        category:"eyebrows",name:"Fronc\u00e9s",     price:12,rarity:"rare"},
+  {id:"frownNatural",        category:"eyebrows",name:"Froncés",     price:12,rarity:"rare"},
   // JOUES
   {id:"none",       category:"nose",name:"Naturel",             price:0, rarity:"gratuit",   previewColor:"transparent"},
-  {id:"blushRose",  category:"nose",name:"Joues ros\u00e9es",   price:0, rarity:"gratuit",   previewColor:"#ff6482"},
-  {id:"blushPeach", category:"nose",name:"Joues p\u00eaches",   price:0, rarity:"gratuit",   previewColor:"#ffa050"},
+  {id:"blushRose",  category:"nose",name:"Joues rosées",   price:0, rarity:"gratuit",   previewColor:"#ff6482"},
+  {id:"blushPeach", category:"nose",name:"Joues pêches",   price:0, rarity:"gratuit",   previewColor:"#ffa050"},
   {id:"blushLilac", category:"nose",name:"Joues lilas",         price:8, rarity:"commun",    previewColor:"#b464ff"},
   {id:"blushBlue",  category:"nose",name:"Joues bleues",        price:8, rarity:"commun",    previewColor:"#5096ff"},
-  {id:"freckles",   category:"nose",name:"Taches de rousseur",  price:12,rarity:"commun",    previewEmoji:"\u00b7\u00b7\u00b7"},
-  {id:"beautyMark", category:"nose",name:"Beauty mark",         price:15,rarity:"rare",      previewEmoji:"\u2022"},
-  {id:"sparkle",    category:"nose",name:"Paillettes",          price:18,rarity:"rare",      previewEmoji:"\u2728"},
-  {id:"star",       category:"nose",name:"\u00c9toile",         price:20,rarity:"rare",      previewEmoji:"\u2B50"},
-  {id:"diamond",    category:"nose",name:"Diamant",             price:30,rarity:"epique",    previewEmoji:"\u{1F48E}"},
+  {id:"freckles",   category:"nose",name:"Taches de rousseur",  price:12,rarity:"commun",    previewEmoji:"???"},
+  {id:"beautyMark", category:"nose",name:"Beauty mark",         price:15,rarity:"rare",      previewEmoji:"•"},
+  {id:"sparkle",    category:"nose",name:"Paillettes",          price:18,rarity:"rare",      previewEmoji:"✨"},
+  {id:"star",       category:"nose",name:"Étoile",         price:20,rarity:"rare",      previewEmoji:"⭐"},
+  {id:"diamond",    category:"nose",name:"Diamant",             price:30,rarity:"epique",    previewEmoji:"💎"},
   // BOUCHE
   {id:"smile",     category:"mouth",name:"Sourire",         price:0, rarity:"gratuit"},
   {id:"default",   category:"mouth",name:"Neutre",          price:0, rarity:"gratuit"},
-  {id:"serious",   category:"mouth",name:"S\u00e9rieux",    price:0, rarity:"gratuit"},
+  {id:"serious",   category:"mouth",name:"Sérieux",    price:0, rarity:"gratuit"},
   {id:"tongue",    category:"mouth",name:"Langue",          price:8, rarity:"commun"},
-  {id:"twinkle",   category:"mouth",name:"\u00c9clatant",   price:12,rarity:"commun"},
+  {id:"twinkle",   category:"mouth",name:"Éclatant",   price:12,rarity:"commun"},
   {id:"screamOpen",category:"mouth",name:"Cri",             price:12,rarity:"rare"},
   {id:"grimace",   category:"mouth",name:"Grimace",         price:8, rarity:"commun"},
   {id:"sad",       category:"mouth",name:"Triste",          price:8, rarity:"commun"},
-  {id:"disbelief", category:"mouth",name:"Incr\u00e9dule",  price:8, rarity:"commun"},
+  {id:"disbelief", category:"mouth",name:"Incrédule",  price:8, rarity:"commun"},
   {id:"vomit",     category:"mouth",name:"Malade",          price:20,rarity:"epique"},
   {id:"eating",    category:"mouth",name:"Miam",            price:8, rarity:"commun"},
   {id:"concerned", category:"mouth",name:"Inquiet",         price:8, rarity:"commun"},
   // LUNETTES
-  {id:"none",          category:"accessories",name:"Aucune",        price:0, rarity:"gratuit",previewEmoji:"\u274C"},
-  {id:"prescription01",category:"accessories",name:"Rondes",        price:12,rarity:"commun", previewEmoji:"\u{1F453}"},
-  {id:"prescription02",category:"accessories",name:"Rectangle",     price:12,rarity:"commun", previewEmoji:"\u{1F453}"},
-  {id:"round",         category:"accessories",name:"Thin frame",    price:18,rarity:"rare",   previewEmoji:"\u{1F9D0}"},
-  {id:"sunglasses",    category:"accessories",name:"Cat eye",       price:22,rarity:"rare",   previewEmoji:"\u{1F576}\ufe0f"},
-  {id:"kurt",          category:"accessories",name:"Kurt Cobain",   price:28,rarity:"epique", previewEmoji:"\u{1F3B8}"},
-  {id:"eyepatch",      category:"accessories",name:"Patch pirate",  price:30,rarity:"epique", previewEmoji:"\u{1F3F4}"},
-  {id:"wayfarers",     category:"accessories",name:"Wayfarers",     price:32,rarity:"epique", previewEmoji:"\u{1F60E}"},
+  {id:"none",          category:"accessories",name:"Aucune",        price:0, rarity:"gratuit",previewEmoji:"❌"},
+  {id:"prescription01",category:"accessories",name:"Rondes",        price:12,rarity:"commun", previewEmoji:"👓"},
+  {id:"prescription02",category:"accessories",name:"Rectangle",     price:12,rarity:"commun", previewEmoji:"👓"},
+  {id:"round",         category:"accessories",name:"Thin frame",    price:18,rarity:"rare",   previewEmoji:"🧐"},
+  {id:"sunglasses",    category:"accessories",name:"Cat eye",       price:22,rarity:"rare",   previewEmoji:"🕶️"},
+  {id:"kurt",          category:"accessories",name:"Kurt Cobain",   price:28,rarity:"epique", previewEmoji:"🎸"},
+  {id:"eyepatch",      category:"accessories",name:"Patch pirate",  price:30,rarity:"epique", previewEmoji:"🏴"},
+  {id:"wayfarers",     category:"accessories",name:"Wayfarers",     price:32,rarity:"epique", previewEmoji:"😎"},
   // PILOSITE
-  {id:"none",           category:"facialHair",name:"Aucune",        price:0, rarity:"gratuit",previewEmoji:"\u274C"},
-  {id:"moustacheFancy", category:"facialHair",name:"Moustache",     price:18,rarity:"commun", previewEmoji:"\u{1F9B8}"},
-  {id:"moustacheMagnum",category:"facialHair",name:"Magnum",        price:18,rarity:"commun", previewEmoji:"\u{1F575}\ufe0f"},
-  {id:"beardLight",     category:"facialHair",name:"Barbe 3 jours", price:22,rarity:"rare",   previewEmoji:"\u{1F9D4}"},
-  {id:"beardMedium",    category:"facialHair",name:"Barbe",         price:22,rarity:"rare",   previewEmoji:"\u{1F9D4}"},
-  {id:"beardMajestic",  category:"facialHair",name:"Barbe viking",  price:38,rarity:"epique", previewEmoji:"\u{1F451}"},
+  {id:"none",           category:"facialHair",name:"Aucune",        price:0, rarity:"gratuit",previewEmoji:"❌"},
+  {id:"moustacheFancy", category:"facialHair",name:"Moustache",     price:18,rarity:"commun", previewEmoji:"🦸"},
+  {id:"moustacheMagnum",category:"facialHair",name:"Magnum",        price:18,rarity:"commun", previewEmoji:"🕵️"},
+  {id:"beardLight",     category:"facialHair",name:"Barbe 3 jours", price:22,rarity:"rare",   previewEmoji:"🧔"},
+  {id:"beardMedium",    category:"facialHair",name:"Barbe",         price:22,rarity:"rare",   previewEmoji:"🧔"},
+  {id:"beardMajestic",  category:"facialHair",name:"Barbe viking",  price:38,rarity:"epique", previewEmoji:"👑"},
   // FONDS
   {id:"f8fafc|solid",                category:"bg",name:"Blanc pur",         price:0, rarity:"gratuit",   previewColor:"#f8fafc"},
   {id:"e0f2fe|solid",                category:"bg",name:"Ciel",              price:0, rarity:"gratuit",   previewColor:"#e0f2fe"},
@@ -502,7 +502,7 @@ export const ALL_ITEMS:ShopItem[]=[
   {id:"fbbf24,f97316|gradientLinear",category:"bg",name:"Golden hour",       price:50,rarity:"legendaire",previewColor:"#fbbf24"},
   {id:"56ab2f,f093fb|gradientLinear",category:"bg",name:"Sakura",            price:0, rarity:"gratuit",   previewColor:"#f093fb",seasonal:true},
   {id:"a8e063,f7971e|gradientLinear",category:"bg",name:"Champ de fleurs",   price:0, rarity:"commun",    previewColor:"#a8e063",seasonal:true},
-  {id:"d4fc79,96e6a1|gradientLinear",category:"bg",name:"Herbe fra\u00eeche",price:0,rarity:"commun",    previewColor:"#d4fc79",seasonal:true},
+  {id:"d4fc79,96e6a1|gradientLinear",category:"bg",name:"Herbe fraîche",price:0,rarity:"commun",    previewColor:"#d4fc79",seasonal:true},
   // STICKERS
   {id:"none",          category:"sticker",name:"Aucun",                price:0, rarity:"gratuit",   stickerIcon:"solar:close-circle-bold"},
   {id:"headphones",    category:"sticker",name:"Casque audio",         price:0, rarity:"gratuit",   stickerIcon:"solar:headphones-round-bold-duotone"},
@@ -514,25 +514,25 @@ export const ALL_ITEMS:ShopItem[]=[
   {id:"music",         category:"sticker",name:"Notes de musique",     price:8, rarity:"commun",    stickerIcon:"solar:music-notes-bold-duotone"},
   {id:"wifi",          category:"sticker",name:"Wi-Fi",                price:8, rarity:"commun",    stickerIcon:"solar:wi-fi-bold-duotone"},
   {id:"sunglasses",    category:"sticker",name:"Lunettes de soleil",   price:12,rarity:"commun",    stickerIcon:"solar:sun-glasses-bold-duotone"},
-  {id:"medal",         category:"sticker",name:"M\u00e9daille",        price:15,rarity:"commun",    stickerIcon:"solar:medal-star-bold-duotone"},
-  {id:"planet",        category:"sticker",name:"Plan\u00e8te",         price:15,rarity:"commun",    stickerIcon:"solar:planet-bold-duotone"},
+  {id:"medal",         category:"sticker",name:"Médaille",        price:15,rarity:"commun",    stickerIcon:"solar:medal-star-bold-duotone"},
+  {id:"planet",        category:"sticker",name:"Planète",         price:15,rarity:"commun",    stickerIcon:"solar:planet-bold-duotone"},
   {id:"butterfly",     category:"sticker",name:"Papillon",             price:12,rarity:"commun",    stickerIcon:"noto:butterfly"},
   {id:"sunflower",     category:"sticker",name:"Tournesol",            price:10,rarity:"commun",    stickerIcon:"noto:sunflower"},
   {id:"hibiscus",      category:"sticker",name:"Hibiscus",             price:10,rarity:"commun",    stickerIcon:"noto:hibiscus"},
   {id:"moon",          category:"sticker",name:"Lune",                 price:12,rarity:"commun",    stickerIcon:"noto:crescent-moon"},
-  {id:"sparkling_heart",category:"sticker",name:"C\u0153ur",          price:12,rarity:"commun",    stickerIcon:"noto:sparkling-heart"},
+  {id:"sparkling_heart",category:"sticker",name:"Cœur",          price:12,rarity:"commun",    stickerIcon:"noto:sparkling-heart"},
   {id:"fire",          category:"sticker",name:"Flammes",              price:15,rarity:"rare",      stickerIcon:"noto:fire"},
-  {id:"lightning",     category:"sticker",name:"\u00c9clair",          price:15,rarity:"rare",      stickerIcon:"noto:high-voltage"},
+  {id:"lightning",     category:"sticker",name:"Éclair",          price:15,rarity:"rare",      stickerIcon:"noto:high-voltage"},
   {id:"rainbow",       category:"sticker",name:"Arc-en-ciel",          price:18,rarity:"rare",      stickerIcon:"noto:rainbow"},
-  {id:"shooting_star", category:"sticker",name:"\u00c9toile filante",  price:18,rarity:"rare",      stickerIcon:"noto:shooting-star"},
+  {id:"shooting_star", category:"sticker",name:"Étoile filante",  price:18,rarity:"rare",      stickerIcon:"noto:shooting-star"},
   {id:"snowflake",     category:"sticker",name:"Flocon",               price:15,rarity:"rare",      stickerIcon:"noto:snowflake"},
-  {id:"trophy",        category:"sticker",name:"Troph\u00e9e",         price:20,rarity:"rare",      stickerIcon:"noto:trophy"},
+  {id:"trophy",        category:"sticker",name:"Trophée",         price:20,rarity:"rare",      stickerIcon:"noto:trophy"},
   {id:"pizza",         category:"sticker",name:"Pizza",                price:12,rarity:"commun",    stickerIcon:"noto:pizza"},
   {id:"ice_cream",     category:"sticker",name:"Glace",                price:10,rarity:"commun",    stickerIcon:"noto:soft-ice-cream"},
-  {id:"glowing_star",  category:"sticker",name:"\u00c9toile",          price:15,rarity:"rare",      stickerIcon:"noto:glowing-star"},
-  {id:"diploma",       category:"sticker",name:"Dipl\u00f4me",         price:20,rarity:"rare",      stickerIcon:"solar:diploma-bold-duotone"},
+  {id:"glowing_star",  category:"sticker",name:"Étoile",          price:15,rarity:"rare",      stickerIcon:"noto:glowing-star"},
+  {id:"diploma",       category:"sticker",name:"Diplôme",         price:20,rarity:"rare",      stickerIcon:"solar:diploma-bold-duotone"},
   {id:"gem",           category:"sticker",name:"Diamant",              price:25,rarity:"epique",    stickerIcon:"noto:gem-stone"},
-  {id:"halo",          category:"sticker",name:"Aur\u00e9ole",         price:20,rarity:"epique",    stickerIcon:"noto:baby-angel"},
+  {id:"halo",          category:"sticker",name:"Auréole",         price:20,rarity:"epique",    stickerIcon:"noto:baby-angel"},
   {id:"cat",           category:"sticker",name:"Chat mignon",          price:20,rarity:"epique",    stickerIcon:"noto:cat-face"},
   {id:"alien",         category:"sticker",name:"Alien",                price:28,rarity:"epique",    stickerIcon:"noto:alien"},
   {id:"robot",         category:"sticker",name:"Robot",                price:25,rarity:"epique",    stickerIcon:"noto:robot"},
@@ -549,7 +549,7 @@ function randomAvatar():AvatarConfig{
 }
 
 // ---------------------------------------------------------------------------
-// MAIN COMPONENT � layout mobile-first avec bottom nav
+// MAIN COMPONENT à layout mobile-first avec bottom nav
 // ---------------------------------------------------------------------------
 type Props={profil:UserProfile;onXPGagne:()=>void};
 export default function AvatarCreator({profil,onXPGagne}:Props){
@@ -607,7 +607,7 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
         tx.update(ref,{xp:(d.xp||0)-item.price,avatarItems:[...(d.avatarItems||[]),key]});
       });
       setOwned(o=>[...o,key]);setJetons(j=>j-item.price);equip(item);
-      showToast(`\u2728 ${item.name} achet\u00e9 !`);onXPGagne();
+      showToast(`✨ ${item.name} acheté !`);onXPGagne();
     }catch(e:unknown){showToast((e instanceof Error?e.message:"Erreur"),false);}
     finally{setBuying(null);}
   };
@@ -616,7 +616,7 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
     if(jetons<chest.price){showToast("\u26A0\uFE0F Pas assez de jetons !",false);return;}
     if(openingChest)return;
     const item=pickRandom(chest.weights as Record<Rarity,number>,owned,profil);
-    if(!item){showToast("Tous les items sont d\u00e9bloqu\u00e9s !",true);return;}
+    if(!item){showToast("Tous les items sont débloqués !",true);return;}
     setOpeningChest(chest.id);
     await new Promise(r=>setTimeout(r,900));
     const key=itemKey(item);
@@ -637,7 +637,7 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
     const uid=auth.currentUser?.uid;if(!uid||saving)return;setSaving(true);
     try{
       await runTransaction(db,async tx=>{tx.update(doc(db,"users",uid),{avatar});});
-      setSaved(true);showToast("\u2705 Avatar sauvegard\u00e9 !");setTimeout(()=>setSaved(false),3500);
+      setSaved(true);showToast("✅ Avatar sauvegardé !");setTimeout(()=>setSaved(false),3500);
     }catch{showToast("Erreur de sauvegarde",false);}finally{setSaving(false);}
   };
 
@@ -721,7 +721,7 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
                 <span style={{fontSize:"0.9rem"}}>{p.emoji}</span><span>{p.name}</span>
               </button>
             ))}
-            <button onClick={()=>setShowSpring(false)} style={{background:"none",border:"none",color:"#334155",fontSize:"0.9rem",cursor:"pointer",padding:"0 4px",lineHeight:1}}>{"�"}</button>
+            <button onClick={()=>setShowSpring(false)} style={{background:"none",border:"none",color:"#334155",fontSize:"0.9rem",cursor:"pointer",padding:"0 4px",lineHeight:1}}>{"—"}</button>
           </div>
         )}
 

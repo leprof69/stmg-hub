@@ -29,15 +29,15 @@ const STOP_WORDS = new Set([
 type DeckCategory = FlashcardProgramme | "tous";
 
 const CATEGORY_LABELS: Record<DeckCategory, string> = {
-  tous: "Toutes les mati?res",
+  tous: "Toutes les matières",
   management: "Management",
   droit: "Droit",
-  economie: "?conomie",
+  economie: "Économie",
   sciences_gestion: "Sciences de Gestion",
   gestion_finance: "Gestion & Finance",
   mercatique: "Mercatique",
   ressources_humaines: "Ressources Humaines",
-  numerique_si: "Num?rique & SI",
+  numerique_si: "Numérique & SI",
 };
 
 function shuffleArray<T>(arr: T[]): T[] {
@@ -53,7 +53,7 @@ function normalizeAnswerText(value: string): string {
   return value
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[̀-ͯ]/g, "")
     .replace(/[^a-z0-9]+/g, " ")
     .replace(/\s+/g, " ")
     .trim();
@@ -195,7 +195,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
           ? `${formatJetonsDelta(current.xp)} + ${formatJetons(bonusXp)} bonus serie !`
           : `${formatJetonsDelta(current.xp)} ? carte validee`
       );
-      setCardEmoji("\u{1F929}\u2705");
+      setCardEmoji("🤩✅");
       setTimeout(() => setCardEmoji(""), 850);
       setSessionGood(nextSessionGood);
       setLearnerAnswer("");
@@ -233,7 +233,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     setAnswerAccepted(false);
     setPendingAutoAction(null);
     setBanner("Carte remise dans la file");
-    setCardEmoji("\u{1F622}\u{1F4DA}");
+    setCardEmoji("😢📚");
     setTimeout(() => setCardEmoji(""), 850);
     setTransitioningCard(false);
   };
@@ -245,12 +245,12 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     setAnswerChecked(true);
     setAnswerAccepted(accepted);
     if (accepted) {
-      setBanner("Bonne r?ponse : lis la correction puis clique sur Continuer.");
-      setCardEmoji("\u2705");
+      setBanner("Bonne réponse : lis la correction puis clique sur Continuer.");
+      setCardEmoji("✅");
       setPendingAutoAction("mastered");
     } else {
-      setBanner("R?ponse insuffisante : lis la correction puis clique sur Continuer.");
-      setCardEmoji("\u{1F914}");
+      setBanner("Réponse insuffisante : lis la correction puis clique sur Continuer.");
+      setCardEmoji("🤔");
       setPendingAutoAction("retry");
     }
   };
@@ -267,8 +267,8 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
 
   const handleToggleCard = () => {
     if (!answerChecked) {
-      setBanner("R?ponds d'abord puis clique sur ? V?rifier ma r?ponse ? pour voir la correction.");
-      setCardEmoji("\u270D\uFE0F");
+      setBanner("R?ponds d'abord puis clique sur ? V—rifier ma réponse ? pour voir la correction.");
+      setCardEmoji("✍️");
       setTimeout(() => setCardEmoji(""), 850);
       return;
     }
@@ -285,9 +285,9 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
     setValidatedIds(nextValidated);
     try {
       await persist(nextValidated, 0);
-      setBanner("Progression du pack r?initialis?e.");
+      setBanner("Progression du pack réinitialisée.");
     } catch {
-      setBanner("R?initialisation locale effectu?e.");
+      setBanner("R—initialisation locale effectu—e.");
     }
     setSessionGood(0);
   };
@@ -303,7 +303,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
       if (!showAnswer) return;
       if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
         e.preventDefault();
-        setBanner("La validation est automatique apr?s v?rification de la r?ponse.");
+        setBanner("La validation est automatique après vérification de la réponse.");
       }
     };
     window.addEventListener("keydown", onKeyDown);
@@ -396,7 +396,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
         {!current ? (
           <section style={{ background: "white", borderRadius: 20, border: "1px solid #DBEAFE", padding: 24, textAlign: "center", boxShadow: "0 10px 30px rgba(30, 41, 59, 0.06)" }}>
             <p style={{ fontSize: 28, margin: "0 0 8px" }}>Bravo !</p>
-            <p style={{ margin: 0, color: "#475569" }}>Tu as valid? toutes les cartes du pack.</p>
+            <p style={{ margin: 0, color: "#475569" }}>Tu as validé toutes les cartes du pack.</p>
           </section>
         ) : (
           <section style={{ background: "#fff", borderRadius: 16, border: "1px solid #E2E8F0", padding: 14, boxShadow: "0 4px 20px rgba(15, 23, 42, 0.06)" }}>
@@ -473,7 +473,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
             </div>
             <div style={{ marginTop: 12, border: "1px solid #DBEAFE", background: "#F8FAFF", borderRadius: 14, padding: 12 }}>
               <label htmlFor="flashcards-answer" style={{ color: "#334155", fontWeight: 700, fontSize: 14 }}>
-                Ta r?ponse (zone sous la carte) :
+                Ta réponse (zone sous la carte) :
               </label>
               <textarea
                 id="flashcards-answer"
@@ -484,7 +484,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
                   setAnswerAccepted(false);
                   setPendingAutoAction(null);
                 }}
-                placeholder="?cris une d?finition courte avec les mots cl?s..."
+                placeholder="Écris une définition courte avec les mots cl’s..."
                 rows={3}
                 disabled={pendingAutoAction !== null || isActionBusy || transitioningCard}
                 style={{
@@ -514,11 +514,11 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
                     cursor: learnerAnswer.trim() && !isActionBusy && !transitioningCard && pendingAutoAction === null ? "pointer" : "not-allowed",
                   }}
                 >
-                  V?rifier ma r?ponse
+                  V—rifier ma réponse
                 </button>
                 {answerChecked && (
                   <span style={{ color: answerAccepted ? "#166534" : "#9F1239", fontWeight: 700 }}>
-                    {answerAccepted ? "R?ponse accept?e : carte valid?e ? l'?tape suivante." : "R?ponse insuffisante : carte renvoy?e ? revoir ? l'?tape suivante."}
+                    {answerAccepted ? "Réponse acceptée : carte validée à l'Étape suivante." : "Réponse insuffisante : carte renvoyée à revoir à l'Étape suivante."}
                   </span>
                 )}
                 {pendingAutoAction && (
@@ -546,7 +546,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
               </div>
             )}
             <p style={{ margin: "10px 0 0", color: "#64748B", fontSize: 13 }}>
-              ?cris ta r?ponse puis clique sur ? V?rifier ma r?ponse ?. Tu vois la correction, puis ? Continuer ? applique la d?cision automatique.
+              Écris ta réponse puis clique sur à V—rifier ma réponse —. Tu vois la correction, puis à Continuer à applique la décision automatique.
             </p>
           </section>
         )}

@@ -631,7 +631,7 @@ function DsExerciseCard({
               />
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 8, flexWrap: "wrap", marginTop: 8 }}>
                 <p style={{ margin: 0, color: "#64748B", fontSize: 12 }}>
-                  {value.trim().length} caractères · minimum conseillé {minChars}
+                  {value.trim().length} caractères ? minimum conseillé {minChars}
                 </p>
                 <button
                   onClick={() => onValidateQuestion(exercise, question)}
@@ -1625,7 +1625,7 @@ export default function ObjectifBac({ profil, onXPGagne, initialActiveTab = "vue
                 ))}
               </div>
               <p style={{ margin: "8px 0 0", color: "#92400E", fontWeight: 700 }}>
-                Toujours: {autoEvalStats.toujours} · Pas toujours: {autoEvalStats.pas_toujours} · Jamais: {autoEvalStats.jamais}
+                Toujours: {autoEvalStats.toujours} ? Pas toujours: {autoEvalStats.pas_toujours} ? Jamais: {autoEvalStats.jamais}
               </p>
               <p style={{ margin: "4px 0 0", color: "#7C2D12" }}>{autoEvalDiagnostic}</p>
             </section>

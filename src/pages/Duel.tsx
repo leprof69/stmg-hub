@@ -18,7 +18,10 @@ import {
   type DuelRunDoc,
 } from "../services/duelService";
 import { formatJetonsDelta } from "../lib/jetons";
+import { formatSdgnMissionChaptersLabel } from "../lib/sdgnMissionQcmPool";
 import { PLATFORM_XP_BLOCKED_MESSAGE, usePlatformIntegrity } from "../contexts/PlatformIntegrityContext";
+
+const MISSION_CHAPTERS_LABEL = formatSdgnMissionChaptersLabel();
 
 /** Messages FR via \\uXXXX pour eviter les soucis d'encodage Windows sur les chaines accentuees. */
 function messageErreurFirestore(e: unknown, contexte: "publier" | "liste" | "defi"): string {
@@ -240,7 +243,7 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
             console.error(e2);
             setXpDelta(null);
             setPublishWarn(
-              "Ton fant\u00F4me est bien enregistr\u00E9 sur le serveur, mais les jetons n\u2019ont pas pu \u00EAtre ajout\u00E9s \u00E0 ton profil (connexion ou droits). Tu peux quand m\u00EAme fermer cette fen\u00EAtre : un responsable pourra corriger plus tard."
+              "Ton fantôme est bien enregistré sur le serveur, mais les jetons n’ont pas pu être ajoutés à ton profil (connexion ou droits). Tu peux quand même fermer cette fenêtre : un responsable pourra corriger plus tard."
             );
           }
         } else {
@@ -267,7 +270,7 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
       try {
         const already = await hasPlayerAttemptedRun(activeRunId, uid);
         if (already) {
-          setErrMsg("Tu as d\u00E9j\u00E0 affront\u00E9 ce fant\u00F4me.");
+          setErrMsg("Tu as déjà affronté ce fantôme.");
           setPhase("hub");
           return;
         }
@@ -546,7 +549,7 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
                 </span>
                 <span>
                   <strong>{"Publier"}</strong>
-                  {` : un QCM de ${DUEL_QUESTIONS_PAR_PARTIE} questions (Sciences de gestion, chap. 7), chrono global ${DUEL_TEMPS_TOTAL_SEC} s. \u00C0 la fin, ton score + ton temps deviennent un `}
+                  {` : un QCM de ${DUEL_QUESTIONS_PAR_PARTIE} questions (Sciences de gestion, ${MISSION_CHAPTERS_LABEL}), chrono global ${DUEL_TEMPS_TOTAL_SEC} s. \u00C0 la fin, ton score + ton temps deviennent un `}
                   <strong>{"fant\u00F4me"}</strong>
                   {` que d\u2019autres peuvent affronter.`}
                 </span>
@@ -617,7 +620,7 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
                     </li>
                     <li className="flex gap-2">
                       <span className="font-black text-neutral-900">{"\u2022"}</span>
-                      <span>{"Sciences de gestion, chapitre 7"}</span>
+                      <span>{`Sciences de gestion (${MISSION_CHAPTERS_LABEL})`}</span>
                     </li>
                     <li className="flex gap-2">
                       <span className="font-black text-neutral-900">{"\u2022"}</span>
@@ -909,7 +912,7 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
                     onClick={() => setPhase("init-brief")}
                     className="w-full rounded-2xl border-4 border-black bg-black py-3.5 font-black text-[#FFFC00] shadow-[4px_4px_0_0_#000] transition active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
                   >
-                    {"Cr\u00E9er un fant\u00F4me"}
+                    {"Créer un fantôme"}
                   </button>
                   <button
                     type="button"

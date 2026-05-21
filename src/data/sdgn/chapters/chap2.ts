@@ -1,0 +1,213 @@
+import type { SdgnMissionExercise } from "../types";
+
+
+export const SDGN_CHAP2_EXERCISES: SdgnMissionExercise[] = [
+  {
+    id: "sdgn2-e1",
+    title: "Traits de personnalité au travail",
+    type: "Exercice",
+    difficulty: "Facile",
+    xp: 120,
+    minChars: 120,
+    support: "Lors d'un entretien de recrutement chez Decathlon, Léa, 22 ans, se présente comme « extravertie et enthousiaste » : elle prend la parole facilement, pose des questions sur l'équipe et sourit beaucoup. Le manager note aussi qu'elle a besoin de réfléchir avant de répondre aux questions techniques sur la logistique. Son binôme de stage, Karim, est décrit comme introverti et stable : il préfère les consignes écrites, apprécie les processus établis et s'épanouit dans un poste d'analyse des stocks sans contact client.",
+    consigne: "Identifie les traits de personnalité de Léa et Karim en mobilisant le tableau du cours (extraverti, introverti, stable, etc.) et explique leurs effets sur le comportement professionnel.",
+    questions: [
+      "Quels traits de personnalité repères-tu chez Léa ? Donne deux effets sur sa communication.",
+      "Quels traits caractérisent Karim et comment influencent-ils son poste idéal ?",
+      "Pourquoi n'existe-t-il pas de trait idéal en entreprise selon le manuel ?"
+    ],
+    correctionModele: "1) Léa — extravertie :\nOuverte aux autres, s'exprime facilement à l'oral, enthousiaste en entretien. Effets : aisance relationnelle, facilité à participer en groupe ; besoin néanmoins de réflexion sur les questions techniques (complémentarité avec introversion ponctuelle).\n\n2) Karim — introverti et stable :\nRéservé, préfère les consignes écrites, apprécie l'habitude et les processus. Poste d'analyse des stocks sans contact client adapté à son profil.\n\n3) Pas de trait idéal :\nUne équipe efficace combine des traits complémentaires : extraversion pour le contact, stabilité pour la rigueur, etc.",
+    attendu: "Traits nommés correctement, effets sur le comportement, complémentarité.",
+  },
+  {
+    id: "sdgn2-e2",
+    title: "Émotions et communication non verbale",
+    type: "Exercice",
+    difficulty: "Facile",
+    xp: 130,
+    minChars: 140,
+    support: "Lors d'une réunion chez Orange, un conseiller client affiche de la surprise face à une réclamation inattendue, puis sa mâchoire se serre (colère contenue). Sa voix devient plus rapide et plus forte (signes paraverbaux). Le client, de son côté, rougit et baisse les yeux (gêne). Le manager intervient : « Prenons cinq minutes. » Après la pause, le conseiller reprend un ton posé et propose une solution. Le manuel rappelle que l'émotion est irrésistible et difficilement contrôlable ; la retenir trop longtemps peut l'intensifier.",
+    consigne: "Analyse la scène en distinguant émotion, signes non verbaux et signes paraverbaux. Mobilise la notion de communication non verbale.",
+    questions: [
+      "Quelles émotions de base identifies-tu chez le conseiller et le client ?",
+      "Classe les signes observés : mimiques/posture (non verbal) vs ton/volume (para verbal).",
+      "Pourquoi le manager a-t-il intérêt à laisser retomber l'émotion avant de poursuivre ?"
+    ],
+    correctionModele: "1) Émotions :\nConseiller : surprise puis colère. Client : gêne proche de la peur ou de la tristesse.\n\n2) Classification des signes :\nNon verbaux : mâchoire serrée, rougeur, regard baissé.\nPara verbaux : voix plus rapide et plus forte, puis ton posé après la pause.\n\n3) Gestion des émotions :\nUne émotion trop retenue s'intensifie. La pause permet de retrouver une communication professionnelle et d'éviter une escalade conflictuelle.",
+    attendu: "Émotions et signes classés, lien avec l'efficacité de la communication.",
+  },
+  {
+    id: "sdgn2-e3",
+    title: "Perception et attitude",
+    type: "Exercice",
+    difficulty: "Facile",
+    xp: 140,
+    minChars: 150,
+    support: "Nadia, nouvelle cheffe de projet chez L'Oréal, observe que son collaborateur Thomas arrive toujours en avance mais reste silencieux en réunion. Elle conclut qu'il « manque d'engagement ». En réalité, Thomas est introverti et logique : il prépare ses arguments par écrit et les envoie après la réunion par e-mail détaillé. Le processus de perception de Nadia (sensation ? attention ? interprétation) est biaisé par sa propre culture d'entreprise très extravertie.",
+    consigne: "Explique le processus de perception et la différence entre attitude et comportement. Montre la dissonance dans le cas de Thomas.",
+    questions: [
+      "Décris les étapes de la perception selon le cours et applique-les à Nadia.",
+      "Qu'est-ce que la dissonance attitude-comportement dans cet exemple ?",
+      "Comment Nadia pourrait-elle corriger son interprétation ?"
+    ],
+    correctionModele: "1) Processus de perception (Nadia) :\nSensation : Thomas silencieux en réunion. Attention : focalisation sur l'oral. Interprétation : culture extravertie = engagement = parole. Compréhension erronée : « il ne s'engage pas ». Mémorisation du biais.\n\n2) Dissonance :\nComportement observable (silence) ne reflète pas l'attitude réelle (engagement par écrit). Impossible de discerner l'attitude sans interpréter correctement le comportement.\n\n3) Correction :\nTenir compte des traits introverti/logique, valoriser les contributions écrites, adapter les canaux de communication.",
+    attendu: "Processus de perception appliqué, dissonance expliquée, piste d'amélioration.",
+  },
+  {
+    id: "sdgn2-e4",
+    title: "Communication interpersonnelle",
+    type: "Exercice",
+    difficulty: "Moyen",
+    xp: 180,
+    minChars: 180,
+    support: "Un commercial de Schneider Electric négocie par visioconférence avec un acheteur allemand. Éléments de la situation : émetteur/récepteur aux rôles inversibles selon les tours de parole ; message (offre tarifaire) ; canal audiovisuel ; support (écran partagé) ; signes verbaux (registre soutenu en anglais), non verbaux (regard caméra, posture droite) et para verbaux (débit lent pour être compris) ; contexte spatial (bureaux respectifs), temporel (créneau de 45 minutes) et relationnel (première collaboration, enjeu identitaire pour le commercial qui veut prouver son expertise).",
+    consigne: "Décompose la situation de communication interpersonnelle en mobilisant tous les éléments du schéma du cours (acteurs, message, canal, support, signes, contexte, enjeux).",
+    questions: [
+      "Identifie chaque composante de la situation de communication dans le support.",
+      "Quel enjeu (informatif, identitaire, d'influence, relationnel) domine pour le commercial ?",
+      "En quoi le canal audiovisuel modifie-t-il l'usage des signes non verbaux ?"
+    ],
+    correctionModele: "1) Composantes :\nActeurs : commercial et acheteur, interdépendants. Message : offre tarifaire. Canal : visioconférence. Support : écran. Signes : verbaux (registre soutenu), non verbaux (regard, posture), para verbaux (débit). Contexte : spatial, temporel (45 min), relationnel (première collaboration).\n\n2) Enjeu dominant :\nEnjeu d'influence (convaincre) et identitaire (prouver l'expertise), combinés à un enjeu relationnel (créer la confiance).\n\n3) Canal audiovisuel :\nRéduit les signes non verbaux (cadrage limité) ; oblige à exagérer regard et articulation ; favorise les supports partagés pour compenser.",
+    attendu: "Schéma complet de communication interpersonnelle, enjeux identifiés.",
+  },
+  {
+    id: "sdgn2-e5",
+    title: "Identité numérique déclarative et agissante",
+    type: "Exercice",
+    difficulty: "Moyen",
+    xp: 190,
+    minChars: 160,
+    support: "Avant un stage chez Publicis, Chloé nettoie son profil LinkedIn (photo professionnelle, titre « Étudiante STMG — marketing digital », liste de compétences). Elle supprime des stories Instagram festives passées en privé. Pourtant, un recruteur lui demande en entretien : « J'ai vu que vous suivez beaucoup de comptes éco-responsables — est-ce un sujet qui vous passionne ? » Chloé comprend que ses abonnements et likes (identité agissante) complètent sa biographie officielle (identité déclarative).",
+    consigne: "Distingue identité déclarative, agissante et calculée selon F. Georges. Applique au parcours de Chloé et à l'e-réputation professionnelle.",
+    questions: [
+      "Qu'est-ce que l'identité déclarative ? Donne deux éléments du profil de Chloé.",
+      "Qu'est-ce que l'identité agissante ? Illustre avec la question du recruteur.",
+      "Pourquoi l'identité calculée peut-elle surévaluer le « chiffre » (nombre d'abonnés, likes) ?"
+    ],
+    correctionModele: "1) Identité déclarative :\nRenseignée par l'utilisateur : photo, titre, compétences sur LinkedIn.\n\n2) Identité agissante :\nRenseignée indirectement par les activités : abonnements éco-responsables, likes, historique de navigation. Le recruteur en déduit des centres d'intérêt.\n\n3) Identité calculée :\nProduite par les plateformes (scores, recommandations). Risque : importance démesurée des métriques quantitatives au détriment de la qualité réelle du profil.",
+    attendu: "Trois dimensions distinguées, lien avec recrutement et e-réputation.",
+  },
+  {
+    id: "sdgn2-e6",
+    title: "Gérer son identité numérique et le RGPD",
+    type: "Exercice",
+    difficulty: "Moyen",
+    xp: 210,
+    minChars: 180,
+    support: "Un ancien camarade publie sur TikTok une vidéo moqueuse montrant Jules, futur stagiaire chez BNP Paribas, sans son accord. Jules demande la suppression au webmaster du compte collaboratif ; la vidéo reste en ligne sur d'autres serveurs. Il consulte la politique « données personnelles » du site de recrutement de la banque et paramètre ses comptes en statut privé. Il signale aussi un traitement abusif à la CNIL. Le manuel cite le droit à l'image, à l'oubli et le RGPD pour la protection des données en Europe.",
+    consigne: "Explique comment Jules peut contrôler son identité numérique et quelles protections juridiques existent (CNIL, RGPD, droit à l'oubli).",
+    questions: [
+      "Quels risques si Jules ne gère pas son identité numérique selon le cours ?",
+      "Quelles démarches concrètes peut-il entreprendre (support) ?",
+      "Quel rôle jouent la CNIL et le RGPD dans cette situation ?"
+    ],
+    correctionModele: "1) Risques :\nMauvaise e-réputation, piratage d'informations, situations indésirables en entretien si d'autres construisent son image en ligne.\n\n2) Démarches :\nDemande de suppression au webmaster, paramétrage confidentialité, séparation profils perso/pro, veille par moteurs de recherche, signalement CNIL.\n\n3) CNIL et RGPD :\nCNIL : garante de la protection des données personnelles en France.\nRGPD : renforce les droits (information, effacement) et oblige les organisations à sécuriser les traitements ; efficacité limitée par la viralité mondiale.",
+    attendu: "Mesures de gestion + cadre juridique, limites de l'effacement en ligne.",
+  },
+  {
+    id: "sdgn2-e7",
+    title: "Personal branding et communication professionnelle",
+    type: "Exercice",
+    difficulty: "Moyen",
+    xp: 230,
+    minChars: 200,
+    support: "Sarah, consultante en communication, publie sur LinkedIn des études de cas anonymisées, participe à des podcasts professionnels et obtient 12 000 abonnés. Elle sépare strictement son compte Facebook familial. Un client la contacte après avoir lu un article qu'elle a partagé sur la « communication de crise ». Son ancien employeur témoigne de sa rigueur dans les recommandations en ligne. Sarah déclare : « Mon profil est mon CV vivant. »",
+    consigne: "Explique le personal branding et montre en quoi il transforme l'identité numérique en atout de communication professionnelle.",
+    questions: [
+      "Définis le personal branding et identifie ses pratiques chez Sarah.",
+      "En quoi la séparation des profils perso/pro est-elle recommandée ?",
+      "Quels bénéfices concrets pour sa carrière (support) ?"
+    ],
+    correctionModele: "1) Personal branding :\nTechniques pour valoriser son image en ligne (savoir-faire, publications) afin d'être remarqué. Sarah : études de cas, podcasts, recommandations.\n\n2) Séparation des profils :\nÉvite que des contenus personnels nuisent à l'e-réputation professionnelle ; contrôle des traces visibles par les recruteurs et clients.\n\n3) Bénéfices :\nOpportunités commerciales (client via article), crédibilité (recommandations), « CV vivant » renforçant la communication professionnelle.",
+    attendu: "Personal branding défini, bonnes pratiques, lien carrière.",
+  },
+  {
+    id: "sdgn2-e8",
+    title: "Intelligence émotionnelle en situation professionnelle",
+    type: "Exercice",
+    difficulty: "Difficile",
+    xp: 260,
+    minChars: 220,
+    support: "Lors d'une formation chez Safran, les participants analysent une mise en situation : un chef d'équipe critique publiquement un technicien (« Vous êtes lent »). Le technicien ressent de la colère, se ferme au dialogue. Un collègue extraverti et stable propose une pause café ; le chef d'équipe revient avec des faits précis et un ton neutre. Le technicien exprime son besoin de consignes écrites (trait logique). La tension retombe. Le formateur insiste : « Garder le contrôle de ses émotions est une qualité appréciée en groupe de travail. »",
+    consigne: "Analyse la scène en croisant traits de personnalité, émotions et intelligence émotionnelle (prise en compte des émotions pour gérer les conflits).",
+    questions: [
+      "Quelles erreurs émotionnelles le chef d'équipe commet-il au départ ?",
+      "Quelles stratégies permettent de retomber la tension ?",
+      "Comment les traits logique/extraverti/stable expliquent-ils les réactions ?"
+    ],
+    correctionModele: "1) Erreurs :\nCritique publique déclenchant colère, pas de prise en compte des émotions, communication non professionnelle.\n\n2) Stratégies :\nPause, faits précis, ton neutre, adaptation au trait logique (consignes écrites), médiation du collègue stable.\n\n3) Traits :\nTechnicien logique : besoin de cohérence écrite. Collègue extraverti/stable : facilite la relation. Chef apprenant à modérer son affectif pour une meilleure intelligence émotionnelle.",
+    attendu: "Émotions gérées, traits mobilisés, lien avec conflit et communication pro.",
+  },
+  {
+    id: "sdgn2-e9",
+    title: "Groupes sociaux et identité sociale",
+    type: "Exercice",
+    difficulty: "Difficile",
+    xp: 280,
+    minChars: 240,
+    support: "Dans une agence de publicité, le groupe primaire du « binôme créatif » (graphiste + rédacteur) décide seul de la direction artistique. Le groupe secondaire « comptes » impose des délais à tous. Le groupe informel des « pauses café » diffuse une rumeur sur un licenciement. Un jeune alternant adopte les codes vestimentaires du groupe de référence « créatifs parisiens » qu'il suit sur les réseaux, sans en être membre. Le statut de « senior » implique des comportements attendus (mentorat, validation des briefs).",
+    consigne: "Classe chaque groupe mentionné (primaire, secondaire, formel, informel, appartenance, référence) et explique statut et rôle.",
+    questions: [
+      "Associe chaque groupe du support à la typologie du cours.",
+      "Qu'est-ce que le statut et le rôle du « senior » ?",
+      "Quel danger du groupe informel est illustré par la rumeur ?"
+    ],
+    correctionModele: "1) Classification :\nBinôme créatif = primaire + appartenance. Comptes = secondaire + formel. Pauses café = informel. Créatifs parisiens sur réseaux = référence.\n\n2) Statut et rôle :\nStatut = place du senior. Rôle = comportements attendus (mentorat, validation).\n\n3) Danger informel :\nRumeur non vérifiée, déformation, tensions et quiproquos (communication informelle).",
+    attendu: "Typologie des groupes maîtrisée, statut/rôle distingués.",
+  },
+  {
+    id: "sdgn2-e10",
+    title: "Synthèse identité et communication professionnelle",
+    type: "Exercice",
+    difficulty: "Tres difficile",
+    xp: 360,
+    minChars: 260,
+    support: "Un DRH de Capgemini résume sa politique de recrutement : « Nous évaluons les compétences techniques, mais aussi la manière dont le candidat communique sous stress, gère son image en ligne et travaille en équipe hétérogène. Un profil introverti peut être excellent consultant si le canal écrit est valorisé. » Un candidat extraverti avec une e-réputation négligée (photos compromettantes) est refusé malgré un bon oral. Un candidat introverti avec LinkedIn soigné et publications sectorielles est retenu.",
+    consigne: "Synthétise les liens entre personnalité, émotions, perception, identité numérique et communication professionnelle pour expliquer les décisions du DRH.",
+    questions: [
+      "Pourquoi le candidat extraverti est-il refusé malgré son aisance orale ?",
+      "Pourquoi le candidat introverti est-il retenu ?",
+      "Formule trois conseils pour un lycéen qui prépare un stage (personnalité + identité numérique)."
+    ],
+    correctionModele: "1) Refus de l'extraverti :\nE-réputation dégradée : identité numérique non maîtrisée, risque pour l'image de l'entreprise.\n\n2) Retenue de l'introverti :\nLinkedIn soigné = personal branding ; canal écrit valorisé = adaptation au trait ; compétences visibles sans extraversion forcée.\n\n3) Conseils lycéen :\n— Connaître ses traits et choisir des canaux adaptés.\n— Soigner identité déclarative et surveiller identité agissante.\n— Gérer les émotions et la perception en entretien (préparation, écoute active).",
+    attendu: "Synthèse cohérente du chapitre 2, conseils actionnables.",
+  },
+  {
+    id: "sdgn2-cas1",
+    title: "Étude de cas : Crise d'e-réputation et embauche",
+    type: "Etude de cas",
+    difficulty: "Difficile",
+    xp: 560,
+    minChars: 400,
+    support: "Julien, 24 ans, est shortlisté pour un poste de chargé de communication chez Accor. Son entretien se passe bien : extraverti, bonne présentation, argumentation structurée. La veille de la signature, un service de veille détecte un ancien tweet grossier de 2019 ressurgi, des commentaires négatifs sur un forum et une photo de soirée taguée sans consentement. L'identité calculée de ses comptes (faible taux d'engagement professionnel) contraste avec un concurrent dont le personal branding est fort. Le DRH convoque Julien : « Expliquez votre gestion des réseaux. » Julien a séparé ses comptes depuis 2022, activé le droit à l'effacement auprès du forum, et demandé à un ami de retirer la photo.",
+    consigne: "Rédige une réponse structurée type bac : identité numérique (3 dimensions), e-réputation, RGPD/CNIL, communication professionnelle. Recommande une décision argumentée au DRH.",
+    questions: [
+      "Analyse la situation avec les trois dimensions de l'identité numérique.",
+      "Quels risques pour Accor en cas d'embauche ? Quels risques pour Julien s'il est écarté injustement ?",
+      "Évalue les actions correctives de Julien (effacement, paramétrage, séparation des profils).",
+      "Le personal branding du concurrent doit-il être le seul critère ? Pourquoi ?",
+      "Synthèse (15 lignes) : quelle politique RH sur l'identité numérique recommandes-tu ?"
+    ],
+    correctionModele: "1) Trois dimensions :\nDéclarative : profil professionnel récent soigné. Agissante : tweets anciens, forums, tags. Calculée : faible engagement pro vs concurrent.\n\n2) Risques :\nAccor : image employeur, scandale client. Julien : discrimination si erreurs jeunesse sans recidive et démarches correctives.\n\n3) Actions correctives :\nSéparation profils, droit à l'effacement, demande retrait photo = gestion active des traces.\n\n4) Personal branding seul insuffisant :\nCompétences, personnalité, éthique comptent ; le branding ne doit pas masquer l'incompétence.\n\n5) Synthèse politique RH :\nCharte d'usage des réseaux, formation des jeunes recrues, veille avec droit de réponse, distinction erreur passée corrigée / comportement récurrent, critères transparents.",
+    attendu: "Cas complet, décision RH argumentée avec nuances juridiques et humaines.",
+  },
+  {
+    id: "sdgn2-cas2",
+    title: "Étude de cas : Communication interpersonnelle en négociation",
+    type: "Etude de cas",
+    difficulty: "Tres difficile",
+    xp: 620,
+    minChars: 450,
+    support: "Deux responsables achats de Carrefour et d'un fournisseur laitier négocient une hausse de prix. La responsable Carrefour (profil logique, stable) envoie un tableau Excel avant la réunion. Le fournisseur (profil affectif, extraverti) arrive avec des slides émotionnels sur les difficultés des éleveurs. En réunion présentielle, les signes non verbaux divergent : elle garde une posture fermée, lui gesticule. Les paraverbaux montent en intensité. Enjeu d'influence majeur. Après une pause, ils passent en stratégie de coopération : compromis sur 3 % au lieu de 8 % demandés, avec clause qualité vérifiable.",
+    consigne: "Analyse la négociation avec personnalité, signes, enjeux, stratégies d'influence (opposition, coopération) et perception.",
+    questions: [
+      "Comment les traits de personnalité expliquent-ils les styles de communication initiaux ?",
+      "Identifie enjeux, signes et contexte relationnel de la situation.",
+      "Quand et pourquoi la stratégie de coopération remplace-t-elle la confrontation ?",
+      "Quel rôle joue la perception de l'autre dans le succès final ?",
+      "Synthèse (12-18 lignes) : comment adapter sa communication à un interlocuteur différent ?"
+    ],
+    correctionModele: "1) Traits :\nLogique/stable : données, faits, retenue émotionnelle. Affectif/extraverti : appel sentiments, oral, gestuelle.\n\n2) Situation :\nEnjeu d'influence. Signes non verbaux et paraverbaux conflictuels. Contexte relationnel tendu, premier tour confrontationnel.\n\n3) Coopération :\nPause, écoute réciproque, compromis 3 %, critères objectifs (qualité) = stratégie donnant-donnant.\n\n4) Perception :\nChacun corrige les stéréotypes (fournisseur « trop émotif », acheteuse « froide ») en reconnaissant la légitimité des arguments de l'autre.\n\n5) Synthèse :\nAdapter canal et signes au profil de l'interlocuteur, gérer ses émotions, choisir la stratégie selon le rapport de force, viser la coopération quand l'objectif est commun.",
+    attendu: "Négociation décortiquée avec tout le vocabulaire du chapitre 2.",
+  },
+];

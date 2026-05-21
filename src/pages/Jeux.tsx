@@ -9,18 +9,18 @@ const AvatarCreator = lazy(() => import("./AvatarCreator"));
 const Duel          = lazy(() => import("./Duel"));
 
 const EJ = {
-  snake:   "\u{1F40D}",
-  slot:    "\u{1F3B0}",
-  micro:   "\u{1F3A4}",
-  game:    "\u{1F3AE}",
-  trophy:  "\u{1F3C6}",
-  coin:    "\u{1F4B0}",
-  star:    "\u{2B50}",
-  sparkle: "\u{2728}",
-  medal:   "\u{1F3C5}",
-  calc:    "\u{1F9EE}",
-  palette: "\u{1F3A8}",
-  swords:  "\u2694\uFE0F",
+  snake:   "🐍",
+  slot:    "🎰",
+  micro:   "🎤",
+  game:    "🎮",
+  trophy:  "🏆",
+  coin:    "💰",
+  star:    "⭐",
+  sparkle: "✨",
+  medal:   "🏅",
+  calc:    "🧮",
+  palette: "🎨",
+  swords:  "⚔️",
 };
 
 type Props = { profil: UserProfile; onXPGagne: () => void };
@@ -32,8 +32,8 @@ const GAMES = [
     emoji: EJ.swords,
     title: "Duel STMG",
     subtitle: "Affrontement en direct",
-    desc: "D\u00e9fie tes camarades en temps r\u00e9el\u00a0! R\u00e9ponds plus vite et plus juste pour remporter des jetons, du prestige et grimper au classement. Saisons, ligues et bonus de s\u00e9rie inclus.",
-    tags: ["Multijoueur", "Temps r\u00e9el", "Saisons"],
+    desc: "Défie tes camarades en temps réel ! Réponds plus vite et plus juste pour remporter des jetons, du prestige et grimper au classement. Saisons, ligues et bonus de série inclus.",
+    tags: ["Multijoueur", "Temps réel", "Saisons"],
     border:   "border-red-400/30",
     glow:     "rgba(239,68,68,0.3)",
     tagColor: "bg-red-500/15 text-red-200 border-red-400/25",
@@ -46,9 +46,9 @@ const GAMES = [
     id: "snake" as const,
     emoji: EJ.snake,
     title: "Snack Serpent",
-    subtitle: "Arcade r\u00e9visions",
-    desc: "Mange des snacks, g\u00e8re ton \u00e9nergie, collecte des pouvoirs et r\u00e9ponds aux questions STMG pour recharger. Serpent \u00e0 \u00e9cailles, particules et r\u00e9visions.",
-    tags: ["Quiz int\u00e9gr\u00e9", "Pouvoirs", "Score"],
+    subtitle: "Arcade révisions",
+    desc: "Mange des snacks, gère ton énergie, collecte des pouvoirs et réponds aux questions STMG pour recharger. Serpent à écailles, particules et révisions.",
+    tags: ["Quiz intégré", "Pouvoirs", "Score"],
     border:   "border-teal-400/30",
     glow:     "rgba(20,184,166,0.3)",
     tagColor: "bg-teal-500/15 text-teal-200 border-teal-400/25",
@@ -61,9 +61,9 @@ const GAMES = [
     id: "casino" as const,
     emoji: EJ.slot,
     title: "Fortune STMG",
-    subtitle: "Casino de r\u00e9visions",
-    desc: "R\u00e9ponds aux questions pour gagner des pi\u00e8ces casino, puis tente ta chance sur la machine \u00e0 sous. Remporte jetons, prestige ou une carte prismatique l\u00e9gendaire\u00a0!",
-    tags: ["Machine \u00e0 sous", "Prismatique", "Cartes bonus"],
+    subtitle: "Casino de révisions",
+    desc: "Réponds aux questions pour gagner des pièces casino, puis tente ta chance sur la machine à sous. Remporte jetons, prestige ou une carte prismatique légendaire !",
+    tags: ["Machine à sous", "Prismatique", "Cartes bonus"],
     border:   "border-amber-400/30",
     glow:     "rgba(251,191,36,0.3)",
     tagColor: "bg-amber-500/15 text-amber-200 border-amber-400/25",
@@ -77,8 +77,8 @@ const GAMES = [
     emoji: EJ.micro,
     title: "Le Grand Oral",
     subtitle: "Quiz RPG jury",
-    desc: "Fais passer ton Grand Oral devant un jury STMG exigeant\u00a0! R\u00e9ponds aux questions pour monter la jauge d\u2019approbation. D\u00e9croche la Mention Tr\u00e8s Bien pour les meilleures r\u00e9compenses.",
-    tags: ["Jury dessin\u00e9", "Timer", "Mention TB"],
+    desc: "Fais passer ton Grand Oral devant un jury STMG exigeant ! Réponds aux questions pour monter la jauge d’approbation. Décroche la Mention Très Bien pour les meilleures récompenses.",
+    tags: ["Jury dessiné", "Timer", "Mention TB"],
     border:   "border-blue-400/30",
     glow:     "rgba(96,165,250,0.3)",
     tagColor: "bg-blue-500/15 text-blue-200 border-blue-400/25",
@@ -91,9 +91,9 @@ const GAMES = [
     id: "calcul" as const,
     emoji: EJ.calc,
     title: "Calcul Express",
-    subtitle: "Calcul chronom\u00e9tr\u00e9",
-    desc: "90 secondes, le max de calculs STMG\u00a0! VA, marge, taux, seuil de rentabilit\u00e9, amortissement\u2026 Encha\u00eenez les bonnes r\u00e9ponses pour le combo x2 et convertissez votre score en jetons.",
-    tags: ["Chrono\u006d\u00e8tre", "Combo x2", "90 types"],
+    subtitle: "Calcul chronométré",
+    desc: "90 secondes, le max de calculs STMG ! VA, marge, taux, seuil de rentabilité, amortissement… Enchaînez les bonnes réponses pour le combo x2 et convertissez votre score en jetons.",
+    tags: ["Chronomètre", "Combo x2", "90 types"],
     border:   "border-green-400/30",
     glow:     "rgba(74,222,128,0.3)",
     tagColor: "bg-green-500/15 text-green-200 border-green-400/25",
@@ -106,8 +106,8 @@ const GAMES = [
     id: "avatar" as const,
     emoji: EJ.palette,
     title: "Mon Avatar",
-    subtitle: "Cr\u00e9ateur d\u2019avatar",
-    desc: "Personnalise ton avatar avec 90+ items\u00a0: coiffures, tenues, accessoires, effets sp\u00e9ciaux\u2026 Ach\u00e8te du contenu exclusif avec tes jetons. Ton avatar s\u2019affiche sur ta page profil\u00a0!",
+    subtitle: "Créateur d’avatar",
+    desc: "Personnalise ton avatar avec 90+ items : coiffures, tenues, accessoires, effets spéciaux… Achète du contenu exclusif avec tes jetons. Ton avatar s’affiche sur ta page profil !",
     tags: ["90+ items", "Achat jetons", "Profil"],
     border:   "border-pink-400/30",
     glow:     "rgba(236,72,153,0.3)",
@@ -222,7 +222,7 @@ export default function Jeux({ profil, onXPGagne }: Props) {
             {EJ.game} Espace Jeux
           </h1>
           <p className="mt-2.5 text-sm text-slate-400">
-            Joue, r\u00e9vise et remporte des{" "}<span className="font-semibold text-amber-300">jetons {EJ.coin}</span>,{" "}
+            Joue, révise et remporte des{" "}<span className="font-semibold text-amber-300">jetons {EJ.coin}</span>,{" "}
             du <span className="font-semibold text-violet-300">prestige {EJ.star}</span>{" "}et des{" "}
             <span className="font-semibold text-pink-300">cartes rares {EJ.medal}</span>.
           </p>
