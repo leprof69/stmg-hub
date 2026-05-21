@@ -7,6 +7,7 @@ const GrandOral     = lazy(() => import("./GrandOral"));
 const CalculExpress = lazy(() => import("./CalculExpress"));
 const AvatarCreator = lazy(() => import("./AvatarCreator"));
 const Duel          = lazy(() => import("./Duel"));
+const QuiVeutGagnerDesJetons = lazy(() => import("./QuiVeutGagnerDesJetons"));
 
 const EJ = {
   snake:   "🐍",
@@ -21,10 +22,11 @@ const EJ = {
   calc:    "🧮",
   palette: "🎨",
   swords:  "⚔️",
+  money:   "💰",
 };
 
 type Props = { profil: UserProfile; onXPGagne: () => void };
-type View  = "hub"|"snake"|"casino"|"grandoral"|"calcul"|"avatar"|"duel";
+type View  = "hub"|"snake"|"casino"|"grandoral"|"calcul"|"avatar"|"duel"|"jetons";
 
 const GAMES = [
   {
@@ -71,6 +73,21 @@ const GAMES = [
     btnShadow:"rgba(251,191,36,0.5)",
     accent:   "#fbbf24",
     grad:     "radial-gradient(ellipse 90% 60% at 80% 20%,rgba(251,191,36,0.15) 0%,transparent 60%),rgba(12,6,2,0.72)",
+  },
+  {
+    id: "jetons" as const,
+    emoji: EJ.money,
+    title: "Qui veut gagner des jetons ?",
+    subtitle: "Quiz paliers",
+    desc: "15 questions SDGN, paliers de jetons qui montent, cases sécurisées et jokers 50:50 / indice. Arrête-toi ou vise le jackpot !",
+    tags: ["15 paliers", "Jokers", "SDGN Missions"],
+    border:   "border-yellow-400/30",
+    glow:     "rgba(234,179,8,0.35)",
+    tagColor: "bg-yellow-500/15 text-yellow-100 border-yellow-400/25",
+    btnFrom:  "#eab308", btnTo: "#ca8a04",
+    btnShadow:"rgba(234,179,8,0.5)",
+    accent:   "#eab308",
+    grad:     "radial-gradient(ellipse 90% 60% at 80% 20%,rgba(234,179,8,0.18) 0%,transparent 60%),rgba(12,10,2,0.78)",
   },
   {
     id: "grandoral" as const,
@@ -175,7 +192,7 @@ function SubShell({ bg, back, label, accent, children }: {
         style={{ background:`${bg}e6` }}>
         <button type="button" onClick={back}
           className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-1.5 text-xs font-semibold text-slate-200 transition hover:bg-white/[0.1]">
-          {"\u2190"} Jeux
+          {"←"} Jeux
         </button>
         <span className="text-sm font-bold" style={{ color: accent }}>{label}</span>
       </div>
@@ -191,6 +208,9 @@ export default function Jeux({ profil, onXPGagne }: Props) {
 
   if (view === "duel")
     return <SubShell bg="#0f0303" back={()=>setView("hub")} label={`${EJ.swords} Duel STMG`} accent="#ef4444"><Duel profil={profil} onXPGagne={onXPGagne}/></SubShell>;
+
+  if (view === "jetons")
+    return <SubShell bg="#050818" back={()=>setView("hub")} label={`${EJ.money} Qui veut gagner des jetons ?`} accent="#eab308"><QuiVeutGagnerDesJetons profil={profil} onXPGagne={onXPGagne}/></SubShell>;
 
   if (view === "snake")
     return <SubShell bg="#03070e" back={()=>setView("hub")} label={`${EJ.snake} Snack Serpent`} accent="#14b8a6"><SerpentSnack profil={profil} onXPGagne={onXPGagne}/></SubShell>;

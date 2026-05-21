@@ -59,12 +59,12 @@ const PROFIL_CSS = `
 // Existing constants
 // ---------------------------------------------------------------------------
 const RARETE_CONFIG = {
-  commune:     { label:"Commune",     couleur:"#9CA3AF", emoji:"\u26AA" },
-  peu_commune: { label:"Peu Commune", couleur:"#10B981", emoji:"\u{1F7E2}" },
-  rare:        { label:"Rare",        couleur:"#3B82F6", emoji:"\u{1F535}" },
-  epique:      { label:"\u00c9pique", couleur:"#0284C7", emoji:"\u{1F537}" },
-  legendaire:  { label:"L\u00e9gendaire",couleur:"#F59E0B",emoji:"\u2B50" },
-  ultra_rare:  { label:"Ultra Rare",  couleur:"#EF4444", emoji:"\u{1F48E}" },
+  commune:     { label:"Commune",     couleur:"#9CA3AF", emoji:"⚪" },
+  peu_commune: { label:"Peu Commune", couleur:"#10B981", emoji:"🟢" },
+  rare:        { label:"Rare",        couleur:"#3B82F6", emoji:"🔵" },
+  epique:      { label:"Épique", couleur:"#0284C7", emoji:"🔷" },
+  legendaire:  { label:"Légendaire",couleur:"#F59E0B",emoji:"⭐" },
+  ultra_rare:  { label:"Ultra Rare",  couleur:"#EF4444", emoji:"💎" },
 };
 
 const CGU_TEXTE = `CONDITIONS GÉNÉRALES D'UTILISATION — STMG HUB
@@ -270,7 +270,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion }: { profil: R
       });
       setOwnedDecoItems((t) => (t.includes(em) ? t : [...t, em]));
       setJetonsCurrent((j) => j - price);
-      afficherMessage(`\u2728 Sticker d\u00e9bloqu\u00e9 !`);
+      afficherMessage(`✨ Sticker débloqué !`);
       return true;
     } catch {
       afficherMessage("Jetons insuffisants", "error");
@@ -313,7 +313,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion }: { profil: R
       pageStyle: cleanPs,
       salon: cleanSalon,
     });
-    afficherMessage("\u2728 Profil personnalis\u00e9 !");
+    afficherMessage("✨ Profil personnalisé !");
   };
 
   const cartesPossedees = toutesCartes.filter(c => (maCollection[c.id]||0) > 0);
@@ -414,7 +414,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion }: { profil: R
         <div onClick={()=>setModeChoixVitrine(null)} style={{ position:"fixed",inset:0,background:"rgba(0,0,0,0.9)",zIndex:2000,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"flex-start",padding:"20px",overflowY:"auto" }}>
           <div onClick={e=>e.stopPropagation()} style={{ width:"100%",maxWidth:"600px" }}>
             <p style={{ fontFamily:"'Fredoka One',cursive",color:"white",fontSize:"1.5rem",textAlign:"center",margin:"0 0 8px" }}>
-              {"\u2728 Choisir une carte pour le slot"} {modeChoixVitrine+1}
+              {"✨ Choisir une carte pour le slot"} {modeChoixVitrine+1}
             </p>
             <p style={{ color:"#9CA3AF",fontSize:"0.85rem",textAlign:"center",margin:"0 0 20px" }}>{cartesPossedees.length} cartes disponibles</p>
             {cartesPossedees.length===0 ? (
@@ -453,7 +453,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion }: { profil: R
         <div style={{ position:"fixed",inset:0,background:"rgba(0,0,0,0.8)",zIndex:2000,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px" }}>
           <div style={{ background:"white",borderRadius:"24px",maxWidth:"500px",width:"100%",maxHeight:"80vh",display:"flex",flexDirection:"column" }}>
             <div style={{ padding:"20px 24px",borderBottom:"1px solid #E5E7EB",display:"flex",justifyContent:"space-between",alignItems:"center" }}>
-              <p style={{ fontFamily:"'Fredoka One',cursive",color:"#1A1A2E",fontSize:"1.1rem",margin:0 }}>{"\u{1F4CB} CGU & RGPD"}</p>
+              <p style={{ fontFamily:"'Fredoka One',cursive",color:"#1A1A2E",fontSize:"1.1rem",margin:0 }}>{"📋 CGU & RGPD"}</p>
               <button onClick={()=>setShowCGU(false)} style={{ background:"none",border:"none",fontSize:"1.5rem",cursor:"pointer",color:"#9CA3AF" }}>{"×"}</button>
             </div>
             <div style={{ padding:"20px 24px",overflowY:"auto",flex:1 }}>
@@ -470,7 +470,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion }: { profil: R
       {showContact&&(
         <div style={{ position:"fixed",inset:0,background:"rgba(0,0,0,0.8)",zIndex:2000,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px" }}>
           <div style={{ background:"white",borderRadius:"24px",maxWidth:"400px",width:"100%",padding:"28px" }}>
-            <p style={{ fontFamily:"'Fredoka One',cursive",color:"#1A1A2E",fontSize:"1.3rem",margin:"0 0 20px" }}>{"\u{1F4E7} Nous contacter"}</p>
+            <p style={{ fontFamily:"'Fredoka One',cursive",color:"#1A1A2E",fontSize:"1.3rem",margin:"0 0 20px" }}>{"📧 Nous contacter"}</p>
             {[
               { label:"Responsable", valeur:"Khalifa SOUCI" },
               { label:"Email",       valeur:"lelaboduprof69@gmail.com" },
@@ -489,15 +489,15 @@ export default function Profil({ profil, onRefaire, onDeconnexion }: { profil: R
       {showJoker&&(
         <div style={{ position:"fixed",inset:0,background:"rgba(0,0,0,0.8)",zIndex:2000,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px" }}>
           <div style={{ background:"white",borderRadius:"24px",maxWidth:"380px",width:"100%",padding:"32px",textAlign:"center" }}>
-            <p style={{ fontSize:"4rem",margin:"0 0 12px" }}>{"\u{1F0CF}"}</p>
+            <p style={{ fontSize:"4rem",margin:"0 0 12px" }}>{"🃏"}</p>
             <p style={{ fontFamily:"'Fredoka One',cursive",color:"#1A1A2E",fontSize:"1.4rem",margin:"0 0 8px" }}>Utiliser ton Joker ?</p>
             <p style={{ color:"#9CA3AF",fontSize:"0.85rem",margin:"0 0 24px",lineHeight:1.8 }}>
-              {"\u2705 Jetons conserv\u00e9s\n\u2705 Badges conserv\u00e9s\n\u2705 Chapitres conserv\u00e9s\n\u2705 Cartes conserv\u00e9es\n\u26A0\ufe0f Famille et Totems r\u00e9initialis\u00e9s\n\u26A0\ufe0f Joker non r\u00e9cup\u00e9rable"}
+              {"✅ Jetons conservés\n✅ Badges conservés\n✅ Chapitres conservés\n✅ Cartes conservées\n⚠️ Famille et Totems réinitialisés\n⚠️ Joker non récupérable"}
             </p>
             <div style={{ display:"flex",gap:"12px" }}>
               <button onClick={()=>setShowJoker(false)} style={{ flex:1,background:"#F3F4F6",color:"#374151",border:"none",fontFamily:"'Fredoka One',cursive",fontSize:"1rem",padding:"14px",borderRadius:"14px",cursor:"pointer" }}>Annuler</button>
               <button onClick={utiliserJoker} disabled={chargement} style={{ flex:1,background:"linear-gradient(135deg,#F59E0B,#B45309)",color:"white",border:"none",fontFamily:"'Fredoka One',cursive",fontSize:"1rem",padding:"14px",borderRadius:"14px",cursor:"pointer" }}>
-                {chargement?"\u23F3...":"\u{1F0CF} Confirmer"}
+                {chargement?"⏳...":"🃏 Confirmer"}
               </button>
             </div>
           </div>

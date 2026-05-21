@@ -3,12 +3,12 @@ export const FLASHCARDS_DATA_VERSION = 5;
 export type FlashcardProgramme =
   | "management"
   | "droit"
-  | "economie"
+  | "économie"
   | "sciences_gestion"
   | "gestion_finance"
   | "mercatique"
   | "ressources_humaines"
-  | "numerique_si";
+  | "numérique_si";
 
 export type FlashcardItem = {
   id: string;
@@ -231,97 +231,97 @@ export const FLASHCARDS: FlashcardItem[] = [
 
   // ─── ÉCONOMIE ───────────────────────────────────────────────────────────────
   {
-    id: "eco-01", programme: "economie", notion: "PIB",
+    id: "eco-01", programme: "économie", notion: "PIB",
     question: "Qu'est-ce que le PIB ?",
     reponse: "Le Produit Intérieur Brut (PIB) mesure la valeur totale des biens et services produits sur le territoire d'un pays pendant une période donnée (généralement une année). C'est le principal indicateur de la richesse créée.",
     xp: 10,
   },
   {
-    id: "eco-02", programme: "economie", notion: "Croissance économique",
+    id: "eco-02", programme: "économie", notion: "Croissance économique",
     question: "Qu'est-ce que la croissance économique ?",
     reponse: "La croissance économique est l'augmentation durable du PIB réel d'un pays. Elle est mesurée par le taux de croissance du PIB. Une croissance positive signifie que l'économie produit davantage de richesses.",
     xp: 9,
   },
   {
-    id: "eco-03", programme: "economie", notion: "Chômage",
+    id: "eco-03", programme: "économie", notion: "Chômage",
     question: "Qu'est-ce que le chômage et comment est-il mesuré ?",
     reponse: "Le chômage désigne la situation des personnes sans emploi, disponibles pour travailler et à la recherche active d'un emploi. Le taux de chômage est mesuré par l'INSEE selon les critères du BIT (Bureau International du Travail).",
     xp: 9,
   },
   {
-    id: "eco-04", programme: "economie", notion: "Inflation",
+    id: "eco-04", programme: "économie", notion: "Inflation",
     question: "Qu'est-ce que l'inflation ?",
     reponse: "L'inflation est la hausse générale et durable des prix. Elle réduit le pouvoir d'achat des ménages. Elle est mesurée par l'indice des prix à la consommation (IPC). Une inflation modérée (~2%) est considérée comme saine.",
     xp: 9,
   },
   {
-    id: "eco-05", programme: "economie", notion: "Mondialisation",
+    id: "eco-05", programme: "économie", notion: "Mondialisation",
     question: "Qu'est-ce que la mondialisation ?",
     reponse: "La mondialisation est le processus d'intégration croissante des économies mondiales à travers les échanges de biens, services, capitaux, personnes et informations. Elle crée des interdépendances entre les pays.",
     xp: 9,
   },
   {
-    id: "eco-06", programme: "economie", notion: "Politique budgétaire",
+    id: "eco-06", programme: "économie", notion: "Politique budgétaire",
     question: "Qu'est-ce que la politique budgétaire ?",
     reponse: "La politique budgétaire est l'utilisation des dépenses publiques et de la fiscalité par l'État pour influencer l'activité économique. Une politique expansionniste augmente les dépenses ou réduit les impôts pour stimuler la croissance.",
     xp: 9,
   },
   {
-    id: "eco-07", programme: "economie", notion: "Politique monétaire",
+    id: "eco-07", programme: "économie", notion: "Politique monétaire",
     question: "Qu'est-ce que la politique monétaire ?",
     reponse: "La politique monétaire est l'action d'une banque centrale (comme la BCE) sur la quantité de monnaie en circulation et les taux d'intérêt pour contrôler l'inflation et soutenir la croissance économique.",
     xp: 9,
   },
   {
-    id: "eco-08", programme: "economie", notion: "Marché",
+    id: "eco-08", programme: "économie", notion: "Marché",
     question: "Qu'est-ce qu'un marché en économie ?",
     reponse: "Un marché est le lieu (physique ou virtuel) de rencontre entre l'offre (vendeurs) et la demande (acheteurs). L'interaction entre l'offre et la demande détermine le prix d'équilibre et les quantités échangées.",
     xp: 8,
   },
   {
-    id: "eco-09", programme: "economie", notion: "Concurrence parfaite",
+    id: "eco-09", programme: "économie", notion: "Concurrence parfaite",
     question: "Qu'est-ce que la concurrence pure et parfaite ?",
     reponse: "La concurrence pure et parfaite est un modèle théorique de marché avec de nombreux offreurs et demandeurs, des produits homogènes, une libre entrée/sortie du marché, et une information parfaite. Les prix s'y forment librement.",
     xp: 8,
   },
   {
-    id: "eco-10", programme: "economie", notion: "Monopole",
+    id: "eco-10", programme: "économie", notion: "Monopole",
     question: "Qu'est-ce qu'un monopole ?",
     reponse: "Un monopole est une structure de marché dans laquelle un seul vendeur fait face à de nombreux acheteurs. Le monopoleur fixe lui-même son prix sans concurrence. Les monopoles peuvent être naturels, légaux ou de fait.",
     xp: 8,
   },
   {
-    id: "eco-11", programme: "economie", notion: "Déficit public",
+    id: "eco-11", programme: "économie", notion: "Déficit public",
     question: "Qu'est-ce que le déficit public ?",
     reponse: "Le déficit public correspond à la situation où les dépenses de l'État (et des administrations publiques) sont supérieures à ses recettes fiscales. Il est financé par l'emprunt, ce qui augmente la dette publique.",
     xp: 8,
   },
   {
-    id: "eco-12", programme: "economie", notion: "Balance commerciale",
+    id: "eco-12", programme: "économie", notion: "Balance commerciale",
     question: "Qu'est-ce que la balance commerciale ?",
     reponse: "La balance commerciale enregistre la différence entre les exportations et les importations de biens d'un pays. Un solde positif (excédent) signifie que le pays exporte plus qu'il n'importe ; un solde négatif est un déficit.",
     xp: 8,
   },
   {
-    id: "eco-13", programme: "economie", notion: "Pouvoir d'achat",
+    id: "eco-13", programme: "économie", notion: "Pouvoir d'achat",
     question: "Qu'est-ce que le pouvoir d'achat ?",
     reponse: "Le pouvoir d'achat représente la quantité de biens et services qu'un revenu permet d'acheter. Il diminue en cas d'inflation supérieure à la hausse des revenus, et augmente quand les revenus progressent plus vite que les prix.",
     xp: 8,
   },
   {
-    id: "eco-14", programme: "economie", notion: "Développement durable",
+    id: "eco-14", programme: "économie", notion: "Développement durable",
     question: "Qu'est-ce que le développement durable ?",
     reponse: "Le développement durable est un développement qui répond aux besoins du présent sans compromettre la capacité des générations futures à répondre aux leurs. Il repose sur trois piliers : économique, social et environnemental.",
     xp: 9,
   },
   {
-    id: "eco-15", programme: "economie", notion: "Inégalités",
+    id: "eco-15", programme: "économie", notion: "Inégalités",
     question: "Comment mesure-t-on les inégalités économiques ?",
     reponse: "Les inégalités se mesurent notamment avec le coefficient de Gini (0 = égalité parfaite, 1 = inégalité maximale) et les déciles de revenus. Les inégalités peuvent être de revenus, de patrimoine ou d'accès aux services.",
     xp: 8,
   },
   {
-    id: "eco-16", programme: "economie", notion: "Politique de l'emploi",
+    id: "eco-16", programme: "économie", notion: "Politique de l'emploi",
     question: "Quels sont les types de politiques de l'emploi ?",
     reponse: "Les politiques de l'emploi se distinguent en politiques actives (aide à la recherche d'emploi, formation, subventions à l'embauche) et politiques passives (allocations chômage, retraite anticipée qui réduisent l'offre de travail).",
     xp: 9,
@@ -721,97 +721,97 @@ export const FLASHCARDS: FlashcardItem[] = [
 
   // ─── NUMÉRIQUE & SI ──────────────────────────────────────────────────────────
   {
-    id: "num-01", programme: "numerique_si", notion: "RGPD",
+    id: "num-01", programme: "numérique_si", notion: "RGPD",
     question: "Qu'est-ce que le RGPD et à quoi s'applique-t-il ?",
     reponse: "Le RGPD (Règlement Général sur la Protection des Données) est un règlement européen entré en vigueur en 2018. Il protège les données personnelles des citoyens européens et impose des obligations aux organisations qui les traitent, sous peine de lourdes sanctions.",
     xp: 9,
   },
   {
-    id: "num-02", programme: "numerique_si", notion: "Donnée personnelle",
+    id: "num-02", programme: "numérique_si", notion: "Donnée personnelle",
     question: "Qu'est-ce qu'une donnée personnelle au sens du RGPD ?",
     reponse: "Une donnée personnelle est toute information permettant d'identifier une personne physique, directement (nom, prénom) ou indirectement (adresse IP, numéro de téléphone, données de localisation, cookie...).",
     xp: 9,
   },
   {
-    id: "num-03", programme: "numerique_si", notion: "Triade CIA",
+    id: "num-03", programme: "numérique_si", notion: "Triade CIA",
     question: "Que signifie la triade CIA en sécurité informatique ?",
     reponse: "La triade CIA regroupe les trois piliers de la sécurité informatique : Confidentialité (seules les personnes autorisées accèdent aux données), Intégrité (les données ne sont pas altérées) et Disponibilité (les systèmes sont accessibles quand on en a besoin).",
     xp: 9,
   },
   {
-    id: "num-04", programme: "numerique_si", notion: "Cloud computing",
+    id: "num-04", programme: "numérique_si", notion: "Cloud computing",
     question: "Qu'est-ce que le cloud computing ?",
     reponse: "Le cloud computing est l'accès à des ressources informatiques (stockage, puissance de calcul, applications) via Internet, sans les posséder physiquement. On distingue les modèles SaaS (logiciel), PaaS (plateforme) et IaaS (infrastructure).",
     xp: 8,
   },
   {
-    id: "num-05", programme: "numerique_si", notion: "Cybersécurité",
+    id: "num-05", programme: "numérique_si", notion: "Cybersécurité",
     question: "Qu'est-ce que la cybersécurité ?",
     reponse: "La cybersécurité est l'ensemble des pratiques, technologies et processus visant à protéger les systèmes informatiques, réseaux et données contre les attaques, les accès non autorisés et les dommages.",
     xp: 8,
   },
   {
-    id: "num-06", programme: "numerique_si", notion: "Phishing",
+    id: "num-06", programme: "numérique_si", notion: "Phishing",
     question: "Qu'est-ce qu'une attaque de phishing ?",
     reponse: "Le phishing (hameçonnage) est une technique de fraude qui consiste à envoyer un message (e-mail, SMS) imitant un organisme de confiance (banque, administration) pour inciter la victime à divulguer ses identifiants ou données bancaires.",
     xp: 8,
   },
   {
-    id: "num-07", programme: "numerique_si", notion: "MFA",
+    id: "num-07", programme: "numérique_si", notion: "MFA",
     question: "Qu'est-ce que l'authentification multifacteur (MFA) ?",
     reponse: "L'authentification multifacteur exige au moins deux preuves d'identité distinctes pour se connecter : quelque chose que l'on sait (mot de passe), que l'on possède (téléphone, token) ou ce que l'on est (empreinte digitale). Elle renforce considérablement la sécurité.",
     xp: 8,
   },
   {
-    id: "num-08", programme: "numerique_si", notion: "RGPD – Droits des personnes",
+    id: "num-08", programme: "numérique_si", notion: "RGPD – Droits des personnes",
     question: "Quels sont les principaux droits des individus accordés par le RGPD ?",
     reponse: "Le RGPD accorde : le droit d'accès (voir ses données), le droit de rectification (corriger), le droit à l'effacement (« droit à l'oubli »), le droit d'opposition (refuser certains traitements) et le droit à la portabilité des données.",
     xp: 9,
   },
   {
-    id: "num-09", programme: "numerique_si", notion: "DPO",
+    id: "num-09", programme: "numérique_si", notion: "DPO",
     question: "Quel est le rôle du DPO (Délégué à la Protection des Données) ?",
     reponse: "Le DPO est le responsable de la conformité au RGPD au sein d'une organisation. Il conseille, sensibilise et contrôle le respect des règles de protection des données. Sa nomination est obligatoire pour certaines organisations.",
     xp: 8,
   },
   {
-    id: "num-10", programme: "numerique_si", notion: "Big data",
+    id: "num-10", programme: "numérique_si", notion: "Big data",
     question: "Qu'est-ce que le big data ?",
     reponse: "Le big data désigne des ensembles de données caractérisés par les 3V : Volume (très grande quantité), Vélocité (traitement en temps réel) et Variété (formats divers : textes, images, vidéos, données structurées...). Il nécessite des outils d'analyse spécifiques.",
     xp: 8,
   },
   {
-    id: "num-11", programme: "numerique_si", notion: "API",
+    id: "num-11", programme: "numérique_si", notion: "API",
     question: "Qu'est-ce qu'une API ?",
     reponse: "Une API (Application Programming Interface) est une interface qui permet à deux applications de communiquer et d'échanger des données. Elle définit les règles d'échange. Les APIs sont au cœur de l'interconnexion des services numériques modernes.",
     xp: 8,
   },
   {
-    id: "num-12", programme: "numerique_si", notion: "Réseau informatique",
+    id: "num-12", programme: "numérique_si", notion: "Réseau informatique",
     question: "Qu'est-ce qu'un réseau informatique ?",
     reponse: "Un réseau informatique est un ensemble d'équipements (ordinateurs, serveurs, routeurs...) connectés entre eux pour partager des données et des ressources. On distingue les réseaux locaux (LAN), étendus (WAN) et Internet.",
     xp: 8,
   },
   {
-    id: "num-13", programme: "numerique_si", notion: "Pare-feu",
+    id: "num-13", programme: "numérique_si", notion: "Pare-feu",
     question: "Qu'est-ce qu'un pare-feu (firewall) ?",
     reponse: "Un pare-feu est un dispositif de sécurité (logiciel ou matériel) qui filtre le trafic réseau entrant et sortant selon des règles définies, afin de bloquer les accès non autorisés tout en permettant les communications légitimes.",
     xp: 8,
   },
   {
-    id: "num-14", programme: "numerique_si", notion: "Sauvegarde",
+    id: "num-14", programme: "numérique_si", notion: "Sauvegarde",
     question: "Pourquoi les sauvegardes régulières sont-elles essentielles ?",
     reponse: "Les sauvegardes permettent de restaurer les données en cas de panne, d'attaque (ransomware), d'erreur humaine ou de sinistre. La règle 3-2-1 recommande : 3 copies, sur 2 supports différents, dont 1 hors site.",
     xp: 8,
   },
   {
-    id: "num-15", programme: "numerique_si", notion: "Blockchain",
+    id: "num-15", programme: "numérique_si", notion: "Blockchain",
     question: "Qu'est-ce que la blockchain ?",
     reponse: "La blockchain est un registre numérique distribué qui enregistre des transactions de façon transparente, sécurisée et infalsifiable. Chaque « bloc » de données est chaîné au précédent. Elle est utilisée pour les cryptomonnaies, les contrats intelligents et la traçabilité.",
     xp: 8,
   },
   {
-    id: "num-16", programme: "numerique_si", notion: "Intelligence artificielle",
+    id: "num-16", programme: "numérique_si", notion: "Intelligence artificielle",
     question: "Qu'est-ce que l'intelligence artificielle (IA) et quelles sont ses applications en entreprise ?",
     reponse: "L'IA désigne la simulation de capacités cognitives humaines par des algorithmes. En entreprise, elle s'applique à la détection de fraudes, aux recommandations clients, à l'automatisation des tâches répétitives, aux chatbots et à l'analyse prédictive.",
     xp: 9,
@@ -821,12 +821,12 @@ export const FLASHCARDS: FlashcardItem[] = [
 export const FLASHCARD_PROGRAMME_LABELS: Record<FlashcardProgramme, string> = {
   management: "Management",
   droit: "Droit",
-  economie: "Économie",
+  économie: "Économie",
   sciences_gestion: "Sciences de Gestion",
   gestion_finance: "Gestion & Finance",
   mercatique: "Mercatique",
   ressources_humaines: "Ressources Humaines",
-  numerique_si: "Numérique & SI",
+  numérique_si: "Numérique & SI",
 };
 
 export function getFlashcardsByProgramme(p: FlashcardProgramme | "tous"): FlashcardItem[] {

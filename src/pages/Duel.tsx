@@ -31,24 +31,24 @@ function messageErreurFirestore(e: unknown, contexte: "publier" | "liste" | "def
   if (code === "permission-denied") {
     if (contexte === "publier") {
       return import.meta.env.DEV
-        ? "Permission refus\u00E9e (Firestore). En local, d\u00E9ploie les r\u00E8gles \u00E0 jour : firebase deploy --only firestore:rules \u2014 ou v\u00E9rifie que la partie comporte bien 8 questions c\u00F4t\u00E9 r\u00E8gles."
-        : "Le serveur a refus\u00E9 l\u2019enregistrement (souvent : r\u00E8gles Firebase pas \u00E0 jour sur le projet). Demande \u00E0 la personne qui g\u00E8re le site de lancer \u00AB firebase deploy --only firestore:rules \u00BB depuis le dossier du projet, puis r\u00E9essaie. Sinon, v\u00E9rifie ta connexion Internet.";
+        ? "Permission refusée (Firestore). En local, déploie les règles à jour : firebase deploy --only firestore:rules — ou vérifie que la partie comporte bien 8 questions côté règles."
+        : "Le serveur a refusé l’enregistrement (souvent : règles Firebase pas à jour sur le projet). Demande à la personne qui gère le site de lancer « firebase deploy --only firestore:rules » depuis le dossier du projet, puis réessaie. Sinon, vérifie ta connexion Internet.";
     }
     if (contexte === "liste") {
       return import.meta.env.DEV
-        ? "Lecture refus\u00E9e ou r\u00E8gles / index manquants. V\u00E9rifie firestore.rules et les index composites duelRuns / duelAttempts."
-        : "Impossible de charger les d\u00E9fis pour le moment.";
+        ? "Lecture refusée ou règles / index manquants. Vérifie firestore.rules et les index composites duelRuns / duelAttempts."
+        : "Impossible de charger les défis pour le moment.";
     }
-    return "Action refus\u00E9e par le serveur. R\u00E9essaie plus tard.";
+    return "Action refusée par le serveur. Réessaie plus tard.";
   }
   if (code === "failed-precondition" || /index/i.test(msg)) {
     return import.meta.env.DEV
-      ? "Index Firestore manquant : ouvre le lien dans la console du navigateur ou d\u00E9ploie firestore.indexes.json."
-      : "Service temporairement indisponible. R\u00E9essaie dans quelques minutes.";
+      ? "Index Firestore manquant : ouvre le lien dans la console du navigateur ou déploie firestore.indexes.json."
+      : "Service temporairement indisponible. Réessaie dans quelques minutes.";
   }
   if (contexte === "publier")
-    return "Impossible d\u2019enregistrer le fant\u00F4me pour le moment. R\u00E9essaie plus tard.";
-  if (contexte === "liste") return "Impossible de charger la liste des fant\u00F4mes.";
+    return "Impossible d’enregistrer le fantôme pour le moment. Réessaie plus tard.";
+  if (contexte === "liste") return "Impossible de charger la liste des fantômes.";
   return "Enregistrement impossible pour le moment.";
 }
 
@@ -415,7 +415,7 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
     setErrMsg(null);
     const run = await fetchDuelRun(id);
     if (!run) {
-      setErrMsg("Ce fant\u00F4me n\u2019existe plus.");
+      setErrMsg("Ce fantôme n’existe plus.");
       return;
     }
     setActiveRunId(id);
@@ -526,12 +526,12 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
           <div>
             <h1 className="flex flex-wrap items-center gap-3 text-4xl font-black tracking-tight sm:text-5xl">
               <span className="flex h-14 w-14 items-center justify-center rounded-2xl border-4 border-black bg-[#FFFC00] text-3xl shadow-[4px_4px_0_0_#000]" aria-hidden>
-                {"\uD83D\uDC7B"}
+                {"👻"}
               </span>
-              <span className="leading-none">{"Duel fant\u00F4mes"}</span>
+              <span className="leading-none">{"Duel fantômes"}</span>
             </h1>
             <p className="mt-3 max-w-2xl text-base font-semibold leading-snug text-neutral-900/90">
-              {`Pas de partie en direct : tu publies un d\u00E9fi fig\u00E9, ou tu rejoues exactement le m\u00EAme QCM qu\u2019un camarade pour tenter de faire mieux.`}
+              {`Pas de partie en direct : tu publies un défi figé, ou tu rejoues exactement le même QCM qu’un camarade pour tenter de faire mieux.`}
             </p>
           </div>
 
@@ -540,7 +540,7 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
             aria-labelledby="duel-how-title"
           >
             <h2 id="duel-how-title" className="text-xs font-black uppercase tracking-[0.2em] text-neutral-500">
-              {"Comment \u00E7a marche"}
+              {"Comment ça marche"}
             </h2>
             <ol className="mt-4 space-y-3.5 text-sm font-medium leading-snug text-neutral-800 sm:text-[15px]">
               <li className="flex gap-3">
@@ -549,9 +549,9 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
                 </span>
                 <span>
                   <strong>{"Publier"}</strong>
-                  {` : un QCM de ${DUEL_QUESTIONS_PAR_PARTIE} questions (Sciences de gestion, ${MISSION_CHAPTERS_LABEL}), chrono global ${DUEL_TEMPS_TOTAL_SEC} s. \u00C0 la fin, ton score + ton temps deviennent un `}
-                  <strong>{"fant\u00F4me"}</strong>
-                  {` que d\u2019autres peuvent affronter.`}
+                  {` : un QCM de ${DUEL_QUESTIONS_PAR_PARTIE} questions (Sciences de gestion, ${MISSION_CHAPTERS_LABEL}), chrono global ${DUEL_TEMPS_TOTAL_SEC} s. À la fin, ton score + ton temps deviennent un `}
+                  <strong>{"fantôme"}</strong>
+                  {` que d’autres peuvent affronter.`}
                 </span>
               </li>
               <li className="flex gap-3">
@@ -560,11 +560,11 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
                 </span>
                 <span>
                   <strong>{"Battre"}</strong>
-                  {` : m\u00EAme \u00E9nonc\u00E9, m\u00EAme chrono. On compare d\u2019abord les `}
-                  <strong>{"bonnes r\u00E9ponses"}</strong>
-                  {` ; en cas d\u2019\u00E9galit\u00E9, le `}
+                  {` : même énoncé, même chrono. On compare d’abord les `}
+                  <strong>{"bonnes réponses"}</strong>
+                  {` ; en cas d’égalité, le `}
                   <strong>{"temps"}</strong>
-                  {` au chrono d\u00E9partage.`}
+                  {` au chrono départage.`}
                 </span>
               </li>
               <li className="flex gap-3">
@@ -573,7 +573,7 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
                 </span>
                 <span>
                   <strong>{"Jetons"}</strong>
-                  {` : surtout en battant des fant\u00F4mes (victoire / nul / d\u00E9faite = r\u00E9compenses diff\u00E9rentes). Bonus publication : ${formatJetonsDelta(XP_PUBLIER_FANTOME)} une fois le fant\u00F4me enregistr\u00E9.`}
+                  {` : surtout en battant des fantômes (victoire / nul / défaite = récompenses différentes). Bonus publication : ${formatJetonsDelta(XP_PUBLIER_FANTOME)} une fois le fantôme enregistré.`}
                 </span>
               </li>
             </ol>
@@ -583,7 +583,7 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
         {errMsg && phase !== "init-publish-failed" && (
           <div className="mb-6 flex gap-3 rounded-2xl border-2 border-red-600 bg-white px-4 py-3 shadow-[4px_4px_0_0_rgba(185,28,28,0.35)]">
             <span className="text-xl leading-none" aria-hidden>
-              {"\u26A0\uFE0F"}
+              {"⚠️"}
             </span>
             <p className="text-sm font-semibold leading-snug text-red-800">{errMsg}</p>
           </div>
@@ -604,27 +604,27 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
                   className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border-2 border-black bg-[#FFFC00] text-2xl shadow-[3px_3px_0_0_#000] transition-transform group-hover:scale-105"
                   aria-hidden
                 >
-                  {"\uD83D\uDC7B"}
+                  {"👻"}
                 </span>
                 <div className="min-w-0 flex-1 space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="rounded-full bg-black px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wide text-[#FFFC00]">
                       {"Publication"}
                     </span>
-                    <span className="text-2xl font-black leading-tight sm:text-[1.65rem]">{"Cr\u00E9er un fant\u00F4me"}</span>
+                    <span className="text-2xl font-black leading-tight sm:text-[1.65rem]">{"Créer un fantôme"}</span>
                   </div>
                   <ul className="space-y-1.5 text-sm font-medium leading-snug text-neutral-700">
                     <li className="flex gap-2">
-                      <span className="font-black text-neutral-900">{"\u2022"}</span>
-                      <span>{`${DUEL_QUESTIONS_PAR_PARTIE} questions \u00B7 chrono global ${DUEL_TEMPS_TOTAL_SEC} s`}</span>
+                      <span className="font-black text-neutral-900">{"•"}</span>
+                      <span>{`${DUEL_QUESTIONS_PAR_PARTIE} questions · chrono global ${DUEL_TEMPS_TOTAL_SEC} s`}</span>
                     </li>
                     <li className="flex gap-2">
-                      <span className="font-black text-neutral-900">{"\u2022"}</span>
+                      <span className="font-black text-neutral-900">{"•"}</span>
                       <span>{`Sciences de gestion (${MISSION_CHAPTERS_LABEL})`}</span>
                     </li>
                     <li className="flex gap-2">
-                      <span className="font-black text-neutral-900">{"\u2022"}</span>
-                      <span>{"Ton score et ton temps deviennent le d\u00E9fi des autres"}</span>
+                      <span className="font-black text-neutral-900">{"•"}</span>
+                      <span>{"Ton score et ton temps deviennent le défi des autres"}</span>
                     </li>
                   </ul>
                 </div>
@@ -640,29 +640,29 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
                   className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border-2 border-[#FFFC00] bg-[#FFFC00]/15 text-2xl"
                   aria-hidden
                 >
-                  {"\u2694\uFE0F"}
+                  {"⚔️"}
                 </span>
                 <div className="min-w-0 flex-1 space-y-2">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="rounded-full bg-[#FFFC00] px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wide text-black">
-                      {"D\u00E9fi"}
+                      {"Défi"}
                     </span>
-                    <span className="text-2xl font-black leading-tight text-[#FFFC00] sm:text-[1.65rem]">{"Battre un fant\u00F4me"}</span>
+                    <span className="text-2xl font-black leading-tight text-[#FFFC00] sm:text-[1.65rem]">{"Battre un fantôme"}</span>
                   </div>
                   <ul className="space-y-1.5 text-sm font-medium leading-snug text-[#FFFC00]/90">
                     <li className="flex gap-2">
-                      <span className="font-black text-[#FFFC00]">{"\u2022"}</span>
-                      <span>{"M\u00EAme QCM, m\u00EAme chrono que l\u2019\u00E9l\u00E8ve qui a publi\u00E9"}</span>
+                      <span className="font-black text-[#FFFC00]">{"•"}</span>
+                      <span>{"Même QCM, même chrono que l’élève qui a publié"}</span>
                     </li>
                     <li className="flex gap-2">
-                      <span className="font-black text-[#FFFC00]">{"\u2022"}</span>
+                      <span className="font-black text-[#FFFC00]">{"•"}</span>
                       <span>
-                        {`Victoire ${formatJetonsDelta(XP_DEFI_GAGNE)} \u00B7 nul ${formatJetonsDelta(XP_DEFI_NUL)} \u00B7 d\u00E9faite ${formatJetonsDelta(XP_DEFI_PERDU)}`}
+                        {`Victoire ${formatJetonsDelta(XP_DEFI_GAGNE)} · nul ${formatJetonsDelta(XP_DEFI_NUL)} · défaite ${formatJetonsDelta(XP_DEFI_PERDU)}`}
                       </span>
                     </li>
                     <li className="flex gap-2">
-                      <span className="font-black text-[#FFFC00]">{"\u2022"}</span>
-                      <span>{"Tu ne vois pas ton propre fant\u00F4me ici (un autre compte doit te d\u00E9fier)"}</span>
+                      <span className="font-black text-[#FFFC00]">{"•"}</span>
+                      <span>{"Tu ne vois pas ton propre fantôme ici (un autre compte doit te défier)"}</span>
                     </li>
                   </ul>
                 </div>
@@ -680,7 +680,7 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
             <ul className="space-y-3 px-5 py-5 text-sm font-medium leading-relaxed text-neutral-800 sm:px-6 sm:text-[15px]">
               <li className="flex gap-3 rounded-2xl border-2 border-black/10 bg-neutral-50/80 px-3 py-2.5">
                 <span className="text-lg" aria-hidden>
-                  {"\u23F1"}
+                  {"⏱"}
                 </span>
                 <span>
                   {"Chrono global : "}
@@ -690,22 +690,22 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
               </li>
               <li className="flex gap-3 rounded-2xl border-2 border-black/10 bg-neutral-50/80 px-3 py-2.5">
                 <span className="text-lg" aria-hidden>
-                  {"\uD83D\uDC64"}
+                  {"👤"}
                 </span>
                 <span>
-                  {`Ton pr\u00E9nom (`}
+                  {`Ton prénom (`}
                   <strong>{prenom}</strong>
-                  {`) appara\u00EEt comme auteur du fant\u00F4me.`}
+                  {`) apparaît comme auteur du fantôme.`}
                 </span>
               </li>
               <li className="flex gap-3 rounded-2xl border-2 border-black/10 bg-neutral-50/80 px-3 py-2.5">
                 <span className="text-lg" aria-hidden>
-                  {"\u2B50"}
+                  {"⭐"}
                 </span>
                 <span>
                   {`Bonus publication : `}
                   <strong>{formatJetonsDelta(XP_PUBLIER_FANTOME)}</strong>
-                  {` une fois le fant\u00F4me enregistr\u00E9 (en plus des jetons gagn\u00E9s en battant d'autres d\u00E9fis).`}
+                  {` une fois le fantôme enregistré (en plus des jetons gagnés en battant d'autres défis).`}
                 </span>
               </li>
             </ul>
@@ -722,7 +722,7 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
                 onClick={startInitPlay}
                 className="order-1 flex-1 rounded-2xl border-4 border-black bg-[#FFFC00] py-3.5 text-base font-black shadow-[4px_4px_0_0_#000] transition hover:brightness-105 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none sm:order-2"
               >
-                {"C\u2019est parti"}
+                {"C’est parti"}
               </button>
             </div>
           </div>
@@ -736,7 +736,7 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
           >
             <div className="border-b-2 border-black/10 bg-neutral-900/5 px-4 py-3 sm:px-5">
               <div className="mb-2 flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-neutral-600">
-                <span>{"Temps \u00E9coul\u00E9"}</span>
+                <span>{"Temps écoulé"}</span>
                 <span className="tabular-nums">{Math.round(pressure * 100)}%</span>
               </div>
               <div className="h-3 w-full overflow-hidden rounded-full bg-black/10 ring-1 ring-black/10">
@@ -773,7 +773,7 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
               <p className="mb-4 rounded-2xl border-2 border-black/10 bg-neutral-50 px-4 py-3 text-base font-bold leading-snug text-neutral-900 sm:text-[17px]">
                 {curQuestion.question}
               </p>
-              <p className="mb-2 text-xs font-black uppercase tracking-wider text-neutral-500">{"Choisis une r\u00E9ponse"}</p>
+              <p className="mb-2 text-xs font-black uppercase tracking-wider text-neutral-500">{"Choisis une réponse"}</p>
               <div className="grid gap-2.5">
                 {curQuestion.choix.map((label, i) => (
                   <button
@@ -796,27 +796,27 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
         {(phase === "init-saving" || phase === "ghost-saving") && (
           <div className="flex flex-col items-center justify-center gap-3 rounded-3xl border-4 border-dashed border-black/30 bg-white/90 px-8 py-12 text-center">
             <span className="text-4xl motion-safe:animate-pulse" aria-hidden>
-              {"\u23F3"}
+              {"⏳"}
             </span>
-            <p className="text-lg font-black text-neutral-900">{"Enregistrement\u2026"}</p>
-            <p className="max-w-xs text-sm font-medium text-neutral-600">{"Quelques secondes, ne ferme pas l\u2019onglet."}</p>
+            <p className="text-lg font-black text-neutral-900">{"Enregistrement…"}</p>
+            <p className="max-w-xs text-sm font-medium text-neutral-600">{"Quelques secondes, ne ferme pas l’onglet."}</p>
           </div>
         )}
 
         {phase === "init-publish-failed" && finishedMeta && (
           <div className="overflow-hidden rounded-3xl border-4 border-red-600 bg-white shadow-[8px_8px_0_0_rgba(185,28,28,0.45)]">
             <div className="border-b-4 border-red-600 bg-red-50 px-5 py-5 text-center">
-              <p className="text-xs font-black uppercase tracking-widest text-red-800/90">{"Probl\u00E8me serveur"}</p>
-              <h2 className="mt-2 text-2xl font-black text-red-800">{"Impossible d\u2019enregistrer le fant\u00F4me"}</h2>
+              <p className="text-xs font-black uppercase tracking-widest text-red-800/90">{"Problème serveur"}</p>
+              <h2 className="mt-2 text-2xl font-black text-red-800">{"Impossible d’enregistrer le fantôme"}</h2>
             </div>
             <div className="space-y-4 px-5 py-5">
               <div className="rounded-2xl border-2 border-black/10 bg-neutral-50 px-4 py-3 text-center">
                 <p className="text-2xl font-black tabular-nums text-neutral-900">
                   {finishedMeta.correct}/{DUEL_QUESTIONS_PAR_PARTIE}{" "}
-                  <span className="text-base font-bold text-neutral-600">{"bonnes \u00E9ponses"}</span>
+                  <span className="text-base font-bold text-neutral-600">{"bonnes éponses"}</span>
                 </p>
                 <p className="mt-1 text-sm font-semibold text-neutral-700">
-                  {`Temps : ${Math.round(finishedMeta.timeMs / 100) / 10}\u00A0s`}
+                  {`Temps : ${Math.round(finishedMeta.timeMs / 100) / 10} s`}
                 </p>
               </div>
               {errMsg && (
@@ -825,7 +825,7 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
                 </div>
               )}
               <p className="text-center text-xs font-medium leading-relaxed text-neutral-600">
-                {`Ton score est affich\u00E9 ci-dessus : tu ne l\u2019as pas perdu. Si le message parle des \u00AB r\u00E8gles \u00BB Firebase, il faut mettre \u00E0 jour le site (commande d\u00E9ploiement c\u00F4t\u00E9 prof / d\u00E9veloppeur).`}
+                {`Ton score est affiché ci-dessus : tu ne l’as pas perdu. Si le message parle des « règles » Firebase, il faut mettre à jour le site (commande déploiement côté prof / développeur).`}
               </p>
               <div className="flex flex-col gap-3 pt-1">
                 <button
@@ -837,7 +837,7 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
                   disabled={questions.length !== DUEL_QUESTIONS_PAR_PARTIE}
                   className="w-full rounded-2xl border-4 border-black bg-[#FFFC00] py-3.5 text-base font-black shadow-[4px_4px_0_0_#000] transition disabled:opacity-50 hover:brightness-105 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
                 >
-                  {"R\u00E9essayer l\u2019enregistrement"}
+                  {"Réessayer l’enregistrement"}
                 </button>
                 <button
                   type="button"
@@ -855,9 +855,9 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
           <div className="overflow-hidden rounded-3xl border-4 border-black bg-white text-center shadow-[8px_8px_0_0_#000]">
             <div className="border-b-4 border-black bg-[#FFFC00] px-5 py-6">
               <div className="text-5xl leading-none" aria-hidden>
-                {"\uD83D\uDC7B"}
+                {"👻"}
               </div>
-              <h2 className="mt-3 text-2xl font-black tracking-tight">{"Fant\u00F4me enregistr\u00E9"}</h2>
+              <h2 className="mt-3 text-2xl font-black tracking-tight">{"Fantôme enregistré"}</h2>
             </div>
             <div className="space-y-4 px-5 py-6">
               {publishWarn && (
@@ -866,10 +866,10 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
                 </div>
               )}
               <p className="text-lg font-bold text-neutral-900">
-                {`${finishedMeta.correct}/${countDuelQuestions({ questions })} bonnes \u00E9ponses`}
+                {`${finishedMeta.correct}/${countDuelQuestions({ questions })} bonnes éponses`}
               </p>
               <p className="text-sm font-semibold text-neutral-600">
-                {`Temps : ${Math.round(finishedMeta.timeMs / 100) / 10}\u00A0s`}
+                {`Temps : ${Math.round(finishedMeta.timeMs / 100) / 10} s`}
               </p>
               {xpDelta != null && (
                 <p className="text-xl font-black text-green-700">{formatJetonsDelta(xpDelta)}</p>
@@ -888,10 +888,10 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
         {phase === "ghost-loading" && (
           <div className="flex flex-col items-center justify-center gap-3 rounded-3xl border-4 border-black bg-white px-8 py-12 text-center shadow-[8px_8px_0_0_#000]">
             <span className="text-4xl motion-safe:animate-bounce" aria-hidden>
-              {"\uD83D\uDC7B"}
+              {"👻"}
             </span>
-            <p className="text-lg font-black">{"Chargement des fant\u00F4mes\u2026"}</p>
-            <p className="text-sm font-medium text-neutral-600">{"R\u00E9cup\u00E9ration de la liste sur le serveur."}</p>
+            <p className="text-lg font-black">{"Chargement des fantômes…"}</p>
+            <p className="text-sm font-medium text-neutral-600">{"Récupération de la liste sur le serveur."}</p>
           </div>
         )}
 
@@ -901,11 +901,11 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
               <div className="overflow-hidden rounded-3xl border-4 border-black bg-white shadow-[8px_8px_0_0_#000]">
                 <div className="border-b-4 border-black bg-neutral-100 px-5 py-4">
                   <p className="text-xs font-black uppercase tracking-widest text-neutral-600">{"Liste vide"}</p>
-                  <p className="mt-1 text-xl font-black">{"Aucun fant\u00F4me pour l\u2019instant"}</p>
+                  <p className="mt-1 text-xl font-black">{"Aucun fantôme pour l’instant"}</p>
                 </div>
                 <div className="space-y-4 px-5 py-5">
                   <p className="text-sm font-medium leading-relaxed text-neutral-700">
-                    {`Ici tu ne vois jamais ton propre d\u00E9fi : seuls les fant\u00F4mes des autres \u00E9l\u00E8ves apparaissent. Si la liste est vide, c\u2019est qu\u2019aucun autre camarade n\u2019a encore publi\u00E9 (ou que tu as d\u00E9j\u00E0 affront\u00E9 ceux propos\u00E9s). Tu peux inviter quelqu\u2019un \u00E0 se connecter avec son compte pour rejouer le tien.`}
+                    {`Ici tu ne vois jamais ton propre défi : seuls les fantômes des autres élèves apparaissent. Si la liste est vide, c’est qu’aucun autre camarade n’a encore publié (ou que tu as déjà affronté ceux proposés). Tu peux inviter quelqu’un à se connecter avec son compte pour rejouer le tien.`}
                   </p>
                   <button
                     type="button"
@@ -926,8 +926,8 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
             ) : (
               <>
                 <div className="rounded-2xl border-2 border-black/15 bg-white/90 px-4 py-3 text-center shadow-sm">
-                  <p className="text-xs font-black uppercase tracking-widest text-neutral-500">{"D\u00E9fis disponibles"}</p>
-                  <p className="mt-1 text-sm font-semibold text-neutral-800">{"Tape sur une ligne pour voir le d\u00E9tail puis lancer la partie."}</p>
+                  <p className="text-xs font-black uppercase tracking-widest text-neutral-500">{"Défis disponibles"}</p>
+                  <p className="mt-1 text-sm font-semibold text-neutral-800">{"Tape sur une ligne pour voir le détail puis lancer la partie."}</p>
                 </div>
                 <ul className="space-y-2.5">
                   {ghostRows.map(({ id, data }) => (
@@ -945,7 +945,7 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
                         </span>
                         <span className="shrink-0 rounded-lg border-2 border-black/10 bg-neutral-50 px-2.5 py-1 text-xs font-bold text-neutral-700">
                           {data.ghostCorrect}/{countDuelQuestions(data)}
-                          {" \u00B7 "}
+                          {" · "}
                           {Math.round(data.ghostTimeMs / 100) / 10}s
                         </span>
                       </button>
@@ -973,13 +973,13 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
             <div className="space-y-5 px-5 py-5">
               <div className="rounded-2xl border-2 border-black/10 bg-neutral-50 px-4 py-3 text-sm font-medium leading-relaxed text-neutral-800">
                 <p>
-                  {"Son fant\u00F4me : "}
+                  {"Son fantôme : "}
                   <strong className="text-neutral-950">
-                    {`${activeRun.ghostCorrect}/${countDuelQuestions(activeRun)} bonnes \u00E9ponses en ${Math.round(activeRun.ghostTimeMs / 100) / 10}\u00A0s`}
+                    {`${activeRun.ghostCorrect}/${countDuelQuestions(activeRun)} bonnes éponses en ${Math.round(activeRun.ghostTimeMs / 100) / 10} s`}
                   </strong>
                 </p>
                 <p className="mt-2 text-neutral-700">
-                  {"Bats-le au score. \u00C0 \u00E9galit\u00E9, le plus rapide au chrono gagne."}
+                  {"Bats-le au score. À égalité, le plus rapide au chrono gagne."}
                 </p>
               </div>
               <div className="flex flex-col gap-3 sm:flex-row">
@@ -1015,10 +1015,10 @@ export default function Duel({ profil, onXPGagne }: DuelProps) {
             >
               <h2 className="text-3xl font-black tracking-tight text-neutral-900">
                 {ghostOutcome === "win" && "Victoire"}
-                {ghostOutcome === "lose" && "D\u00E9faite"}
+                {ghostOutcome === "lose" && "Défaite"}
                 {ghostOutcome === "draw" && "Match nul"}
               </h2>
-              <p className="mt-1 text-sm font-bold text-neutral-900/80">{"R\u00E9sultat du duel"}</p>
+              <p className="mt-1 text-sm font-bold text-neutral-900/80">{"Résultat du duel"}</p>
             </div>
             <div className="space-y-4 px-5 py-6">
               <div className="grid grid-cols-2 gap-3 text-center text-sm">

@@ -112,7 +112,7 @@ function AmountSheet({ label, emoji, maxAmount, description, confirm, onClose }:
           style={{ width:"100%",padding:"15px",borderRadius:"16px",border:"none",fontWeight:900,fontSize:"1rem",cursor:"pointer",
             background:busy||val<1?"rgba(255,255,255,0.06)":"linear-gradient(135deg,#a78bfa,#ec4899)",
             color:busy||val<1?"#1e293b":"white",fontFamily:"'Fredoka One',cursive" }}>
-          {busy?"\u23F3 En cours...":"\u2728 Confirmer \u2014 "+val}
+          {busy?"⏳ En cours...":"✨ Confirmer — "+val}
         </button>
       </div>
     </div>
@@ -148,7 +148,7 @@ function ExchangeSheet({ myCards, theirCards, toPrenom, onPropose, onClose }: {
           <div style={{ width:"40px",height:"4px",background:"rgba(255,255,255,0.12)",borderRadius:"2px",margin:"0 auto 12px" }}/>
           <div style={{ textAlign:"center",marginBottom:"10px" }}>
             <div style={{ fontFamily:"'Fredoka One',cursive",color:"white",fontSize:"1.2rem" }}>
-              {"\u{1F0CF} Proposer un \u00e9change"}
+              {"🃏 Proposer un échange"}
             </div>
             <div style={{ color:"#64748b",fontSize:"0.75rem",marginTop:"4px" }}>
               {"avec "}{toPrenom}
@@ -187,7 +187,7 @@ function ExchangeSheet({ myCards, theirCards, toPrenom, onPropose, onClose }: {
           {myCard&&theirCard?(
             <div style={{ display:"flex",gap:"10px",alignItems:"center",marginBottom:"12px",padding:"10px",background:"rgba(167,139,250,0.08)",borderRadius:"12px",border:"1px solid rgba(167,139,250,0.2)" }}>
               <img src={myCard.image} alt="" style={{ width:"44px",borderRadius:"8px" }}/>
-              <div style={{ color:"#a78bfa",fontSize:"1.2rem",fontWeight:900 }}>{"\u21C4"}</div>
+              <div style={{ color:"#a78bfa",fontSize:"1.2rem",fontWeight:900 }}>{"⇄"}</div>
               <img src={theirCard.image} alt="" style={{ width:"44px",borderRadius:"8px" }}/>
               <div style={{ flex:1,fontSize:"0.72rem",color:"#94a3b8" }}>
                 <div style={{ fontWeight:700 }}>{myCard.nom}</div>
@@ -197,7 +197,7 @@ function ExchangeSheet({ myCards, theirCards, toPrenom, onPropose, onClose }: {
             </div>
           ):(
             <div style={{ textAlign:"center",color:"#475569",fontSize:"0.78rem",marginBottom:"12px" }}>
-              {"S\u00e9lectionne ta carte (onglet 1) puis la sienne (onglet 2)"}
+              {"Sélectionne ta carte (onglet 1) puis la sienne (onglet 2)"}
             </div>
           )}
           <button onClick={doPropose} disabled={!myCard||!theirCard||busy}
@@ -205,7 +205,7 @@ function ExchangeSheet({ myCards, theirCards, toPrenom, onPropose, onClose }: {
               cursor:myCard&&theirCard?"pointer":"not-allowed",
               background:myCard&&theirCard?"linear-gradient(135deg,#6366f1,#ec4899)":"rgba(255,255,255,0.06)",
               color:myCard&&theirCard?"white":"#1e293b",fontFamily:"'Fredoka One',cursive" }}>
-            {busy?"\u23F3...":"\u{1F4E8} Envoyer la proposition"}
+            {busy?"⏳...":"📨 Envoyer la proposition"}
           </button>
         </div>
       </div>
@@ -238,7 +238,7 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
   },[visitedUid]);
 
   const donnerJetons = async (amount:number) => {
-    if(myJetons<amount){ showToast("\u26A0\uFE0F Pas assez de jetons !",false); return; }
+    if(myJetons<amount){ showToast("⚠️ Pas assez de jetons !",false); return; }
     try{
       await runTransaction(db,async tx=>{
         const myRef  = doc(db,"users",auth.currentUser.uid);
@@ -258,7 +258,7 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
 
   const donnerPrestige = async (amount:number) => {
     const cost = amount*PRESTIGE_COST;
-    if(myJetons<cost){ showToast("\u26A0\uFE0F Pas assez de jetons !",false); return; }
+    if(myJetons<cost){ showToast("⚠️ Pas assez de jetons !",false); return; }
     try{
       await runTransaction(db,async tx=>{
         const myRef  = doc(db,"users",auth.currentUser.uid);
@@ -314,10 +314,10 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
   if(!data) return(
     <div style={{ minHeight:"100vh",background:"#070a12",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"16px" }}>
       <style>{VS_CSS}</style>
-      <div style={{ fontSize:"3rem",lineHeight:1 }}>{"\u{1F615}"}</div>
+      <div style={{ fontSize:"3rem",lineHeight:1 }}>{"😕"}</div>
       <div style={{ color:"white",fontFamily:"'Fredoka One',cursive",fontSize:"1.2rem" }}>{"Salon introuvable"}</div>
       <button onClick={onBack} style={{ background:"#a78bfa",color:"white",border:"none",padding:"12px 24px",borderRadius:"14px",fontWeight:800,cursor:"pointer" }}>
-        {"\u2190 Retour"}
+        {"← Retour"}
       </button>
     </div>
   );
@@ -351,14 +351,14 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
       {/* ?? HEADER ?????????????????????????????????????????????????? */}
       <div style={{ background:"rgba(7,10,18,0.97)",backdropFilter:"blur(16px)",borderBottom:"1px solid rgba(255,255,255,0.07)",padding:"12px 16px",display:"flex",alignItems:"center",gap:"12px",position:"sticky",top:0,zIndex:100 }}>
         <button onClick={onBack} style={{ background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.12)",borderRadius:"10px",padding:"8px 14px",color:"white",fontWeight:700,fontSize:"0.82rem",cursor:"pointer" }}>
-          {"\u2190 Retour"}
+          {"← Retour"}
         </button>
         <div style={{ flex:1,fontSize:"0.78rem",color:"#475569",fontWeight:700,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap" }}>
           {"Vous visitez le salon de "}
           <span style={{ color:"white" }}>{data.prenom as string}</span>
         </div>
         <div style={{ background:"rgba(251,191,36,0.12)",border:"1px solid rgba(251,191,36,0.25)",borderRadius:"10px",padding:"6px 12px",color:"#fbbf24",fontSize:"0.78rem",fontWeight:800,flexShrink:0 }}>
-          {"\u26A1 "}{myJetons.toLocaleString("fr-FR")}
+          {"⚡ "}{myJetons.toLocaleString("fr-FR")}
         </div>
       </div>
 
@@ -382,7 +382,7 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
               </div>
             );})}
             <div style={{ position:"absolute",bottom:"10px",left:"14px",fontSize:"0.58rem",fontWeight:700,color:theme.dark?"rgba(255,255,255,0.35)":"rgba(0,0,0,0.3)",letterSpacing:"0.1em",textTransform:"uppercase" }}>
-              {"\u{1F3E0} "}{salonTitre}
+              {"🏠 "}{salonTitre}
             </div>
             <div style={{ position:"relative",zIndex:1,textAlign:"center",paddingBottom:"14px" }}>
               <div style={{ display:"flex",justifyContent:"center",marginBottom:"12px",filter:"drop-shadow(0 12px 24px rgba(0,0,0,0.35))" }}>
@@ -400,15 +400,15 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
               </span>
               {salon.motto&&(
                 <div style={{ marginTop:"10px",fontSize:"0.8rem",color:theme.dark?"rgba(255,255,255,0.7)":"rgba(0,0,0,0.6)",fontStyle:"italic" }}>
-                  {"\u201C"}{salon.motto}{"\u201D"}
+                  {"“"}{salon.motto}{"”"}
                 </div>
               )}
               <div style={{ display:"flex",gap:"10px",justifyContent:"center",marginTop:"12px" }}>
                 <div style={{ background:"rgba(0,0,0,0.25)",borderRadius:"10px",padding:"6px 14px",color:theme.dark?"white":"#0f172a",fontSize:"0.85rem",fontFamily:"'Fredoka One',cursive" }}>
-                  {"\u26A1 "}{(data.xp as number||0).toLocaleString("fr-FR")}
+                  {"⚡ "}{(data.xp as number||0).toLocaleString("fr-FR")}
                 </div>
                 <div style={{ background:"rgba(0,0,0,0.25)",borderRadius:"10px",padding:"6px 14px",color:theme.dark?"white":"#0f172a",fontSize:"0.85rem",fontFamily:"'Fredoka One',cursive" }}>
-                  {"\u{1F0CF} "}{theirCards.length}{" cartes"}
+                  {"🃏 "}{theirCards.length}{" cartes"}
                 </div>
               </div>
             </div>
@@ -419,14 +419,14 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
         {vitrine.some(Boolean)&&(
           <div style={{ background:"white",borderRadius:"20px",padding:"18px",boxShadow:"0 4px 16px rgba(0,0,0,0.08)" }}>
             <p style={{ fontFamily:"'Fredoka One',cursive",color:"#1A1A2E",fontSize:"1.1rem",margin:"0 0 12px" }}>
-              {"\u2728 Vitrine"}
+              {"✨ Vitrine"}
             </p>
             <div style={{ display:"flex",gap:"10px",justifyContent:"center" }}>
               {[0,1,2].map(i=>{
                 const c = vitrine[i];
                 if(!c) return(
                   <div key={i} style={{ flex:1,maxWidth:120,borderRadius:"12px",border:"2px dashed #E5E7EB",padding:"24px 0",display:"flex",alignItems:"center",justifyContent:"center",color:"#9CA3AF",fontSize:"0.7rem" }}>
-                    {"\u2014"}
+                    {"—"}
                   </div>
                 );
                 const col = (RARETE_CFG[c.rarete]||{couleur:"#9CA3AF"}).couleur;
@@ -446,13 +446,13 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
         {/* ?? ACTIONS ??????????????????????????????????????????????? */}
         <div style={{ background:"linear-gradient(135deg,rgba(167,139,250,0.07),rgba(236,72,153,0.07))",borderRadius:"20px",padding:"18px",border:"1px solid rgba(167,139,250,0.18)" }}>
           <p style={{ fontFamily:"'Fredoka One',cursive",color:"white",fontSize:"1.1rem",margin:"0 0 14px" }}>
-            {"\u{1F91D} Interactions"}
+            {"🤝 Interactions"}
           </p>
           <div style={{ display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"10px" }}>
 
             <button className="vs-act-btn" onClick={()=>setSheet("jetons")}
               style={{ background:"rgba(251,191,36,0.12)",border:"1px solid rgba(251,191,36,0.28)",color:"white" }}>
-              <span style={{ fontSize:"1.8rem",lineHeight:1 }}>{"\u{1F4B0}"}</span>
+              <span style={{ fontSize:"1.8rem",lineHeight:1 }}>{"💰"}</span>
               <span style={{ fontSize:"0.7rem",fontWeight:800,color:"#fbbf24" }}>{"Don jetons"}</span>
               <span style={{ fontSize:"0.58rem",color:"#64748b",textAlign:"center",lineHeight:1.3 }}>{"Offrir des jetons"}</span>
             </button>
@@ -460,15 +460,15 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
             <button className="vs-act-btn" onClick={()=>setSheet("echange")}
               disabled={myOwnedCards.length===0||theirCards.length===0}
               style={{ background:"rgba(99,102,241,0.12)",border:"1px solid rgba(99,102,241,0.28)",color:"white",opacity:myOwnedCards.length===0||theirCards.length===0?0.4:1 }}>
-              <span style={{ fontSize:"1.8rem",lineHeight:1 }}>{"\u{1F0CF}"}</span>
+              <span style={{ fontSize:"1.8rem",lineHeight:1 }}>{"🃏"}</span>
               <span style={{ fontSize:"0.7rem",fontWeight:800,color:"#818cf8" }}>{"Troc cartes"}</span>
-              <span style={{ fontSize:"0.58rem",color:"#64748b",textAlign:"center",lineHeight:1.3 }}>{"Proposer un \u00e9change"}</span>
+              <span style={{ fontSize:"0.58rem",color:"#64748b",textAlign:"center",lineHeight:1.3 }}>{"Proposer un échange"}</span>
             </button>
 
             <button className="vs-act-btn" onClick={()=>setSheet("prestige")}
               disabled={!canAffordPrestige}
               style={{ background:"rgba(192,132,252,0.12)",border:"1px solid rgba(192,132,252,0.28)",color:"white",opacity:canAffordPrestige?1:0.4 }}>
-              <span style={{ fontSize:"1.8rem",lineHeight:1 }}>{"\u{1F381}"}</span>
+              <span style={{ fontSize:"1.8rem",lineHeight:1 }}>{"🎁"}</span>
               <span style={{ fontSize:"0.7rem",fontWeight:800,color:"#c084fc" }}>{"Surprise"}</span>
               <span style={{ fontSize:"0.58rem",color:"#64748b",textAlign:"center",lineHeight:1.3 }}>{"Offrir une surprise"}</span>
             </button>
@@ -477,15 +477,15 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
         </div>
 
         <p style={{ textAlign:"center",padding:"6px",color:"#1e293b",fontSize:"0.65rem",margin:0 }}>
-          {"\u{1F507} Mode visite \u2014 aucun message, interactions seulement"}
+          {"🔇 Mode visite — aucun message, interactions seulement"}
         </p>
       </div>
 
       {/* ?? SHEETS ???????????????????????????????????????????????????? */}
       {sheet==="jetons"&&(
         <AmountSheet
-          label={`Don \u00e0 ${data.prenom}`}
-          emoji={"\u{1F4B0}"}
+          label={`Don à ${data.prenom}`}
+          emoji={"💰"}
           maxAmount={myJetons}
           description={`Tu as ${myJetons.toLocaleString("fr-FR")} jetons`}
           confirm={donnerJetons}
@@ -494,9 +494,9 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
       {sheet==="prestige"&&(
         <AmountSheet
           label={`Surprise pour ${data.prenom}`}
-          emoji={"\u{1F381}"}
+          emoji={"🎁"}
           maxAmount={Math.max(0,Math.floor(myJetons/PRESTIGE_COST))}
-          description={"\u00c0 toi de choisir l\u2019intensit\u00e9"}
+          description={"À toi de choisir l’intensité"}
           confirm={donnerPrestige}
           onClose={()=>setSheet(null)}/>
       )}

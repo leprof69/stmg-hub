@@ -210,8 +210,8 @@ export function AvatarSVG({config,size=200}:{config:AvatarConfig;size?:number}){
             <Icon icon={ic} width={pSz} height={pSz}/>
           </div>
         ))}
-        {(!loaded&&!errored)&&<div style={{fontSize:size>80?"2rem":"1.3rem"}}>{"\u{1F9D1}"}</div>}
-        {errored&&<div style={{fontSize:size>80?"2rem":"1.3rem"}}>{"\u{1F9D1}"}</div>}
+        {(!loaded&&!errored)&&<div style={{fontSize:size>80?"2rem":"1.3rem"}}>{"🧑"}</div>}
+        {errored&&<div style={{fontSize:size>80?"2rem":"1.3rem"}}>{"🧑"}</div>}
         <img src={url} width={size} height={size} alt="Avatar" draggable={false}
           onLoad={()=>{setLoaded(true);setErrored(false);}}
           onError={()=>{setErrored(true);setLoaded(false);}}
@@ -596,7 +596,7 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
   const buy=async(item:ShopItem)=>{
     const key=itemKey(item);
     if(isOwned(item)||buying)return;
-    if(jetons<item.price){showToast("\u26A0\uFE0F Pas assez de jetons !",false);return;}
+    if(jetons<item.price){showToast("⚠️ Pas assez de jetons !",false);return;}
     setBuying(key);
     try{
       const uid=auth.currentUser?.uid;if(!uid)throw new Error();
@@ -613,7 +613,7 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
   };
 
   const openChest=async(chest:typeof CHESTS[0])=>{
-    if(jetons<chest.price){showToast("\u26A0\uFE0F Pas assez de jetons !",false);return;}
+    if(jetons<chest.price){showToast("⚠️ Pas assez de jetons !",false);return;}
     if(openingChest)return;
     const item=pickRandom(chest.weights as Record<Rarity,number>,owned,profil);
     if(!item){showToast("Tous les items sont débloqués !",true);return;}
@@ -665,11 +665,11 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
         <div style={{position:"fixed",inset:0,zIndex:400,background:"rgba(0,0,0,0.85)",display:"flex",alignItems:"center",justifyContent:"center",padding:"20px"}} onClick={()=>setChestResult(null)}>
           <div style={{background:"linear-gradient(135deg,#0f172a,#1e1b4b)",border:`2px solid ${RS[chestResult.rarity].border}`,borderRadius:"28px",padding:"36px 28px",textAlign:"center",maxWidth:"300px",width:"100%",animation:"chestReveal 0.4s cubic-bezier(0.34,1.56,0.64,1) both",boxShadow:`0 0 60px ${RS[chestResult.rarity].border}`}}>
             <div style={{marginBottom:"16px",display:"flex",justifyContent:"center"}}>
-              {chestResult.stickerIcon?<Icon icon={chestResult.stickerIcon} width={72} height={72}/>:<span style={{fontSize:"4rem"}}>{chestResult.previewEmoji||"\u{1F4E6}"}</span>}
+              {chestResult.stickerIcon?<Icon icon={chestResult.stickerIcon} width={72} height={72}/>:<span style={{fontSize:"4rem"}}>{chestResult.previewEmoji||"📦"}</span>}
             </div>
             <div style={{fontSize:"0.65rem",color:RS[chestResult.rarity].text,fontWeight:800,textTransform:"uppercase",letterSpacing:"0.15em",marginBottom:"8px"}}>{RS[chestResult.rarity].label}</div>
             <div style={{fontSize:"1.3rem",fontWeight:900,color:"white",marginBottom:"22px"}}>{chestResult.name}</div>
-            <button onClick={()=>{equip(chestResult);setChestResult(null);}} style={{width:"100%",padding:"14px",borderRadius:"14px",background:`linear-gradient(135deg,${RS[chestResult.rarity].text},#a78bfa)`,color:"white",fontWeight:800,fontSize:"1rem",border:"none",cursor:"pointer"}}>{"\u{1F4A1} Equiper !"}</button>
+            <button onClick={()=>{equip(chestResult);setChestResult(null);}} style={{width:"100%",padding:"14px",borderRadius:"14px",background:`linear-gradient(135deg,${RS[chestResult.rarity].text},#a78bfa)`,color:"white",fontWeight:800,fontSize:"1rem",border:"none",cursor:"pointer"}}>{"💡 Equiper !"}</button>
             <div style={{marginTop:"12px",fontSize:"0.72rem",color:"#475569"}}>Tap pour fermer</div>
           </div>
         </div>
@@ -681,24 +681,24 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
         {/* ?? TOP HEADER */}
         <div style={{background:"rgba(7,10,18,0.96)",backdropFilter:"blur(20px)",borderBottom:"1px solid rgba(255,255,255,0.07)",padding:"10px 16px",display:"flex",alignItems:"center",gap:"10px",position:"sticky",top:0,zIndex:100}}>
           <div style={{flex:1}}>
-            <div style={{fontSize:"0.58rem",color:"#475569",fontWeight:700,textTransform:"uppercase",letterSpacing:"0.12em"}}>{"Cr\u00e9ateur d\u2019avatar"}</div>
-            <div style={{fontSize:"0.95rem",fontWeight:900,background:"linear-gradient(90deg,#a78bfa,#ec4899)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>{"\u{1F3A8} Mon Avatar"}</div>
+            <div style={{fontSize:"0.58rem",color:"#475569",fontWeight:700,textTransform:"uppercase",letterSpacing:"0.12em"}}>{"Créateur d’avatar"}</div>
+            <div style={{fontSize:"0.95rem",fontWeight:900,background:"linear-gradient(90deg,#a78bfa,#ec4899)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>{"🎨 Mon Avatar"}</div>
           </div>
           <button onClick={()=>setShowChest(v=>!v)} style={{background:"rgba(251,191,36,0.12)",border:"1px solid rgba(251,191,36,0.3)",borderRadius:"10px",padding:"7px 12px",color:"#fbbf24",fontSize:"0.78rem",fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",gap:"5px"}}>
-            <span style={{fontSize:"1rem"}}>{"\u{1F4E6}"}</span>
+            <span style={{fontSize:"1rem"}}>{"📦"}</span>
           </button>
           <div style={{background:"rgba(251,191,36,0.12)",border:"1px solid rgba(251,191,36,0.3)",borderRadius:"10px",padding:"7px 12px",color:"#fbbf24",fontSize:"0.82rem",fontWeight:800}}>
-            {"\u{1F4B0}"} {jetons.toLocaleString("fr-FR")}
+            {"💰"} {jetons.toLocaleString("fr-FR")}
           </div>
           <button onClick={saveAvatar} disabled={saving} style={{background:saved?"linear-gradient(135deg,#16a34a,#15803d)":"linear-gradient(135deg,#a78bfa,#818cf8)",color:"white",fontWeight:800,fontSize:"0.8rem",padding:"8px 14px",borderRadius:"10px",border:"none",cursor:"pointer",whiteSpace:"nowrap"}}>
-            {saving?"\u23F3":saved?"\u2705 OK":"\u{1F4BE} Sauver"}
+            {saving?"⏳":saved?"✅ OK":"💾 Sauver"}
           </button>
         </div>
 
         {/* ?? COFFRES PANEL */}
         {showChest&&(
           <div style={{background:"linear-gradient(135deg,rgba(251,191,36,0.06),rgba(168,85,247,0.06))",borderBottom:"1px solid rgba(251,191,36,0.15)",padding:"14px 16px",animation:"slideUp 0.2s both"}}>
-            <div style={{fontSize:"0.65rem",color:"#fbbf24",fontWeight:800,textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:"12px"}}>{"\u{1F4E6} Coffres myst\u00e8res"}</div>
+            <div style={{fontSize:"0.65rem",color:"#fbbf24",fontWeight:800,textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:"12px"}}>{"📦 Coffres mystères"}</div>
             <div style={{display:"flex",gap:"10px",overflowX:"auto"}} className="no-sb">
               {CHESTS.map(c=>(
                 <button key={c.id} onClick={()=>openChest(c)} disabled={!!openingChest||jetons<c.price}
@@ -715,7 +715,7 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
         {/* ?? SPRING BANNER (collapsible) */}
         {showSpring&&(
           <div style={{background:"linear-gradient(90deg,rgba(86,171,47,0.1),rgba(240,147,251,0.1))",borderBottom:"1px solid rgba(86,171,47,0.18)",padding:"8px 16px",display:"flex",alignItems:"center",gap:"8px"}}>
-            <span style={{fontSize:"0.6rem",color:"#a8e063",fontWeight:700,textTransform:"uppercase",letterSpacing:"0.08em",flex:1}}>{"\u{1F338} Collection Printemps 2026"}</span>
+            <span style={{fontSize:"0.6rem",color:"#a8e063",fontWeight:700,textTransform:"uppercase",letterSpacing:"0.08em",flex:1}}>{"🌸 Collection Printemps 2026"}</span>
             {SPRING_PRESETS.map(p=>(
               <button key={p.name} className="av-preset" onClick={()=>applyPreset(p)} style={{flexShrink:0,background:"rgba(86,171,47,0.1)",border:"1px solid rgba(86,171,47,0.3)",borderRadius:"8px",padding:"5px 10px",cursor:"pointer",color:"white",fontSize:"0.72rem",fontWeight:700,display:"flex",alignItems:"center",gap:"4px"}}>
                 <span style={{fontSize:"0.9rem"}}>{p.emoji}</span><span>{p.name}</span>
@@ -732,7 +732,7 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
             <div style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:"6px"}}>
               <AvatarSVG key={`p${previewKey}${JSON.stringify(displayConfig)}`} config={displayConfig} size={140}/>
               {hovered&&<div style={{background:"rgba(167,139,250,0.9)",color:"white",fontSize:"0.6rem",fontWeight:700,padding:"3px 10px",borderRadius:"20px",whiteSpace:"nowrap",textAlign:"center",maxWidth:"148px",overflow:"hidden",textOverflow:"ellipsis"}}>
-                {"\u25B6 "}{hovered.name}
+                {"▶ "}{hovered.name}
               </div>}
               {/* Progress bar */}
               <div style={{width:"148px",display:"flex",alignItems:"center",gap:"6px"}}>
@@ -766,7 +766,7 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
                   </button>
                 ))}
                 <button onClick={()=>{setAvatar(randomAvatar());setPreviewKey(k=>k+1);}} style={{background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.09)",borderRadius:"10px",padding:"6px 4px",color:"#475569",display:"flex",flexDirection:"column",alignItems:"center",gap:"2px",cursor:"pointer"}}>
-                  <span style={{fontSize:"1.1rem"}}>{"\u{1F3B2}"}</span>
+                  <span style={{fontSize:"1.1rem"}}>{"🎲"}</span>
                   <span style={{fontSize:"0.52rem",color:"#475569",textAlign:"center",lineHeight:1.1}}>Aléa</span>
                 </button>
               </div>
@@ -777,7 +777,7 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
         {/* ?? COLOR PICKER pour tenue/fond */}
         {(activeTab==="clothesColor"||activeTab==="bg")&&(
           <div style={{padding:"8px 16px",background:"rgba(255,255,255,0.02)",borderBottom:"1px solid rgba(255,255,255,0.05)",display:"flex",alignItems:"center",gap:"10px"}}>
-            <span style={{fontSize:"0.7rem",color:"#64748b",fontWeight:700}}>{"\u{1F3A8}"}</span>
+            <span style={{fontSize:"0.7rem",color:"#64748b",fontWeight:700}}>{"🎨"}</span>
             <input type="color"
               defaultValue={activeTab==="clothesColor"?"#"+avatar.clothesColor:"#"+avatar.bgColor}
               onChange={e=>{const hex=e.target.value.slice(1);
@@ -815,7 +815,7 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
                     background:item.previewColor&&item.previewColor!=="transparent"?item.previewColor:"rgba(255,255,255,0.06)",
                     border:"1px solid rgba(255,255,255,0.1)",
                     display:"flex",alignItems:"center",justifyContent:"center"}}>
-                    {locked?<span style={{fontSize:"1.3rem"}}>{"\u{1F512}"}</span>
+                    {locked?<span style={{fontSize:"1.3rem"}}>{"🔒"}</span>
                     :useMini?<MiniPreview item={item}/>
                     :item.stickerIcon?<Icon icon={item.stickerIcon} width={30} height={30} color={stkDef?.color||undefined}/>
                     :item.previewEmoji?<span style={{fontSize:"1.35rem"}}>{item.previewEmoji}</span>
@@ -824,16 +824,16 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
                   <div style={{fontSize:"0.68rem",fontWeight:700,color:"#e2e8f0",marginBottom:"2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{item.name}</div>
                   <div style={{fontSize:"0.52rem",fontWeight:700,textTransform:"uppercase",color:rs.text,marginBottom:"6px",letterSpacing:"0.05em"}}>{rs.label}</div>
                   {locked?(
-                    <div style={{padding:"4px",borderRadius:"7px",background:"rgba(255,215,0,0.1)",color:"#ffd700",fontSize:"0.6rem",fontWeight:700}}>{`\u{1F451}${item.minPrestige}`}</div>
+                    <div style={{padding:"4px",borderRadius:"7px",background:"rgba(255,215,0,0.1)",color:"#ffd700",fontSize:"0.6rem",fontWeight:700}}>{`👑${item.minPrestige}`}</div>
                   ):eq?(
-                    <div style={{padding:"4px",borderRadius:"7px",background:"rgba(167,139,250,0.2)",color:"#a78bfa",fontSize:"0.62rem",fontWeight:700}}>{"\u2713 \u00c9quip\u00e9"}</div>
+                    <div style={{padding:"4px",borderRadius:"7px",background:"rgba(167,139,250,0.2)",color:"#a78bfa",fontSize:"0.62rem",fontWeight:700}}>{"✓ Équipé"}</div>
                   ):own?(
                     <button onClick={e=>{e.stopPropagation();equip(item);}} style={{width:"100%",padding:"5px",borderRadius:"7px",background:"rgba(74,222,128,0.12)",color:"#4ade80",border:"1px solid rgba(74,222,128,0.25)",fontSize:"0.62rem",fontWeight:700,cursor:"pointer"}}>
-                      {item.price===0?"\u{1F338} Gratuit":"\u{1F4A1} \u00c9quiper"}
+                      {item.price===0?"🌸 Gratuit":"💡 Équiper"}
                     </button>
                   ):(
                     <button onClick={e=>{e.stopPropagation();buy(item);}} disabled={bying} style={{width:"100%",padding:"5px",borderRadius:"7px",fontSize:"0.62rem",fontWeight:700,cursor:afford?"pointer":"not-allowed",border:"none",background:afford?`${rs.text}28`:"rgba(255,255,255,0.04)",color:afford?rs.text:"#1e293b"}}>
-                      {bying?"\u23F3":`\u{1F4B0} ${item.price}j`}
+                      {bying?"⏳":`💰 ${item.price}j`}
                     </button>
                   )}
                 </div>

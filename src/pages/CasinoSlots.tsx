@@ -7,32 +7,32 @@ import { GAME_QCM_POOL } from "../lib/gameQcmPool";
 
 // ?? Unicode emoji constants ?????????????????????????????????????????????????
 const E = {
-  lemon:    "\u{1F34B}", // ??
-  cherry:   "\u{1F352}", // ??
-  grad:     "\u{1F393}", // ??
-  moneym:   "\u{1F911}", // ??
-  gem:      "\u{1F48E}", // ??
-  rainbow:  "\u{1F308}", // ??
-  slot:     "\u{1F3B0}", // ??
-  ok:       "\u{2705}",  // ?
-  nok:      "\u{274C}",  // ?
-  sparkle:  "\u{2728}",  // ?
-  party:    "\u{1F38A}", // ??
-  boom:     "\u{1F4AB}", // ??
-  coins:    "\u{1F4B0}", // ??
-  gear:     "\u{2699}\u{FE0F}",
-  hype:     "\u{1F973}", // ??
-  fire:     "\u{1F525}", // ??
-  moneyW:   "\u{1F4B8}", // ??
-  star:     "\u{2B50}",  // ?
-  card:     "\u{1F0CF}", // ??
-  medal:    "\u{1F3C5}", // ??
-  chart:    "\u{1F4C8}", // ??
-  brain:    "\u{1F9E0}", // ??
-  tie:      "\u{1F454}", // ??
-  brief:    "\u{1F4BC}", // ??
-  mega:     "\u{1F4E3}", // ??
-  money2:   "\u{1F4B9}", // ??
+  lemon:    "🍋", // ??
+  cherry:   "🍒", // ??
+  grad:     "🎓", // ??
+  moneym:   "🤑", // ??
+  gem:      "💎", // ??
+  rainbow:  "🌈", // ??
+  slot:     "🎰", // ??
+  ok:       "✅",  // ?
+  nok:      "❌",  // ?
+  sparkle:  "✨",  // ?
+  party:    "🎊", // ??
+  boom:     "💫", // ??
+  coins:    "💰", // ??
+  gear:     "⚙️",
+  hype:     "🥳", // ??
+  fire:     "🔥", // ??
+  moneyW:   "💸", // ??
+  star:     "⭐",  // ?
+  card:     "🃏", // ??
+  medal:    "🏅", // ??
+  chart:    "📈", // ??
+  brain:    "🧠", // ??
+  tie:      "👔", // ??
+  brief:    "💼", // ??
+  mega:     "📣", // ??
+  money2:   "💹", // ??
 };
 
 type Props = { profil: { prenom?: string }; onXPGagne?: () => void };
@@ -280,7 +280,7 @@ function WinOverlay({ result, onClose }: { result: WinResult; onClose: () => voi
         <button type="button" onClick={onClose}
           className="mt-5 w-full rounded-2xl py-3 text-sm font-black tracking-wider text-slate-950"
           style={{ background:isJP?"linear-gradient(135deg,#fbbf24,#f97316)":isSup?"linear-gradient(135deg,#38bdf8,#818cf8)":isMoney?"linear-gradient(135deg,#4ade80,#22c55e)":"#fb923c" }}>
-          {isJP?`${E.hype} Incroyable !`:isSup?`${E.fire} Super !`:isMoney?`${E.moneym} Trop fort !`:`${E.sparkle} Bien jou\u00e9 !`}
+          {isJP?`${E.hype} Incroyable !`:isSup?`${E.fire} Super !`:isMoney?`${E.moneym} Trop fort !`:`${E.sparkle} Bien joué !`}
         </button>
       </div>
     </div>
@@ -466,7 +466,7 @@ export default function CasinoSlots({ profil, onXPGagne }: Props) {
           </h1>
           <p className="mt-2 text-sm text-slate-400">
             Salut <span className="font-semibold text-amber-300">{prenom}</span> {E.hype}{" "}
-            à gagne des pi\u00e8ces et tente ta chance !
+            à gagne des pièces et tente ta chance !
           </p>
         </header>
 
@@ -517,10 +517,10 @@ export default function CasinoSlots({ profil, onXPGagne }: Props) {
               style={{ background:coins>=1&&!isSpinning?"linear-gradient(135deg,#dc2626,#b91c1c,#991b1b)":"#1f1010", boxShadow:coins>=1&&!isSpinning?"0 8px 32px -8px rgba(239,68,68,0.65),0 0 0 1px rgba(251,191,36,0.3) inset":"none" }}>
               {isSpinning
                 ? <span className="flex items-center justify-center gap-2"><span style={{ display:"inline-block", animation:"spinSlow 1s linear infinite" }}>{E.gear}</span> En cours...</span>
-                : coins<1 ? "Gagne des pi\u00e8ces pour jouer !"
+                : coins<1 ? "Gagne des pièces pour jouer !"
                 : <span className="flex items-center justify-center gap-2">
                     <span>{E.slot}</span><span>SPIN</span>
-                    <span className="rounded-lg border border-amber-400/40 bg-amber-400/15 px-1.5 py-0.5 text-xs font-bold text-amber-200">{"\u22121 pi\u00e8ce"}</span>
+                    <span className="rounded-lg border border-amber-400/40 bg-amber-400/15 px-1.5 py-0.5 text-xs font-bold text-amber-200">{"−1 pièce"}</span>
                   </span>
               }
             </button>
@@ -535,7 +535,7 @@ export default function CasinoSlots({ profil, onXPGagne }: Props) {
               { s:E.rainbow, l:"Prismatique", g:"Carte+100j+200p", c:"#e879f9" },
               { s:E.gem,     l:"Diamant",     g:"50j + 50 prestige",c:"#38bdf8" },
               { s:E.moneym,  l:"Jackpot",     g:"30j + 20 prestige",c:"#4ade80" },
-              { s:E.grad,    l:"Dipl\u00f4me", g:"15 jetons",        c:"#fb923c" },
+              { s:E.grad,    l:"Diplôme", g:"15 jetons",        c:"#fb923c" },
               { s:E.cherry,  l:"Cerise",       g:"8 jetons",         c:"#f87171" },
               { s:E.lemon,   l:"Citron",       g:"5 jetons",         c:"#fde047" },
             ].map(({s,l,g,c})=>(
@@ -551,23 +551,28 @@ export default function CasinoSlots({ profil, onXPGagne }: Props) {
         {/* Quiz */}
         <div className="rounded-[1.35rem] border border-violet-400/25 backdrop-blur-2xl"
           style={{ background:"linear-gradient(135deg,rgba(124,58,237,0.12) 0%,rgba(15,5,25,0.88) 60%)", boxShadow:"0 0 60px -22px rgba(139,92,246,0.4)" }}>
-          <div className="p-4">
-            <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.2em] text-violet-300/80">Gagner des pièces</p>
-            <p className="text-sm text-slate-400">Bonne réponse : <span className="font-bold text-amber-300">+3 pièces</span>{" \u2022 "}Mauvaise : <span className="font-semibold text-slate-300">+1 pièce</span>{" \u2022 "}<span className="text-slate-500">Pas de limite !</span></p>
+          <div className="border-b border-violet-400/15 bg-violet-500/8 px-4 py-3">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-violet-300/80">Règles du quiz</p>
+            <p className="mt-1 text-xs text-slate-500">
+              Bonne réponse : <span className="font-bold text-amber-300">+3 pièces</span>
+              {" • "}Mauvaise : <span className="font-semibold text-slate-400">+1 pièce</span>
+              {" • "}Pas de limite
+            </p>
           </div>
 
           {quizPhase==="idle" && (
-            <div className="px-4 pb-4">
+            <div className="p-4">
               <button type="button" onClick={drawQuestion}
                 className="w-full rounded-2xl border border-violet-400/30 bg-violet-500/15 py-3 text-sm font-bold text-violet-100 transition hover:bg-violet-500/22">
-                Tirer une question →
+                Tirer une question SDGN →
               </button>
             </div>
           )}
 
           {quizPhase==="question" && currentQ && (
-            <div className="px-4 pb-4">
-              <p className="mb-4 text-sm font-semibold leading-snug text-white sm:text-base">{currentQ.q}</p>
+            <div className="px-4 pb-4 pt-4">
+              <p className="mb-1 text-[10px] font-bold uppercase tracking-wider text-amber-300/90">Question</p>
+              <p className="mb-4 rounded-xl border border-amber-400/20 bg-amber-500/8 px-3 py-3 text-sm font-semibold leading-snug text-white sm:text-base">{currentQ.q}</p>
               <div className="grid gap-2.5">
                 {currentQ.choices.map((c,i)=>(
                   <button key={i} type="button" onClick={()=>answerQ(i)}
@@ -583,7 +588,7 @@ export default function CasinoSlots({ profil, onXPGagne }: Props) {
             <div className="px-4 pb-4">
               <div className={`mb-4 rounded-xl border p-3 text-center ${lastCorrect?"border-emerald-400/40 bg-emerald-500/12":"border-rose-400/30 bg-rose-500/10"}`}>
                 <p className={`font-bold ${lastCorrect?"text-emerald-300":"text-rose-300"}`}>
-                  {lastCorrect?`${E.ok} Correct ! +3 pi\u00e8ces`:`${E.nok} Mauvaise r\u00e9ponse +1 pi\u00e8ce`}
+                  {lastCorrect?`${E.ok} Correct ! +3 pièces`:`${E.nok} Mauvaise réponse +1 pièce`}
                 </p>
                 {!lastCorrect && <p className="mt-1 text-xs text-slate-400">Réponse : <span className="font-semibold text-slate-200">{currentQ.choices[currentQ.ok]}</span></p>}
               </div>

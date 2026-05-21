@@ -690,9 +690,9 @@ export default function SerpentSnack({ profil, onXPGagne }: Props) {
         return add;
       });
       setGainAffiche(xpAdd);
-      if (xpAdd === 0) setMessage(`Plafond du jour atteint \u2014 rejoue demain !`);
-      else if (xpAdd < raw) setMessage(`Plafond atteint (${DAILY_XP_CAP} max) : tu gagnes quand m\u00eame ${formatJetonsDelta(xpAdd)}.`);
-      else setMessage(`Bravo\u00a0! ${formatJetonsDelta(xpAdd)} ajout\u00e9s \u00e0 ton solde.`);
+      if (xpAdd === 0) setMessage(`Plafond du jour atteint — rejoue demain !`);
+      else if (xpAdd < raw) setMessage(`Plafond atteint (${DAILY_XP_CAP} max) : tu gagnes quand même ${formatJetonsDelta(xpAdd)}.`);
+      else setMessage(`Bravo ! ${formatJetonsDelta(xpAdd)} ajoutés à ton solde.`);
       onXPGagne?.();
     } catch (e) { console.error(e); setMessage("Impossible d'enregistrer les jetons."); }
     finally { setBusy(false); }
@@ -804,9 +804,9 @@ export default function SerpentSnack({ profil, onXPGagne }: Props) {
           <div className="mb-4 flex flex-wrap gap-2 rounded-2xl border border-white/8 bg-white/[0.03] px-3 py-2.5 backdrop-blur-xl">
             <span className="w-full text-[10px] font-bold uppercase tracking-wider text-slate-600">Pouvoirs</span>
             {[
-              { emoji: "\u{1F300}", label: "Tunnel", val: game.wrapMovesLeft, col: "border-violet-400/40 bg-violet-500/12 text-violet-200" },
-              { emoji: "\u{1F9F2}", label: "Aimant", val: game.magnetMovesLeft, col: "border-cyan-400/40 bg-cyan-500/12 text-cyan-200" },
-              { emoji: "\u{1F6E1}", label: `Bouclier ${game.biteShields}/2`, val: game.biteShields, col: "border-amber-400/40 bg-amber-500/12 text-amber-200" },
+              { emoji: "🌀", label: "Tunnel", val: game.wrapMovesLeft, col: "border-violet-400/40 bg-violet-500/12 text-violet-200" },
+              { emoji: "🧲", label: "Aimant", val: game.magnetMovesLeft, col: "border-cyan-400/40 bg-cyan-500/12 text-cyan-200" },
+              { emoji: "🛡", label: `Bouclier ${game.biteShields}/2`, val: game.biteShields, col: "border-amber-400/40 bg-amber-500/12 text-amber-200" },
             ].map(({ emoji, label, val, col }) => (
               <span key={label} className={`rounded-xl border px-2.5 py-1 text-[11px] font-semibold tabular-nums transition-all ${val > 0 ? col : "border-white/8 bg-black/20 text-slate-600"}`}>
                 {emoji} {label}{typeof val === "number" && label !== `Bouclier ${game.biteShields}/2` ? (val > 0 ? ` à ${val}` : " —") : ""}
@@ -877,7 +877,7 @@ export default function SerpentSnack({ profil, onXPGagne }: Props) {
             style={{ background: "linear-gradient(135deg, rgba(244,63,94,0.13) 0%, rgba(15,23,42,0.88) 50%, rgba(3,7,14,0.92) 100%)", boxShadow: "0 0 60px -22px rgba(244,63,94,0.5)" }}>
             <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-rose-300/80">Game over</p>
             <p className="mt-2 text-5xl font-black tabular-nums tracking-tight text-white">{game.score}</p>
-            <p className="mt-2 text-sm text-slate-500">{game.manges} snacks{game.superManges > 0 ? ` \u2014 ${game.superManges} super` : ""}</p>
+            <p className="mt-2 text-sm text-slate-500">{game.manges} snacks{game.superManges > 0 ? ` — ${game.superManges} super` : ""}</p>
             {busy ? <p className="mt-5 text-slate-400">Enregistrement...</p>
               : <p className="mt-5 text-lg font-bold" style={{ background: "linear-gradient(90deg, #34d399, #5eead4)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                   {gainAffiche > 0 ? formatJetonsDelta(gainAffiche) : "0 jetons"}

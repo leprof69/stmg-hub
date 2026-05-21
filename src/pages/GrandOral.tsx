@@ -7,25 +7,25 @@ import { GAME_QCM_POOL } from "../lib/gameQcmPool";
 
 // ?? Emoji constants ?????????????????????????????????????????????????????????
 const E = {
-  micro: "\u{1F3A4}",  // ??
-  star:  "\u{2B50}",   // ?
-  trophy:"\u{1F3C6}",  // ??
-  ok:    "\u{2705}",   // ?
-  nok:   "\u{274C}",   // ?
-  fire:  "\u{1F525}",  // ??
-  hype:  "\u{1F973}",  // ??
-  clap:  "\u{1F44F}",  // ??
-  sweat: "\u{1F625}",  // ??
-  angry: "\u{1F620}",  // ??
-  wow:   "\u{1F92F}",  // ??
-  think: "\u{1F914}",  // ??
-  coins: "\u{1F4B0}",  // ??
-  card:  "\u{1F0CF}",  // ??
-  medal: "\u{1F3C5}",  // ??
-  gem:   "\u{1F48E}",  // ??
-  spark: "\u{2728}",   // ?
-  cross: "\u{274C}",   // ?
-  check: "\u{2714}",   // ?
+  micro: "🎤",  // ??
+  star:  "⭐",   // ?
+  trophy:"🏆",  // ??
+  ok:    "✅",   // ?
+  nok:   "❌",   // ?
+  fire:  "🔥",  // ??
+  hype:  "🥳",  // ??
+  clap:  "👏",  // ??
+  sweat: "😥",  // ??
+  angry: "😠",  // ??
+  wow:   "🤯",  // ??
+  think: "🤔",  // ??
+  coins: "💰",  // ??
+  card:  "🃏",  // ??
+  medal: "🏅",  // ??
+  gem:   "💎",  // ??
+  spark: "✨",   // ?
+  cross: "❌",   // ?
+  check: "✔",   // ?
 };
 
 type Props = { profil: { prenom?: string }; onXPGagne?: () => void };
@@ -396,7 +396,7 @@ export default function GrandOral({ profil, onXPGagne }: Props) {
     if (timerRef.current) window.clearInterval(timerRef.current);
     const mention = isWin
       ? wc===0 ? "Très Bien" : wc<=2 ? "Bien" : wc<=5 ? "Assez Bien" : "Passable"
-      : "\u00c9ch\u00e9c";
+      : "Échéc";
     const jetons   = isWin ? (wc===0?100:wc<=2?60:wc<=5?35:20) : 8;
     const prestige = isWin ? (wc===0?100:wc<=2?50:wc<=5?20:0)  : 0;
     const card     = isWin && wc<=2 ? (wc===0?"mention_tb":"mention_b") : null;
@@ -516,7 +516,7 @@ export default function GrandOral({ profil, onXPGagne }: Props) {
             <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-slate-600">Récompenses selon la mention</p>
             <div className="grid grid-cols-2 gap-2">
               {[
-                { m:"Tr\u00e8s Bien",  j:100, p:100, c:"#fbbf24", card:true },
+                { m:"Très Bien",  j:100, p:100, c:"#fbbf24", card:true },
                 { m:"Bien",          j:60,  p:50,  c:"#4ade80", card:true },
                 { m:"Assez Bien",    j:35,  p:20,  c:"#38bdf8", card:false },
                 { m:"Passable",      j:20,  p:0,   c:"#94a3b8", card:false },
@@ -629,15 +629,15 @@ export default function GrandOral({ profil, onXPGagne }: Props) {
         {/* Big result */}
         <div className="mb-6" style={{ animation:"goFadeIn 0.5s ease-out" }}>
           {isWin
-            ? <div style={{ fontSize:88, animation:"goFloat 2.5s ease-in-out infinite" }}>{result.mention==="Tr\u00e8s Bien"?E.trophy:E.clap}</div>
+            ? <div style={{ fontSize:88, animation:"goFloat 2.5s ease-in-out infinite" }}>{result.mention==="Très Bien"?E.trophy:E.clap}</div>
             : <div style={{ fontSize:88 }}>{E.sweat}</div>
           }
           <h2 className="mt-3 text-3xl font-black sm:text-4xl"
-            style={ isWin && result.mention==="Tr\u00e8s Bien"
+            style={ isWin && result.mention==="Très Bien"
               ? { background:"linear-gradient(90deg,#fbbf24,#f97316,#fbbf24)", backgroundSize:"200% 100%", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent", animation:"goPrismatic 2.5s linear infinite" }
               : { color: isWin ? "#4ade80" : "#ef4444" }
             }>
-            {isWin ? `Mention ${result.mention} !` : "Jury insatisfait\u2026"}
+            {isWin ? `Mention ${result.mention} !` : "Jury insatisfait…"}
           </h2>
           {juror && <p className="mt-1 text-sm text-slate-500">{juror.name} a rendu son verdict.</p>}
         </div>
@@ -664,7 +664,7 @@ export default function GrandOral({ profil, onXPGagne }: Props) {
               style={{ animation:"goSlideIn 0.5s 0.4s both" }}>
               <p className="text-[10px] font-bold uppercase tracking-widest text-violet-300/70 mb-2">{E.card} Carte Exclusive</p>
               <p className="text-base font-black" style={{ color:"#fbbf24" }}>
-                {result.card==="mention_tb" ? "Carte Mention Tr\u00e8s Bien" : "Carte Mention Bien"}
+                {result.card==="mention_tb" ? "Carte Mention Très Bien" : "Carte Mention Bien"}
               </p>
               <p className="text-xs text-slate-500">Ajoutée à ton profil</p>
             </div>

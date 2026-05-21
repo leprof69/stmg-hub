@@ -6,21 +6,21 @@ import { PLATFORM_XP_BLOCKED_MESSAGE, usePlatformIntegrity } from "../contexts/P
 
 // ?? Emoji constants (unicode escapes to avoid encoding issues) ?????????????????
 const E = {
-  bolt:    "\u{26A1}",
-  check:   "\u{2705}",
-  cross:   "\u{274C}",
-  trophy:  "\u{1F3C6}",
-  coin:    "\u{1F4B0}",
-  star:    "\u{2B50}",
-  fire:    "\u{1F525}",
-  clock:   "\u{23F1}",
-  chart:   "\u{1F4C8}",
-  calc:    "\u{1F9EE}",
-  rocket:  "\u{1F680}",
-  brain:   "\u{1F9E0}",
-  medal:   "\u{1F3C5}",
-  gem:     "\u{1F48E}",
-  percent: "\u{0025}",
+  bolt:    "⚡",
+  check:   "✅",
+  cross:   "❌",
+  trophy:  "🏆",
+  coin:    "💰",
+  star:    "⭐",
+  fire:    "🔥",
+  clock:   "⏱",
+  chart:   "📈",
+  calc:    "🧮",
+  rocket:  "🚀",
+  brain:   "🧠",
+  medal:   "🏅",
+  gem:     "💎",
+  percent: "%",
 };
 
 // ?? CSS ????????????????????????????????????????????????????????????????????????
@@ -57,54 +57,54 @@ function genQ(): CalcQ {
     case 0: {
       const ca = (20 + Math.floor(Math.random() * 80)) * 1000;
       const ci = Math.floor(Math.random() * 0.65 * ca / 1000) * 1000;
-      return { category: "Valeur Ajout\u00e9e", lines: [`CA\u00a0=\u00a0${fmt(ca)}\u00a0\u20ac`, `CI\u00a0=\u00a0${fmt(ci)}\u00a0\u20ac`, "Calculez la VA\u00a0:"], answer: ca - ci, tolerance: 0, unit: "\u20ac", points: 15, hint: "VA = CA \u2212 CI" };
+      return { category: "Valeur Ajoutée", lines: [`CA = ${fmt(ca)} €`, `CI = ${fmt(ci)} €`, "Calculez la VA :"], answer: ca - ci, tolerance: 0, unit: "€", points: 15, hint: "VA = CA − CI" };
     }
     case 1: {
       const pa = 20 + Math.floor(Math.random() * 180) * 5;
       const marge = (5 + Math.floor(Math.random() * 20)) * 5;
-      return { category: "Marge brute", lines: [`PA\u00a0=\u00a0${fmt(pa)}\u00a0\u20ac`, `PV\u00a0=\u00a0${fmt(pa + marge)}\u00a0\u20ac`, "Calculez la marge brute\u00a0:"], answer: marge, tolerance: 0, unit: "\u20ac", points: 10, hint: "Marge = PV \u2212 PA" };
+      return { category: "Marge brute", lines: [`PA = ${fmt(pa)} €`, `PV = ${fmt(pa + marge)} €`, "Calculez la marge brute :"], answer: marge, tolerance: 0, unit: "€", points: 10, hint: "Marge = PV − PA" };
     }
     case 2: {
       const pa2 = (10 + Math.floor(Math.random() * 18)) * 10;
       const marge2 = (2 + Math.floor(Math.random() * 8)) * 10;
       const taux = Math.round(marge2 / pa2 * 100);
-      return { category: "Taux de marge", lines: [`PA\u00a0=\u00a0${fmt(pa2)}\u00a0\u20ac`, `Marge\u00a0=\u00a0${fmt(marge2)}\u00a0\u20ac`, "Taux de marge (%)\u00a0:"], answer: taux, tolerance: 1, unit: "%", points: 12, hint: "Taux marge = Marge \u00f7 PA \u00d7 100" };
+      return { category: "Taux de marge", lines: [`PA = ${fmt(pa2)} €`, `Marge = ${fmt(marge2)} €`, "Taux de marge (%) :"], answer: taux, tolerance: 1, unit: "%", points: 12, hint: "Taux marge = Marge ÷ PA × 100" };
     }
     case 3: {
       const pa3 = (10 + Math.floor(Math.random() * 15)) * 10;
       const marge3 = (2 + Math.floor(Math.random() * 8)) * 10;
       const pv3 = pa3 + marge3;
       const tauxMarque = Math.round(marge3 / pv3 * 100);
-      return { category: "Taux de marque", lines: [`PV\u00a0=\u00a0${fmt(pv3)}\u00a0\u20ac`, `Marge\u00a0=\u00a0${fmt(marge3)}\u00a0\u20ac`, "Taux de marque (%)\u00a0:"], answer: tauxMarque, tolerance: 1, unit: "%", points: 15, hint: "Taux marque = Marge \u00f7 PV \u00d7 100" };
+      return { category: "Taux de marque", lines: [`PV = ${fmt(pv3)} €`, `Marge = ${fmt(marge3)} €`, "Taux de marque (%) :"], answer: tauxMarque, tolerance: 1, unit: "%", points: 15, hint: "Taux marque = Marge ÷ PV × 100" };
     }
     case 4: {
       const prod = (50 + Math.floor(Math.random() * 200)) * 1000;
       const charges = (30 + Math.floor(Math.random() * Math.floor(prod / 1000 - 10))) * 1000;
-      return { category: "R\u00e9sultat", lines: [`Produits\u00a0=\u00a0${fmt(prod)}\u00a0\u20ac`, `Charges\u00a0=\u00a0${fmt(charges)}\u00a0\u20ac`, "Calculez le r\u00e9sultat\u00a0:"], answer: prod - charges, tolerance: 0, unit: "\u20ac", points: 12, hint: "R\u00e9sultat = Produits \u2212 Charges" };
+      return { category: "Résultat", lines: [`Produits = ${fmt(prod)} €`, `Charges = ${fmt(charges)} €`, "Calculez le résultat :"], answer: prod - charges, tolerance: 0, unit: "€", points: 12, hint: "Résultat = Produits − Charges" };
     }
     case 5: {
       const base = (10 + Math.floor(Math.random() * 80)) * 1000;
       const growPct = [-15, -10, -5, 5, 10, 15, 20, 25, 30][Math.floor(Math.random() * 9)];
       const n = Math.round(base * (1 + growPct / 100));
       const actual = Math.round((n - base) / base * 100);
-      return { category: "Taux de croissance", lines: [`N\u22121\u00a0=\u00a0${fmt(base)}\u00a0\u20ac`, `N\u00a0=\u00a0${fmt(n)}\u00a0\u20ac`, "Taux de croissance (%)\u00a0:"], answer: actual, tolerance: 1, unit: "%", points: 18, hint: "(N \u2212 N\u22121) \u00f7 N\u22121 \u00d7 100" };
+      return { category: "Taux de croissance", lines: [`N−1 = ${fmt(base)} €`, `N = ${fmt(n)} €`, "Taux de croissance (%) :"], answer: actual, tolerance: 1, unit: "%", points: 18, hint: "(N − N−1) ÷ N−1 × 100" };
     }
     case 6: {
       const cf = (10 + Math.floor(Math.random() * 80)) * 1000;
       const tmcv = [20, 25, 30, 40, 50][Math.floor(Math.random() * 5)];
       const sr = Math.round(cf / (tmcv / 100));
-      return { category: "Seuil de rentabilit\u00e9", lines: [`CF\u00a0=\u00a0${fmt(cf)}\u00a0\u20ac`, `TMCV\u00a0=\u00a0${tmcv}\u00a0%`, "Seuil de rentabilit\u00e9 (\u20ac)\u00a0:"], answer: sr, tolerance: 100, unit: "\u20ac", points: 20, hint: "SR = CF \u00f7 TMCV" };
+      return { category: "Seuil de rentabilité", lines: [`CF = ${fmt(cf)} €`, `TMCV = ${tmcv} %`, "Seuil de rentabilité (€) :"], answer: sr, tolerance: 100, unit: "€", points: 20, hint: "SR = CF ÷ TMCV" };
     }
     case 7: {
       const pv4 = [5, 8, 10, 12, 15, 20, 25, 30, 40, 50][Math.floor(Math.random() * 10)];
       const qty = 50 + Math.floor(Math.random() * 450) * 2;
-      return { category: "Chiffre d'affaires", lines: [`PV unit.\u00a0=\u00a0${pv4}\u00a0\u20ac`, `Quantit\u00e9s\u00a0=\u00a0${fmt(qty)}`, "Calculez le CA\u00a0:"], answer: pv4 * qty, tolerance: 0, unit: "\u20ac", points: 10, hint: "CA = PV \u00d7 Q" };
+      return { category: "Chiffre d'affaires", lines: [`PV unit. = ${pv4} €`, `Quantités = ${fmt(qty)}`, "Calculez le CA :"], answer: pv4 * qty, tolerance: 0, unit: "€", points: 10, hint: "CA = PV × Q" };
     }
     case 8: {
       const val = (5 + Math.floor(Math.random() * 45)) * 1000;
       const duree = [3, 4, 5, 8, 10][Math.floor(Math.random() * 5)];
       const annuite = Math.round(val / duree);
-      return { category: "Amortissement", lines: [`Valeur\u00a0=\u00a0${fmt(val)}\u00a0\u20ac`, `Dur\u00e9e\u00a0=\u00a0${duree}\u00a0ans`, "Annuit\u00e9 (\u20ac)\u00a0:"], answer: annuite, tolerance: 1, unit: "\u20ac", points: 15, hint: "Annuit\u00e9 = Valeur \u00f7 Dur\u00e9e" };
+      return { category: "Amortissement", lines: [`Valeur = ${fmt(val)} €`, `Durée = ${duree} ans`, "Annuité (€) :"], answer: annuite, tolerance: 1, unit: "€", points: 15, hint: "Annuité = Valeur ÷ Durée" };
     }
     case 9: {
       const va2 = (40 + Math.floor(Math.random() * 80)) * 1000;
@@ -113,20 +113,20 @@ function genQ(): CalcQ {
       const chPers = Math.round(va2 * chPct / 100 / 1000) * 1000;
       const imp = Math.round(va2 * impPct / 100 / 1000) * 1000;
       const ebe = va2 - chPers - imp;
-      return { category: "EBE", lines: [`VA\u00a0=\u00a0${fmt(va2)}\u00a0\u20ac`, `Ch. personnel\u00a0=\u00a0${fmt(chPers)}\u00a0\u20ac`, `Imp\u00f4ts\u00a0=\u00a0${fmt(imp)}\u00a0\u20ac`, "EBE (\u20ac)\u00a0:"], answer: ebe, tolerance: 0, unit: "\u20ac", points: 20, hint: "EBE = VA \u2212 Ch.Personnel \u2212 Imp\u00f4ts" };
+      return { category: "EBE", lines: [`VA = ${fmt(va2)} €`, `Ch. personnel = ${fmt(chPers)} €`, `Impôts = ${fmt(imp)} €`, "EBE (€) :"], answer: ebe, tolerance: 0, unit: "€", points: 20, hint: "EBE = VA − Ch.Personnel − Impôts" };
     }
     case 10: {
       const ca2 = (80 + Math.floor(Math.random() * 120)) * 1000;
       const cvPct = 40 + Math.floor(Math.random() * 20);
       const cv = Math.round(ca2 * cvPct / 100 / 1000) * 1000;
       const mcv = ca2 - cv;
-      return { category: "Marge sur Co\u00fbt Variable", lines: [`CA\u00a0=\u00a0${fmt(ca2)}\u00a0\u20ac`, `Co\u00fbts variables\u00a0=\u00a0${fmt(cv)}\u00a0\u20ac`, "Calculez la MCV\u00a0:"], answer: mcv, tolerance: 0, unit: "\u20ac", points: 15, hint: "MCV = CA \u2212 CV" };
+      return { category: "Marge sur Coût Variable", lines: [`CA = ${fmt(ca2)} €`, `Coûts variables = ${fmt(cv)} €`, "Calculez la MCV :"], answer: mcv, tolerance: 0, unit: "€", points: 15, hint: "MCV = CA − CV" };
     }
     default: {
       const inv = (5 + Math.floor(Math.random() * 95)) * 1000;
       const gain = (Math.floor(Math.random() * 20) + 5) * 1000;
       const rentab = Math.round(gain / inv * 100);
-      return { category: "Rentabilit\u00e9", lines: [`Investissement\u00a0=\u00a0${fmt(inv)}\u00a0\u20ac`, `Gain annuel\u00a0=\u00a0${fmt(gain)}\u00a0\u20ac`, "Taux de rentabilit\u00e9 (%)\u00a0:"], answer: rentab, tolerance: 1, unit: "%", points: 18, hint: "Gain \u00f7 Investissement \u00d7 100" };
+      return { category: "Rentabilité", lines: [`Investissement = ${fmt(inv)} €`, `Gain annuel = ${fmt(gain)} €`, "Taux de rentabilité (%) :"], answer: rentab, tolerance: 1, unit: "%", points: 18, hint: "Gain ÷ Investissement × 100" };
     }
   }
 }
@@ -314,10 +314,10 @@ export default function CalculExpress({ profil, onXPGagne }: Props) {
           {[
             [E.clock, "90 secondes pour marquer un max de points"],
             [E.brain, "Calculs STMG : VA, Marge, SR, Amort..."],
-            [E.bolt,  "Plus tu r\u00e9ponds vite, plus tu gagnes de points"],
-            [E.fire,  "Enchainez les r\u00e9ponses correctes pour le COMBO x2"],
-            [E.cross, "Mauvaise r\u00e9ponse = \u22125 secondes"],
-            [E.coin,  "Score converti en jetons \u00e0 la fin !"],
+            [E.bolt,  "Plus tu réponds vite, plus tu gagnes de points"],
+            [E.fire,  "Enchainez les réponses correctes pour le COMBO x2"],
+            [E.cross, "Mauvaise réponse = −5 secondes"],
+            [E.coin,  "Score converti en jetons à la fin !"],
           ].map(([ic, txt], i) => (
             <div key={i} style={{ display:"flex", gap:"12px", alignItems:"center", marginBottom:"10px" }}>
               <span style={{ fontSize:"1.2rem", flexShrink:0 }}>{ic}</span>
@@ -327,7 +327,7 @@ export default function CalculExpress({ profil, onXPGagne }: Props) {
         </div>
 
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:"10px", marginBottom:"24px" }}>
-          {[["Seuil de rentabilit\u00e9","20 pts"],["Taux de croissance","18 pts"],["EBE","20 pts"]].map(([n,p]) => (
+          {[["Seuil de rentabilité","20 pts"],["Taux de croissance","18 pts"],["EBE","20 pts"]].map(([n,p]) => (
             <div key={n} style={{ background:"rgba(74,222,128,0.06)", border:"1px solid rgba(74,222,128,0.15)", borderRadius:"14px", padding:"12px", textAlign:"center" }}>
               <div style={{ color:"#4ade80", fontSize:"0.7rem", fontWeight:700, marginBottom:"4px" }}>{n}</div>
               <div style={{ color:"white", fontSize:"0.9rem", fontWeight:900 }}>{p}</div>
@@ -375,7 +375,7 @@ export default function CalculExpress({ profil, onXPGagne }: Props) {
               [E.check, correct, "Correctes", "#4ade80"],
               [E.cross, wrong, "Erreurs", "#ef4444"],
               [E.fire, maxStreak, "Meilleur combo", "#f97316"],
-              [E.percent, `${acc}%`, "Pr\u00e9cision", "#22d3ee"],
+              [E.percent, `${acc}%`, "Précision", "#22d3ee"],
             ].map(([ic, val, label, color]) => (
               <div key={label as string} style={{ background:"rgba(255,255,255,0.04)", border:"1px solid rgba(255,255,255,0.06)", borderRadius:"16px", padding:"14px 8px", textAlign:"center" }}>
                 <div style={{ fontSize:"1.4rem" }}>{ic}</div>
