@@ -11,9 +11,9 @@ import {
 import { doc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../services/firebase";
 
-/** Message affiché lorsque les jetons sont bloqués (persistant jusqu’à action admin). */
+/** Message affiché lorsque les jetons sont bloqués (persistant jusqu'à action admin). */
 export const PLATFORM_XP_BLOCKED_MESSAGE =
-  "Changement d'onglet ou une autre fenêtre au premier plan a Été détecté : tu ne peux plus gagner de jetons tant que l'—quipe ne r—tablit pas ton acc—s (contacte ton prof en cas d'erreur). Recharger la page ne suffit pas.";
+  "Changement d'onglet ou une autre fenêtre au premier plan a été détecté : tu ne peux plus gagner de jetons tant que l'équipe ne rétablit pas ton accès (contacte ton prof en cas d'erreur). Recharger la page ne suffit pas.";
 
 type PlatformIntegrityContextValue = {
   xpRewardsSuspended: boolean;
@@ -22,7 +22,10 @@ type PlatformIntegrityContextValue = {
 
 const PlatformIntegrityContext = createContext<PlatformIntegrityContextValue | null>(null);
 
-const ARM_DELAY_MS = 450;
+/** Délai avant d'activer l'écoute (évite les faux positifs au chargement). */
+const ARM_DELAY_MS = 1500;
+/** L'onglet doit rester caché au moins ce temps pour compter comme triche (notifs, barre d'adresse, etc.). */
+const MIN_HIDDEN_MS = 2800;
 
 export function PlatformIntegrityProvider({
   children,
@@ -43,8 +46,8 @@ export function PlatformIntegrityProvider({
   const armedRef = useRef(false);
   const hadVisibleFocusRef = useRef(false);
   const pendingReturnWallRef = useRef(false);
-  /** Mis à true d’s la première sortie d'onglet (sync, avant re-render React). */
   const sessionViolatedRef = useRef(false);
+  const hiddenConfirmTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const profileSuspendedRef = useRef(xpSuspendedFromProfile);
   profileSuspendedRef.current = xpSuspendedFromProfile;
 
@@ -63,6 +66,10 @@ export function PlatformIntegrityProvider({
       armedRef.current = false;
       hadVisibleFocusRef.current = false;
       pendingReturnWallRef.current = false;
+      if (hiddenConfirmTimerRef.current) {
+        window.clearTimeout(hiddenConfirmTimerRef.current);
+        hiddenConfirmTimerRef.current = null;
+      }
       setReturnWallOpen(false);
       return;
     }
@@ -82,9 +89,26 @@ export function PlatformIntegrityProvider({
           "platformIntegrity.xpSuspended": true,
           "platformIntegrity.suspendedAt": new Date().toISOString(),
         });
-        onAfterViolation?.();
+        onAfterViolationRef.current?.();
       } catch (err) {
         console.error("Enregistrement anti-triche (platformIntegrity) impossible", err);
+      }
+    };
+
+    const confirmViolation = () => {
+      if (document.visibilityState !== "hidden") return;
+      if (!hadVisibleFocusRef.current || sessionViolatedRef.current) return;
+
+      pendingReturnWallRef.current = true;
+      sessionViolatedRef.current = true;
+      setSessionSuspended(true);
+      void persistViolationFirestore();
+    };
+
+    const cancelHiddenTimer = () => {
+      if (hiddenConfirmTimerRef.current) {
+        window.clearTimeout(hiddenConfirmTimerRef.current);
+        hiddenConfirmTimerRef.current = null;
       }
     };
 
@@ -93,27 +117,36 @@ export function PlatformIntegrityProvider({
       const v = document.visibilityState;
 
       if (v === "visible") {
+        cancelHiddenTimer();
+
         if (!hadVisibleFocusRef.current) {
           hadVisibleFocusRef.current = true;
           return;
         }
+
         const blocked = profileSuspendedRef.current || sessionViolatedRef.current;
         if (pendingReturnWallRef.current && blocked) {
           setReturnWallOpen(true);
           pendingReturnWallRef.current = false;
         }
-      } else if (v === "hidden") {
+        return;
+      }
+
+      if (v === "hidden") {
         if (!hadVisibleFocusRef.current) return;
-        pendingReturnWallRef.current = true;
-        sessionViolatedRef.current = true;
-        setSessionSuspended(true);
-        void persistViolationFirestore();
+        if (sessionViolatedRef.current || hiddenConfirmTimerRef.current) return;
+
+        hiddenConfirmTimerRef.current = window.setTimeout(() => {
+          hiddenConfirmTimerRef.current = null;
+          confirmViolation();
+        }, MIN_HIDDEN_MS);
       }
     };
 
     document.addEventListener("visibilitychange", onVisibility);
     return () => {
       window.clearTimeout(armTimer);
+      cancelHiddenTimer();
       document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [userId, isAdmin]);
@@ -177,9 +210,9 @@ export function PlatformIntegrityProvider({
               Jetons suspendus
             </h2>
             <p style={{ margin: "0 0 14px", fontWeight: 700, fontSize: "0.96rem", lineHeight: 1.55, color: "#334155" }}>
-              Tu as quittà cet onglet ou affiché une autre fenêtre au premier plan :{" "}
-              <strong>tu ne peux plus gagner de jetons</strong> sur STMG Hub tant que ton professeur ne r—tablit pas ton acc—s
-              (anti-triche ou lev—e en cas de bug).
+              Tu as quitté cet onglet ou affiché une autre fenêtre au premier plan pendant plusieurs secondes :{" "}
+              <strong>tu ne peux plus gagner de jetons</strong> sur STMG Hub tant que ton professeur ne rétablit pas ton
+              accès (anti-triche ou levée en cas de bug).
             </p>
             <button
               type="button"

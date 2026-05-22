@@ -561,10 +561,10 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
                 {sdgnChapterNum != null ? getSdgnChapterBlurb(sdgnChapterNum) : ""}
               </p>
               <p style={{ color: "#475569", margin: "0 0 14px", fontSize: "0.94rem", fontWeight: 600 }}>
-                Anti-triche : copier-coller, menu contextuel et glisser-déposer bloqués sur les réponses ; changer
-                d&apos;onglet ou mettre une autre fenêtre au premier plan bloque les jetons jusqu&apos;à ce que ton professeur
-                rétablisse ton accès depuis l&apos;admin (un simple rechargement ne suffit pas). Rester sur cet onglet sans
-                rien faire ne compte pas comme triche.
+                Anti-triche : copier-coller, menu contextuel et glisser-déposer bloqués sur les réponses. Les jetons ne sont
+                suspendus que si tu quittes l&apos;onglet (ou une autre fenêtre passe au premier plan) pendant au moins
+                quelques secondes — une notification ou un clic accidentel ne suffit pas. Rester sur cet onglet ne compte
+                pas comme triche.
               </p>
               {chapitreActif && (
                 <div
