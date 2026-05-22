@@ -51,8 +51,8 @@ const RECOMPENSES_FAMILLE = [
 ];
 
 const ONGLET_ADMIN = [
-  { id: "reporting", label: "📊 Reporting élèves" },
   { id: "recompenses", label: "🏆 Récompenses jetons" },
+  { id: "reporting", label: "📊 Reporting élèves" },
   { id: "imports", label: "📥 Imports & maintenance" },
   { id: "infos", label: "💡 Infos" },
 ];
@@ -153,7 +153,8 @@ export default function Admin() {
   const [erreurEleves, setErreurEleves] = useState("");
   const [filtreClasse, setFiltreClasse] = useState("toutes");
   const [filtreLycee, setFiltreLycee] = useState("tous");
-  const [ongletActif, setOngletActif] = useState("reporting");
+  const [ongletActif, setOngletActif] = useState("recompenses");
+  const [recompensesVoirTous, setRecompensesVoirTous] = useState(false);
   const [filtreActivite, setFiltreActivite] = useState("tous");
   const [rechercheEleve, setRechercheEleve] = useState("");
   const [resetDsLoading, setResetDsLoading] = useState(false);
@@ -329,6 +330,10 @@ export default function Admin() {
     (filtreClasse === "toutes" || e.classe === filtreClasse) &&
     (filtreLycee === "tous" || e.lycee === filtreLycee)
   );
+
+  /** Classement global (tous élèves) — utilisé pour les récompenses, pas les filtres reporting. */
+  const topElevesClassement = eleves.slice(0, 5);
+  const topFamillesClassement = famillesClassement.slice(0, 5);
 
   const statsParClasse = classesDispo.map(cl => {
     const membres = eleves.filter(e => e.classe === cl);
@@ -877,6 +882,18 @@ export default function Admin() {
 
         {ongletActif === "reporting" && (
           <>
+            <div style={{ marginBottom: 14, background: COLORS.U + "12", border: `1px solid ${COLORS.U}35`, borderRadius: 14, padding: "12px 16px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+              <p style={{ margin: 0, color: "#92400E", fontSize: "0.88rem", fontWeight: 700 }}>
+                🏆 Pour donner les jetons du classement (top élèves / familles), utilise l’onglet <strong>Récompenses jetons</strong>.
+              </p>
+              <button
+                type="button"
+                onClick={() => setOngletActif("recompenses")}
+                style={{ border: "none", borderRadius: 10, padding: "8px 14px", background: COLORS.U, color: "white", fontFamily: "'Fredoka One', cursive", cursor: "pointer", fontSize: "0.82rem" }}
+              >
+                Aller aux récompenses →
+              </button>
+            </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 10, marginBottom: 14 }}>
               <div style={{ background: "white", borderRadius: 14, padding: 14, border: "1px solid #DBEAFE" }}>
                 <p style={{ margin: 0, color: "#1D4ED8", fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem" }}>Élèves suivis</p>
@@ -1343,96 +1360,127 @@ export default function Admin() {
         {ongletActif === "recompenses" && (
           <div style={{ background: "white", borderRadius: "24px", padding: "24px", border: `2px solid ${COLORS.U}20`, boxShadow: `0 4px 20px ${COLORS.U}10` }}>
             <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.4rem", color: COLORS.U, marginBottom: "8px" }}>🏆 Récompenses du jour</h2>
-            <p style={{ color: "#6B7280", fontSize: "0.9rem", marginBottom: "18px" }}>Distribue des jetons bonus aux meilleurs élèves et familles.</p>
+            <p style={{ color: "#6B7280", fontSize: "0.9rem", marginBottom: "18px" }}>
+              Classement global (tous élèves). Ajuste les montants puis distribue en un clic.
+            </p>
 
             <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "16px" }}>
               <div style={{ background: COLORS.U + "15", border: `1px solid ${COLORS.U}30`, borderRadius: "12px", padding: "8px 14px" }}>
-                <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.U, margin: 0, fontSize: "0.85rem" }}>👥 Élèves inscrits : {eleves.length}</p>
+                <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.U, margin: 0, fontSize: "0.85rem" }}>👥 Élèves : {eleves.length}</p>
               </div>
               <div style={{ background: COLORS.S + "15", border: `1px solid ${COLORS.S}30`, borderRadius: "12px", padding: "8px 14px" }}>
-                <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.S, margin: 0, fontSize: "0.85rem" }}>⚡ Jetons total : {formatJetons(eleves.reduce((sum, e) => sum + (e.xp || 0), 0))}</p>
+                <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.S, margin: 0, fontSize: "0.85rem" }}>⚡ Jetons en circulation : {formatJetons(eleves.reduce((sum, e) => sum + (e.xp || 0), 0))}</p>
               </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "18px" }}>
-              <div style={{ background: "white", border: `1px solid ${COLORS.S}25`, borderRadius: "12px", padding: "10px 12px" }}>
-                <p style={{ margin: "0 0 6px", fontFamily: "'Fredoka One', cursive", color: COLORS.S, fontSize: "0.85rem" }}>📚 Par classe</p>
-                {statsParClasse.slice(0, 4).map(item => (
-                  <p key={item.classe} style={{ margin: "2px 0", color: "#6B7280", fontSize: "0.78rem" }}>
-                    {item.classe === "premiere" ? "Première" : item.classe === "terminale" ? "Terminale" : item.classe} ? {item.eleves} élève(s) ? {formatJetons(item.xp)}
-                  </p>
-                ))}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 14, marginBottom: 22 }}>
+              <div style={{ background: `linear-gradient(135deg, ${COLORS.U}18, ${COLORS.U}08)`, border: `2px solid ${COLORS.U}35`, borderRadius: 18, padding: 18 }}>
+                <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.U, margin: "0 0 6px", fontSize: "1.05rem" }}>👤 Top 5 élèves</p>
+                <p style={{ color: "#64748B", fontSize: "0.82rem", margin: "0 0 12px" }}>
+                  200 · 150 · 100 · 75 · 50 jetons (modifiables ci-dessous)
+                </p>
+                <Btn onClick={distribuerTopIndividuel} color={COLORS.U} disabled={recompenseEnCours || !topElevesClassement.length}>
+                  {recompenseEnCours ? "⏳ Distribution…" : "🚀 Distribuer aux 5 premiers"}
+                </Btn>
               </div>
-              <div style={{ background: "white", border: `1px solid ${COLORS.T}25`, borderRadius: "12px", padding: "10px 12px" }}>
-                <p style={{ margin: "0 0 6px", fontFamily: "'Fredoka One', cursive", color: COLORS.T, fontSize: "0.85rem" }}>🏫 Par lycée</p>
-                {statsParLycee.slice(0, 4).map(item => (
-                  <p key={item.lycee} style={{ margin: "2px 0", color: "#6B7280", fontSize: "0.78rem" }}>
-                    {item.lycee} {item.ville ? `(${item.ville})` : ""} ? {item.eleves} élève(s) ? {formatJetons(item.xp)}
-                  </p>
-                ))}
+              <div style={{ background: `linear-gradient(135deg, ${COLORS.T}18, ${COLORS.T}08)`, border: `2px solid ${COLORS.T}35`, borderRadius: 18, padding: 18 }}>
+                <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.T, margin: "0 0 6px", fontSize: "1.05rem" }}>🧬 Top 5 familles</p>
+                <p style={{ color: "#64748B", fontSize: "0.82rem", margin: "0 0 12px" }}>
+                  150 · 100 · 75 · 50 · 25 jetons par membre de la famille
+                </p>
+                <Btn onClick={distribuerTopFamilles} color={COLORS.T} disabled={recompenseEnCours || !topFamillesClassement.length}>
+                  {recompenseEnCours ? "⏳ Distribution…" : "🚀 Distribuer aux 5 familles"}
+                </Btn>
               </div>
             </div>
 
-            <div style={{ marginBottom: "20px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px", flexWrap: "wrap", gap: "8px" }}>
-                <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1.05rem", margin: 0 }}>👤 Élèves (jetons + cartes)</p>
-                <Btn onClick={distribuerTopIndividuel} color={COLORS.U} disabled={recompenseEnCours} small>🚀 Distribuer Top 5</Btn>
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {elevesFiltres.map((eleve, i) => {
-                  const recompense = RECOMPENSES_INDIVIDUEL[i];
-                  const couleurFamille = familleColors[eleve.famille] || COLORS.S;
-                  const cartesTotal = compterCartesTotal(eleve.cartes || {});
-                  const cartesUniques = compterCartesUniques(eleve.cartes || {});
-                  return (
-                    <div key={eleve.id} style={{ background: i < 3 ? COLORS.U + "08" : "#F8FAFC", borderRadius: "14px", padding: "12px 14px", border: i < 3 ? `2px solid ${COLORS.U}30` : "1px solid #E5E7EB", display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-                      <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: i < 3 ? "1.4rem" : "0.95rem", width: "36px", textAlign: "center" }}>
-                        {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}
-                      </div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-                          <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "0.98rem", margin: 0 }}>{eleve.prenom || eleve.nom || eleve.email || `Élève ${eleve.id.slice(0, 6)}`}</p>
-                          <span style={{ background: couleurFamille + "20", color: couleurFamille, fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.68rem" }}>{familleEmojis[eleve.famille]} {eleve.famille}</span>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 16, marginBottom: 20 }}>
+              <div>
+                <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1rem", margin: "0 0 10px" }}>Podium élèves</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {topElevesClassement.map((eleve, i) => {
+                    const recompense = RECOMPENSES_INDIVIDUEL[i];
+                    const couleurFamille = familleColors[eleve.famille] || COLORS.S;
+                    return (
+                      <div key={eleve.id} style={{ background: i < 3 ? COLORS.U + "08" : "#F8FAFC", borderRadius: 14, padding: "10px 12px", border: i < 3 ? `2px solid ${COLORS.U}30` : "1px solid #E5E7EB", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                        <span style={{ width: 32, textAlign: "center", fontSize: i < 3 ? "1.2rem" : "0.9rem" }}>{i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}</span>
+                        <div style={{ flex: 1, minWidth: 120 }}>
+                          <p style={{ margin: 0, fontFamily: "'Fredoka One', cursive", fontSize: "0.92rem" }}>{eleve.prenom || eleve.nom || `Élève ${eleve.id.slice(0, 6)}`}</p>
+                          <p style={{ margin: "2px 0 0", color: "#9CA3AF", fontSize: "0.75rem" }}>{formatJetons(eleve.xp || 0)} · {familleEmojis[eleve.famille]} {eleve.famille || "—"}</p>
                         </div>
-                        <p style={{ color: "#9CA3AF", fontSize: "0.78rem", margin: "2px 0 0" }}>{formatJetons(eleve.xp || 0)} ? 🃏 {cartesTotal} cartes ({cartesUniques} uniques)</p>
+                        <input type="number" value={xpCustom[eleve.id] ?? (recompense?.xp || 0)} onChange={e => setXpCustom(prev => ({ ...prev, [eleve.id]: parseInt(e.target.value, 10) || 0 }))} style={{ width: 72, padding: "6px 8px", borderRadius: 10, border: `2px solid ${couleurFamille}40`, fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem", textAlign: "center" }} />
+                        <Btn onClick={() => distribuerXPIndividuel(eleve.id, xpCustom[eleve.id] ?? recompense?.xp, eleve.prenom)} color={recompense?.couleur || COLORS.S} disabled={recompenseEnCours} small>{recompense?.label || "+jetons"}</Btn>
                       </div>
-                      <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                        <input type="number" value={xpCustom[eleve.id] ?? (recompense?.xp || 0)} onChange={e => setXpCustom(prev => ({ ...prev, [eleve.id]: parseInt(e.target.value) || 0 }))} style={{ width: "80px", padding: "6px 10px", borderRadius: "10px", border: `2px solid ${COLORS.U}30`, fontFamily: "'Fredoka One', cursive", fontSize: "0.9rem", textAlign: "center", outline: "none" }} />
-                        <Btn onClick={() => distribuerXPIndividuel(eleve.id, xpCustom[eleve.id] ?? recompense?.xp, eleve.prenom)} color={recompense ? recompense.couleur : COLORS.S} disabled={recompenseEnCours} small>{recompense ? recompense.label : "+jetons"}</Btn>
+                    );
+                  })}
+                  {!topElevesClassement.length && <p style={{ color: "#94A3B8", fontSize: "0.85rem" }}>Aucun élève chargé.</p>}
+                </div>
+              </div>
+              <div>
+                <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1rem", margin: "0 0 10px" }}>Podium familles</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {topFamillesClassement.map((famille, i) => {
+                    const recompense = RECOMPENSES_FAMILLE[i];
+                    const couleur = familleColors[famille.nom] || COLORS.S;
+                    return (
+                      <div key={famille.nom} style={{ background: i < 3 ? couleur + "08" : "#F8FAFC", borderRadius: 14, padding: "10px 12px", border: i < 3 ? `2px solid ${couleur}30` : "1px solid #E5E7EB", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                        <span style={{ width: 32, textAlign: "center" }}>{i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}</span>
+                        <span style={{ fontSize: "1.2rem" }}>{familleEmojis[famille.nom]}</span>
+                        <div style={{ flex: 1, minWidth: 100 }}>
+                          <p style={{ margin: 0, fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "0.92rem" }}>{famille.nom}</p>
+                          <p style={{ margin: "2px 0 0", color: "#9CA3AF", fontSize: "0.75rem" }}>{famille.membres} membres · {formatJetons(famille.xp)}</p>
+                        </div>
+                        <span style={{ fontFamily: "'Fredoka One', cursive", fontSize: "0.8rem", color: couleur }}>{formatJetonsDelta(recompense?.xp || 0)}/pers.</span>
+                        <Btn onClick={() => distribuerXPFamille(famille.nom, recompense?.xp || 0)} color={couleur} disabled={recompenseEnCours} small>{recompense?.label || "+jetons"}</Btn>
+                      </div>
+                    );
+                  })}
+                  {!topFamillesClassement.length && <p style={{ color: "#94A3B8", fontSize: "0.85rem" }}>Aucune famille.</p>}
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setRecompensesVoirTous((v) => !v)}
+              style={{
+                width: "100%",
+                marginBottom: 14,
+                padding: "10px 14px",
+                borderRadius: 12,
+                border: "1px dashed #CBD5E1",
+                background: "#F8FAFC",
+                fontFamily: "'Fredoka One', cursive",
+                color: "#475569",
+                cursor: "pointer",
+                fontSize: "0.88rem",
+              }}
+            >
+              {recompensesVoirTous ? "▲ Masquer la liste complète" : "▼ Voir tous les élèves (ajustement individuel)"}
+            </button>
+
+            {recompensesVoirTous && (
+              <div style={{ marginBottom: 20 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8, maxHeight: 420, overflowY: "auto" }}>
+                  {eleves.map((eleve, i) => {
+                    const recompense = RECOMPENSES_INDIVIDUEL[i];
+                    const couleurFamille = familleColors[eleve.famille] || COLORS.S;
+                    return (
+                      <div key={eleve.id} style={{ background: "#F8FAFC", borderRadius: 12, padding: "10px 12px", border: "1px solid #E5E7EB", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                        <span style={{ width: 36, textAlign: "center", fontSize: "0.8rem", color: "#64748B" }}>#{i + 1}</span>
+                        <div style={{ flex: 1, minWidth: 120 }}>
+                          <p style={{ margin: 0, fontFamily: "'Fredoka One', cursive", fontSize: "0.88rem" }}>{eleve.prenom || eleve.nom || `Élève ${eleve.id.slice(0, 6)}`}</p>
+                          <p style={{ margin: "2px 0 0", color: "#9CA3AF", fontSize: "0.72rem" }}>{formatJetons(eleve.xp || 0)}</p>
+                        </div>
+                        <input type="number" value={xpCustom[eleve.id] ?? (recompense?.xp || 0)} onChange={e => setXpCustom(prev => ({ ...prev, [eleve.id]: parseInt(e.target.value, 10) || 0 }))} style={{ width: 72, padding: "6px 8px", borderRadius: 10, border: `2px solid ${COLORS.U}30`, fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem", textAlign: "center" }} />
+                        <Btn onClick={() => distribuerXPIndividuel(eleve.id, xpCustom[eleve.id] ?? recompense?.xp, eleve.prenom)} color={recompense?.couleur || COLORS.S} disabled={recompenseEnCours} small>+jetons</Btn>
                         <Btn onClick={() => retirerXPIndividuel(eleve.id, xpCustom[eleve.id] ?? recompense?.xp, eleve.prenom)} color={COLORS.H} disabled={recompenseEnCours} small>Retirer</Btn>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-
-            <div style={{ marginBottom: "20px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px", flexWrap: "wrap", gap: "8px" }}>
-                <p style={{ fontFamily: "'Fredoka One', cursive", color: "#1A1A2E", fontSize: "1.05rem", margin: 0 }}>🧬 Classement Familles</p>
-                <Btn onClick={distribuerTopFamilles} color={COLORS.T} disabled={recompenseEnCours} small>🚀 Distribuer Top 5 familles</Btn>
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                {famillesClassement.map((famille, i) => {
-                  const recompense = RECOMPENSES_FAMILLE[i];
-                  const couleur = familleColors[famille.nom] || COLORS.S;
-                  return (
-                    <div key={famille.nom} style={{ background: i < 3 ? couleur + "08" : "#F8FAFC", borderRadius: "16px", padding: "12px 14px", border: i < 3 ? `2px solid ${couleur}30` : "1px solid #E5E7EB", display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
-                      <div style={{ fontFamily: "'Fredoka One', cursive", fontSize: i < 3 ? "1.4rem" : "0.95rem", width: "36px", textAlign: "center" }}>{i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}</div>
-                      <span style={{ fontSize: "1.45rem" }}>{familleEmojis[famille.nom]}</span>
-                      <div style={{ flex: 1 }}>
-                        <p style={{ fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "0.98rem", margin: 0 }}>{famille.nom}</p>
-                        <p style={{ color: "#9CA3AF", fontSize: "0.78rem", margin: "2px 0 0" }}>{famille.membres} membres ? {formatJetons(famille.xp)} total</p>
-                      </div>
-                      <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                        <span style={{ fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "0.86rem" }}>{formatJetonsDelta(recompense?.xp || 0)}/membre</span>
-                        <Btn onClick={() => distribuerXPFamille(famille.nom, recompense?.xp || 0)} color={couleur} disabled={recompenseEnCours} small>{recompense ? recompense.label : "+jetons"}</Btn>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+            )}
 
             {messagesRecompense.length > 0 && (
               <div style={{ background: "#F0FDF4", borderRadius: "16px", padding: "16px", border: "1px solid #BBF7D0" }}>
