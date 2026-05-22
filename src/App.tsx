@@ -34,6 +34,7 @@ function App() {
   const [utilisateur, setUtilisateur] = useState<User | null>(null);
   const [profil, setProfil] = useState<UserProfile | null>(null);
   const [chargement, setChargement] = useState(true);
+  const [erreurChargement, setErreurChargement] = useState("");
   const [page, setPage] = useState("dashboard");
   const [visitedUid, setVisitedUid] = useState<string | null>(null);
   const [afficherLogin, setAfficherLogin] = useState(false);
@@ -47,9 +48,19 @@ function App() {
   const sessionStartMs = useRef(0);
   const lastSessionFlushMs = useRef(0);
   const chargerProfil = async (user: User) => {
-    const p = await fetchUserProfile(user.uid);
-    setProfil(p);
-    setChargement(false);
+    try {
+      setErreurChargement("");
+      const p = await fetchUserProfile(user.uid);
+      setProfil(p);
+    } catch (err) {
+      console.error("Chargement profil impossible", err);
+      setErreurChargement(
+        "Impossible de charger ton profil (connexion ou Firebase). Vérifie internet, réessaie, ou déconnecte-toi.",
+      );
+      setProfil(null);
+    } finally {
+      setChargement(false);
+    }
   };
 
   const onAfterPlatformIntegrityViolation = useCallback(() => {
@@ -57,16 +68,39 @@ function App() {
   }, [utilisateur]);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (user) => {
-      setUtilisateur(user);
-      if (user) {
-        chargerProfil(user);
-      } else {
-        setProfil(null);
+    const chargementMax = window.setTimeout(() => {
+      setChargement((encore) => {
+        if (encore) {
+          setErreurChargement(
+            "Le chargement prend trop de temps. Vérifie ta connexion, que le serveur tourne (npm run dev → http://localhost:3000), puis recharge.",
+          );
+        }
+        return false;
+      });
+    }, 20000);
+
+    const unsub = onAuthStateChanged(
+      auth,
+      (user) => {
+        setUtilisateur(user);
+        if (user) {
+          void chargerProfil(user);
+        } else {
+          setProfil(null);
+          setErreurChargement("");
+          setChargement(false);
+        }
+      },
+      (err) => {
+        console.error("Firebase Auth", err);
+        setErreurChargement("Erreur de connexion Firebase Auth. Recharge la page ou réessaie plus tard.");
         setChargement(false);
-      }
-    });
-    return () => unsub();
+      },
+    );
+    return () => {
+      window.clearTimeout(chargementMax);
+      unsub();
+    };
   }, []);
 
   useEffect(() => {
@@ -182,8 +216,39 @@ function App() {
 
   if (chargement) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <p className="text-white text-xl">Chargement...</p>
+      <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center gap-4 px-4 text-center">
+        <p className="text-white text-xl">Chargement…</p>
+        <p className="text-slate-400 text-sm max-w-md">
+          STMG HUB — si cet écran reste bloqué, utilise <strong className="text-white">http://localhost:3000</strong>{" "}
+          (pas le port 5173) après <code className="text-amber-200">npm run dev</code>.
+        </p>
+      </div>
+    );
+  }
+
+  if (erreurChargement && utilisateur) {
+    return (
+      <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center gap-4 px-6 text-center">
+        <p className="text-red-300 text-lg font-semibold max-w-lg">{erreurChargement}</p>
+        <div className="flex flex-wrap gap-3 justify-center">
+          <button
+            type="button"
+            className="rounded-xl bg-sky-600 px-5 py-3 font-bold text-white"
+            onClick={() => {
+              setChargement(true);
+              void chargerProfil(utilisateur);
+            }}
+          >
+            Réessayer
+          </button>
+          <button
+            type="button"
+            className="rounded-xl bg-slate-600 px-5 py-3 font-bold text-white"
+            onClick={() => void signOut(auth)}
+          >
+            Se déconnecter
+          </button>
+        </div>
       </div>
     );
   }
