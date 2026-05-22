@@ -105,18 +105,18 @@ export default function Classement({ profil, onVisiterProfil }) {
 
       // Familles
       const famillesMap = {
-        Architecte: { nom: "Architecte", xp: 0, eleves: 0 },
-        Visionnaire: { nom: "Visionnaire", xp: 0, eleves: 0 },
-        Challenger: { nom: "Challenger", xp: 0, eleves: 0 },
-        Explorateur: { nom: "Explorateur", xp: 0, eleves: 0 },
-        Influenceur: { nom: "Influenceur", xp: 0, eleves: 0 },
+        Architecte: { nom: "Architecte", prestige: 0, eleves: 0 },
+        Visionnaire: { nom: "Visionnaire", prestige: 0, eleves: 0 },
+        Challenger: { nom: "Challenger", prestige: 0, eleves: 0 },
+        Explorateur: { nom: "Explorateur", prestige: 0, eleves: 0 },
+        Influenceur: { nom: "Influenceur", prestige: 0, eleves: 0 },
       };
       users.forEach(u => {
         if (!u.famille || !famillesMap[u.famille]) return;
-        famillesMap[u.famille].xp += (u.xp || 0);
+        famillesMap[u.famille].prestige += getPrestigeTotal(u);
         famillesMap[u.famille].eleves += 1;
       });
-      setClassementFamilles(Object.values(famillesMap).sort((a, b) => b.xp - a.xp));
+      setClassementFamilles(Object.values(famillesMap).sort((a, b) => b.prestige - a.prestige));
     } catch (err) {
       console.error(err);
       setErreurClassement("Classement indisponible : lecture Firestore refusée pour les élèves.");
@@ -344,8 +344,8 @@ export default function Classement({ profil, onVisiterProfil }) {
                     const rang = i + 1;
                     const estMaFamille = famille.nom === profil?.famille;
                     const couleur = familleColors[famille.nom] || COLORS.S;
-                    const maxXP = classementFamilles[0]?.xp || 1;
-                    const pourcentage = maxXP > 0 ? Math.round((famille.xp / maxXP) * 100) : 0;
+                    const maxPrestige = classementFamilles[0]?.prestige || 1;
+                    const pourcentage = maxPrestige > 0 ? Math.round((famille.prestige / maxPrestige) * 100) : 0;
                     return (
                       <div key={i} style={{
                         background: estMaFamille ? couleur + "10" : "#F8FAFC",
@@ -362,7 +362,7 @@ export default function Classement({ profil, onVisiterProfil }) {
                               </p>
                               {estMaFamille && <span style={{ background: couleur, color: "white", fontFamily: "'Fredoka One', cursive", padding: "1px 10px", borderRadius: "100px", fontSize: "0.7rem" }}>Ma famille</span>}
                             </div>
-                            <p style={{ color: "#9CA3AF", fontSize: "0.8rem", margin: "2px 0 0" }}>{famille.eleves} membre{famille.eleves > 1 ? "s" : ""} • {famille.xp.toLocaleString()} jetons</p>
+                            <p style={{ color: "#9CA3AF", fontSize: "0.8rem", margin: "2px 0 0" }}>{famille.eleves} membre{famille.eleves > 1 ? "s" : ""} • {famille.prestige.toLocaleString("fr-FR")} prestige</p>
                           </div>
                           <div style={{ fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "1.1rem", flexShrink: 0 }}>{pourcentage}%</div>
                         </div>

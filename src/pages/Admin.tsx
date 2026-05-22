@@ -7,6 +7,7 @@ import * as XLSX from "xlsx";
 import { DS_EXAM_ID, DS_LOCK_TYPE, DS_EXERCISES } from "../services/devoirSurveilleExamData";
 import { COLLECTIONS } from "../services/collectionsData";
 import { formatJetons, formatJetonsDelta } from "../lib/jetons";
+import { getPrestigeTotal } from "../services/userProfileService";
 import {
   SDGN_MISSIONS_PROGRESS_VERSION,
   compareSdgnExerciseIds,
@@ -183,16 +184,16 @@ export default function Admin() {
       setUsersAll(allUsers);
       const users = allUsers
         .filter(u => u.role !== "admin")
-        .sort((a, b) => (b.xp || 0) - (a.xp || 0));
+        .sort((a, b) => getPrestigeTotal(b) - getPrestigeTotal(a));
       setEleves(users);
       const famillesMap = {};
       users.forEach(u => {
         if (!u.famille) return;
-        if (!famillesMap[u.famille]) famillesMap[u.famille] = { nom: u.famille, xp: 0, membres: 0 };
-        famillesMap[u.famille].xp += (u.xp || 0);
+        if (!famillesMap[u.famille]) famillesMap[u.famille] = { nom: u.famille, prestige: 0, membres: 0 };
+        famillesMap[u.famille].prestige += getPrestigeTotal(u);
         famillesMap[u.famille].membres += 1;
       });
-      setFamillesClassement(Object.values(famillesMap).sort((a, b) => b.xp - a.xp));
+      setFamillesClassement(Object.values(famillesMap).sort((a, b) => b.prestige - a.prestige));
       const initXp = {};
       users.forEach((u, i) => { initXp[u.id] = RECOMPENSES_INDIVIDUEL[i]?.xp || 0; });
       setXpCustom(initXp);
@@ -340,9 +341,9 @@ export default function Admin() {
     return {
       classe: cl,
       eleves: membres.length,
-      xp: membres.reduce((sum, e) => sum + (e.xp || 0), 0),
+      prestige: membres.reduce((sum, e) => sum + getPrestigeTotal(e), 0),
     };
-  }).sort((a, b) => b.xp - a.xp);
+  }).sort((a, b) => b.prestige - a.prestige);
 
   const statsParLycee = lyceesDispo.map(ly => {
     const membres = eleves.filter(e => e.lycee === ly);
@@ -350,9 +351,9 @@ export default function Admin() {
       lycee: ly,
       ville: membres[0]?.lyceeVille || "",
       eleves: membres.length,
-      xp: membres.reduce((sum, e) => sum + (e.xp || 0), 0),
+      prestige: membres.reduce((sum, e) => sum + getPrestigeTotal(e), 0),
     };
-  }).sort((a, b) => b.xp - a.xp);
+  }).sort((a, b) => b.prestige - a.prestige);
 
   const todayKey = toDayKey();
   const reportingRows = useMemo(() => {
@@ -884,7 +885,7 @@ export default function Admin() {
           <>
             <div style={{ marginBottom: 14, background: COLORS.U + "12", border: `1px solid ${COLORS.U}35`, borderRadius: 14, padding: "12px 16px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
               <p style={{ margin: 0, color: "#92400E", fontSize: "0.88rem", fontWeight: 700 }}>
-                🏆 Pour donner les jetons du classement (top élèves / familles), utilise l’onglet <strong>Récompenses jetons</strong>.
+                🏆 Classement = <strong>prestige</strong> (jetons dépensés en cartes). Récompenses bonus : onglet <strong>Récompenses jetons</strong>.
               </p>
               <button
                 type="button"
@@ -1361,7 +1362,8 @@ export default function Admin() {
           <div style={{ background: "white", borderRadius: "24px", padding: "24px", border: `2px solid ${COLORS.U}20`, boxShadow: `0 4px 20px ${COLORS.U}10` }}>
             <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.4rem", color: COLORS.U, marginBottom: "8px" }}>🏆 Récompenses du jour</h2>
             <p style={{ color: "#6B7280", fontSize: "0.9rem", marginBottom: "18px" }}>
-              Classement global (tous élèves). Ajuste les montants puis distribue en un clic.
+              Classement par <strong>prestige</strong> (dépenses boutique cartes + bonus sociaux), comme le classement national élèves.
+              Les boutons ci-dessous ajoutent des <strong>jetons</strong> bonus, pas du prestige.
             </p>
 
             <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "16px" }}>
@@ -1369,7 +1371,9 @@ export default function Admin() {
                 <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.U, margin: 0, fontSize: "0.85rem" }}>👥 Élèves : {eleves.length}</p>
               </div>
               <div style={{ background: COLORS.S + "15", border: `1px solid ${COLORS.S}30`, borderRadius: "12px", padding: "8px 14px" }}>
-                <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.S, margin: 0, fontSize: "0.85rem" }}>⚡ Jetons en circulation : {formatJetons(eleves.reduce((sum, e) => sum + (e.xp || 0), 0))}</p>
+                <p style={{ fontFamily: "'Fredoka One', cursive", color: COLORS.S, margin: 0, fontSize: "0.85rem" }}>
+                  👑 Prestige total classe : {eleves.reduce((sum, e) => sum + getPrestigeTotal(e), 0).toLocaleString("fr-FR")}
+                </p>
               </div>
             </div>
 
@@ -1406,7 +1410,9 @@ export default function Admin() {
                         <span style={{ width: 32, textAlign: "center", fontSize: i < 3 ? "1.2rem" : "0.9rem" }}>{i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`}</span>
                         <div style={{ flex: 1, minWidth: 120 }}>
                           <p style={{ margin: 0, fontFamily: "'Fredoka One', cursive", fontSize: "0.92rem" }}>{eleve.prenom || eleve.nom || `Élève ${eleve.id.slice(0, 6)}`}</p>
-                          <p style={{ margin: "2px 0 0", color: "#9CA3AF", fontSize: "0.75rem" }}>{formatJetons(eleve.xp || 0)} · {familleEmojis[eleve.famille]} {eleve.famille || "—"}</p>
+                          <p style={{ margin: "2px 0 0", color: "#9CA3AF", fontSize: "0.75rem" }}>
+                            👑 {getPrestigeTotal(eleve).toLocaleString("fr-FR")} prestige · {formatJetons(eleve.xp || 0)} jetons · {familleEmojis[eleve.famille]} {eleve.famille || "—"}
+                          </p>
                         </div>
                         <input type="number" value={xpCustom[eleve.id] ?? (recompense?.xp || 0)} onChange={e => setXpCustom(prev => ({ ...prev, [eleve.id]: parseInt(e.target.value, 10) || 0 }))} style={{ width: 72, padding: "6px 8px", borderRadius: 10, border: `2px solid ${couleurFamille}40`, fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem", textAlign: "center" }} />
                         <Btn onClick={() => distribuerXPIndividuel(eleve.id, xpCustom[eleve.id] ?? recompense?.xp, eleve.prenom)} color={recompense?.couleur || COLORS.S} disabled={recompenseEnCours} small>{recompense?.label || "+jetons"}</Btn>
@@ -1428,7 +1434,7 @@ export default function Admin() {
                         <span style={{ fontSize: "1.2rem" }}>{familleEmojis[famille.nom]}</span>
                         <div style={{ flex: 1, minWidth: 100 }}>
                           <p style={{ margin: 0, fontFamily: "'Fredoka One', cursive", color: couleur, fontSize: "0.92rem" }}>{famille.nom}</p>
-                          <p style={{ margin: "2px 0 0", color: "#9CA3AF", fontSize: "0.75rem" }}>{famille.membres} membres · {formatJetons(famille.xp)}</p>
+                          <p style={{ margin: "2px 0 0", color: "#9CA3AF", fontSize: "0.75rem" }}>{famille.membres} membres · {famille.prestige.toLocaleString("fr-FR")} prestige</p>
                         </div>
                         <span style={{ fontFamily: "'Fredoka One', cursive", fontSize: "0.8rem", color: couleur }}>{formatJetonsDelta(recompense?.xp || 0)}/pers.</span>
                         <Btn onClick={() => distribuerXPFamille(famille.nom, recompense?.xp || 0)} color={couleur} disabled={recompenseEnCours} small>{recompense?.label || "+jetons"}</Btn>
@@ -1470,7 +1476,7 @@ export default function Admin() {
                         <span style={{ width: 36, textAlign: "center", fontSize: "0.8rem", color: "#64748B" }}>#{i + 1}</span>
                         <div style={{ flex: 1, minWidth: 120 }}>
                           <p style={{ margin: 0, fontFamily: "'Fredoka One', cursive", fontSize: "0.88rem" }}>{eleve.prenom || eleve.nom || `Élève ${eleve.id.slice(0, 6)}`}</p>
-                          <p style={{ margin: "2px 0 0", color: "#9CA3AF", fontSize: "0.72rem" }}>{formatJetons(eleve.xp || 0)}</p>
+                          <p style={{ margin: "2px 0 0", color: "#9CA3AF", fontSize: "0.72rem" }}>👑 {getPrestigeTotal(eleve).toLocaleString("fr-FR")} prestige</p>
                         </div>
                         <input type="number" value={xpCustom[eleve.id] ?? (recompense?.xp || 0)} onChange={e => setXpCustom(prev => ({ ...prev, [eleve.id]: parseInt(e.target.value, 10) || 0 }))} style={{ width: 72, padding: "6px 8px", borderRadius: 10, border: `2px solid ${COLORS.U}30`, fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem", textAlign: "center" }} />
                         <Btn onClick={() => distribuerXPIndividuel(eleve.id, xpCustom[eleve.id] ?? recompense?.xp, eleve.prenom)} color={recompense?.couleur || COLORS.S} disabled={recompenseEnCours} small>+jetons</Btn>
@@ -1538,7 +1544,7 @@ export default function Admin() {
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               {[
                 { emoji: "📊", texte: "Reporting élèves : temps de connexion, missions SDGN (notes, %, jetons par exercice), Objectif Bac, Focus, cartes, anti-triche historique, ajustement jetons.", couleur: COLORS.B },
-                { emoji: "🏆", texte: "Récompenses : charge le classement puis distribue les jetons bonus en 1 clic.", couleur: COLORS.U },
+                { emoji: "🏆", texte: "Récompenses : classement par prestige (cartes) ; distribution de jetons bonus en 1 clic.", couleur: COLORS.U },
                 { emoji: "📚", texte: "Chapitres : supporte les colonnes françaises avec URL Application et URL Fiche.", couleur: COLORS.S },
                 { emoji: "🎯", texte: "Missions : la colonne correction sert de référence à la correction IA.", couleur: COLORS.T },
                 { emoji: "🔒", texte: "Cette page reste réservée aux comptes admin.", couleur: COLORS.H },
