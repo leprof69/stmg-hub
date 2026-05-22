@@ -348,6 +348,7 @@ export default function Onboarding({ onTermine }) {
     setChargement(true);
     const user = auth.currentUser;
     await setDoc(doc(db, "users", user.uid), {
+      email: user.email?.trim() || "",
       prenom,
       age: parseInt(age),
       classe,

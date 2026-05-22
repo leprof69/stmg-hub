@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useState, useEffect, useMemo } from "react";
-import { db } from "../services/firebase";
+import { auth, db } from "../services/firebase";
+import { sendPasswordResetEmail } from "firebase/auth";
 import { doc, setDoc, collection, getDocs, deleteDoc, updateDoc, deleteField } from "firebase/firestore";
 import * as XLSX from "xlsx";
 import { DS_EXAM_ID, DS_LOCK_TYPE, DS_EXERCISES } from "../services/devoirSurveilleExamData";
@@ -157,6 +158,8 @@ export default function Admin() {
   const [rechercheEleve, setRechercheEleve] = useState("");
   const [resetDsLoading, setResetDsLoading] = useState(false);
   const [sdgnExpanded, setSdgnExpanded] = useState({});
+  const [resetPwdUserId, setResetPwdUserId] = useState(null);
+  const [flashReporting, setFlashReporting] = useState("");
   const [quickJetons, setQuickJetons] = useState({});
 
   useEffect(() => {
@@ -197,6 +200,48 @@ export default function Admin() {
       setErreurEleves("Impossible de charger les élèves (droits Firestore ou connexion).");
     }
     setChargementEleves(false);
+  };
+
+  const envoyerLienResetMdp = async (eleve) => {
+    let email = String(eleve.email || "").trim();
+    if (!email) {
+      const saisi = window.prompt(
+        `Aucun e-mail enregistré pour ${eleve.nomAffiche}.\n\n` +
+          `Saisis l'e-mail du compte Firebase Auth (UID ${eleve.id}) :`,
+      );
+      if (!saisi) return;
+      email = saisi.trim();
+    }
+    if (!email) return;
+    if (
+      !window.confirm(
+        `Envoyer un lien « mot de passe oublié » à :\n\n${email}\n(${eleve.nomAffiche})\n\nL'élève doit vérifier sa boîte mail (et les spams).`,
+      )
+    ) {
+      return;
+    }
+    setResetPwdUserId(eleve.id);
+    setFlashReporting("");
+    try {
+      await sendPasswordResetEmail(auth, email, {
+        url: `${window.location.origin}/`,
+        handleCodeInApp: false,
+      });
+      setFlashReporting(`Lien de réinitialisation envoyé à ${email} (${eleve.nomAffiche}). Demande à l'élève de vérifier les spams.`);
+      if (!eleve.email) {
+        await updateDoc(doc(db, "users", eleve.id), { email });
+        await chargerEleves();
+      }
+    } catch (err) {
+      console.error(err);
+      const code = err && typeof err === "object" && "code" in err ? err.code : "";
+      let msg = "échec d'envoi";
+      if (code === "auth/invalid-email") msg = "e-mail invalide";
+      if (code === "auth/too-many-requests") msg = "trop de demandes, réessaie plus tard";
+      setFlashReporting(`Erreur envoi reset MDP pour ${eleve.nomAffiche} : ${msg}.`);
+    } finally {
+      setResetPwdUserId(null);
+    }
   };
 
   const retablirJetonsAntiTriche = async (userId, nomAffiche) => {
@@ -913,6 +958,23 @@ export default function Admin() {
                   </div>
                 </div>
               )}
+              {flashReporting ? (
+                <div
+                  style={{
+                    marginBottom: 12,
+                    padding: "10px 14px",
+                    borderRadius: 12,
+                    background: flashReporting.startsWith("Erreur") ? "#FEE2E2" : "#DCFCE7",
+                    border: `1px solid ${flashReporting.startsWith("Erreur") ? "#FECACA" : "#86EFAC"}`,
+                    color: flashReporting.startsWith("Erreur") ? "#991B1B" : "#166534",
+                    fontSize: "0.88rem",
+                    fontWeight: 700,
+                  }}
+                >
+                  {flashReporting}
+                </div>
+              ) : null}
+
               <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 10 }}>
                 <input
                   value={rechercheEleve}
@@ -1202,6 +1264,48 @@ export default function Admin() {
                             Cartes : <strong>{eleve.cartesTotal}</strong> ({eleve.cartesUniques} uniques)
                           </p>
                         </div>
+                      </div>
+
+                      <div
+                        style={{
+                          background: "#F8FAFC",
+                          borderRadius: 12,
+                          padding: 12,
+                          border: "1px solid #E2E8F0",
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: 10,
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div>
+                          <p style={{ margin: "0 0 4px", fontFamily: "'Fredoka One', cursive", fontSize: "0.82rem", color: "#0F172A" }}>
+                            Compte / connexion
+                          </p>
+                          <p style={{ margin: 0, color: "#64748B", fontSize: "0.78rem" }}>
+                            E-mail : <strong>{eleve.email || "non renseigné dans Firestore"}</strong>
+                            {" · "}UID : <code style={{ fontSize: "0.72rem" }}>{eleve.id}</code>
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => void envoyerLienResetMdp(eleve)}
+                          disabled={resetPwdUserId === eleve.id}
+                          style={{
+                            background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
+                            color: "white",
+                            border: "none",
+                            borderRadius: 10,
+                            padding: "8px 14px",
+                            fontWeight: 800,
+                            fontSize: "0.82rem",
+                            cursor: resetPwdUserId !== eleve.id ? "pointer" : "not-allowed",
+                            fontFamily: "'Fredoka One', cursive",
+                          }}
+                        >
+                          {resetPwdUserId === eleve.id ? "Envoi en cours…" : "Envoyer lien mot de passe oublié"}
+                        </button>
                       </div>
 
                       {eleve.platformIntegrity?.xpSuspended ? (
