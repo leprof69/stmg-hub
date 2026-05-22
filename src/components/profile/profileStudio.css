@@ -305,3 +305,139 @@
 .ps-no-sb {
   scrollbar-width: none;
 }
+
+.ps-hero-editable {
+  outline: 1px dashed rgba(251, 191, 36, 0.35);
+  outline-offset: 2px;
+}
+
+.ps-hero-edit-hint {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  margin: 0;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.58rem;
+  font-weight: 800;
+  color: #fde68a;
+  background: rgba(15, 23, 42, 0.72);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.ps-deco-size-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(251, 191, 36, 0.08);
+  border: 1px solid rgba(251, 191, 36, 0.22);
+}
+
+.ps-deco-size-bar input[type="range"] {
+  width: 100%;
+  accent-color: #fbbf24;
+}
+
+.ps-howto {
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(139, 92, 246, 0.12));
+  border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+.ps-howto-title {
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+  font-weight: 900;
+  color: #fde68a;
+}
+
+.ps-howto-steps {
+  margin: 0;
+  padding: 0 0 0 4px;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: #cbd5e1;
+  line-height: 1.4;
+}
+
+.ps-howto-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.ps-howto-steps li span {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fbbf24;
+  color: #0f172a;
+  font-weight: 900;
+  font-size: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ps-placement-wrap {
+  margin-bottom: 16px;
+}
+
+.ps-placement-title {
+  margin: 0 0 4px;
+  font-size: 0.78rem;
+  font-weight: 900;
+  color: #e9d5ff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.ps-placement-sub {
+  margin: 0 0 10px;
+  font-size: 0.7rem;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+.ps-placement-sub strong {
+  color: #fde68a;
+}
+
+.ps-placement-hero {
+  position: relative;
+  min-height: 200px;
+  border-radius: 16px;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.ps-placement-hero-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 48px 12px 16px;
+  pointer-events: none;
+}
+
+.ps-placement-name {
+  font-family: "Fredoka One", cursive;
+  font-size: 0.95rem;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+}

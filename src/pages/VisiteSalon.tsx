@@ -8,8 +8,7 @@ import {
 import { COLLECTIONS } from "../services/collectionsData";
 import { AvatarSVG, DEFAULT_AVATAR } from "./AvatarCreator";
 import type { AvatarConfig } from "./AvatarCreator";
-import SalonDecoSticker from "../components/SalonDecoSticker";
-import { DECO_POSITIONS } from "../lib/profileCustomization";
+import SalonDecoLayer from "../components/profile/SalonDecoLayer";
 import { sanitizeSalonDeco } from "../lib/profileDecoUtils";
 import { avatarFrameStyles } from "../lib/profilTheme";
 
@@ -323,7 +322,6 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
   );
 
   const salon: SalonCfg = { ...DEF_SALON, ...(data.salon||{}) };
-  const salonDecos = sanitizeSalonDeco(salon.deco);
   const theme = THEMES[salon.theme]||THEMES.defaut;
   const avatarCfg: AvatarConfig = { ...DEFAULT_AVATAR, ...(data.avatar||{}) };
   const couleurFamille = FAM_COLORS[data.famille as string]||"#0EA5E9";
@@ -367,20 +365,7 @@ export default function VisiteSalon({ visitedUid, myProfil, onBack }: {
         {/* ?? SALON CARD ??????????????????????????????????????????? */}
         <div style={{ borderRadius:"24px",overflow:"hidden",boxShadow:"0 12px 40px rgba(0,0,0,0.4)",animation:"vsIn 0.3s both" }}>
           <div style={{ background:theme.gradient,padding:"24px",position:"relative",overflow:"hidden" }}>
-            {salonDecos.map((em,i)=>{
-              const pos = DECO_POSITIONS[i];
-              if (!pos) return null;
-              const posStyle = Object.fromEntries(
-                Object.entries(pos).filter(([k]) => k !== "animation" && k !== "fontSize")
-              );
-              return (
-              <div key={i} style={{ position:"absolute",pointerEvents:"none",lineHeight:1,
-                ...posStyle,
-                animation:`vsDecoFloat ${2.5+i*0.4}s ease-in-out ${i*0.3}s infinite`,
-                filter:"drop-shadow(0 2px 8px rgba(0,0,0,0.35))",zIndex:0 }}>
-                <SalonDecoSticker em={em} fontSize={pos.fontSize} accentColor={couleurFamille}/>
-              </div>
-            );})}
+            <SalonDecoLayer salon={salon} couleurFamille={couleurFamille} animate animSet="visit" />
             <div style={{ position:"absolute",bottom:"10px",left:"14px",fontSize:"0.58rem",fontWeight:700,color:theme.dark?"rgba(255,255,255,0.35)":"rgba(0,0,0,0.3)",letterSpacing:"0.1em",textTransform:"uppercase" }}>
               {"🏠 "}{salonTitre}
             </div>

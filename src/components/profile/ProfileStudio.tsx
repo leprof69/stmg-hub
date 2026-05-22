@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Icon } from "@iconify/react";
 import Lottie from "lottie-react";
 import { AvatarSVG } from "../../pages/AvatarCreator";
 import type { AvatarConfig } from "../../pages/AvatarCreator";
 import SalonDecoSticker from "../SalonDecoSticker";
+import SalonDecoLayer from "./SalonDecoLayer";
+import StickerPlacementCanvas from "./StickerPlacementCanvas";
 import {
   type PageStyle,
   type SalonConfig,
@@ -17,7 +19,6 @@ import {
   VITRINE_FRAME,
   SALON_THEMES,
   DECO_CATS,
-  DECO_POSITIONS,
   AVATAR_FRAME,
   MAX_SALON_DECOS,
   decoItemPrice,
@@ -32,6 +33,14 @@ import {
   isDecoOwnedByUser,
 } from "../../lib/profileBasePack";
 import { avatarFrameStyles } from "../../lib/profilTheme";
+import {
+  normalizeSalonDecoLayout,
+  removeDecoFromLayout,
+  setDecoPlacement,
+  getDecoPlacement,
+  SALON_DECO_SCALE_MIN,
+  SALON_DECO_SCALE_MAX,
+} from "../../lib/salonDecoLayout";
 import { resolveLottieFetchUrl } from "../../lib/fluent3dAssets";
 import "./profileStudio.css";
 
@@ -86,13 +95,22 @@ function StudioPreview({
   prenom,
   couleurFamille,
   avatarConfig,
+  editable = false,
+  selectedEm = null,
+  onSelectEm,
+  onLayoutPatch,
 }: {
   pageStyle: PageStyle;
   salon: SalonConfig;
   prenom: string;
   couleurFamille: string;
   avatarConfig: AvatarConfig;
+  editable?: boolean;
+  selectedEm?: string | null;
+  onSelectEm?: (em: string) => void;
+  onLayoutPatch?: (em: string, patch: Partial<import("../../lib/profileCustomization").SalonDecoPlacement>) => void;
 }) {
+  const heroRef = useRef<HTMLDivElement>(null);
   const bgCfg = PAGE_BG[pageStyle.pageBg] || PAGE_BG.defaut;
   const theme = SALON_THEMES[salon.theme] || SALON_THEMES.defaut;
   const neCfg = NAME_EFFECT[pageStyle.nameEffect] || NAME_EFFECT.defaut;
@@ -126,6 +144,8 @@ function StudioPreview({
         }}
       >
         <div
+          ref={heroRef}
+          className={editable ? "ps-hero-editable" : undefined}
           style={{
             background: theme.gradient,
             borderRadius: 16,
@@ -135,30 +155,19 @@ function StudioPreview({
             textAlign: "center",
           }}
         >
-          {salon.deco
-            .filter((d) => !d.startsWith("gif:") && !d.includes("duotone"))
-            .slice(0, MAX_SALON_DECOS)
-            .map((em, i) => {
-              const pos = DECO_POSITIONS[i];
-              if (!pos) return null;
-              const posStyle = Object.fromEntries(
-                Object.entries(pos).filter(([k]) => k !== "animation" && k !== "fontSize")
-              );
-              return (
-                <div
-                  key={i}
-                  style={{
-                    position: "absolute",
-                    pointerEvents: "none",
-                    lineHeight: 1,
-                    ...posStyle,
-                    filter: "drop-shadow(0 2px 6px rgba(0,0,0,0.4))",
-                  }}
-                >
-                  <SalonDecoSticker em={em} fontSize={pos.fontSize} accentColor={couleurFamille} />
-                </div>
-              );
-            })}
+          {editable && (
+            <p className="ps-hero-edit-hint">Glisse les stickers · curseur pour la taille</p>
+          )}
+          <SalonDecoLayer
+            salon={salon}
+            couleurFamille={couleurFamille}
+            heroRef={heroRef}
+            editable={editable}
+            selectedEm={selectedEm}
+            onSelectEm={onSelectEm}
+            onLayoutPatch={onLayoutPatch}
+            animate={!editable}
+          />
           <div style={{ position: "relative", zIndex: 1 }}>
             <div style={{ display: "flex", justifyContent: "center", marginBottom: 8 }}>
               <div style={afSt.ring}>
@@ -261,10 +270,12 @@ export default function ProfileStudio({
     avatarFrame: pageStyle.avatarFrame || "defaut",
   });
   const [localSalon, setLocalSalon] = useState<SalonConfig>({ ...salon });
-  const [tab, setTab] = useState<Tab>("salon");
+  const [tab, setTab] = useState<Tab>("stickers");
+  const previewColRef = useRef<HTMLDivElement>(null);
   const [pageSub, setPageSub] = useState<"bg" | "cards" | "name" | "vitrine" | "avatar">("bg");
   const [bgFilter, setBgFilter] = useState<PageBgFilterId>("all");
   const [decoCat, setDecoCat] = useState(DECO_CATS[0].key);
+  const [selectedDecoEm, setSelectedDecoEm] = useState<string | null>(null);
   const [buying, setBuying] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
@@ -292,7 +303,10 @@ export default function ProfileStudio({
   const toggleDeco = async (em: string) => {
     if (em.includes("duotone")) return;
     if (localSalon.deco.includes(em)) {
-      setLocalSalon((s) => ({ ...s, deco: s.deco.filter((d) => d !== em) }));
+      setLocalSalon((s) =>
+        normalizeSalonDecoLayout(removeDecoFromLayout({ ...s, deco: s.deco.filter((d) => d !== em) }))
+      );
+      if (selectedDecoEm === em) setSelectedDecoEm(null);
       return;
     }
     const price = decoItemPrice(em);
@@ -304,17 +318,29 @@ export default function ProfileStudio({
       if (!ok) return;
     }
     setLocalSalon((s) => {
-      if (s.deco.length >= MAX_SALON_DECOS) return { ...s, deco: [...s.deco.slice(1), em] };
-      return { ...s, deco: [...s.deco, em] };
+      const nextDeco =
+        s.deco.length >= MAX_SALON_DECOS ? [...s.deco.slice(1), em] : [...s.deco, em];
+      return normalizeSalonDecoLayout({ ...s, deco: nextDeco });
     });
+    setSelectedDecoEm(em);
   };
 
   const handleSave = async () => {
     setSaving(true);
-    await onSave(localPage, localSalon);
+    await onSave(localPage, normalizeSalonDecoLayout(localSalon));
     setSaving(false);
     onClose();
   };
+
+  const patchDecoLayout = (em: string, patch: Partial<import("../../lib/profileCustomization").SalonDecoPlacement>) => {
+    setLocalSalon((s) => setDecoPlacement(s, em, patch));
+  };
+
+  useEffect(() => {
+    if (tab === "stickers") {
+      previewColRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }, [tab]);
 
   const renderShopBtn = (
     owned: boolean,
@@ -432,7 +458,7 @@ export default function ProfileStudio({
       </header>
 
       <div className="ps-body">
-        <div className="ps-preview-col ps-no-sb">
+        <div ref={previewColRef} className="ps-preview-col ps-no-sb">
           <p
             style={{
               fontSize: "0.62rem",
@@ -451,6 +477,10 @@ export default function ProfileStudio({
             prenom={prenom}
             couleurFamille={couleurFamille}
             avatarConfig={avatarConfig}
+            editable={tab === "stickers"}
+            selectedEm={selectedDecoEm}
+            onSelectEm={setSelectedDecoEm}
+            onLayoutPatch={patchDecoLayout}
           />
         </div>
 
@@ -815,6 +845,52 @@ export default function ProfileStudio({
 
             {tab === "stickers" && (
               <>
+                <div className="ps-howto">
+                  <p className="ps-howto-title">Comment placer tes stickers</p>
+                  <ol className="ps-howto-steps">
+                    <li>
+                      <span>1</span> Choisis un sticker dans la grille (en bas)
+                    </li>
+                    <li>
+                      <span>2</span> Glisse-le dans la zone colorée ci-dessous
+                    </li>
+                    <li>
+                      <span>3</span> Ajuste la taille avec le curseur
+                    </li>
+                    <li>
+                      <span>4</span> Clique <strong>Enregistrer</strong> en haut à droite
+                    </li>
+                  </ol>
+                </div>
+
+                <StickerPlacementCanvas
+                  salon={localSalon}
+                  prenom={prenom}
+                  couleurFamille={couleurFamille}
+                  avatarConfig={avatarConfig}
+                  selectedEm={selectedDecoEm}
+                  onSelectEm={setSelectedDecoEm}
+                  onLayoutPatch={patchDecoLayout}
+                />
+                {selectedDecoEm && localSalon.deco.includes(selectedDecoEm) && (
+                  <div className="ps-deco-size-bar">
+                    <span style={{ fontSize: "0.68rem", fontWeight: 800, color: "#c4b5fd" }}>
+                      Taille · {decoLabel(selectedDecoEm)}
+                    </span>
+                    <input
+                      type="range"
+                      min={Math.round(SALON_DECO_SCALE_MIN * 100)}
+                      max={Math.round(SALON_DECO_SCALE_MAX * 100)}
+                      value={Math.round(
+                        getDecoPlacement(localSalon, selectedDecoEm, localSalon.deco.indexOf(selectedDecoEm)).scale *
+                          100
+                      )}
+                      onChange={(e) =>
+                        patchDecoLayout(selectedDecoEm, { scale: Number(e.target.value) / 100 })
+                      }
+                    />
+                  </div>
+                )}
                 <div
                   style={{
                     display: "flex",
@@ -833,25 +909,54 @@ export default function ProfileStudio({
                     </span>
                   ) : (
                     localSalon.deco.map((em) => (
-                      <button
-                        key={em}
-                        type="button"
-                        onClick={() => toggleDeco(em)}
-                        title="Retirer"
-                        style={{
-                          width: 52,
-                          height: 52,
-                          borderRadius: 12,
-                          border: "1px solid rgba(239,68,68,0.35)",
-                          background: "rgba(239,68,68,0.1)",
-                          cursor: "pointer",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <SalonDecoSticker em={em} fontSize="1.5rem" accentColor={couleurFamille} />
-                      </button>
+                      <div key={em} style={{ position: "relative" }}>
+                        <button
+                          type="button"
+                          onClick={() => setSelectedDecoEm(em)}
+                          title="Sélectionner pour déplacer"
+                          style={{
+                            width: 52,
+                            height: 52,
+                            borderRadius: 12,
+                            border:
+                              selectedDecoEm === em
+                                ? "2px solid rgba(251,191,36,0.9)"
+                                : "1px solid rgba(167,139,250,0.35)",
+                            background:
+                              selectedDecoEm === em
+                                ? "rgba(251,191,36,0.12)"
+                                : "rgba(15,23,42,0.5)",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <SalonDecoSticker em={em} fontSize="1.5rem" accentColor={couleurFamille} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => void toggleDeco(em)}
+                          title="Retirer"
+                          style={{
+                            position: "absolute",
+                            top: -6,
+                            right: -6,
+                            width: 20,
+                            height: 20,
+                            borderRadius: "50%",
+                            border: "none",
+                            background: "#ef4444",
+                            color: "#fff",
+                            fontSize: "0.65rem",
+                            fontWeight: 900,
+                            cursor: "pointer",
+                            lineHeight: 1,
+                          }}
+                        >
+                          {"\u00d7"}
+                        </button>
+                      </div>
                     ))
                   )}
                 </div>

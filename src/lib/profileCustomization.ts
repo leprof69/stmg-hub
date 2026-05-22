@@ -16,11 +16,19 @@ export const DEFAULT_PAGE_STYLE: PageStyle = {
   avatarFrame: "defaut",
 };
 
+export type SalonDecoPlacement = {
+  x: number;
+  y: number;
+  scale: number;
+};
+
 export type SalonConfig = {
   theme: string;
   titre: string;
   motto: string;
   deco: string[];
+  /** Position et taille libres par id de sticker (cle = em). */
+  decoLayout?: Record<string, SalonDecoPlacement>;
 };
 export const DEFAULT_SALON: SalonConfig = { theme:"defaut", titre:"", motto:"", deco:[] };
 

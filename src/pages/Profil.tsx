@@ -7,6 +7,7 @@ import { AvatarSVG, DEFAULT_AVATAR } from "./AvatarCreator";
 import type { AvatarConfig } from "./AvatarCreator";
 import ProfileStudio from "../components/profile/ProfileStudio";
 import { sanitizeSalonDeco } from "../lib/profileDecoUtils";
+import { normalizeSalonDecoLayout } from "../lib/salonDecoLayout";
 import {
   isBasePackTheme,
   isBasePackPageKey,
@@ -173,7 +174,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion }: { profil: R
     const rawSalon = data.salon
       ? ({ ...DEFAULT_SALON, ...(data.salon as SalonConfig) } as SalonConfig)
       : { ...DEFAULT_SALON };
-    setSalon(clampSalonToOwned(rawSalon, ownedThemesList, ownedDecoList));
+    setSalon(clampSalonToOwned(normalizeSalonDecoLayout(rawSalon), ownedThemesList, ownedDecoList));
 
     const rawPs = data.pageStyle
       ? ({
@@ -298,7 +299,7 @@ export default function Profil({ profil, onRefaire, onDeconnexion }: { profil: R
 
   const saveStudio = async (ps: PageStyle, newSalon: SalonConfig) => {
     const cleanSalon = clampSalonToOwned(
-      { ...newSalon, deco: sanitizeSalonDeco(newSalon.deco) },
+      normalizeSalonDecoLayout({ ...newSalon, deco: sanitizeSalonDeco(newSalon.deco) }),
       ownedThemes,
       ownedDecoItems
     );

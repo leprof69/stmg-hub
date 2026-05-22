@@ -1,17 +1,11 @@
 import type { CSSProperties, ReactNode } from "react";
 import { AvatarSVG } from "../../pages/AvatarCreator";
 import type { AvatarConfig } from "../../pages/AvatarCreator";
-import SalonDecoSticker from "../SalonDecoSticker";
+import SalonDecoLayer from "./SalonDecoLayer";
 import ProfilePageBgOverlay from "./ProfilePageBgOverlay";
 import type { BgDef } from "../../lib/pageBgTypes";
 import type { PageStyle, SalonConfig } from "../../lib/profileCustomization";
-import {
-  DECO_POSITIONS,
-  MAX_SALON_DECOS,
-  NAME_EFFECT,
-  SALON_THEMES,
-  VITRINE_FRAME,
-} from "../../lib/profileCustomization";
+import { NAME_EFFECT, SALON_THEMES, VITRINE_FRAME } from "../../lib/profileCustomization";
 import { isPhotoPageBg, pageBgFocal, pageBgFullScreen } from "../../lib/pageBgUtils";
 import {
   avatarFrameStyles,
@@ -33,13 +27,6 @@ const RARETE: Record<string, { label: string; couleur: string; emoji: string }> 
   epique: { label: "\u00c9pique", couleur: "#0284C7", emoji: "\u{1F537}" },
   legendaire: { label: "L\u00e9gendaire", couleur: "#F59E0B", emoji: "\u2B50" },
   ultra_rare: { label: "Ultra Rare", couleur: "#EF4444", emoji: "\u{1F48E}" },
-};
-
-const DECO_ANIM: Record<string, string> = {
-  decoFloat0: "pp-deco-float-0",
-  decoFloat1: "pp-deco-float-1",
-  decoFloat2: "pp-deco-float-2",
-  decoFloat3: "pp-deco-float-3",
 };
 
 export type ProfilPageViewProps = {
@@ -158,9 +145,6 @@ export default function ProfilPageView({
   const photoFocal = pageBgFocal(pageBgCfg);
   const photoSrc = isPhoto ? pageBgCfg.image! : "";
 
-  const staticDecos = salon.deco
-    .filter((d) => !d.startsWith("gif:") && !d.includes("duotone"))
-    .slice(0, MAX_SALON_DECOS);
   const gifDecos = salon.deco.filter((d) => d.startsWith("gif:"));
 
   return (
@@ -194,31 +178,7 @@ export default function ProfilPageView({
             <div className="pp-hero-gradient" style={{ background: theme.gradient }} aria-hidden />
           )}
           <div className={`pp-hero-scrim${isPhoto ? "" : " pp-hero-scrim--mesh"}`} aria-hidden />
-          {staticDecos.map((em, i) => {
-            const pos = DECO_POSITIONS[i];
-            if (!pos) return null;
-            const animKey = pos.animation as string;
-            const animName = DECO_ANIM[animKey] || "pp-deco-float-0";
-            const posStyle = Object.fromEntries(
-              Object.entries(pos).filter(([k]) => k !== "animation" && k !== "fontSize")
-            ) as CSSProperties;
-            return (
-              <div
-                key={i}
-                className="pp-hero-deco"
-                style={{
-                  ...posStyle,
-                  animation: `${animName} ${2.4 + i * 0.35}s ease-in-out ${i * 0.28}s infinite`,
-                }}
-              >
-                <SalonDecoSticker
-                  em={em}
-                  fontSize={(pos as { fontSize: string }).fontSize}
-                  accentColor={couleurFamille}
-                />
-              </div>
-            );
-          })}
+          <SalonDecoLayer salon={salon} couleurFamille={couleurFamille} animate animSet="profile" />
 
           <button type="button" className="pp-edit-btn" onClick={onPersonalize}>
             <span>{"\u2728"}</span>

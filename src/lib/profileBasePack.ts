@@ -1,5 +1,6 @@
 import type { PageStyle, SalonConfig } from "./profileCustomization";
 import { DEFAULT_PAGE_STYLE, THEME_PRICES } from "./profileCustomization";
+import { normalizeSalonDecoLayout } from "./salonDecoLayout";
 import { sanitizeSalonDeco } from "./profileDecoUtils";
 
 /** Libellà affiché pour les Éléments inclus dans le pack de base (tout le reste = jetons). */
@@ -69,7 +70,7 @@ export function clampSalonToOwned(
   const deco = sanitizeSalonDeco(salon.deco).filter((em) =>
     isDecoOwnedByUser(em, ownedDecoItems)
   );
-  return { ...salon, theme, deco };
+  return normalizeSalonDecoLayout({ ...salon, theme, deco });
 }
 
 /** Résumé court pour l’UI du studio. */
