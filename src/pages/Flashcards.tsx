@@ -32,12 +32,12 @@ const CATEGORY_LABELS: Record<DeckCategory, string> = {
   tous: "Toutes les matières",
   management: "Management",
   droit: "Droit",
-  economie: "Économie",
+  économie: "Économie",
   sciences_gestion: "Sciences de Gestion",
   gestion_finance: "Gestion & Finance",
   mercatique: "Mercatique",
   ressources_humaines: "Ressources Humaines",
-  numerique_si: "Numérique & SI",
+  numérique_si: "Numérique & SI",
 };
 
 function shuffleArray<T>(arr: T[]): T[] {

@@ -9,7 +9,31 @@ import {
 import { db } from "./firebase";
 import { FS } from "./firestoreConstants";
 
-export type UserProfile = { id: string } & DocumentData;
+/** Profil Firestore `users/{uid}` — champs courants typés + index pour le reste. */
+export type UserProfile = {
+  id: string;
+  prenom?: string;
+  nom?: string;
+  email?: string;
+  xp?: number;
+  xpDepensee?: number;
+  classe?: string;
+  lycee?: string;
+  lyceeVille?: string;
+  lyceeCode?: string;
+  role?: string;
+  famille?: string;
+  cartes?: Record<string, number>;
+  prestige?: number;
+  prestigeBase?: number;
+  prestigeGifted?: number;
+  prestigeDonBonus?: number;
+  platformIntegrity?: {
+    xpSuspended?: boolean;
+    clearedAt?: string;
+    clearedByAdmin?: boolean;
+  };
+} & DocumentData;
 
 /** Portefeuille actuel + jetons déjà dépensés en boutique : total « carrière » pour stats / badges (champs `xp`, `xpDepensee`). */
 export function getXpTotalePourNiveau(data: { xp?: unknown; xpDepensee?: unknown } | null | undefined): number {
@@ -37,7 +61,10 @@ export function getPrestigeTotal(data: { prestigeBase?: unknown; prestige?: unkn
  * ou à défaut jetons cumulés / 10 (même échelle qu’environ 1 prestige / 10 jetons dépensés) pour ne pas
  * rester bloqué au niveau 1 tant qu’aucun pack n’est ouvert.
  */
-export function getPrestigePourNiveau(data: Parameters<typeof getXpTotalePourNiveau>[0]): number {
+type PrestigeNiveauInput = Parameters<typeof getXpTotalePourNiveau>[0] &
+  Parameters<typeof getPrestigeTotal>[0];
+
+export function getPrestigePourNiveau(data: PrestigeNiveauInput | null | undefined): number {
   const prestige = getPrestigeTotal(data);
   const depuisXp = Math.floor(getXpTotalePourNiveau(data) / 10);
   return Math.max(prestige, depuisXp);

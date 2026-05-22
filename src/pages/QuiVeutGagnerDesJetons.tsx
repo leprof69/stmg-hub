@@ -343,7 +343,7 @@ export default function QuiVeutGagnerDesJetons({ profil, onXPGagne }: Props) {
             const labels = ["A", "B", "C", "D"] as const;
             const showResult = answered;
             const isOk = current?.ok === i;
-            const isBad = answered && !isOk && i !== -1;
+            const isBad = answered && !isOk;
             let bg = "rgba(30,41,59,0.9)";
             let border = "rgba(255,255,255,0.1)";
             if (showResult && isOk) {

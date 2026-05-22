@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "npx vite",
-    "build": "npm run check:encoding && npm run validate:qcm && npx vite build",
+    "build": "npm run check:encoding && npm run validate:qcm && tsc --noEmit -p tsconfig.app.json && npx vite build",
     "preview": "npx vite preview",
     "typecheck": "npm run check:encoding && tsc --noEmit -p tsconfig.app.json",
     "check:encoding": "node scripts/check-encoding.mjs",

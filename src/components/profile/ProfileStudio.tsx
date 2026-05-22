@@ -303,9 +303,10 @@ export default function ProfileStudio({
   const toggleDeco = async (em: string) => {
     if (em.includes("duotone")) return;
     if (localSalon.deco.includes(em)) {
-      setLocalSalon((s) =>
-        normalizeSalonDecoLayout(removeDecoFromLayout({ ...s, deco: s.deco.filter((d) => d !== em) }))
-      );
+      setLocalSalon((s) => {
+        const next = { ...s, deco: s.deco.filter((d) => d !== em) };
+        return normalizeSalonDecoLayout(removeDecoFromLayout(next, em));
+      });
       if (selectedDecoEm === em) setSelectedDecoEm(null);
       return;
     }

@@ -199,9 +199,15 @@ function Confetti({ rank }: { rank:number }) {
 // ?? CARD REVEAL widget ????????????????????????????????????????????????????????
 function CardBadge({ card }: { card: CasinoCard }) {
   return (
-    <div style={{ animation:"cardReveal 0.5s cubic-bezier(0.34,1.56,0.64,1) both" }}
+    <div
       className="mx-auto mt-3 w-full max-w-[220px] overflow-hidden rounded-2xl border p-3 text-center"
-      style2={{ border:`1.5px solid ${card.color}55`, background:`${card.color}18`, boxShadow:`0 0 18px ${card.color}40` }}>
+      style={{
+        animation: "cardReveal 0.5s cubic-bezier(0.34,1.56,0.64,1) both",
+        border: `1.5px solid ${card.color}55`,
+        background: `${card.color}18`,
+        boxShadow: `0 0 18px ${card.color}40`,
+      }}
+    >
       <div style={{ fontSize:32, marginBottom:4 }}>{card.emoji}</div>
       <p className="text-sm font-black" style={{ color:card.color }}>{card.name}</p>
       <p className="text-[11px] text-slate-400 mt-0.5">{card.desc}</p>
@@ -220,9 +226,14 @@ function WinOverlay({ result, onClose }: { result: WinResult; onClose: () => voi
         <div className="relative z-10 w-full max-w-xs rounded-[1.75rem] border border-white/15 bg-[#0d0820] p-6 text-center"
           style={{ boxShadow:"0 20px 60px rgba(0,0,0,0.8)" }} onClick={e=>e.stopPropagation()}>
           <p className="text-xs font-bold uppercase tracking-widest text-violet-300/80 mb-3">Carte surprise !</p>
-          <div style={{ animation:"cardReveal 0.55s cubic-bezier(0.34,1.56,0.64,1) both" }}
+          <div
             className="rounded-2xl border p-4 text-center"
-            style2={{ border:`1.5px solid ${result.card.color}55`, background:`${result.card.color}18` }}>
+            style={{
+              animation: "cardReveal 0.55s cubic-bezier(0.34,1.56,0.64,1) both",
+              border: `1.5px solid ${result.card.color}55`,
+              background: `${result.card.color}18`,
+            }}
+          >
             <div style={{ fontSize:44 }}>{result.card.emoji}</div>
             <p className="mt-1 text-base font-black" style={{ color:result.card.color }}>{result.card.name}</p>
             <p className="text-xs text-slate-400 mt-1">{result.card.desc}</p>

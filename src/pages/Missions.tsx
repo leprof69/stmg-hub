@@ -171,10 +171,9 @@ const formatExerciseTypeLabel = (t: MissionExercise["type"]) => (t === "Etude de
 
 export default function Missions({ profil, onXPGagne }: MissionsProps) {
   const { xpRewardsSuspended } = usePlatformIntegrity();
-  const niveauxAccessibles = useMemo(
-    () => (profil?.classe === "terminale" ? (["premiere", "terminale"] as const) : (["premiere"] as const)),
-    [profil?.classe]
-  );
+  const niveauxAccessibles = useMemo((): ("premiere" | "terminale")[] => {
+    return profil?.classe === "terminale" ? ["premiere", "terminale"] : ["premiere"];
+  }, [profil?.classe]);
   const peutChoisirClasse = profil?.role === "admin" || profil?.classe === "terminale";
 
   const [niveauSelectionne, setNiveauSelectionne] = useState<"premiere" | "terminale">(
