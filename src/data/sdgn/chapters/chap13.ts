@@ -18,6 +18,7 @@ export const SDGN_CHAP13_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Performance :\nAtteinte d'objectifs prédéfinis. Une fois l'objectif atteint, il devient performance ; sinon, échec.\n\n2) Trois étapes :\n— Objectifs : demi-finales, budget plafonné.\n— Moyens : effectif, préparation, entraînements.\n— Résultat : élimination quarts (2025-26) = échec ; demies saison précédente = performance.\n\n3) Efficacité vs efficiente :\nEfficiente : objectif atteint avec ressources contraintes/optimales (saison précédente). Efficacité : ressources non optimisées malgré des efforts — ici échec 2025-26 malgré budget maîtrisé, il manquait l'atteinte du résultat.",
     attendu: "Définition performance, trois étapes, distinction efficiente/efficacité.",
+    notionsCibles: ["performance", "trois étapes", "efficiente/efficacité."],
   },
   {
     id: "sdgn13-e2",
@@ -35,6 +36,7 @@ export const SDGN_CHAP13_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Qualités des objectifs :\nCompréhensibles (vocabulaire commun), mesurables (indicateurs), réalisables, limités dans le temps.\n\n2) Classification :\n— CA +8 % / 12 mois : quantitatif (euros, %).\n— Satisfaction 85 % : qualitatif rendu mesurable par enquête.\n— Délai 48 h max : quantitatif (temps).\n— Ambiance : qualitatif tant qu'indicateurs absents.\n\n3) Précision nécessaire :\nSans indicateurs (enquête, absentéisme), on ne peut pas savoir si l'objectif est atteint — la performance n'est pas vérifiable.",
     attendu: "Qualités rappelées, classification correcte, ambiance à indicateurs.",
+    notionsCibles: ["Qualités rappelées", "classification correcte", "ambiance à indicateurs."],
   },
   {
     id: "sdgn13-e3",
@@ -52,6 +54,7 @@ export const SDGN_CHAP13_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Atteinte efficiente :\nN+1 Express Nord : objectif atteint (99 % en 24 h) avec moins de salariés — ressources optimisées.\n\n2) Filiale test :\nPerformance légèrement supérieure (99,5 %) mais surconsommation de moyens (140 salariés, heures sup.) → efficacité limitée, pas d'efficiente.\n\n3) Lien organisation :\nLa performance ne se résume pas au résultat : il faut évaluer le rapport résultat / ressources pour piloter durablement.",
     attendu: "Efficiente vs efficacité illustrés, lien pilotage.",
+    notionsCibles: ["Efficiente vs efficacité illustrés", "lien pilotage."],
   },
   {
     id: "sdgn13-e4",
@@ -71,6 +74,7 @@ export const SDGN_CHAP13_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Performance commerciale :\nNiveau d'atteinte des objectifs du domaine commercial, apprécié notamment par les quantités vendues (unités).\n\n2) Évolution quantités :\n465 000 vs 420 000 = +45 000 unités, soit +10,7 %. Capacité à vendre en hausse.\n\n3) Limite :\nSi le marché croît plus vite (+15 %), BrushClean peut perdre des parts malgré des volumes en hausse — d'où le CA et la part de marché indispensables.",
     attendu: "Définition, calcul +10,7 %, limite de l'indicateur volumes.",
+    notionsCibles: ["Définition", "+10", "limite de l'indicateur volumes."],
   },
   {
     id: "sdgn13-e5",
@@ -90,6 +94,7 @@ export const SDGN_CHAP13_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Évolution cycle :\n934  − 892 = +42 M€.\n+42 / 892 × 100 ≈ +4,7 %.\n\n2) Performance cycle :\nCA en hausse : performance commerciale positive sur la période (ventes en valeur augmentent).\n\n3) Rayon piscine :\n198  − 210 = −12 M€, soit environ ?5,7 %. Performance commerciale en baisse — analyse par nature d'activité nécessaire (saisonnalité, concurrence).",
     attendu: "Calcul +4,7 %, interprétation hausse/baisse par rayon.",
+    notionsCibles: ["+4", "interprétation hausse/baisse par rayon."],
   },
   {
     id: "sdgn13-e6",
@@ -110,6 +115,7 @@ export const SDGN_CHAP13_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Parts de marché Marie :\n2023 : 118 / 680 × 100  − 17,4 %.\n2024 : 124 / 700 × 100  − 17,7 % (si marché 700 M€, légère hausse — le support suggère une baisse si le marché a crû plus vite ; avec marché 2024 à 750 M€ par ex. : 124/750 = 16,5 %).\nExemple cohérent avec énoncé « part recule » : marché 2024 = 750 M€ → 16,5 % < 17,4 %.\n\n2) CA ↑ et part ↓ :\nLe marché global croît plus vite que les ventes de Marie : elle vend plus en valeur mais moins vite que le secteur.\n\n3) Objectif :\nVendre davantage que les concurrents pour gagner des parts — pas seulement augmenter le CA.",
     attendu: "Formule part de marché, paradoxe CA/part expliqué.",
+    notionsCibles: ["Formule part de marché", "paradoxe CA/part expliqué."],
   },
   {
     id: "sdgn13-e7",
@@ -129,6 +135,7 @@ export const SDGN_CHAP13_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Fidélité :\nLes clients satisfaits rachètent : la fidélité stimule les ventes récurrentes et réduit la dépendance à l'acquisition de nouveaux clients.\n\n2) Chiffres Sephora :\nRéachat 64 % > 51 % concurrent : meilleure rétention. Panier annuel fidèle 186 € vs 72 € : la fidélité multiplie la valeur client.\n\n3) Campagne e-mail :\n+4 points de réachat : action de communication améliore la performance commerciale mesurable sur l'indicateur fidélité.",
     attendu: "Fidélité définie, chiffres interprétés, lien campagne/performance.",
+    notionsCibles: ["Fidélité définie", "chiffres interprétés", "lien campagne/performance."],
   },
   {
     id: "sdgn13-e8",
@@ -149,6 +156,7 @@ export const SDGN_CHAP13_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Définitions :\n— Rentabilité : capacité à générer des profits à partir des capitaux investis (capitaux propres).\n— Profitabilité : capacité à générer du profit à partir de l'activité (CA).\n\n2) Rentabilité :\nTechPrint : 2,4 / 18 × 100  − 13,3 %.\nImprim'Rapide : 1,1 / 6 × 100  − 18,3 %.\n\n3) Profitabilité :\nTechPrint : 2,4 / 32 × 100 = 7,5 %.\nImprim'Rapide : 1,1 / 14 × 100  − 7,9 %.\nImprim'Rapide est plus rentable en capital ; profitabilité proche sur le CA.",
     attendu: "Deux notions distinguées, ratios calculés et comparés.",
+    notionsCibles: ["Deux notions distinguées", "ratios calculés et comparés."],
   },
   {
     id: "sdgn13-e9",
@@ -168,6 +176,7 @@ export const SDGN_CHAP13_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Dividendes et autofinancement :\n— Dividendes : part du profit versée aux actionnaires.\n— Autofinancement : bénéfice non distribué, en réserves, pour financer des investissements internes.\n\n2) Calculs :\nAutofinancement = 21,4  − 8,4 = 13 Md€.\nDistribué : 8,4 / 21,4  − 39 %. Autofinancé : ≈ 61 %.\n\n3) Dividende par action :\nRendement = 3,34 / 62  − 5,4 % : indicateur de performance financière pour l'actionnaire.",
     attendu: "Définitions, répartition 39/61 %, lien actionnaire.",
+    notionsCibles: ["Définitions", "répartition 39/61 %", "lien actionnaire."],
   },
   {
     id: "sdgn13-e10",
@@ -187,6 +196,7 @@ export const SDGN_CHAP13_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Performance commerciale positive :\nCA +22 %, part de marché 38 % en hausse — objectifs commerciaux atteints ou dépassés.\n\n2) Performance financière fragile :\nMarge unitaire en baisse, résultat net groupe négatif — profitabilité/rentabilité insuffisantes.\n\n3) Conflits d'acteurs :\n— Actionnaires : rentabilité vs stratégie de croissance.\n— Restaurants : commissions vs volumes Uber.\n— Livreurs : conditions de travail vs satisfaction client élevée.\nPerformance globale contradictoire : impossible de maximiser tous les indicateurs simultanément.",
     attendu: "Contradictions repérées, acteurs et tensions nommés.",
+    notionsCibles: ["Contradictions repérées", "acteurs et tensions nommés."],
   },
   {
     id: "sdgn13-cas1",
@@ -208,6 +218,7 @@ export const SDGN_CHAP13_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Ratios 2024 :\nProfitabilité = 4,2 / 98  − 4,3 %.\nRentabilité CP = 4,2 / 28 = 15 %.\nPerformance financière correcte pour une PME en croissance.\n\n2) Performance commerciale :\nCA +12 %, part 23 %, réachat 58 % : progression commerciale solide.\n\n3) Refus discount :\nCA pourrait monter mais image premium et valeur perçue risquent de baisser — performance commerciale à court terme vs qualité de marque à long terme.\n\n4) Objectifs 2025 :\nPart 26 %, RN 5 M€ — suivre CA, parts, fidélité, RN, rentabilité.\n\n5) Synthèse :\nPME performante commercialement, autofinancement total (0 dividende) pour investir. Tensions possibles entre croissance volume et positionnement premium — pilotage multi-indicateurs indispensable.",
     attendu: "Cas PME complet, ratios, arbitrage image/CA, synthèse.",
+    notionsCibles: ["Cas PME complet", "ratios", "arbitrage image/CA"],
   },
   {
     id: "sdgn13-cas2",
@@ -230,5 +241,6 @@ export const SDGN_CHAP13_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Évolution temporelle :\nCA : (69,2  − 65,4) / 65,4 ≈ +5,8 %.\nRN : (5,2  − 4,8) / 4,8 ≈ +8,3 %.\nLivraisons : +4,2 %. Performance commerciale et financière en progression.\n\n2) Comparaison spatiale :\nPart CA ≈ 69,2 / (69,2 + 55,6) ≈ 55,4 % vs Boeing — leadership commercial.\n\n3) Financier :\nRentabilité CP 11 %, dividendes 1,8 Md€, reste en autofinancement R&D — actionnaires rémunérés tout en finançant l'innovation.\n\n4) Tensions :\n— Salariés vs marge : pression sur coûts.\n— Clients compagnies vs prix de vente : menace sur profitabilité.\n— États vs dividendes/emploi : contraintes politiques.\n\n5) Synthèse :\nAirbus est globalement performant (objectifs commerciaux et financiers atteints, efficiente sur livraisons). Mais les performances restent contradictoires : prix bas pour clients, R&D coûteuse, tensions sociales. L'analyse exige comparaisons temps/espace et lecture multi-acteurs.",
     attendu: "Comparaisons calculées, parts de marché, tensions, synthèse nuancée.",
+    notionsCibles: ["Comparaisons calculées", "parts de marché", "tensions"],
   },
 ];

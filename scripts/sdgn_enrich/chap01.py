@@ -45,6 +45,7 @@ EXERCISES = [
             "de statuts juridiques ni d'existence reconnue par les tiers comme entité autonome."
         ),
         "attendu": "Définition précise, repérage dans le texte, distinction action collective / organisation.",
+        "notions": ["action collective organisée", "organisation"],
         "minChars": 120,
     },
     {
@@ -86,6 +87,7 @@ EXERCISES = [
             "collectives dans la durée."
         ),
         "attendu": "Articulation claire action collective ? organisation, vocabulaire juridique exact.",
+        "notions": ["vocabulaire juridique exact."],
         "minChars": 140,
     },
     {
@@ -127,6 +129,7 @@ EXERCISES = [
             "avec son activité économique."
         ),
         "attendu": "Trois cas distincts, finalités et types correctement nommés.",
+        "notions": ["Trois cas distincts", "finalités et types correctement nommés."],
         "minChars": 150,
     },
     {
@@ -238,6 +241,7 @@ EXERCISES = [
             "— Contrôle citoyen indirect : l'usager conteste les tarifs auprès de la mairie."
         ),
         "attendu": "Comparaison association / secteur public, contrôle citoyen et institutionnel.",
+        "notions": ["Comparaison association / secteur public", "contrôle citoyen et institutionnel."],
         "minChars": 180,
     },
     {
@@ -276,6 +280,7 @@ EXERCISES = [
             "salariés, d'où la nécessité de mécanismes de contrôle pour aligner leurs intérêts."
         ),
         "attendu": "Quatre modes distincts, mécanismes expliqués, pas de confusion propriété/direction.",
+        "notions": ["Quatre modes distincts", "mécanismes expliqués", "pas de confusion propriété/direction."],
         "minChars": 200,
     },
     {
@@ -315,6 +320,7 @@ EXERCISES = [
             "— Mission d'intérêt général et stabilité de l'emploi public ? ADEME."
         ),
         "attendu": "Comparaison structurée des trois types, conseil argumenté.",
+        "notions": ["Comparaison structurée des trois types", "conseil argumenté."],
         "minChars": 220,
     },
     {
@@ -352,6 +358,7 @@ EXERCISES = [
             "requalification possible, sanctions, perte de confiance des financeurs publics."
         ),
         "attendu": "Enchaînement logique, distinction des finalités, argument juridique.",
+        "notions": ["Enchaînement logique", "des finalités", "argument juridique."],
         "minChars": 240,
     },
     {
@@ -390,6 +397,7 @@ EXERCISES = [
             "des décisions court-termistes."
         ),
         "attendu": "Analyse fine propriété/gouvernement/conflits, vocabulaire coopératif maîtrisé.",
+        "notions": ["vocabulaire coopératif maîtrisé."],
         "minChars": 260,
     },
     {
@@ -442,6 +450,7 @@ EXERCISES = [
             "lucratifs compatibles pour légitimer son pouvoir face aux parties prenantes."
         ),
         "attendu": "Cas LVMH analysé avec toutes les notions du chapitre 1, synthèse argumentée.",
+        "notions": ["synthèse argumentée."],
         "minChars": 400,
     },
     {
@@ -490,6 +499,7 @@ EXERCISES = [
             "Elles se complètent dans la chaîne sociale et sanitaire."
         ),
         "attendu": "Comparaison systématique association / public, synthèse sur l'économie sociale.",
+        "notions": ["synthèse sur l'économie sociale."],
         "minChars": 450,
     },
 ]

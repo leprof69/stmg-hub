@@ -1,5 +1,5 @@
 /** Genere par scripts/regen_sdgn_catalog.py */
-export const SDGN_MISSIONS_PROGRESS_VERSION = 1 as const;
+export const SDGN_MISSIONS_PROGRESS_VERSION = 2 as const;
 export type SdgnMissionMeta = { title: string; chapter: string; xpMax: number };
 export const SDGN_MISSION_BY_ID: Record<string, SdgnMissionMeta> = {
   "sdgn1-e1": { title: "Caract\u00e9ristiques de l'action collective organis\u00e9e", chapter: "SDGN Chapitre 1", xpMax: 120 },
@@ -87,17 +87,17 @@ export const SDGN_MISSION_BY_ID: Record<string, SdgnMissionMeta> = {
   "sdgn7-cas1": { title: "\u00c9tude de cas : Decathlon", chapter: "SDGN Chapitre 7", xpMax: 560 },
   "sdgn7-cas2": { title: "\u00c9tude de cas : L'Or\u00e9al", chapter: "SDGN Chapitre 7", xpMax: 620 },
   "sdgn8-e1": { title: "La notion de processus de gestion", chapter: "SDGN Chapitre 8", xpMax: 120 },
-  "sdgn8-e2": { title: "Schema evenement-resultat", chapter: "SDGN Chapitre 8", xpMax: 130 },
-  "sdgn8-e3": { title: "SI structurant et rigidite des processus", chapter: "SDGN Chapitre 8", xpMax: 140 },
+  "sdgn8-e2": { title: "Sch\u00e9ma \u00e9v\u00e9nement-r\u00e9sultat", chapter: "SDGN Chapitre 8", xpMax: 130 },
+  "sdgn8-e3": { title: "SI structurant et rigidit\u00e9 des processus", chapter: "SDGN Chapitre 8", xpMax: 140 },
   "sdgn8-e4": { title: "Le progiciel de gestion integre (PGI)", chapter: "SDGN Chapitre 8", xpMax: 180 },
   "sdgn8-e5": { title: "Contraintes de mise en place d'un PGI", chapter: "SDGN Chapitre 8", xpMax: 190 },
   "sdgn8-e6": { title: "E-commerce et m-commerce", chapter: "SDGN Chapitre 8", xpMax: 210 },
-  "sdgn8-e7": { title: "Site de marche et encheres en ligne", chapter: "SDGN Chapitre 8", xpMax: 230 },
-  "sdgn8-e8": { title: "Teletravail et organisation", chapter: "SDGN Chapitre 8", xpMax: 260 },
-  "sdgn8-e9": { title: "Mobilite professionnelle et SI", chapter: "SDGN Chapitre 8", xpMax: 280 },
+  "sdgn8-e7": { title: "Site de march\u00e9 et ench\u00e8res en ligne", chapter: "SDGN Chapitre 8", xpMax: 230 },
+  "sdgn8-e8": { title: "T\u00e9l\u00e9travail et organisation", chapter: "SDGN Chapitre 8", xpMax: 260 },
+  "sdgn8-e9": { title: "Mobilit\u00e9 professionnelle et SI", chapter: "SDGN Chapitre 8", xpMax: 280 },
   "sdgn8-e10": { title: "Intelligence artificielle et cloud computing", chapter: "SDGN Chapitre 8", xpMax: 360 },
-  "sdgn8-cas1": { title: "Etude de cas : deploiement PGI chez Medisport", chapter: "SDGN Chapitre 8", xpMax: 560 },
-  "sdgn8-cas2": { title: "Etude de cas : choix numeriques chez TerraLog", chapter: "SDGN Chapitre 8", xpMax: 620 },
+  "sdgn8-cas1": { title: "\u00c9tude de cas : d\u00e9ploiement PGI chez Medisport", chapter: "SDGN Chapitre 8", xpMax: 560 },
+  "sdgn8-cas2": { title: "\u00c9tude de cas : choix num\u00e9riques chez TerraLog", chapter: "SDGN Chapitre 8", xpMax: 620 },
   "sdgn9-e1": { title: "Valeur per\u00e7ue et arbitrage du consommateur", chapter: "SDGN Chapitre 9", xpMax: 120 },
   "sdgn9-e2": { title: "\u00c9l\u00e9ments objectifs et subjectifs", chapter: "SDGN Chapitre 9", xpMax: 130 },
   "sdgn9-e3": { title: "Image de marque", chapter: "SDGN Chapitre 9", xpMax: 140 },

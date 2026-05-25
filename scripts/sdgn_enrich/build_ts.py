@@ -37,6 +37,11 @@ def render_ex(ch: int, ex: dict, diff: str, xp: int, etude: bool) -> str:
     typ = "Etude de cas" if etude else "Exercice"
     ql = ",\n      ".join(json.dumps(q, ensure_ascii=False) for q in ex["questions"])
     tables = fmt_tables(ex.get("supportTables"))
+    notions = ex.get("notions") or ex.get("notionsCibles") or []
+    notions_line = ""
+    if notions:
+        nl = ", ".join(json.dumps(n, ensure_ascii=False) for n in notions)
+        notions_line = f"\n    notionsCibles: [{nl}],"
     return f"""  {{
     id: "sdgn{ch}-{ex['id']}",
     title: {json.dumps(ex['title'], ensure_ascii=False)},
@@ -50,7 +55,7 @@ def render_ex(ch: int, ex: dict, diff: str, xp: int, etude: bool) -> str:
       {ql}
     ],
     correctionModele: {json.dumps(ex['correctionModele'], ensure_ascii=False)},
-    attendu: {json.dumps(ex['attendu'], ensure_ascii=False)},
+    attendu: {json.dumps(ex['attendu'], ensure_ascii=False)},{notions_line}
   }},"""
 
 

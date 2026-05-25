@@ -18,6 +18,7 @@ export const SDGN_CHAP3_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Culture d'entreprise :\nEnsemble de références partagées. Valeur : protéger la planète. Normes : fournisseurs certifiés. Rituels : bénévolat mensuel, parcours d'intégration.\n\n2) Sentiment d'appartenance :\nCadre sécurisant, cohérence des comportements, reconnaissance publique des actes alignés.\n\n3) Risque de non-intégration :\nQuiproquo, conflit, rejet du groupe si la culture individuelle s'oppose à celle de l'organisation.",
     attendu: "Trois composantes distinguées, lien appartenance, risque de rejet.",
+    notionsCibles: ["Trois composantes distinguées", "lien appartenance", "risque de rejet."],
   },
   {
     id: "sdgn3-e2",
@@ -52,6 +53,7 @@ export const SDGN_CHAP3_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Mentions : émetteur, destinataires, date d'effet, objet (badge), numéro.\n\n2) Ton impératif :\nLa note exprime un ordre officiel, pas une invitation ; relation d'autorité descendante.\n\n3) Autorité rationnelle légale :\nPouvoir conféré par le statut de chef d'établissement et les règles connues de tous.",
     attendu: "Note de service caractérisée, autorité nommée correctement.",
+    notionsCibles: ["Note de service caractérisée", "autorité nommée correctement."],
   },
   {
     id: "sdgn3-e4",
@@ -86,6 +88,7 @@ export const SDGN_CHAP3_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Stéréotype :\nReprésentation schématique d'un individu selon son groupe d'appartenance (« ce quartier »).\n\n2) Préjugé :\nJugement négatif à effets discriminatoires : CV écarté sans lecture.\n\n3) Conséquences :\nPour l'individu : mise à l'écart, perte d'opportunité. Pour l'organisation : plainte RH, image employeur dégradée, perte de talents.",
     attendu: "Définitions exactes, discrimination identifiée.",
+    notionsCibles: ["Définitions exactes", "discrimination identifiée."],
   },
   {
     id: "sdgn3-e6",
@@ -103,6 +106,7 @@ export const SDGN_CHAP3_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Enjeux :\nChef de produit : influence (convaincre). DAF : informatif (budget). Marketing : relationnel et influence (test pilote).\n\n2) Stratégies :\nOpposition DAF, évitement/test pilote, argumentation d'influence, coopération finale (compromis PACA).\n\n3) Arguments :\nAutorité (Gartner), communauté (clients fidèles), cadrage possible sur l'innovation.",
     attendu: "Enjeux et stratégies nommés, arguments classés.",
+    notionsCibles: ["Enjeux et stratégies nommés", "arguments classés."],
   },
   {
     id: "sdgn3-e7",
@@ -120,6 +124,7 @@ export const SDGN_CHAP3_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Manipulation TikTok :\nIntérêt uniquement pour le vendeur, pression, pas de choix réel ni contre-argumentation.\n\n2) Influence positive RH :\nArgumentation avec preuves, délai de réflexion, réponses aux objections = choix laissé.\n\n3) Ressorts :\nVendeur : affectif (rêve d'argent). RH : logique (chiffres) et appartenance (carrière interne).",
     attendu: "Distinction nette manipulation/influence, ressorts identifiés.",
+    notionsCibles: ["nette manipulation/influence", "ressorts identifiés."],
   },
   {
     id: "sdgn3-e8",
@@ -137,6 +142,7 @@ export const SDGN_CHAP3_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Conformisme :\nTous utilisent le même langage par pression normative du groupe, environnement stable.\n\n2) Minorité active :\nOpinion différente, organisée, prototypes réguliers, persistance jusqu'au pilote.\n\n3) Effets :\nConformisme : cohésion mais perte de créativité. Minorité active : dynamique de changement, nouvelle norme possible.",
     attendu: "Conformisme et minorité active appliqués, effets doubles.",
+    notionsCibles: ["Conformisme et minorité active appliqués", "effets doubles."],
   },
   {
     id: "sdgn3-e9",
@@ -191,6 +197,7 @@ export const SDGN_CHAP3_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Note insuffisante :\nTon directif sans dialogue, vide informationnel comblé par rumeur rapide.\n\n2) Formelle vs informelle :\nNote fiable mais lente ; Facebook rapide mais déformé ? tension.\n\n3) Leader de fait :\nDélégué charismatique, influence par argumentation et négociation, puis coopération.\n\n4) Conformisme/rumeur :\nPeur collective ? absentéisme, pression normative sur comportements.\n\n5) Plan d'action :\nAssocier note et réunion, espaces d'expression ascendante, réseau social d'entreprise modéré, réaction rapide du management, association systématique du CSE.",
     attendu: "Crise communication interne analysée, mesures préventives concrètes.",
+    notionsCibles: ["Crise communication interne analysée", "mesures préventives concrètes."],
   },
   {
     id: "sdgn3-cas2",
@@ -210,5 +217,6 @@ export const SDGN_CHAP3_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Culture :\nNouvelles valeurs agile vs normes sécurité strictes (cohabitation). Stéréotypes résistants.\n\n2) Leadership :\nParticipatif sur projets, autorité légale maintenue sur conformité — pas contradictoire si les domaines sont clarifiés.\n\n3) Minorité active + RSE :\nMentorat femmes ingénieures, visibilité des réussites, appartenance renforcée.\n\n4) Turn-over :\nMeilleure adéquation culture-individus, rétention des talents tech.\n\n5) Synthèse :\nTransformation partielle réussie : participation, inclusion, baisse turn-over. Limites : stéréotypes, managers autocratiques résiduels, tension agile/sécurité. Culture change lentement ; nécessite contrôle des dirigeants et alliances minorités actives.",
     attendu: "Transformation culturelle nuancée, toutes notions du chapitre 3.",
+    notionsCibles: ["Transformation culturelle nuancée", "toutes notions du chapitre 3."],
   },
 ];

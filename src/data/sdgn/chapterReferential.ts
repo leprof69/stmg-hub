@@ -34,7 +34,7 @@ export const SDGN_CHAPTER_REFERENTIAL: Record<number, SdgnChapterReferential> = 
   },
   2: {
     question:
-      "Comment les caracteristiques de l'individu (personnalite, emotions, identite numerique) influencent-elles sa communication professionnelle ?",
+      "Comment les caracteristiques de l'individu (personnalite, emotions, identite numérique) influencent-elles sa communication professionnelle ?",
     notions: [
       "personnalite",
       "traits de personnalite",
@@ -42,14 +42,14 @@ export const SDGN_CHAPTER_REFERENTIAL: Record<number, SdgnChapterReferential> = 
       "intelligence emotionnelle",
       "communication non verbale",
       "perception",
-      "identite numerique",
+      "identite numérique",
       "e-reputation",
       "communication professionnelle",
     ],
     competences: [
-      "Reperer les traits de personnalite et leurs effets sur le comportement au travail",
+      "Repérer les traits de personnalite et leurs effets sur le comportement au travail",
       "Analyser l'impact des emotions et des signes non verbaux",
-      "Evaluer les risques et atouts de l'identite numerique professionnelle",
+      "Évaluer les risques et atouts de l'identite numérique professionnelle",
     ],
   },
   3: {
@@ -81,7 +81,7 @@ export const SDGN_CHAPTER_REFERENTIAL: Record<number, SdgnChapterReferential> = 
   },
   4: {
     question:
-      "Comment l'activite de travail mobilise-t-elle les competences de l'individu et comment l'organisation optimise-t-elle les conditions de travail ?",
+      "Comment l'activité de travail mobilise-t-elle les competences de l'individu et comment l'organisation optimise-t-elle les conditions de travail ?",
     notions: [
       "approche par competences",
       "savoirs",
@@ -91,7 +91,7 @@ export const SDGN_CHAPTER_REFERENTIAL: Record<number, SdgnChapterReferential> = 
       "profil de competences",
       "qualite de vie au travail",
       "QVCT",
-      "teletravail",
+      "télétravail",
       "conditions de travail",
     ],
     competences: [
@@ -121,7 +121,7 @@ export const SDGN_CHAPTER_REFERENTIAL: Record<number, SdgnChapterReferential> = 
   },
   6: {
     question:
-      "Comment les organisations transforment-elles les donnees en information strategique, et quelles limites rencontrent-elles ?",
+      "Comment les organisations transforment-elles les données en information strategique, et quelles limites rencontrent-elles ?",
     notions: [
       "donnee",
       "information",
@@ -129,7 +129,7 @@ export const SDGN_CHAPTER_REFERENTIAL: Record<number, SdgnChapterReferential> = 
       "Big Data",
       "5V",
       "open data",
-      "donnees personnelles",
+      "données personnelles",
       "systeme d'information",
       "PGI",
       "CRM",
@@ -137,14 +137,14 @@ export const SDGN_CHAPTER_REFERENTIAL: Record<number, SdgnChapterReferential> = 
       "RGPD",
     ],
     competences: [
-      "Reperer l'origine d'une information et les etapes de sa transformation",
-      "Identifier les donnees a caractere personnel et les contraintes d'utilisation",
-      "Manipuler des donnees ouvertes pour creer de l'information",
+      "Repérer l'origine d'une information et les étapes de sa transformation",
+      "Identifier les données à caractère personnel et les contraintes d'utilisation",
+      "Manipuler des données ouvertes pour créer de l'information",
     ],
   },
   7: {
     question:
-      "Comment les technologies numeriques transforment-elles le travail collaboratif et la communication dans l'organisation ?",
+      "Comment les technologies numériques transforment-elles le travail collaboratif et la communication dans l'organisation ?",
     notions: [
       "visioconference",
       "outils collaboratifs",
@@ -160,44 +160,44 @@ export const SDGN_CHAPTER_REFERENTIAL: Record<number, SdgnChapterReferential> = 
     competences: [
       "Classer les outils collaboratifs par famille",
       "Analyser l'impact des TIC sur les methodes de travail",
-      "Evaluer risques et opportunites des usages numeriques en organisation",
+      "Évaluer risques et opportunites des usages numériques en organisation",
     ],
   },
   8: {
     question:
-      "Comment le numerique (processus, PGI, e-commerce, teletravail, IA, cloud) transforme-t-il l'organisation du travail ?",
+      "Comment le numérique (processus, PGI, e-commerce, télétravail, IA, cloud) transforme-t-il l'organisation du travail ?",
     notions: [
       "processus de gestion",
-      "schema evenement-resultat",
-      "evenement declencheur",
-      "evenement-resultat",
+      "schéma événement-résultat",
+      "événement déclencheur",
+      "événement-résultat",
       "regles d'emission",
       "PGI",
       "e-commerce",
       "m-commerce",
       "site de marche",
-      "teletravail",
+      "télétravail",
       "mobilite professionnelle",
       "intelligence artificielle",
       "cloud computing",
       "systeme d'information structurant",
     ],
     competences: [
-      "Schematiser un processus de gestion representant l'organisation du travail",
+      "Schématiser un processus de gestion représentant l'organisation du travail",
       "Comparer les systemes de gestion (PGI, e-commerce, m-commerce, site de marche)",
-      "Analyser les choix numeriques pour une utilisation optimale (teletravail, IA, cloud)",
+      "Analyser les choix numériques pour une utilisation optimale (télétravail, IA, cloud)",
     ],
   },
   9: {
     question:
-      "Comment l'organisation construit-elle et mesure-t-elle la valeur percue aupres des consommateurs ?",
+      "Comment l'organisation construit-elle et mesure-t-elle la valeur perçue auprès des consommateurs ?",
     notions: [
-      "valeur percue",
+      "valeur perçue",
       "avantages attendus",
       "sacrifices consentis",
       "image de marque",
       "notoriete",
-      "qualite percue",
+      "qualite perçue",
       "satisfaction",
       "medias sociaux",
       "communaute en ligne",
@@ -207,15 +207,15 @@ export const SDGN_CHAPTER_REFERENTIAL: Record<number, SdgnChapterReferential> = 
       "brand content",
     ],
     competences: [
-      "Expliquer la construction de la valeur percue par le consommateur",
-      "Analyser l'impact des medias sociaux sur la valeur percue",
-      "Choisir et interpreter des indicateurs de mesure de la valeur percue",
+      "Expliquer la construction de la valeur perçue par le consommateur",
+      "Analyser l'impact des medias sociaux sur la valeur perçue",
+      "Choisir et interpreter des indicateurs de mesure de la valeur perçue",
     ],
   },
   10: {
     question: "Comment mesurer la valeur financiere et boursiere d'une organisation ?",
     notions: [
-      "compte de resultat",
+      "compte de résultat",
       "bilan",
       "actif",
       "passif",
@@ -226,7 +226,7 @@ export const SDGN_CHAPTER_REFERENTIAL: Record<number, SdgnChapterReferential> = 
       "valeur ajoutee",
     ],
     competences: [
-      "Lire et interpreter un compte de resultat et un bilan simplifies",
+      "Lire et interpreter un compte de résultat et un bilan simplifies",
       "Distinguer valeur financiere et valeur boursiere",
       "Analyser les facteurs influencant la valeur boursiere",
     ],
@@ -251,22 +251,22 @@ export const SDGN_CHAPTER_REFERENTIAL: Record<number, SdgnChapterReferential> = 
   },
   12: {
     question:
-      "Quelle est la relation entre prix, cout et marge, et comment le gestionnaire arbitre-t-il ?",
+      "Quelle est la relation entre prix, coût et marge, et comment le gestionnaire arbitre-t-il ?",
     notions: [
       "prix de vente",
-      "cout de revient",
+      "coût de revient",
       "marge commerciale",
-      "marge sur cout de revient",
+      "marge sur coût de revient",
       "qualite",
       "concurrence",
       "saisonnalite",
       "innovation",
-      "maitrise des couts",
+      "maitrise des coûts",
     ],
     competences: [
-      "Calculer et interpreter prix, cout et marge",
+      "Calculer et interpreter prix, coût et marge",
       "Analyser l'effet d'une decision de prix sur la performance",
-      "Proposer un arbitrage prix-qualite-cout coherent",
+      "Proposer un arbitrage prix-qualite-coût coherent",
     ],
   },
   13: {
@@ -289,7 +289,7 @@ export const SDGN_CHAPTER_REFERENTIAL: Record<number, SdgnChapterReferential> = 
     competences: [
       "Identifier des indicateurs pertinents pour apprecier la performance",
       "Effectuer des comparaisons dans le temps et dans l'espace",
-      "Reperer contraintes et opportunites liees aux aspirations des acteurs",
+      "Repérer contraintes et opportunites liees aux aspirations des acteurs",
       "Percevoir le caractere contradictoire des differents types de performance",
     ],
   },

@@ -33,6 +33,7 @@ EXERCISES = [
             "Savoirs management, savoir-être décisionnel plus affirmé."
         ),
         "attendu": "Trois piliers distingués, exemples du support, analyse promotion.",
+        "notions": ["Trois piliers distingués", "exemples du support", "analyse promotion."],
         "minChars": 120,
     },
     {
@@ -91,6 +92,7 @@ EXERCISES = [
             "Peut figurer dans conditions ou offre séparée ; la fiche reste exhaustive sur le travail."
         ),
         "attendu": "Fiche de poste structurée, rubriques identifiées.",
+        "notions": ["Fiche de poste structurée", "rubriques identifiées."],
         "minChars": 150,
     },
     {
@@ -126,11 +128,11 @@ EXERCISES = [
         "id": "e5",
         "title": "Conditions de travail : facteurs d'influence",
         "support": (
-            "Dans un entrepôt Amazon, les préparateurs de commandes effectuent 12 km de marche par "
+            "Dans un entrepôt Amazon, les préparateurs de commandes effectuent 12 km de marché par "
             "shift (facteur physique), dans un bruit constant de 78 dB (environnemental), avec des "
             "objectifs chiffrés minute par minute (organisationnel). Les relations entre collègues "
             "sont tendues après un changement de manager autoritaire (social). Un salarié confie "
-            "des difficultés à « déconnecter » mentalement (psychologique)."
+            "des difficultés à « déconnectér » mentalement (psychologique)."
         ),
         "consigne": (
             "Classe chaque élément du support dans les facteurs physiques, environnementaux, "
@@ -145,7 +147,7 @@ EXERCISES = [
             "1) Obligation L.4121 :\n"
             "Assurer sécurité et protéger santé physique et mentale.\n\n"
             "2) Classification :\n"
-            "Physique : marche 12 km. Environnemental : bruit 78 dB. Organisationnel : objectifs "
+            "Physique : marché 12 km. Environnemental : bruit 78 dB. Organisationnel : objectifs "
             "minute. Social : manager autoritaire. Psychologique : difficulté déconnexion.\n\n"
             "3) Analyse globale :\n"
             "Facteurs liés ; négliger un volet fausse le diagnostic des risques."
@@ -181,6 +183,7 @@ EXERCISES = [
             "Réduction coûts absentéisme, fidélisation, performance et image."
         ),
         "attendu": "QVCT et acteurs nommés avec rôles précis.",
+        "notions": ["QVCT et acteurs nommés avec rôles précis."],
         "minChars": 180,
     },
     {
@@ -240,6 +243,7 @@ EXERCISES = [
             "Investissement formation/ergonomie < coûts turnover et conflits."
         ),
         "attendu": "Comparaison chiffrée, conséquences doubles (orga/salarié).",
+        "notions": ["Comparaison chiffrée", "conséquences doubles (orga/salarié)."],
         "minChars": 220,
     },
     {
@@ -268,6 +272,7 @@ EXERCISES = [
             "dynamique de changement."
         ),
         "attendu": "Conflit et résolution, effets négatifs/positifs distingués.",
+        "notions": ["Conflit et résolution", "effets négatifs/positifs distingués."],
         "minChars": 240,
     },
     {
@@ -299,6 +304,7 @@ EXERCISES = [
             "payés, pas chômage, autonomie mais précarité."
         ),
         "attendu": "Double statut analysé, complémentarité et tensions.",
+        "notions": ["Double statut analysé", "complémentarité et tensions."],
         "minChars": 260,
     },
     {
@@ -336,6 +342,7 @@ EXERCISES = [
             "compléter par formation."
         ),
         "attendu": "Décision RH argumentée, outils du chapitre 4 mobilisés.",
+        "notions": ["Décision RH argumentée", "outils du chapitre 4 mobilisés."],
         "minChars": 400,
     },
     {
@@ -364,12 +371,13 @@ EXERCISES = [
             "1) Diagnostic : chaleur physique, cadence organisationnel, relations sociales tendues.\n\n"
             "2) Acteurs : employeur investit, CSE alerte, Anact conseille, médecine travail suit TMS.\n\n"
             "3) Effets : baisse absentéisme, fidélisation, baisse coûts cachés, motivation.\n\n"
-            "4) Conflit primes : opposition ? négociation, consensus possible, effets positifs si écouté.\n\n"
+            "4) Conflit primes : opposition ? négociation, consensus possible, effets positifs si écoûté.\n\n"
             "5) Synthèse rentabilité :\n"
             "Coût ventilation/formation < coût absentéisme et grèves ; QVCT = performance sociale "
             "et pérennité."
         ),
         "attendu": "Diagnostic complet, plan QVCT, rentabilité argumentée.",
+        "notions": ["Diagnostic complet", "plan QVCT", "rentabilité argumentée."],
         "minChars": 450,
     },
 ]

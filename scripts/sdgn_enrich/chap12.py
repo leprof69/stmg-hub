@@ -23,7 +23,7 @@ EXERCISES = [
         ],
         "correctionModele": (
             "1) Formule :\n"
-            "Prix de vente ? Coût (d'achat ou de revient) = Marge.\n\n"
+            "Prix de vente \u2212 co\u00fbt (d'achat ou de revient) = marge commerciale.\n\n"
             "2) Calcul :\n"
             "Marge commerciale unitaire = 89   − 52 = 37 € HT.\n"
             "Le prix (89 €) est bien supérieur au coût d'achat (52 €).\n\n"
@@ -32,6 +32,7 @@ EXERCISES = [
             "le prix doit excéder le coût. Sinon, chaque vente appauvrit l'entreprise."
         ),
         "attendu": "Formule appliquée, marge 37 €, justification économique.",
+        "notions": ["Formule appliquée", "marge 37 €", "justification économique."],
         "minChars": 120,
         "supportTables": [
             {
@@ -66,13 +67,14 @@ EXERCISES = [
             "1) Marge unitaire :\n"
             "1,36   − 0,85 = 0,51 € HT.\n\n"
             "2) Taux de marge :\n"
-            "0,51 / 0,85 × 100   − 60 %.\n"
+            "0,51 / 0,85 \u00d7 100 \u2248 60 %.\n"
             "Sur chaque euro d'achat, ProSnack dégage 0,60 € de marge commerciale.\n\n"
             "3) Interprétation :\n"
             "Un taux élevé offre une marge de manœuvre pour baisser le prix en promotion ou absorber "
             "une hausse du coût fournisseur sans devenir déficitaire sur le produit."
         ),
         "attendu": "Marge 0,51 €, taux ≈ 60 %, interprétation gestion.",
+        "notions": ["Marge 0", "51 €", "taux ≈ 60 %"],
         "minChars": 140,
         "supportTables": [
             {
@@ -116,6 +118,7 @@ EXERCISES = [
             "Marge totale = 9,20 × 10 000 = 92 000 € (ou 180 000   − 88 000)."
         ),
         "attendu": "Coût revient 88 000 € / 8,80 € unité, marge nette calculée.",
+        "notions": ["Coût revient 88 000 € / 8", "80 € unité", "marge nette calculée."],
         "minChars": 150,
         "supportTables": [
             {
@@ -164,6 +167,7 @@ EXERCISES = [
             "performance financière ↓ (risque du manuel si volumes n'explosent pas)."
         ),
         "attendu": "Calculs avant/après, distinction performance commerciale vs financière.",
+        "notions": ["Calculs avant/après"],
         "minChars": 170,
         "supportTables": [
             {
@@ -206,6 +210,7 @@ EXERCISES = [
             "qualité. Sinon baisser le prix ou accepter une marge réduite pour gagner des volumes."
         ),
         "attendu": "Lien qualité-coût, deux marges calculées, arbitrage cohérent.",
+        "notions": ["Lien qualité-coût", "deux marges calculées", "arbitrage cohérent."],
         "minChars": 180,
         "supportTables": [
             {
@@ -247,9 +252,10 @@ EXERCISES = [
             "forte, bas pour remplir avions hors pic).\n\n"
             "3) Innovation :\n"
             "Produit différencié : Apple fixe un prix premium justifié par l'innovation ; volumes élevés "
-            "car avantage concurrentiel fort ? marge unitaire élevée × quantités = performance financière."
+            "grâce à l'avantage concurrentiel : marge unitaire élevée × quantités \u2192 performance financière."
         ),
         "attendu": "Trois déterminants illustrés, effet sur prix et marge expliqué.",
+        "notions": ["Trois déterminants illustrés", "effet sur prix et marge expliqué."],
         "minChars": 190,
     },
     {
@@ -282,6 +288,7 @@ EXERCISES = [
             "concurrence et attentes clients, pas seulement le CR."
         ),
         "attendu": "Prix 567 € calculé, comparaison concurrent, risque identifié.",
+        "notions": ["Prix 567 € calculé", "comparaison concurrent", "risque identifié."],
         "minChars": 160,
         "supportTables": [
             {
@@ -329,6 +336,7 @@ EXERCISES = [
             "des quantités livrées. Arbitrage selon concurrence et attentes clients."
         ),
         "attendu": "Marges calculées, charges classées, leviers identifiés.",
+        "notions": ["Marges calculées", "charges classées", "leviers identifiés."],
         "minChars": 200,
         "supportTables": [
             {
@@ -375,6 +383,7 @@ EXERCISES = [
             "d'où l'intérêt de suivre la marge totale."
         ),
         "attendu": "Calculs unitaire et total, conclusion contre l'argument simpliste.",
+        "notions": ["Calculs unitaire et total", "conclusion contre l'argument simpliste."],
         "minChars": 210,
         "supportTables": [
             {
@@ -416,6 +425,7 @@ EXERCISES = [
             "↑, mais marge totale plus faible. Arbitrage nécessaire selon objectif défini."
         ),
         "attendu": "Trois scénarios calculés, recommandation liée à l'objectif.",
+        "notions": ["Trois scénarios calculés", "recommandation liée à l'objectif."],
         "minChars": 240,
         "supportTables": [
             {
@@ -467,6 +477,7 @@ EXERCISES = [
             "total magasin et éviter une guerre des prix sans fin."
         ),
         "attendu": "Cas distributeur complet, calculs, arbitrage prix/marge/volume.",
+        "notions": ["Cas distributeur complet", "calculs", "arbitrage prix/marge/volume."],
         "minChars": 400,
         "supportTables": [
             {
@@ -524,6 +535,7 @@ EXERCISES = [
             "sont indispensables."
         ),
         "attendu": "Cas industriel, marges calculées, qualité/coût/concurrence articulés.",
+        "notions": ["Cas industriel", "marges calculées", "qualité/coût/concurrence articulés."],
         "minChars": 450,
         "supportTables": [
             {

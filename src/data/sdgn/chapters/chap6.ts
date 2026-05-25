@@ -18,6 +18,7 @@ export const SDGN_CHAP6_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Donnée : clics bruts, non contextualisés.\n\n2) Information : agrégat panier moyen 67 € IDF — donnée traitée, sens donné.\nConnaissance : décision promo coques — interprétation stratégique.\n\n3) SI :\nCollecte, stocke, traite, diffuse ; rend la donnée exploitable.",
     attendu: "Trois niveaux distingués, exemple Cdiscount appliqué.",
+    notionsCibles: ["Trois niveaux distingués", "exemple Cdiscount appliqué."],
   },
   {
     id: "sdgn6-e2",
@@ -35,6 +36,7 @@ export const SDGN_CHAP6_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Big Data : ensemble volumineux de données numériques difficile à traiter classiquement.\n\n2) 5V :\nVolume : billions logs. Vélocité : temps réel. Variété : texte, géo, chiffres. Véracité : filtrage faux positifs. Valeur : moins de pannes, satisfaction client.\n\n3) Valeur stratégique :\nSans valeur business, les autres V n'ont pas d'intérêt économique.",
     attendu: "5V tous illustrés, Big Data défini.",
+    notionsCibles: ["5V tous illustrés", "Big Data défini."],
   },
   {
     id: "sdgn6-e3",
@@ -52,6 +54,7 @@ export const SDGN_CHAP6_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Open data : accessible, réutilisable, redistribuable sans restriction.\n\n2) Exemples :\nHoraires transports + qualité air ? application Mobilité Lyon = information utile.\n\n3) Transparence :\nPermettre aux citoyens de contrôler et comprendre l'action publique.",
     attendu: "Open data défini, réutilisation concrète, cadre légal cité.",
+    notionsCibles: ["Open data défini", "réutilisation concrète", "cadre légal cité."],
   },
   {
     id: "sdgn6-e4",
@@ -69,6 +72,7 @@ export const SDGN_CHAP6_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Données personnelles : nom, e-mail, achats, géolocalisation — identification directe/indirecte.\n\n2) Droit d'accès :\nRGPD permet à l'individu de connaître les données traitées.\n\n3) Mineur :\nConsentement parental requis, protection renforcée.",
     attendu: "Données personnelles repérées, droits RGPD mobilisés.",
+    notionsCibles: ["Données personnelles repérées", "droits RGPD mobilisés."],
   },
   {
     id: "sdgn6-e5",
@@ -86,6 +90,7 @@ export const SDGN_CHAP6_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) SI : données + RH + logiciels + matériel en interaction pour traiter et diffuser l'information.\n\n2) PGI :\nProgiciel intégré gérant processus clés ; flux caisse ? stock ? compta en temps réel.\n\n3) Excel isolés :\nDonnées non fiabilisées, pas d'actualité, pas de cohérence groupe.",
     attendu: "SI et PGI définis, intégration expliquée.",
+    notionsCibles: ["SI et PGI définis", "intégration expliquée."],
   },
   {
     id: "sdgn6-e6",
@@ -103,6 +108,7 @@ export const SDGN_CHAP6_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) CRM : logiciel de gestion de la relation client, historique interactions.\n\n2) Information :\nTaux de transformation par segment = donnée contextualisée.\n\n3) Décision :\nRéallocation ressources vers segment rentable — aide à la décision du manuel.",
     attendu: "CRM situé dans le SI, lien décision explicite.",
+    notionsCibles: ["CRM situé dans le SI", "lien décision explicite."],
   },
   {
     id: "sdgn6-e7",
@@ -111,14 +117,14 @@ export const SDGN_CHAP6_EXERCISES: SdgnMissionExercise[] = [
     difficulty: "Moyen",
     xp: 230,
     minChars: 200,
-    support: "Un directeur de magasin Fnac reçoit un rapport : ventes « +120 % » sur une référence, mais la donnée source comptait les retours comme ventes (fiabilité faible), le rapport date de six mois (actualité faible) et ne concerne pas son rayon (pertinence faible). Il refuse de commander du stock supplémentaire. Le manuel exige : pertinence, fiabilité, objectivité, actualité, accessibilité, rentabilité.",
+    support: "Un directeur de magasin Fnac reçoit un rapport : ventes « +120 % » sur une référence, mais la donnée source comptait les retours comme ventes (fiabilité faible), le rapport date de six mois (actualité faible) et ne concerne pas son rayon (pertinence faible). Il refuse de commander du stock supplémentaire. Le manuel exige : pertinence, fiabilité, objectivité, actualité, accèssibilité, rentabilité.",
     consigne: "Évalue le rapport selon les critères de qualité de l'information. Explique le refus du directeur.",
     questions: [
       "Liste les critères de qualité de l'information.",
       "Quels critères ne sont pas respectés dans le cas ?",
       "Pourquoi une information de mauvaise qualité conduit-elle à une mauvaise décision ?"
     ],
-    correctionModele: "1) Critères : pertinence, fiabilité, objectivité, actualité, accessibilité, rentabilité.\n\n2) Non respectés :\nFiabilité (retours comptés), actualité (6 mois), pertinence (mauvais rayon).\n\n3) Mauvaise décision :\nDécision basée sur information erronée ? surstock ou rupture, coût pour l'organisation.",
+    correctionModele: "1) Critères : pertinence, fiabilité, objectivité, actualité, accèssibilité, rentabilité.\n\n2) Non respectés :\nFiabilité (retours comptés), actualité (6 mois), pertinence (mauvais rayon).\n\n3) Mauvaise décision :\nDécision basée sur information erronée ? surstock ou rupture, coût pour l'organisation.",
     attendu: "Critères nommés et appliqués au rapport Fnac.",
   },
   {
@@ -137,6 +143,7 @@ export const SDGN_CHAP6_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Registre : finalité, catégories, destinataires, durée conservation.\n\n2) Droits :\nInformation (pop-up), effacement (demande utilisateur).\n\n3) Données santé :\nSensibles, consentement explicite, sécurisation renforcée obligatoire.",
     attendu: "RGPD opérationnel sur un cas HealthTrack.",
+    notionsCibles: ["RGPD opérationnel sur un cas HealthTrack."],
   },
   {
     id: "sdgn6-e9",
@@ -154,6 +161,7 @@ export const SDGN_CHAP6_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Usages :\nGestion courante : livraisons, stocks. Décision : optimisation tournées via croisement données.\n\n2) Limites :\nQualité (prix erronés), RGPD (consentement marketing), saisie caisse défaillante.\n\n3) Garbage in/out :\nDonnée entrée fausse ? information et décision fausses malgré outils performants.",
     attendu: "Usages et limites articulés, qualité de l'information reliée.",
+    notionsCibles: ["Usages et limites articulés", "qualité de l'information reliée."],
   },
   {
     id: "sdgn6-e10",
@@ -193,6 +201,7 @@ export const SDGN_CHAP6_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Chaîne :\nDonnées brutes TCL/pollution ? information croisée tableau de bord ? connaissance politique mobilité durable.\n\n2) Qualité budget :\nActualité insuffisante, fiabilité contestée ? pertinence décisionnelle réduite.\n\n3) Charte :\nCitation source, date de mise à jour, licence, pas de données personnelles sans base légale.\n\n4) Bénéfices :\nTransparence, innovation citoyenne, meilleure décision publique.\n\n5) Synthèse :\nOpen data nécessaire mais pas suffisant : qualité, compétences analyse, complément données internes et expertise humaine.",
     attendu: "Open data et qualité maîtrisés, charte proposée, synthèse critique.",
+    notionsCibles: ["Open data et qualité maîtrisés", "charte proposée", "synthèse critique."],
   },
   {
     id: "sdgn6-cas2",
@@ -212,5 +221,6 @@ export const SDGN_CHAP6_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Traitements :\nCRM profil, fidélité, pub ciblée — finalités marketing et relation client.\n\n2) Droits :\nOpposition, portabilité, information préalable.\n\n3) Risques faille :\nSanctions CNIL, perte confiance, atteinte vie privée.\n\n4) Conciliation :\nConsentement clair, minimisation données, anonymisation stats, DPO et registre à jour.\n\n5) Synthèse gouvernance :\nComité data, audits, qualité information, privacy by design, transparence page « données personnelles » — performance durable si confiance préservée.",
     attendu: "Cas e-commerce complet, RGPD et limites, gouvernance recommandée.",
+    notionsCibles: ["Cas e-commerce complet", "RGPD et limites", "gouvernance recommandée."],
   },
 ];

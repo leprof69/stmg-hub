@@ -1,4 +1,5 @@
 import { decodeUnicodeEscapes } from "../lib/decodeUnicode";
+import { sanitizeMissionEvaluationText } from "../lib/missionGrades";
 
 /**
  * Correction IA / locale harmonise pour Missions, Objectif Bac et futurs crans.
@@ -222,21 +223,20 @@ export function buildPerfectAnswerLocal(exercise: CorrectionExerciseBase): strin
   return lines.join("\n");
 }
 
-/** Formulation volontairement pdagogique à conserver pour l'élève (feedback utile). */
-export function buildDeveloppementLocal(score: number, ratio: number, missing: string[]) {
+/** Retour qualitatif uniquement — la note lettre est affichee a part dans l'UI. */
+export function buildDeveloppementLocal(_score: number, ratio: number, missing: string[]) {
   const lignes: string[] = [];
-  lignes.push(`Évaluation du fond : ${score}/10.`);
   if (ratio >= 0.7) {
-    lignes.push("Tu as bien couvert les idées attendues. La majorit des éléments de réponse est présente.");
+    lignes.push("Tu as bien couvert les id\u00e9es attendues. La majorit\u00e9 des \u00e9l\u00e9ments de r\u00e9ponse est pr\u00e9sente.");
   } else if (ratio >= 0.5) {
-    lignes.push("Ta réponse est globalement juste, mais il manque encore quelques éléments importants.");
+    lignes.push("Ta r\u00e9ponse est globalement juste, mais il manque encore quelques \u00e9l\u00e9ments importants.");
   } else if (ratio >= 0.3) {
-    lignes.push("Ta réponse aborde le sujet mais une partie importante du contenu attendu n'apparat pas encore.");
+    lignes.push("Ta r\u00e9ponse aborde le sujet mais une partie importante du contenu attendu n'appara\u00eet pas encore.");
   } else {
-    lignes.push("Ta réponse est trop courte ou trop éloignée des notions attendues. Relis le cours et la consigne.");
+    lignes.push("Ta r\u00e9ponse est trop courte ou trop \u00e9loign\u00e9e des notions attendues. Relis le cours et la consigne.");
   }
   if (missing.length) {
-    lignes.push(`éléments  ajouter pour te rapprocher de la réponse parfaite : ${missing.join(", ")}.`);
+    lignes.push(`\u00c9l\u00e9ments \u00e0 renforcer : ${missing.join(", ")}.`);
   }
   return lignes.join("\n\n");
 }
@@ -245,6 +245,27 @@ export function buildConseilsLocal(missing: string[]) {
   return missing.length
     ? `Ajoute en priorité ces éléments : ${missing.join(", ")}.`
     : "Relis ta réponse et vrifie que chaque question est traite explicitement.";
+}
+
+function sanitizeMissionEvalFields<T extends {
+  feedback: string;
+  analyseDeveloppee?: string;
+  pointsForts: string;
+  pointsFaibles: string;
+  conseilsProgression?: string;
+}>(evalResult: T): T {
+  return {
+    ...evalResult,
+    feedback: sanitizeMissionEvaluationText(evalResult.feedback),
+    analyseDeveloppee: evalResult.analyseDeveloppee
+      ? sanitizeMissionEvaluationText(evalResult.analyseDeveloppee)
+      : evalResult.analyseDeveloppee,
+    pointsForts: sanitizeMissionEvaluationText(evalResult.pointsForts),
+    pointsFaibles: sanitizeMissionEvaluationText(evalResult.pointsFaibles),
+    conseilsProgression: evalResult.conseilsProgression
+      ? sanitizeMissionEvaluationText(evalResult.conseilsProgression)
+      : evalResult.conseilsProgression,
+  };
 }
 
 type SemanticBundle = {
@@ -301,42 +322,42 @@ function computeSemanticBundle(exercise: CorrectionExerciseBase, text: string): 
 export function localCorrectionMissions(exercise: CorrectionExerciseBase, answer: string): MissionLocalEval {
   const text = String(answer || "").trim();
   if (!text) {
-    return {
+    return sanitizeMissionEvalFields({
       score: 0,
       feedback: "Réponse vide : impossible d'évaluer le contenu.",
-      analyseDeveloppee: "Saisis une première version en rpondant point par point  la consigne.",
-      pointsForts: "Aucun lment exploitable pour le moment.",
+      analyseDeveloppee: "Saisis une première version en répondant point par point à la consigne.",
+      pointsForts: "Aucun élément exploitable pour le moment.",
       pointsFaibles: "Réponse absente.",
-      conseilsProgression: "Relis la consigne et rponds point par point.",
+      conseilsProgression: "Relis la consigne et réponds point par point.",
       propositionReponse: buildPerfectAnswerLocal(exercise),
       source: "local",
-    };
+    });
   }
 
   const bundle = computeSemanticBundle(exercise, text);
   if (!bundle) {
-    return {
+    return sanitizeMissionEvalFields({
       score: 0,
       feedback: "Réponse vide : impossible d'évaluer le contenu.",
-      analyseDeveloppee: "Saisis une première version en rpondant point par point  la consigne.",
-      pointsForts: "Aucun lment exploitable pour le moment.",
+      analyseDeveloppee: "Saisis une première version en répondant point par point à la consigne.",
+      pointsForts: "Aucun élément exploitable pour le moment.",
       pointsFaibles: "Réponse absente.",
-      conseilsProgression: "Relis la consigne et rponds point par point.",
+      conseilsProgression: "Relis la consigne et réponds point par point.",
       propositionReponse: buildPerfectAnswerLocal(exercise),
       source: "local",
-    };
+    });
   }
 
-  return {
+  return sanitizeMissionEvalFields({
     score: bundle.score,
-    feedback: "Correction centre sur le fond de ta réponse.",
+    feedback: "Voici ce qui ressort de ta copie.",
     analyseDeveloppee: bundle.analyseBlock,
     pointsForts: bundle.pointsForts,
     pointsFaibles: bundle.pointsFaibles,
     conseilsProgression: bundle.conseils,
     propositionReponse: buildPerfectAnswerLocal(exercise),
     source: "local",
-  };
+  });
 }
 
 export function localCorrectionObjectifBac(exercise: CorrectionExerciseBase, answer: string): ObjectifBacEvalResult {
@@ -422,7 +443,7 @@ export function buildReliableMissionsEvaluation(
   const fallbackAnswer = buildPerfectAnswerLocal(exercise);
   const safeAnswer = aiAnswer.length >= 80 && aiAnswer.length <= 4800 ? aiAnswer : fallbackAnswer;
 
-  return {
+  return sanitizeMissionEvalFields({
     score: blendedScore,
     feedback: aiFeedback.length >= 8 ? aiFeedback : local.feedback,
     analyseDeveloppee: aiAnalyse.length >= 120 ? aiAnalyse : local.analyseDeveloppee,
@@ -431,7 +452,7 @@ export function buildReliableMissionsEvaluation(
     conseilsProgression: aiConseils.length >= 40 ? aiConseils : local.conseilsProgression,
     propositionReponse: safeAnswer,
     source: "ai",
-  };
+  });
 }
 
 export function buildReliableObjectifBacEvaluation(
@@ -468,14 +489,17 @@ export function buildReliableObjectifBacEvaluation(
 
 const IA_RULES_MISSIONS = `
 Règles :
-- Évalue le fond et les idées mobilises ; accepte les synonymes et reformulations fidles (pas besoin des mots exacts).
+- Évalue le fond et les idées mobilisées ; accepte les synonymes et reformulations fidèles.
 - Ne pénalise pas la forme si le contenu est correct ; reste bienveillant et précis.
-- score entre 0 et 10 (nombre, entier ou décimal)
-- feedback : synthèse courte et bienveillante
-- analyse_developpee : dire clairement ce qui est juste et ce qui manque, sans juger la forme
-- conseils_progression : actions simples sur le contenu
-- points_forts / points_faibles : explicites
-- proposition_reponse : réponse modèle complète (version attendue la plus proche d'une copie parfaite)
+- score entre 0 et 10 (nombre interne JSON uniquement — jamais affiché à l'élève).
+- INTERDIT dans feedback, analyse_developpee, points_forts, points_faibles, conseils_progression :
+  chiffres de note, X/10, sur 10, pourcentages de réussite, "évaluation", "score", "note obtenue", "niveau de maîtrise".
+  Pas de note lettre non plus dans ces champs (l'app affiche la lettre séparément).
+- feedback : synthèse courte, qualitative, bienveillante
+- analyse_developpee : ce qui est juste et ce qui manque, sans aucune notation
+- conseils_progression : actions concrètes sur le contenu
+- points_forts / points_faibles : explicites, sans chiffres
+- proposition_reponse : réponse modèle complète (peut citer des chiffres du document support)
 - aucun texte hors JSON`;
 
 export function buildMissionsAIPrompt(exercise: CorrectionExerciseBase, studentAnswer: string): string {

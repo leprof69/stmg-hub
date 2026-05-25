@@ -38,6 +38,7 @@ EXERCISES = [
             "maîtrisé, il manquait l'atteinte du résultat."
         ),
         "attendu": "Définition performance, trois étapes, distinction efficiente/efficacité.",
+        "notions": ["performance", "trois étapes", "efficiente/efficacité."],
         "minChars": 120,
     },
     {
@@ -72,6 +73,7 @@ EXERCISES = [
             "la performance n'est pas vérifiable."
         ),
         "attendu": "Qualités rappelées, classification correcte, ambiance à indicateurs.",
+        "notions": ["Qualités rappelées", "classification correcte", "ambiance à indicateurs."],
         "minChars": 140,
     },
     {
@@ -104,6 +106,7 @@ EXERCISES = [
             "ressources pour piloter durablement."
         ),
         "attendu": "Efficiente vs efficacité illustrés, lien pilotage.",
+        "notions": ["Efficiente vs efficacité illustrés", "lien pilotage."],
         "minChars": 150,
     },
     {
@@ -135,6 +138,7 @@ EXERCISES = [
             "volumes en hausse — d'où le CA et la part de marché indispensables."
         ),
         "attendu": "Définition, calcul +10,7 %, limite de l'indicateur volumes.",
+        "notions": ["Définition", "+10", "limite de l'indicateur volumes."],
         "minChars": 160,
         "supportTables": [
             {
@@ -176,6 +180,7 @@ EXERCISES = [
             "par nature d'activité nécessaire (saisonnalité, concurrence)."
         ),
         "attendu": "Calcul +4,7 %, interprétation hausse/baisse par rayon.",
+        "notions": ["+4", "interprétation hausse/baisse par rayon."],
         "minChars": 150,
         "supportTables": [
             {
@@ -219,6 +224,7 @@ EXERCISES = [
             "Vendre davantage que les concurrents pour gagner des parts — pas seulement augmenter le CA."
         ),
         "attendu": "Formule part de marché, paradoxe CA/part expliqué.",
+        "notions": ["Formule part de marché", "paradoxe CA/part expliqué."],
         "minChars": 170,
         "supportTables": [
             {
@@ -272,6 +278,7 @@ EXERCISES = [
             "mesurable sur l'indicateur fidélité."
         ),
         "attendu": "Fidélité définie, chiffres interprétés, lien campagne/performance.",
+        "notions": ["Fidélité définie", "chiffres interprétés", "lien campagne/performance."],
         "minChars": 180,
         "supportTables": [
             {
@@ -317,6 +324,7 @@ EXERCISES = [
             "Imprim'Rapide est plus rentable en capital ; profitabilité proche sur le CA."
         ),
         "attendu": "Deux notions distinguées, ratios calculés et comparés.",
+        "notions": ["Deux notions distinguées", "ratios calculés et comparés."],
         "minChars": 190,
         "supportTables": [
             {
@@ -365,6 +373,7 @@ EXERCISES = [
             "Rendement = 3,34 / 62  − 5,4 % : indicateur de performance financière pour l'actionnaire."
         ),
         "attendu": "Définitions, répartition 39/61 %, lien actionnaire.",
+        "notions": ["Définitions", "répartition 39/61 %", "lien actionnaire."],
         "minChars": 200,
         "supportTables": [
             {
@@ -409,6 +418,7 @@ EXERCISES = [
             "Performance globale contradictoire : impossible de maximiser tous les indicateurs simultanément."
         ),
         "attendu": "Contradictions repérées, acteurs et tensions nommés.",
+        "notions": ["Contradictions repérées", "acteurs et tensions nommés."],
         "minChars": 240,
         "supportTables": [
             {
@@ -464,6 +474,7 @@ EXERCISES = [
             "Tensions possibles entre croissance volume et positionnement premium — pilotage multi-indicateurs indispensable."
         ),
         "attendu": "Cas PME complet, ratios, arbitrage image/CA, synthèse.",
+        "notions": ["Cas PME complet", "ratios", "arbitrage image/CA"],
         "minChars": 400,
         "supportTables": [
             {
@@ -520,6 +531,7 @@ EXERCISES = [
             "R&D coûteuse, tensions sociales. L'analyse exige comparaisons temps/espace et lecture multi-acteurs."
         ),
         "attendu": "Comparaisons calculées, parts de marché, tensions, synthèse nuancée.",
+        "notions": ["Comparaisons calculées", "parts de marché", "tensions"],
         "minChars": 450,
         "supportTables": [
             {

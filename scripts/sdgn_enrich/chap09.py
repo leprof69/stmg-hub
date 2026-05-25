@@ -42,6 +42,7 @@ EXERCISES = [
             "prix différents pour le même produit selon leur arbitrage."
         ),
         "attendu": "Définition exacte, repérage avantages/sacrifices, distinction perçue/réelle.",
+        "notions": ["exacte", "repérage avantages/sacrifices", "perçue/réelle."],
         "minChars": 120,
     },
     {
@@ -77,6 +78,7 @@ EXERCISES = [
             "élever les avantages perçus et justifier un prix supérieur."
         ),
         "attendu": "Classification objectif/subjectif correcte, lien avec stratégie marketing.",
+        "notions": ["Classification objectif/subjectif correcte", "lien avec stratégie marketing."],
         "minChars": 140,
     },
     {
@@ -112,6 +114,7 @@ EXERCISES = [
             "(42 %), ce qui peut restaurer la valeur perçue et les performances commerciales."
         ),
         "attendu": "Définition image de marque, enchaînement crise / action / reprise.",
+        "notions": ["image de marque", "enchaînement crise / action / reprise."],
         "minChars": 150,
     },
     {
@@ -147,6 +150,7 @@ EXERCISES = [
             "publicité et les échantillons renforcent le rappel spontané et le top of mind."
         ),
         "attendu": "Trois indicateurs définis, interprétation des écarts, stratégie Andros justifiée.",
+        "notions": ["Trois indicateurs définis", "interprétation des écarts", "stratégie Andros justifiée."],
         "minChars": 160,
         "supportTables": [
             {
@@ -192,6 +196,7 @@ EXERCISES = [
             "le prix seul ne suffit pas."
         ),
         "attendu": "Qualité vs satisfaction distinguées, mécanisme attentes/expérience.",
+        "notions": ["Qualité vs satisfaction distinguées", "mécanisme attentes/expérience."],
         "minChars": 170,
     },
     {
@@ -227,6 +232,7 @@ EXERCISES = [
             "sans baisser le prix : valeur perçue et ventes en hausse."
         ),
         "attendu": "Définition médias sociaux, usages repérés, brand content relié à la valeur perçue.",
+        "notions": ["médias sociaux", "usages repérés", "brand content relié à la valeur perçue."],
         "minChars": 180,
     },
     {
@@ -262,6 +268,7 @@ EXERCISES = [
             "la performance globale."
         ),
         "attendu": "Influenceur et e-réputation définis, crise et réaction analysées.",
+        "notions": ["Influenceur et e-réputation définis", "crise et réaction analysées."],
         "minChars": 190,
     },
     {
@@ -295,6 +302,7 @@ EXERCISES = [
             "permet d'optimiser la stratégie en temps réel."
         ),
         "attendu": "KPI définis, indicateurs quantitatifs listés, calcul d'engagement commenté.",
+        "notions": ["KPI définis", "indicateurs quantitatifs listés", "d'engagement commenté."],
         "minChars": 200,
         "supportTables": [
             {
@@ -344,6 +352,7 @@ EXERCISES = [
             "des performances."
         ),
         "attendu": "KPI qualitatifs identifiés, décisions cohérentes, lien avec performance.",
+        "notions": ["KPI qualitatifs identifiés", "décisions cohérentes", "lien avec performance."],
         "minChars": 210,
     },
     {
@@ -382,6 +391,7 @@ EXERCISES = [
             "éviter une nouvelle crise e-réputation."
         ),
         "attendu": "Quatre piliers mobilisés, KPI intégrés, priorité argumentée.",
+        "notions": ["Quatre piliers mobilisés", "KPI intégrés", "priorité argumentée."],
         "minChars": 240,
         "supportTables": [
             {
@@ -439,6 +449,7 @@ EXERCISES = [
             "lui paraît gagnant — performance commerciale et fidélisation en découlent."
         ),
         "attendu": "Cas complet avec toutes les notions du chapitre 9, synthèse argumentée.",
+        "notions": ["synthèse argumentée."],
         "minChars": 400,
     },
     {
@@ -485,6 +496,7 @@ EXERCISES = [
             "doit arbitrer entre volume et réputation."
         ),
         "attendu": "Contradiction KPI/éthique analysée, actions réalistes, synthèse performance.",
+        "notions": ["Contradiction KPI/éthique analysée", "actions réalistes", "synthèse performance."],
         "minChars": 450,
     },
 ]

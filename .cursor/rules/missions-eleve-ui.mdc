@@ -1,0 +1,29 @@
+---
+description: UI Missions — texte francais et zones de reponse (eleve)
+globs: src/pages/Missions.tsx,src/pages/Missions.css,src/lib/missionRubric/**
+alwaysApply: false
+---
+
+# Missions — UI eleve
+
+Avant de livrer une modification Missions, verifier :
+
+## Texte francais
+
+- **UTF-8 reel** dans le JSX (accents visibles dans le fichier).
+- **Interdit** : `\u00e9` etc. en **texte entre balises** (`<p>...\u00e8...</p>`) — ca s'affiche litteralement.
+- OK : accents en UTF-8, ou `\uXXXX` uniquement dans **attributs** / expressions `{ "..." }`.
+
+## Zones de reponse
+
+- Tout `<textarea>` Missions doit avoir les styles `.mission-answer textarea` **ou** `.mission-answer-block textarea` (meme min-height, padding, font-size 18px).
+- Mode **une zone par question** : `rows` >= 8, bloc `.mission-answer-block` avec min-height genereuse ; pas de micro-champ par defaut navigateur.
+
+## Pas de jargon technique eleve
+
+- Pas de bandeau « pilote », « sans IA », « ch.1 test ».
+- Pas de ligne « Source : grille / IA » pour la correction par rubrique.
+
+## Apres edit
+
+- `npm run check:encoding`

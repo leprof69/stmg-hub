@@ -1,26 +1,28 @@
 import { useState, useEffect, useMemo, type CSSProperties } from "react";
+import "./Missions.css";
 import { auth, db } from "../services/firebase";
-import {
-  buildMissionsAIPrompt,
-  buildReliableMissionsEvaluation,
-  callGeminiCorrection,
-  callGroqCorrection,
-  localCorrectionMissions,
-} from "../services/correctionIA";
+import { localCorrectionMissions } from "../services/correctionIA";
 import type { ExerciseSupportTable } from "../services/correctionIA";
 import { collection, doc, getDoc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
 import ProtectedTextarea from "../components/ProtectedTextarea";
-import { formatJetons, formatJetonsDelta } from "../lib/jetons";
+import { formatJetonsDelta } from "../lib/jetons";
+import { getMissionLetterGradeMeta, sanitizeMissionEvaluationText } from "../lib/missionGrades";
+import { splitReadableParagraphs } from "../lib/missionReadableText";
 import { PLATFORM_XP_BLOCKED_MESSAGE, usePlatformIntegrity } from "../contexts/PlatformIntegrityContext";
 import type { SdgnMissionExercise } from "../data/sdgn/types";
+import { MANAGEMENT_CHAPTER_LABELS } from "../data/management/registry";
 import { getSdgnChapterReferential } from "../data/sdgn/chapterReferential";
+import { SDGN_CHAPTER_LABELS } from "../data/sdgn/registry";
 import {
-  detectSdgnChapterNumber,
-  getSdgnChapterBlurb,
-  getSdgnExercises,
-  getSdgnProgressLabel,
-  SDGN_CHAPTER_LABELS,
-} from "../data/sdgn/registry";
+  detectMissionChapterNumber,
+  getMissionChapterBlurb,
+  getMissionExercises,
+  getMissionProgressLabel,
+  hasMissionPack,
+} from "../lib/missionPack";
+import { rubricCorrectionMissions } from "../lib/missionRubric";
+import { getMissionRubricPack } from "../lib/missionRubric/registry";
+import { MISSIONS_PROGRESS_VERSION } from "../lib/missionsProgress";
 
 /** Même clé `matiere` que dans Firestore / import Admin ; libellé court à l'écran. */
 const MATIERES_MISSIONS = [
@@ -71,7 +73,7 @@ function MissionSupportTables({ tables }: { tables: ExerciseSupportTable[] }) {
     whiteSpace: "nowrap",
   };
   return (
-    <div style={{ marginTop: 10, overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+    <div className="mission-support-table-wrap">
       {tables.map((tbl, ti) => (
         <div key={ti} style={{ marginBottom: ti < tables.length - 1 ? 14 : 0 }}>
           {tbl.title ? (
@@ -127,33 +129,67 @@ type MissionEvalResult = {
   pointsFaibles: string;
   conseilsProgression: string;
   propositionReponse: string;
-  source: "ai" | "local";
+  source: "local" | "rubric";
   entrainementSansXp: boolean;
 };
 
-const MISSIONS_PROGRESS_VERSION = 1;
+const missionQuestionAnswerKey = (exerciseId: string, questionIndex: number) => `${exerciseId}__q${questionIndex}`;
+
+function getMissionCombinedAnswer(
+  exercise: MissionExercise,
+  answers: Record<string, string>,
+  useRubric: boolean
+): string {
+  const qs = exercise.questions ?? [];
+  if (!useRubric || qs.length === 0) return answers[exercise.id] || "";
+  return qs.map((_, qi) => (answers[missionQuestionAnswerKey(exercise.id, qi)] || "").trim()).join("\n\n");
+}
+
+function getMissionAnswersByQuestion(exercise: MissionExercise, answers: Record<string, string>): string[] {
+  const qs = exercise.questions ?? [];
+  return qs.map((_, qi) => answers[missionQuestionAnswerKey(exercise.id, qi)] || "");
+}
+
+/** Tous les packs Missions (SDGN + Management) : une zone de réponse par question si le sujet en a. */
+function exerciseUsesPerQuestionAnswers(exercise: MissionExercise): boolean {
+  return Boolean(exercise.questions?.length);
+}
 
 const getTodayKey = () => {
   const now = new Date();
   return `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
 };
 
+function MissionReadableText({
+  text,
+  className,
+  sanitize = true,
+}: {
+  text: string;
+  className?: string;
+  sanitize?: boolean;
+}) {
+  const paragraphs = useMemo(() => {
+    const source = sanitize ? sanitizeMissionEvaluationText(text) : text;
+    return splitReadableParagraphs(source);
+  }, [text, sanitize]);
+  return (
+    <div className={className ? `mission-readable ${className}` : "mission-readable"}>
+      {paragraphs.map((paragraph, index) => (
+        <p key={`${index}-${paragraph.slice(0, 24)}`} className="mission-readable__line">
+          {paragraph}
+        </p>
+      ))}
+    </div>
+  );
+}
+
 const normalize = (value = "") =>
   String(value)
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    .replace(/[\u0300-\u036f]/g, "")
     .trim();
-
-const getScoreMood = (score: number) => {
-  if (score >= 9) return { emoji: "🤯", text: "Niveau génie", color: "#166534" };
-  if (score >= 8) return { emoji: "🔥", text: "Excellent", color: "#166534" };
-  if (score >= 7) return { emoji: "😎", text: "Très solide", color: "#1D4ED8" };
-  if (score >= 6) return { emoji: "🙂", text: "Bon travail", color: "#0369A1" };
-  if (score >= 5) return { emoji: "🧐", text: "Correct mais perfectible", color: "#B45309" };
-  if (score >= 3) return { emoji: "😅", text: "On continue, tu progresses", color: "#B45309" };
-  return { emoji: "💪", text: "Ne rien lâcher", color: "#B91C1C" };
-};
 
 const formatDifficultyLabel = (d: MissionExercise["difficulty"]) => (d === "Tres difficile" ? "Très difficile" : d);
 
@@ -169,8 +205,317 @@ const DIFFICULTY_STYLE: Record<
 
 const formatExerciseTypeLabel = (t: MissionExercise["type"]) => (t === "Etude de cas" ? "Étude de cas" : t);
 
+function getExerciseNotionChips(exercise: MissionExercise): string[] {
+  const fromNotions = (exercise.notionsCibles ?? [])
+    .map((n) => n.trim().replace(/\.$/, ""))
+    .filter((n) => n.length >= 3 && n.length <= 48 && !/^(trois|quatre|deux|une?)\s/i.test(n));
+  if (fromNotions.length) return fromNotions.slice(0, 6);
+
+  const attendu = exercise.attendu?.trim();
+  if (!attendu) return [];
+  return attendu
+    .split(/[,;·]/)
+    .map((part) => part.trim().replace(/\.$/, ""))
+    .filter((part) => part.length > 4 && part.length <= 42 && !/\b(correctement|distincts|nommés)\b/i.test(part))
+    .slice(0, 4);
+}
+
+type MissionClaimEntry = { lastClaimDate?: string; totalClaims?: number };
+
+function isMissionExerciseCompleted(exerciseId: string, claims: Record<string, MissionClaimEntry>): boolean {
+  return (claims[exerciseId]?.totalClaims ?? 0) > 0;
+}
+
+function getFirstIncompleteExerciseIndex(
+  exercises: MissionExercise[],
+  claims: Record<string, MissionClaimEntry>
+): number {
+  const idx = exercises.findIndex((ex) => !isMissionExerciseCompleted(ex.id, claims));
+  return idx === -1 ? Math.max(0, exercises.length - 1) : idx;
+}
+
+function canAccessMissionExerciseIndex(
+  index: number,
+  exercises: MissionExercise[],
+  claims: Record<string, MissionClaimEntry>
+): boolean {
+  if (index <= 0 || index >= exercises.length) return index === 0;
+  return isMissionExerciseCompleted(exercises[index - 1].id, claims);
+}
+
+type MissionExerciseCardProps = {
+  exercise: MissionExercise;
+  index: number;
+  totalCount: number;
+  perQuestionAnswers: boolean;
+  answer: string;
+  onAnswerChange: (value: string) => void;
+  questionAnswers: string[];
+  onQuestionAnswerChange: (questionIndex: number, value: string) => void;
+  evalResult?: MissionEvalResult;
+  xpDejaAccorde: boolean;
+  savingId: string;
+  canClaim: boolean;
+  onSubmit: () => void;
+  onBlockedPaste: () => void;
+  hasNext: boolean;
+  onGoNext?: () => void;
+};
+
+function MissionExerciseCard({
+  exercise,
+  index,
+  totalCount,
+  perQuestionAnswers,
+  answer,
+  onAnswerChange,
+  questionAnswers,
+  onQuestionAnswerChange,
+  evalResult,
+  xpDejaAccorde,
+  savingId,
+  canClaim,
+  onSubmit,
+  onBlockedPaste,
+  hasNext,
+  onGoNext,
+}: MissionExerciseCardProps) {
+  const diffStyle = DIFFICULTY_STYLE[exercise.difficulty];
+  const isCas = exercise.type === "Etude de cas";
+  const gradeMeta = evalResult ? getMissionLetterGradeMeta(evalResult.score) : null;
+  const notionChips = getExerciseNotionChips(exercise);
+  const answerCharCount = perQuestionAnswers
+    ? questionAnswers.reduce((sum, part) => sum + (part || "").trim().length, 0)
+    : answer.trim().length;
+  const cardStyle = {
+    "--diff-stripe": diffStyle.stripe,
+    "--diff-header-bg": diffStyle.headerBg,
+    "--diff-badge-bg": diffStyle.badgeBg,
+    "--diff-badge-text": diffStyle.badgeText,
+  } as CSSProperties;
+
+  return (
+    <article
+      id={`mission-${exercise.id}`}
+      className="mission-exercise mission-exercise--linear is-open"
+      style={cardStyle}
+    >
+      <header className="mission-exercise__header">
+        <div className="mission-exercise__head-row">
+          <p className="mission-exercise__progress">
+            Exercice <span className="mission-exercise__progress-num">{index + 1}</span>
+            <span className="mission-exercise__progress-sep">/</span>
+            {totalCount}
+          </p>
+          {xpDejaAccorde ? (
+            <span className="mission-exercise__validated" aria-label="Exercice validé">
+              Validé
+            </span>
+          ) : null}
+        </div>
+        <h3 className="mission-exercise__title mission-exercise__title--linear">{exercise.title}</h3>
+        <ul className="mission-exercise__meta" aria-label="Informations sur l'exercice">
+          <li>
+            <span className="mission-meta-pill mission-meta-pill--diff">{formatDifficultyLabel(exercise.difficulty)}</span>
+          </li>
+          <li>
+            <span className="mission-meta-pill mission-meta-pill--type">{formatExerciseTypeLabel(exercise.type)}</span>
+          </li>
+          <li>
+            <span className={`mission-meta-pill mission-meta-pill--xp ${isCas ? "mission-meta-pill--cas" : ""}`}>
+              {formatJetonsDelta(exercise.xp)}
+            </span>
+          </li>
+        </ul>
+        {notionChips.length > 0 ? (
+          <div className="mission-exercise__notions">
+            <p className="mission-exercise__notions-label">Notions du cours</p>
+            <ul className="mission-notions" aria-label="Notions à mobiliser">
+              {notionChips.map((notion) => (
+                <li key={notion}>
+                  <span className="mission-notion-chip">{notion}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+      </header>
+
+      <div className="mission-exercise__body mission-exercise__body--readable">
+        <section className="mission-block mission-block--consigne" aria-labelledby={`consigne-${exercise.id}`}>
+          <span className="mission-block__label" id={`consigne-${exercise.id}`}>
+            Consigne
+          </span>
+          <MissionReadableText text={exercise.consigne} className="mission-block__text mission-block__text--consigne" />
+        </section>
+
+        {(exercise.support || (exercise.supportTables && exercise.supportTables.length > 0)) && (
+          <section className="mission-block mission-block--support" aria-labelledby={`support-${exercise.id}`}>
+            <span className="mission-block__label" id={`support-${exercise.id}`}>
+              Document
+            </span>
+            {exercise.support ? (
+              <MissionReadableText text={exercise.support} className="mission-block__text mission-block__text--support" />
+            ) : null}
+            {exercise.supportTables && exercise.supportTables.length > 0 ? (
+              <MissionSupportTables tables={exercise.supportTables} />
+            ) : null}
+          </section>
+        )}
+
+        {exercise.questions && exercise.questions.length > 0 ? (
+          <section className="mission-block mission-block--questions" aria-labelledby={`questions-${exercise.id}`}>
+            <span className="mission-block__label" id={`questions-${exercise.id}`}>
+              Questions
+            </span>
+            <ol className="mission-questions">
+              {exercise.questions.map((question, qi) => (
+                <li key={`${exercise.id}-q-${qi}`}>
+                  <span className="mission-questions__num" aria-hidden="true">
+                    {qi + 1}
+                  </span>
+                  <p className="mission-questions__text">{question}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ) : null}
+
+        <section className="mission-block mission-block--answer" aria-labelledby={`answer-${exercise.id}`}>
+          <span className="mission-block__label" id={`answer-${exercise.id}`}>
+            Ta réponse
+          </span>
+          {perQuestionAnswers ? (
+            <div className="mission-answers-by-question">
+              {exercise.questions.map((question, qi) => (
+                <div key={`${exercise.id}-answer-q-${qi}`} className="mission-answer-block">
+                  <p className="mission-answer-block__label">
+                    <span className="mission-questions__num" aria-hidden="true">
+                      {qi + 1}
+                    </span>
+                    {question}
+                  </p>
+                  <ProtectedTextarea
+                    value={questionAnswers[qi] || ""}
+                    onChange={(e) => onQuestionAnswerChange(qi, e.target.value)}
+                    placeholder={`Réponse à la question ${qi + 1}…`}
+                    rows={8}
+                    enableProtection
+                    onBlockedAction={onBlockedPaste}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="mission-answer">
+              <ProtectedTextarea
+                value={answer}
+                onChange={(e) => onAnswerChange(e.target.value)}
+                placeholder="Développe ta réponse en t'appuyant sur le document…"
+                rows={12}
+                enableProtection
+                onBlockedAction={onBlockedPaste}
+              />
+            </div>
+          )}
+            <div className="mission-exercise__footer">
+              <p className="mission-char-count">
+                {answerCharCount} / {exercise.minChars} caractères minimum
+              </p>
+              <button type="button" className="mission-submit" disabled={!canClaim} onClick={onSubmit}>
+                {savingId === exercise.id
+                  ? "Correction…"
+                  : xpDejaAccorde
+                    ? "Corriger (entraînement)"
+                    : "Corriger et valider"}
+              </button>
+            </div>
+            {xpDejaAccorde ? (
+              <p className="mission-hint">
+                Jetons déjà obtenus pour cet exercice : tu peux t&apos;entraîner sans nouvelle récompense.
+              </p>
+            ) : null}
+          </section>
+
+          {evalResult && gradeMeta ? (
+            <div className="mission-result">
+              <div
+                className="mission-grade"
+                style={{
+                  background: gradeMeta.bg,
+                  borderColor: gradeMeta.border,
+                  color: gradeMeta.color,
+                }}
+              >
+                <span className="mission-grade__letter">{gradeMeta.grade}</span>
+                <div className="mission-grade__meta">
+                  {!evalResult.entrainementSansXp ? (
+                    <p className="mission-grade__reward">{formatJetonsDelta(evalResult.xpAccordee)} gagnés</p>
+                  ) : (
+                    <p className="mission-grade__reward">Entraînement — pas de nouveaux jetons</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="mission-result__section mission-result__section--plus">
+                <p className="mission-result__section-title">Ce qui est bien</p>
+                <MissionReadableText text={evalResult.pointsForts} />
+              </div>
+
+              <div className="mission-result__section mission-result__section--minus">
+                <p className="mission-result__section-title">À améliorer</p>
+                <MissionReadableText text={evalResult.pointsFaibles} />
+              </div>
+
+              <div className="mission-result__section">
+                <p className="mission-result__section-title">Synthèse</p>
+                <MissionReadableText text={evalResult.feedback} />
+              </div>
+
+              {evalResult.analyseDeveloppee ? (
+                <details className="mission-result__details">
+                  <summary>Analyse détaillée</summary>
+                  <MissionReadableText text={evalResult.analyseDeveloppee} />
+                </details>
+              ) : null}
+
+              {evalResult.conseilsProgression ? (
+                <details className="mission-result__details">
+                  <summary>Conseils pour progresser</summary>
+                  <MissionReadableText text={evalResult.conseilsProgression} />
+                </details>
+              ) : null}
+
+              <details className="mission-result__details mission-result__details--model">
+                <summary>
+                  {evalResult.source === "rubric" ? "Repères de correction" : "Réponse proposée"}
+                </summary>
+                <MissionReadableText text={evalResult.propositionReponse} sanitize={false} className="mission-result__model-text" />
+              </details>
+
+              {xpDejaAccorde && hasNext && onGoNext ? (
+                <button type="button" className="mission-next-btn" onClick={onGoNext}>
+                  Exercice suivant
+                </button>
+              ) : null}
+            </div>
+          ) : null}
+      </div>
+    </article>
+  );
+}
+
 export default function Missions({ profil, onXPGagne }: MissionsProps) {
   const { xpRewardsSuspended } = usePlatformIntegrity();
+
+  useEffect(() => {
+    const href = "https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap";
+    if (document.querySelector(`link[href="${href}"]`)) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    document.head.appendChild(link);
+  }, []);
   const niveauxAccessibles = useMemo((): ("premiere" | "terminale")[] => {
     return profil?.classe === "terminale" ? ["premiere", "terminale"] : ["premiere"];
   }, [profil?.classe]);
@@ -188,6 +533,7 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
   const [evaluations, setEvaluations] = useState<Record<string, MissionEvalResult>>({});
   const [uiMessage, setUiMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [savingId, setSavingId] = useState("");
+  const [viewIndex, setViewIndex] = useState(0);
 
   useEffect(() => {
     const def = profil?.classe === "terminale" ? "terminale" : "premiere";
@@ -245,24 +591,62 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
   }, []);
 
   const chapitreActif = chapitres.find((c) => c.id === chapitreIdSelectionne) ?? null;
-  const sdgnChapterNum = useMemo(
-    () => detectSdgnChapterNumber(chapitreActif, matiereSelectionnee),
+  const missionChapterNum = useMemo(
+    () => detectMissionChapterNumber(chapitreActif, matiereSelectionnee),
     [chapitreActif, matiereSelectionnee]
   );
-  const hasSdgnMissionPack = sdgnChapterNum != null;
-  const sdgnProgressChapterLabel = useMemo(
-    () => (sdgnChapterNum != null ? getSdgnProgressLabel(sdgnChapterNum) : "SDGN"),
-    [sdgnChapterNum]
+  const hasActiveMissionPack = hasMissionPack(matiereSelectionnee, missionChapterNum);
+  const missionProgressChapterLabel = useMemo(
+    () =>
+      missionChapterNum != null ? getMissionProgressLabel(matiereSelectionnee, missionChapterNum) : matiereSelectionnee,
+    [matiereSelectionnee, missionChapterNum]
   );
-  const sdgnPackExercises = useMemo(
-    () => (sdgnChapterNum != null ? getSdgnExercises(sdgnChapterNum) : []),
-    [sdgnChapterNum]
+  const missionPackExercises = useMemo(
+    () => (missionChapterNum != null ? getMissionExercises(matiereSelectionnee, missionChapterNum) : []),
+    [matiereSelectionnee, missionChapterNum]
   );
-  const potentialXP = useMemo(() => sdgnPackExercises.reduce((sum, ex) => sum + ex.xp, 0), [sdgnPackExercises]);
+  const potentialXP = useMemo(() => missionPackExercises.reduce((sum, ex) => sum + ex.xp, 0), [missionPackExercises]);
+  const completedExerciseCount = useMemo(
+    () => missionPackExercises.filter((ex) => isMissionExerciseCompleted(ex.id, claims)).length,
+    [missionPackExercises, claims]
+  );
+
+  useEffect(() => {
+    if (!missionPackExercises.length) {
+      setViewIndex(0);
+      return;
+    }
+    setViewIndex(getFirstIncompleteExerciseIndex(missionPackExercises, claims));
+  }, [chapitreIdSelectionne, missionPackExercises]);
+
+  useEffect(() => {
+    if (!missionPackExercises.length) return;
+    setViewIndex((prev) => {
+      if (canAccessMissionExerciseIndex(prev, missionPackExercises, claims)) return prev;
+      return getFirstIncompleteExerciseIndex(missionPackExercises, claims);
+    });
+  }, [claims, missionPackExercises]);
+
+  const activeExercise = missionPackExercises[viewIndex] ?? null;
 
   const sdgnReferential = useMemo(
-    () => (sdgnChapterNum != null ? getSdgnChapterReferential(sdgnChapterNum) : null),
-    [sdgnChapterNum]
+    () =>
+      matiereSelectionnee === "Sciences de Gestion" && missionChapterNum != null
+        ? getSdgnChapterReferential(missionChapterNum)
+        : null,
+    [matiereSelectionnee, missionChapterNum]
+  );
+
+  const missionChapterTitle = useMemo(() => {
+    if (missionChapterNum == null) return "";
+    if (matiereSelectionnee === "Sciences de Gestion") return SDGN_CHAPTER_LABELS[missionChapterNum] ?? "";
+    if (matiereSelectionnee === "Management") return MANAGEMENT_CHAPTER_LABELS[missionChapterNum] ?? "";
+    return "";
+  }, [matiereSelectionnee, missionChapterNum]);
+
+  const rubricPack = useMemo(
+    () => getMissionRubricPack(matiereSelectionnee, missionChapterNum),
+    [matiereSelectionnee, missionChapterNum]
   );
 
   const missionExerciseForCorrection = (exercise: MissionExercise): MissionExercise & {
@@ -281,7 +665,8 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
       setUiMessage({ type: "error", text: "Session expirée. Reconnecte-toi pour valider tes jetons." });
       return;
     }
-    const text = (answers[exercise.id] || "").trim();
+    const perQuestion = exerciseUsesPerQuestionAnswers(exercise);
+    const text = getMissionCombinedAnswer(exercise, answers, perQuestion).trim();
     if (text.length < exercise.minChars) {
       setUiMessage({
         type: "error",
@@ -309,16 +694,47 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
       const entrainementSansXp = (prevEntry?.totalClaims ?? 0) >= 1;
       const today = getTodayKey();
 
-      const local = localCorrectionMissions(exerciseEval, text);
-      const prompt = buildMissionsAIPrompt(exerciseEval, text);
-      let ai = null;
-      try {
-        ai = await callGeminiCorrection(prompt);
-        if (!ai) ai = await callGroqCorrection(prompt);
-      } catch {
-        ai = null;
+      const rubric = rubricPack?.getRubric(exercise.id);
+      let reliable: {
+        score: number;
+        feedback: string;
+        analyseDeveloppee: string;
+        pointsForts: string;
+        pointsFaibles: string;
+        conseilsProgression: string;
+        propositionReponse: string;
+        source: "local" | "rubric";
+      };
+
+      if (rubric && rubricPack) {
+        const byQuestion = perQuestion
+          ? getMissionAnswersByQuestion(exercise, answers)
+          : [text];
+        const rubricEval = rubricCorrectionMissions(exerciseEval, byQuestion, rubric, rubricPack.glossaire);
+        reliable = {
+          score: rubricEval.score,
+          feedback: rubricEval.feedback,
+          analyseDeveloppee: rubricEval.analyseDeveloppee,
+          pointsForts: rubricEval.pointsForts,
+          pointsFaibles: rubricEval.pointsFaibles,
+          conseilsProgression: rubricEval.conseilsProgression,
+          propositionReponse: rubricEval.propositionReponse,
+          source: "rubric",
+        };
+      } else {
+        const local = localCorrectionMissions(exerciseEval, text);
+        reliable = {
+          score: local.score,
+          feedback: local.feedback,
+          analyseDeveloppee: local.analyseDeveloppee,
+          pointsForts: local.pointsForts,
+          pointsFaibles: local.pointsFaibles,
+          conseilsProgression: local.conseilsProgression,
+          propositionReponse: local.propositionReponse,
+          source: "local",
+        };
       }
-      const reliable = buildReliableMissionsEvaluation(local, ai, exerciseEval);
+
       const score = reliable.score;
       const pourcentageBrute = Math.max(0, Math.min(100, Math.round(score * 10)));
       const xpBrute = Math.round((exercise.xp * pourcentageBrute) / 100);
@@ -337,7 +753,7 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
         missionsProgress: {
           ...(stored || {}),
           version: MISSIONS_PROGRESS_VERSION,
-          chapter: sdgnProgressChapterLabel,
+          chapter: missionProgressChapterLabel,
           claims: {
             ...nextClaims,
             [exercise.id]: {
@@ -369,8 +785,8 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
       setUiMessage({
         type: "success",
         text: entrainementSansXp
-          ? `Correction terminée : ${score}/10. Entraînement : les jetons ne sont comptés qu'une fois par exercice (${formatJetons(0)} cette fois).`
-          : `Correction terminée : ${score}/10 → ${pourcentageBrute}% de la récompense mission, soit ${formatJetonsDelta(xpAccordee)}.`,
+          ? `Correction terminée : ${getMissionLetterGradeMeta(score).grade}. Entraînement — pas de nouveaux jetons cette fois.`
+          : `Correction terminée : ${getMissionLetterGradeMeta(score).grade} · ${formatJetonsDelta(xpAccordee)} gagnés.`,
       });
       if (onXPGagne && xpAccordee > 0) onXPGagne();
     } catch (err) {
@@ -381,57 +797,48 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
     }
   };
 
-  return (
-    <div style={{ minHeight: "100vh", background: "linear-gradient(180deg,#0b1220 0%,#111827 40%,#1e293b 100%)", fontFamily: "'Nunito', sans-serif" }}>
-      <div style={{ maxWidth: "860px", margin: "0 auto", padding: "24px 16px 48px" }}>
-        <div
-          style={{
-            background: "linear-gradient(145deg,#0f172a 0%,#1e293b 55%,#334155 100%)",
-            borderRadius: "16px",
-            padding: "24px 26px",
-            marginBottom: "22px",
-            border: "1px solid #475569",
-            boxShadow: "0 4px 24px rgba(15,23,42,0.35)",
-          }}
-        >
-          <h1 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "2.1rem", color: "#f8fafc", margin: "0 0 8px", letterSpacing: "0.02em" }}>
-            Missions
-          </h1>
-          <p style={{ color: "#cbd5e1", margin: 0, fontSize: "0.95rem", fontWeight: 600, lineHeight: 1.5 }}>
-            Choisis le niveau, la matière puis le chapitre (même arborescence que l'onglet Chapitres).
-          </p>
-        </div>
+  const goToExercise = (index: number) => {
+    if (!canAccessMissionExerciseIndex(index, missionPackExercises, claims)) return;
+    setViewIndex(index);
+    requestAnimationFrame(() => {
+      document.getElementById("mission-active")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
 
-        <div
-          style={{
-            background: "#ffffff",
-            borderRadius: "14px",
-            border: "1px solid #e2e8f0",
-            padding: "16px",
-            marginBottom: "18px",
-            boxShadow: "0 1px 3px rgba(15,23,42,0.06)",
-          }}
-        >
-          <p style={{ fontFamily: "'Fredoka One', cursive", color: "#0f172a", fontSize: "1.05rem", margin: "0 0 14px" }}>Filtres</p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "12px" }}>
-            <div style={{ borderRadius: "12px", border: "1px solid #e2e8f0", padding: "10px 12px", background: "#f8fafc" }}>
-              <p style={{ fontFamily: "'Fredoka One', cursive", color: "#0369a1", fontSize: "0.78rem", margin: "0 0 6px" }}>
-                Niveau
-              </p>
+  const goToNextExercise = () => {
+    if (viewIndex >= missionPackExercises.length - 1) return;
+    if (!isMissionExerciseCompleted(missionPackExercises[viewIndex]?.id ?? "", claims)) return;
+    goToExercise(viewIndex + 1);
+  };
+
+  const refNotions =
+    chapitreActif?.notions && chapitreActif.notions.length > 0
+      ? chapitreActif.notions
+      : sdgnReferential?.notions ?? [];
+  const refCompetences =
+    chapitreActif?.competences && chapitreActif.competences.length > 0
+      ? chapitreActif.competences
+      : sdgnReferential?.competences ?? [];
+  const refQuestion = chapitreActif?.question?.trim() || sdgnReferential?.question;
+
+  return (
+    <div className="missions-page">
+      <div className="missions-shell">
+        <header className="missions-hero">
+          <h1>Missions</h1>
+          <p>Un exercice à la fois : corrige pour débloquer le suivant.</p>
+        </header>
+
+        <section className="missions-panel">
+          <p className="missions-panel__title">Filtres</p>
+          <div className="missions-filters">
+            <div className="missions-field">
+              <label htmlFor="missions-niveau">Niveau</label>
               {peutChoisirClasse ? (
                 <select
+                  id="missions-niveau"
                   value={niveauSelectionne}
                   onChange={(e) => setNiveauSelectionne(e.target.value as "premiere" | "terminale")}
-                  style={{
-                    width: "100%",
-                    border: "1px solid #cbd5e1",
-                    borderRadius: "10px",
-                    padding: "8px 10px",
-                    fontFamily: "'Nunito', sans-serif",
-                    fontWeight: 700,
-                    color: "#0f172a",
-                    background: "white",
-                  }}
                 >
                   {niveauxAccessibles.map((nv) => (
                     <option key={nv} value={nv}>
@@ -440,27 +847,17 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
                   ))}
                 </select>
               ) : (
-                <p style={{ margin: 0, fontWeight: 700, color: "#1F2937" }}>Première STMG</p>
+                <p style={{ margin: 0, fontWeight: 700, color: "#1f2937", minHeight: 44, display: "flex", alignItems: "center" }}>
+                  Première STMG
+                </p>
               )}
             </div>
-
-            <div style={{ borderRadius: "12px", border: "1px solid #e2e8f0", padding: "10px 12px", background: "#f8fafc" }}>
-              <p style={{ fontFamily: "'Fredoka One', cursive", color: "#475569", fontSize: "0.78rem", margin: "0 0 6px" }}>
-                Matière
-              </p>
+            <div className="missions-field">
+              <label htmlFor="missions-matiere">Matière</label>
               <select
+                id="missions-matiere"
                 value={matiereSelectionnee}
                 onChange={(e) => setMatiereSelectionnee(e.target.value)}
-                style={{
-                  width: "100%",
-                  border: "1px solid #cbd5e1",
-                  borderRadius: "10px",
-                  padding: "8px 10px",
-                  fontFamily: "'Nunito', sans-serif",
-                  fontWeight: 700,
-                  color: "#0f172a",
-                  background: "white",
-                }}
               >
                 {MATIERES_MISSIONS.map((m) => (
                   <option key={m.matiere} value={m.matiere}>
@@ -469,26 +866,14 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
                 ))}
               </select>
             </div>
-
-            <div style={{ borderRadius: "12px", border: "1px solid #e2e8f0", padding: "10px 12px", background: "#f8fafc" }}>
-              <p style={{ fontFamily: "'Fredoka One', cursive", color: "#15803d", fontSize: "0.78rem", margin: "0 0 6px" }}>
-                Chapitre
-              </p>
+            <div className="missions-field">
+              <label htmlFor="missions-chapitre">Chapitre</label>
               <select
+                id="missions-chapitre"
                 value={chapitreIdSelectionne}
                 onChange={(e) => setChapitreIdSelectionne(e.target.value)}
                 disabled={chargementChapitres || chapitres.length === 0}
-                style={{
-                  width: "100%",
-                  border: "1px solid #cbd5e1",
-                  borderRadius: "10px",
-                  padding: "8px 10px",
-                  fontFamily: "'Nunito', sans-serif",
-                  fontWeight: 700,
-                  color: "#0f172a",
-                  background: "white",
-                  opacity: chargementChapitres || chapitres.length === 0 ? 0.6 : 1,
-                }}
+                style={{ opacity: chargementChapitres || chapitres.length === 0 ? 0.6 : 1 }}
               >
                 {chapitres.length === 0 && !chargementChapitres ? (
                   <option value="">Aucun chapitre pour ce couple niveau / matière</option>
@@ -502,483 +887,180 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
               </select>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div
-          style={{
-            textAlign: "center",
-            padding: "22px",
-            background: "#ffffff",
-            borderRadius: "14px",
-            border: hasSdgnMissionPack ? "1px solid #cbd5e1" : "1px dashed #94a3b8",
-            boxShadow: hasSdgnMissionPack ? "0 1px 3px rgba(15,23,42,0.06)" : "none",
-          }}
-        >
-          {!hasSdgnMissionPack ? (
+        <section className={`missions-content ${hasActiveMissionPack ? "" : "missions-content--empty"}`}>
+          {!hasActiveMissionPack ? (
             <>
-              <p style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.4rem", color: "#0f172a", margin: "0 0 12px" }}>
+              <p style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.25rem", color: "#0f172a", margin: "0 0 10px", textAlign: "center" }}>
                 Exercices à venir
               </p>
-              <p
-                style={{
-                  color: "#334155",
-                  fontSize: "0.98rem",
-                  margin: 0,
-                  maxWidth: "560px",
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                  fontWeight: 600,
-                  lineHeight: 1.55,
-                }}
-              >
-                Sélectionne SDGN et un chapitre (1 à 13) pour afficher les 10 exercices progressifs et 2 études de cas alignés sur le manuel.
+              <p style={{ color: "#334155", fontSize: "0.95rem", margin: 0, fontWeight: 600, lineHeight: 1.55, textAlign: "center" }}>
+                SDGN Première (ch. 1 à 13) et Management Terminale (ch. 1 à 15) : même parcours, notes en lettres et mise en page confortable.
               </p>
             </>
           ) : (
-            <div style={{ textAlign: "left" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "10px", flexWrap: "wrap", marginBottom: "8px" }}>
-                <p style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.35rem", color: "#0f172a", margin: 0, letterSpacing: "0.02em" }}>
-                  {sdgnChapterNum != null
-                    ? `SDGN — Chapitre ${sdgnChapterNum} : ${SDGN_CHAPTER_LABELS[sdgnChapterNum]}`
-                    : "SDGN : missions"}
-                </p>
-                <span
-                  style={{
-                    background: "#f1f5f9",
-                    color: "#0f172a",
-                    borderRadius: 999,
-                    padding: "7px 12px",
-                    fontWeight: 800,
-                    fontSize: 13,
-                    border: "1px solid #cbd5e1",
-                  }}
-                >
-                  Potentiel : {formatJetonsDelta(potentialXP)}
-                </span>
-              </div>
-              <p style={{ margin: "0 0 14px", fontSize: "0.88rem", color: "#64748b", fontWeight: 600, lineHeight: 1.45 }}>
-                {sdgnChapterNum != null ? getSdgnChapterBlurb(sdgnChapterNum) : ""}
-              </p>
-              <p style={{ color: "#475569", margin: "0 0 14px", fontSize: "0.94rem", fontWeight: 600 }}>
-                Anti-triche : copier-coller, menu contextuel et glisser-déposer bloqués sur les réponses. Les jetons ne sont
-                suspendus que si tu quittes l&apos;onglet (ou une autre fenêtre passe au premier plan) pendant au moins
-                quelques secondes — une notification ou un clic accidentel ne suffit pas. Rester sur cet onglet ne compte
-                pas comme triche.
-              </p>
-              {chapitreActif && (
-                <div
-                  style={{
-                    marginBottom: 16,
-                    borderRadius: 12,
-                    padding: "14px 16px",
-                    border: "1px solid #cbd5e1",
-                    background: "#f8fafc",
-                    color: "#0f172a",
-                  }}
-                >
-                  <p
-                    style={{
-                      fontFamily: "'Fredoka One', cursive",
-                      fontSize: "1rem",
-                      margin: "0 0 12px",
-                      color: "#0f172a",
-                      borderLeft: "4px solid #0d9488",
-                      paddingLeft: 10,
-                    }}
-                  >
-                    Référentiel du chapitre (commun à toutes les missions)
+            <>
+              <header className="missions-chapter-head">
+                <div className="missions-chapter-head__row">
+                  <h2>
+                    {missionChapterNum != null
+                      ? `${matiereSelectionnee === "Sciences de Gestion" ? "SDGN" : "Management"} — Ch. ${missionChapterNum}`
+                      : matiereSelectionnee}
+                  </h2>
+                  <span className="missions-potential">Potentiel {formatJetonsDelta(potentialXP)}</span>
+                </div>
+                {missionChapterTitle ? (
+                  <p style={{ margin: "0 0 8px", fontWeight: 700, color: "#0f172a", fontSize: "0.95rem", lineHeight: 1.4 }}>
+                    {missionChapterTitle}
                   </p>
-                  {(chapitreActif.question?.trim() || sdgnReferential?.question) ? (
-                    <div style={{ marginBottom: 12 }}>
-                      <p style={{ fontFamily: "'Fredoka One', cursive", margin: "0 0 6px", fontWeight: 700, color: "#0f766e", fontSize: "0.88rem" }}>
-                        Question de gestion
+                ) : null}
+                <p className="missions-blurb">
+                  {missionChapterNum != null ? getMissionChapterBlurb(matiereSelectionnee, missionChapterNum) : ""}
+                </p>
+              </header>
+
+              <details className="missions-details">
+                <summary>Règles anti-triche</summary>
+                <div className="missions-details__body">
+                  <p>
+                    Copier-coller et glisser-déposer sont bloqués dans la zone de réponse. Les jetons ne sont suspendus
+                    que si tu quittes l&apos;onglet plusieurs secondes.
+                  </p>
+                </div>
+              </details>
+
+              
+
+              {chapitreActif && (refQuestion || refNotions.length > 0 || refCompetences.length > 0) ? (
+                <details className="missions-details">
+                  <summary>Référentiel du chapitre</summary>
+                  <div className="missions-details__body">
+                    {refQuestion ? (
+                      <p>
+                        <strong>Question de gestion :</strong> {refQuestion}
                       </p>
-                      <p style={{ margin: 0, fontWeight: 600, lineHeight: 1.55, fontSize: "0.95rem", color: "#334155" }}>
-                        {chapitreActif.question?.trim() || sdgnReferential?.question}
-                      </p>
-                    </div>
-                  ) : null}
-                  {(() => {
-                    const notions =
-                      chapitreActif.notions && chapitreActif.notions.length > 0
-                        ? chapitreActif.notions
-                        : sdgnReferential?.notions ?? [];
-                    const competences =
-                      chapitreActif.competences && chapitreActif.competences.length > 0
-                        ? chapitreActif.competences
-                        : sdgnReferential?.competences ?? [];
-                    if (notions.length === 0 && competences.length === 0) {
-                      return (
-                        <p style={{ margin: 0, fontWeight: 600, color: "#64748b", fontSize: "0.92rem" }}>
-                          Référentiel indisponible pour ce chapitre.
-                        </p>
-                      );
-                    }
-                    return (
+                    ) : null}
+                    {refCompetences.length > 0 ? (
                       <>
-                        {competences.length > 0 ? (
-                          <div style={{ marginBottom: 12 }}>
-                            <p
-                              style={{
-                                fontFamily: "'Fredoka One', cursive",
-                                margin: "0 0 6px",
-                                fontWeight: 700,
-                                color: "#0f766e",
-                                fontSize: "0.88rem",
-                              }}
-                            >
-                              Compétences (référentiel SDGN)
-                            </p>
-                            <ul
-                              style={{
-                                margin: 0,
-                                paddingLeft: 22,
-                                fontWeight: 600,
-                                lineHeight: 1.5,
-                                color: "#334155",
-                                fontSize: "0.93rem",
-                              }}
-                            >
-                              {competences.map((c, i) => (
-                                <li key={`ref-c-${i}`}>{c}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        ) : null}
-                        {notions.length > 0 ? (
-                          <div>
-                            <p
-                              style={{
-                                fontFamily: "'Fredoka One', cursive",
-                                margin: "0 0 6px",
-                                fontWeight: 700,
-                                color: "#0f766e",
-                                fontSize: "0.88rem",
-                              }}
-                            >
-                              Notions (à mobiliser dans chaque mission)
-                            </p>
-                            <p style={{ margin: 0, fontWeight: 600, lineHeight: 1.55, fontSize: "0.93rem", color: "#334155" }}>
-                              {notions.join(" · ")}
-                            </p>
-                          </div>
-                        ) : null}
+                        <p style={{ marginBottom: 6 }}>
+                          <strong>Compétences :</strong>
+                        </p>
+                        <ul>
+                          {refCompetences.map((c, i) => (
+                            <li key={`ref-c-${i}`}>{c}</li>
+                          ))}
+                        </ul>
                       </>
+                    ) : null}
+                    {refNotions.length > 0 ? (
+                      <p style={{ marginTop: refCompetences.length > 0 ? 10 : 0 }}>
+                        <strong>Notions :</strong> {refNotions.join(" · ")}
+                      </p>
+                    ) : null}
+                  </div>
+                </details>
+              ) : null}
+
+              {uiMessage ? (
+                <div className={`missions-alert missions-alert--${uiMessage.type === "success" ? "success" : "error"}`}>
+                  {uiMessage.text}
+                </div>
+              ) : null}
+
+              <div className="mission-progress" aria-label="Progression du chapitre">
+                <div
+                  className="mission-progress__bar"
+                  role="progressbar"
+                  aria-valuenow={completedExerciseCount}
+                  aria-valuemin={0}
+                  aria-valuemax={missionPackExercises.length}
+                >
+                  <span
+                    className="mission-progress__fill"
+                    style={{
+                      width: `${missionPackExercises.length ? (completedExerciseCount / missionPackExercises.length) * 100 : 0}%`,
+                    }}
+                  />
+                </div>
+                <p className="mission-progress__label">
+                  {completedExerciseCount} / {missionPackExercises.length} exercices validés
+                </p>
+              </div>
+
+              <nav className="mission-quick-nav" aria-label="Navigation entre exercices">
+                {missionPackExercises.map((exercise, index) => {
+                  const done = isMissionExerciseCompleted(exercise.id, claims);
+                  const accessible = canAccessMissionExerciseIndex(index, missionPackExercises, claims);
+                  const active = viewIndex === index;
+                  return (
+                    <button
+                      key={`nav-${exercise.id}`}
+                      type="button"
+                      className={`mission-quick-nav__btn ${active ? "is-active" : ""} ${done ? "is-done" : ""} ${!accessible ? "is-locked" : ""}`}
+                      onClick={() => goToExercise(index)}
+                      disabled={!accessible}
+                      aria-current={active ? "step" : undefined}
+                      title={!accessible ? "Termine l'exercice précédent pour débloquer" : undefined}
+                    >
+                      {index + 1}
+                    </button>
+                  );
+                })}
+              </nav>
+
+              {activeExercise ? (
+                <div id="mission-active" className="mission-exercise-list">
+                  {(() => {
+                    const exercise = activeExercise;
+                    const index = viewIndex;
+                    const answer = answers[exercise.id] || "";
+                    const perQuestionAnswers = exerciseUsesPerQuestionAnswers(exercise);
+                    const questionAnswers = getMissionAnswersByQuestion(exercise, answers);
+                    const combinedLen = perQuestionAnswers
+                      ? questionAnswers.reduce((sum, part) => sum + (part || "").trim().length, 0)
+                      : answer.trim().length;
+                    const evalResult = evaluations[exercise.id];
+                    const xpDejaAccorde = isMissionExerciseCompleted(exercise.id, claims);
+                    const canClaim = combinedLen >= exercise.minChars && savingId !== exercise.id;
+                    const hasNext = index < missionPackExercises.length - 1;
+                    return (
+                      <MissionExerciseCard
+                        key={exercise.id}
+                        exercise={exercise}
+                        index={index}
+                        totalCount={missionPackExercises.length}
+                        perQuestionAnswers={perQuestionAnswers}
+                        answer={answer}
+                        onAnswerChange={(value) => setAnswers((prev) => ({ ...prev, [exercise.id]: value }))}
+                        questionAnswers={questionAnswers}
+                        onQuestionAnswerChange={(qi, value) =>
+                          setAnswers((prev) => ({
+                            ...prev,
+                            [missionQuestionAnswerKey(exercise.id, qi)]: value,
+                          }))
+                        }
+                        evalResult={evalResult}
+                        xpDejaAccorde={xpDejaAccorde}
+                        savingId={savingId}
+                        canClaim={canClaim}
+                        onSubmit={() => void evaluateAndClaimXP(exercise)}
+                        onBlockedPaste={() =>
+                          setUiMessage({
+                            type: "error",
+                            text: "Action bloquée : anti-triche active sur cette zone.",
+                          })
+                        }
+                        hasNext={hasNext}
+                        onGoNext={hasNext ? goToNextExercise : undefined}
+                      />
                     );
                   })()}
                 </div>
-              )}
-              {uiMessage && (
-                <div
-                  style={{
-                    marginBottom: 12,
-                    borderRadius: 10,
-                    padding: "10px 12px",
-                    fontWeight: 800,
-                    border: `1px solid ${uiMessage.type === "success" ? "#86efac" : "#fca5a5"}`,
-                    color: uiMessage.type === "success" ? "#14532d" : "#991b1b",
-                    background: uiMessage.type === "success" ? "#ecfdf5" : "#fef2f2",
-                  }}
-                >
-                  {uiMessage.text}
-                </div>
-              )}
-              <div style={{ display: "grid", gap: "16px" }}>
-                {sdgnPackExercises.map((exercise, index) => {
-                  const answer = answers[exercise.id] || "";
-                  const evalResult = evaluations[exercise.id];
-                  const mood = evalResult ? getScoreMood(evalResult.score) : null;
-                  const xpDejaAccorde = (claims[exercise.id]?.totalClaims ?? 0) > 0;
-                  const canClaim = answer.trim().length >= exercise.minChars && savingId !== exercise.id;
-                  const diffStyle = DIFFICULTY_STYLE[exercise.difficulty];
-                  const isCas = exercise.type === "Etude de cas";
-                  return (
-                    <article
-                      key={exercise.id}
-                      style={{
-                        background: "#ffffff",
-                        border: "1px solid #e2e8f0",
-                        borderLeft: `4px solid ${diffStyle.stripe}`,
-                        borderRadius: 12,
-                        padding: 0,
-                        overflow: "hidden",
-                        boxShadow: "0 1px 3px rgba(15,23,42,0.08)",
-                      }}
-                    >
-                      <div
-                        style={{
-                          background: diffStyle.headerBg,
-                          padding: "10px 14px",
-                          borderBottom: "1px solid #e2e8f0",
-                          display: "flex",
-                          flexWrap: "wrap",
-                          gap: 8,
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
-                          <span
-                            style={{
-                              background: "#ffffff",
-                              color: "#0f172a",
-                              borderRadius: 8,
-                              padding: "5px 10px",
-                              fontWeight: 800,
-                              fontSize: 12,
-                              fontFamily: "'Fredoka One', cursive",
-                              border: "1px solid #cbd5e1",
-                            }}
-                          >
-                            {index + 1}. {formatExerciseTypeLabel(exercise.type)}
-                          </span>
-                          <span
-                            style={{
-                              background: diffStyle.badgeBg,
-                              color: diffStyle.badgeText,
-                              borderRadius: 8,
-                              padding: "5px 10px",
-                              fontWeight: 800,
-                              fontSize: 12,
-                              border: "1px solid rgba(15,23,42,0.12)",
-                            }}
-                          >
-                            {formatDifficultyLabel(exercise.difficulty)}
-                          </span>
-                          <span
-                            style={{
-                              background: isCas ? "#ffe4e6" : "#f1f5f9",
-                              color: "#334155",
-                              borderRadius: 8,
-                              padding: "5px 10px",
-                              fontWeight: 800,
-                              fontSize: 12,
-                              border: "1px solid #cbd5e1",
-                            }}
-                          >
-                            {formatJetonsDelta(exercise.xp)}
-                          </span>
-                        </div>
-                      </div>
-                      <div style={{ padding: "16px 16px 18px" }}>
-                        <p style={{ margin: "0 0 12px", fontWeight: 800, color: "#0f172a", fontSize: "1.05rem", fontFamily: "'Fredoka One', cursive", lineHeight: 1.35 }}>
-                          {exercise.title}
-                        </p>
-                        <div style={{ margin: "0 0 14px" }}>
-                          <p style={{ margin: "0 0 6px", fontFamily: "'Fredoka One', cursive", fontWeight: 700, color: "#475569", fontSize: "0.82rem", letterSpacing: "0.03em" }}>
-                            CONSIGNE
-                          </p>
-                          <p style={{ margin: 0, color: "#1e293b", lineHeight: 1.6, fontWeight: 500, fontSize: "0.98rem" }}>{exercise.consigne}</p>
-                        </div>
-                        {(exercise.support || (exercise.supportTables && exercise.supportTables.length > 0)) && (
-                          <div
-                            style={{
-                              margin: "0 0 14px",
-                              color: "#1e293b",
-                              lineHeight: 1.6,
-                              background: "#fffbeb",
-                              border: "1px solid #fcd34d",
-                              borderRadius: 10,
-                              padding: "12px 14px",
-                            }}
-                          >
-                            <p style={{ margin: "0 0 6px", fontFamily: "'Fredoka One', cursive", fontWeight: 700, color: "#b45309", fontSize: "0.82rem" }}>SUPPORT</p>
-                            {exercise.support ? (
-                              <p style={{ margin: 0, fontWeight: 500, fontSize: "0.96rem", whiteSpace: "pre-wrap" }}>{exercise.support}</p>
-                            ) : null}
-                            {exercise.supportTables && exercise.supportTables.length > 0 ? (
-                              <MissionSupportTables tables={exercise.supportTables} />
-                            ) : null}
-                          </div>
-                        )}
-                        {exercise.questions && exercise.questions.length > 0 && (
-                          <div style={{ margin: "0 0 14px" }}>
-                            <p
-                              style={{
-                                margin: "0 0 10px",
-                                fontFamily: "'Fredoka One', cursive",
-                                fontWeight: 700,
-                                fontSize: "0.95rem",
-                                color: "#0f172a",
-                              }}
-                            >
-                              Questions à traiter
-                            </p>
-                            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                              {exercise.questions.map((question, qi) => (
-                                <div
-                                  key={`${exercise.id}-q-${qi}`}
-                                  style={{
-                                    background: "#ffffff",
-                                    border: "1px solid #e2e8f0",
-                                    borderRadius: 10,
-                                    padding: "12px 14px",
-                                    borderLeft: "4px solid #0d9488",
-                                    boxShadow: "0 1px 2px rgba(15,23,42,0.04)",
-                                  }}
-                                >
-                                  <p
-                                    style={{
-                                      margin: 0,
-                                      fontSize: "0.78rem",
-                                      fontWeight: 800,
-                                      color: "#0f766e",
-                                      letterSpacing: "0.04em",
-                                      textTransform: "uppercase",
-                                    }}
-                                  >
-                                    Question {qi + 1}
-                                  </p>
-                                  <p style={{ margin: "8px 0 0", fontWeight: 500, fontSize: "0.97rem", color: "#1e293b", lineHeight: 1.55 }}>
-                                    {question}
-                                  </p>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                        <p
-                          style={{
-                            margin: "0 0 10px",
-                            padding: "10px 12px",
-                            borderRadius: 10,
-                            border: "1px solid #99f6e4",
-                            background: "linear-gradient(135deg, #f0fdfa 0%, #ecfeff 100%)",
-                            color: "#115e59",
-                            fontSize: "0.88rem",
-                            fontWeight: 600,
-                            lineHeight: 1.5,
-                          }}
-                        >
-                          <span style={{ fontFamily: "'Fredoka One', cursive", fontWeight: 700, color: "#0f766e" }}>Rédaction</span>
-                          {" — "}
-                          Nomme les notions du cours (valeur ajoutée, consommations intermédiaires, parties prenantes, etc.) et relie les chiffres à ton raisonnement :
-                          comme sur une copie papier ou au bac, quelques phrases claires valent mieux qu’un bloc de chiffres seuls — et la correction automatique
-                          suit mieux ton travail.
-                        </p>
-                        <ProtectedTextarea
-                          value={answer}
-                          onChange={(e) => setAnswers((prev) => ({ ...prev, [exercise.id]: e.target.value }))}
-                          placeholder="Écris ta réponse ici…"
-                          enableProtection
-                          onBlockedAction={() =>
-                            setUiMessage({
-                              type: "error",
-                              text: "Action bloquée : anti-triche active sur cette zone.",
-                            })
-                          }
-                          style={{
-                            width: "100%",
-                            minHeight: 130,
-                            borderRadius: 10,
-                            border: "1px solid #cbd5e1",
-                            padding: "12px",
-                            resize: "vertical",
-                            boxSizing: "border-box",
-                            fontFamily: "'Nunito', sans-serif",
-                            fontWeight: 500,
-                            fontSize: "0.98rem",
-                            lineHeight: 1.55,
-                          }}
-                        />
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10, flexWrap: "wrap", marginTop: 12 }}>
-                          <p style={{ margin: 0, color: "#64748b", fontSize: 12, fontWeight: 600 }}>
-                            {answer.trim().length} caractères / {exercise.minChars} minimum
-                          </p>
-                          <button
-                            type="button"
-                            onClick={() => void evaluateAndClaimXP(exercise)}
-                            disabled={!canClaim}
-                            style={{
-                              border: "1px solid #0f766e",
-                              borderRadius: 10,
-                              padding: "10px 16px",
-                              fontWeight: 800,
-                              cursor: canClaim ? "pointer" : "not-allowed",
-                              background: canClaim ? "#0d9488" : "#cbd5e1",
-                              color: canClaim ? "#ffffff" : "#64748b",
-                              fontFamily: "'Nunito', sans-serif",
-                              fontSize: "0.95rem",
-                            }}
-                          >
-                            {savingId === exercise.id
-                              ? "Correction…"
-                              : xpDejaAccorde
-                                ? "Corriger (sans jetons)"
-                                : "Corriger et valider les jetons"}
-                          </button>
-                        </div>
-                        {xpDejaAccorde && (
-                          <p style={{ margin: "10px 0 0", fontSize: 12, fontWeight: 600, color: "#64748b" }}>
-                            Tu as déjà obtenu les jetons pour cet exercice : chaque nouvelle correction compte comme entraînement ({formatJetons(0)}).
-                          </p>
-                        )}
-                        {evalResult && (
-                          <div
-                            style={{
-                              marginTop: 14,
-                              background: "#f8fafc",
-                              border: "1px solid #cbd5e1",
-                              borderLeft: "4px solid #0d9488",
-                              borderRadius: 10,
-                              padding: 14,
-                            }}
-                          >
-                            <p style={{ margin: "0 0 6px", color: "#0f172a", fontWeight: 800, fontFamily: "'Fredoka One', cursive", fontSize: "0.98rem" }}>
-                              Résultat : {evalResult.score}/10
-                              {evalResult.entrainementSansXp
-                                ? ` — entraînement (${formatJetons(0)})`
-                                : ` — ${Math.max(0, Math.min(100, Math.round(evalResult.score * 10)))}% de la récompense mission → ${formatJetonsDelta(evalResult.xpAccordee)}`}
-                            </p>
-                            {mood && (
-                              <p style={{ margin: "0 0 8px", color: mood.color, fontWeight: 800, fontSize: "1.2rem" }}>
-                                {mood.emoji} {mood.text}
-                              </p>
-                            )}
-                            <p style={{ margin: "0 0 6px", color: "#166534", fontWeight: 600 }}>
-                              <strong>Points + :</strong> {evalResult.pointsForts}
-                            </p>
-                            <p style={{ margin: "0 0 6px", color: "#b45309", fontWeight: 600 }}>
-                              <strong>Points − :</strong> {evalResult.pointsFaibles}
-                            </p>
-                            <p style={{ margin: "0 0 8px", color: "#334155", fontWeight: 500, lineHeight: 1.55 }}>
-                              <strong>Synthèse :</strong> {evalResult.feedback}
-                            </p>
-                            {evalResult.analyseDeveloppee ? (
-                              <p style={{ margin: "0 0 8px", color: "#334155", whiteSpace: "pre-wrap", lineHeight: 1.55, fontWeight: 500 }}>
-                                <strong style={{ fontFamily: "'Fredoka One', cursive", color: "#0f172a" }}>Analyse détaillée</strong>
-                                {"\n"}
-                                {evalResult.analyseDeveloppee}
-                              </p>
-                            ) : null}
-                            {evalResult.conseilsProgression ? (
-                              <p style={{ margin: "0 0 10px", color: "#334155", whiteSpace: "pre-wrap", lineHeight: 1.55, fontWeight: 500 }}>
-                                <strong style={{ fontFamily: "'Fredoka One', cursive", color: "#0f172a" }}>Conseils</strong>
-                                {"\n"}
-                                {evalResult.conseilsProgression}
-                              </p>
-                            ) : null}
-                            <div style={{ background: "#ecfdf5", border: "1px solid #86efac", borderRadius: 8, padding: 12 }}>
-                              <p style={{ margin: "0 0 6px", color: "#14532d", fontWeight: 800, fontFamily: "'Fredoka One', cursive", fontSize: "0.9rem" }}>
-                                Réponse proposée (à noter au cahier)
-                              </p>
-                              <p style={{ margin: 0, color: "#166534", whiteSpace: "pre-wrap", lineHeight: 1.55, fontWeight: 500 }}>
-                                {evalResult.propositionReponse}
-                              </p>
-                            </div>
-                            <p style={{ margin: "8px 0 0", fontSize: 12, color: "#64748b", fontWeight: 600 }}>
-                              Source : {evalResult.source === "ai" ? "IA + garde-fous locaux" : "Correction locale"}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-            </div>
+              ) : null}
+            </>
           )}
-        </div>
+        </section>
       </div>
     </div>
   );

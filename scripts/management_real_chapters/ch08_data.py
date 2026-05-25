@@ -1,0 +1,375 @@
+# -*- coding: utf-8 -*-
+"""Management chapitre 8 — acteurs reels, un concept par exercice."""
+
+D = "\u2014 "
+
+
+def I(sid, title, **body):
+    return {"sid": sid, "title": title, "body": body}
+
+
+CH8 = [
+    I(
+        "e1",
+        "Taylorisme chez IKEA France",
+        support=(
+            "IKEA France organise la pr\u00e9paration des commandes click & collect "
+            "dans son entrep\u00f4t de Gennevilliers en t\u00e2ches standardis\u00e9es : "
+            "picking, emballage, \u00e9tiquetage, mise en zone exp\u00e9dition. "
+            "Division horizontale forte (chaque poste sp\u00e9cialis\u00e9), "
+            "division verticale marqu\u00e9e (encadrement s\u00e9par\u00e9 de l'ex\u00e9cution). "
+            "Chronom\u00e9trage des gestes, prime au rendement sur le poste picking. "
+            "Productivit\u00e9 \u00e9lev\u00e9e (+18 % en 2 ans) mais turnover 19 % sur postes r\u00e9p\u00e9titifs."
+        ),
+        consigne=(
+            "Pr\u00e9sente les caract\u00e9ristiques d'une organisation rigide (OST/Taylor) "
+            "\u00e0 partir du support IKEA France."
+        ),
+        questions=[
+            "Quels sont les trois principes de l'organisation rigide selon le cours ?",
+            "Identifie division horizontale et verticale chez IKEA.",
+            "Pourquoi ce mod\u00e8le convient-il \u00e0 un environnement de volumes stables ?",
+        ],
+        correction=(
+            "1) Division horizontale (sp\u00e9cialisation), division verticale (encadrement/ex\u00e9cution), "
+            "salaire au rendement.\n\n"
+            "2) Horizontale : 4 postes sp\u00e9cialis\u00e9s (picking, emballage, \u00e9tiquetage, exp\u00e9dition).\n"
+            f"{D}Verticale : hi\u00e9rarchie encadrement/ex\u00e9cutants.\n"
+            f"{D}Rendement picking chronom\u00e9tr\u00e9.\n\n"
+            "3) Volumes stables click & collect : gains productivit\u00e9 (+18 %), co\u00fbts comp\u00e9titifs. "
+            "Limite : turnover 19 % (perte de sens)."
+        ),
+        attendu="Trois principes OST, application support, ad\u00e9quation environnement.",
+        notions=["organisation rigide", "taylorisme", "division du travail"],
+    ),
+    I(
+        "e2",
+        "Flux tendus et kanban chez But",
+        support=(
+            "But r\u00e9duit ses stocks composants atelier de 24 \u00e0 9 jours via kanban "
+            "sur 85 r\u00e9f\u00e9rences de panneaux et quincaillerie. "
+            "\u00c9tiquettes kanban d\u00e9clenchent r\u00e9approvisionnement, "
+            "livraisons fournisseurs 3\u00d7/semaine. Principe \u00ab juste \u00e0 temps \u00bb. "
+            "BFR lib\u00e9r\u00e9 : 380 000 \u20ac. "
+            "Risque : rupture approvisionnement panneaux d\u00e9cembre 2025 (retard 4 commandes clients)."
+        ),
+        consigne=(
+            "Explique le flux tendu et le syst\u00e8me kanban chez But. "
+            "Analyse avantages et risques."
+        ),
+        questions=[
+            "D\u00e9finis flux tendu et kanban selon le cours.",
+            "Quels gains But tire-t-il du flux tendu ?",
+            "Quelles limites la rupture de d\u00e9cembre 2025 r\u00e9v\u00e8le-t-elle ?",
+        ],
+        correction=(
+            "1) Flux tendu : production \u00e0 la demande, stocks minimis\u00e9s. "
+            "Kanban : \u00e9tiquetage d\u00e9clenchant r\u00e9appro.\n\n"
+            "2) Stocks 24\u21929 jours, BFR \u2212380 000 \u20ac, livraisons synchronis\u00e9es.\n\n"
+            "3) Vuln\u00e9rabilit\u00e9 ruptures, d\u00e9pendance fournisseurs fiables, "
+            "n\u00e9cessit\u00e9 stock s\u00e9curit\u00e9 minimal."
+        ),
+        attendu="D\u00e9finitions, gains chiffr\u00e9s, limites flux tendu.",
+        notions=["flux tendu", "kanban", "juste \u00e0 temps"],
+    ),
+    I(
+        "e3",
+        "Lean et VSM chez Conforama",
+        support=(
+            "Conforama r\u00e9alise une Value Stream Mapping (VSM) sur la cha\u00eene "
+            "commande web \u2192 pr\u00e9paration entrep\u00f4t \u2192 livraison client : "
+            "lead time total 16 jours (commande \u2192 livraison), "
+            "dont 5 jours valeur ajout\u00e9e et 11 jours gaspillages (attentes, stocks, reprises). "
+            "Apr\u00e8s lean : lead time 11 jours (\u221231 %), 5S d\u00e9ploy\u00e9, 65 projets kaizen/an."
+        ),
+        consigne=(
+            "Pr\u00e9sente le lean management et analyse la VSM de Conforama."
+        ),
+        questions=[
+            "Qu'est-ce que le lean management ? Cite muda, 5S, kaizen.",
+            "Analyse la VSM : o\u00f9 sont les gaspillages ?",
+            "Comment le lead time a-t-il \u00e9t\u00e9 r\u00e9duit de 31 % ?",
+        ],
+        correction=(
+            "1) Lean : \u00e9liminer gaspillages, am\u00e9lioration continue. "
+            "5S (ranger), kaizen (petites am\u00e9liorations), muda (gaspillages).\n\n"
+            "2) 11 jours non valeur ajout\u00e9e : attentes, stocks interm\u00e9diaires, reprises qualit\u00e9.\n\n"
+            "3) 5S, kaizen (65 projets/an), flux tendu, r\u00e9duction attentes \u2192 16\u219211 jours."
+        ),
+        attendu="D\u00e9finitions lean, analyse VSM, r\u00e9sultats chiffr\u00e9s.",
+        notions=["lean management", "VSM", "muda"],
+    ),
+    I(
+        "e4",
+        "Coordination Mintzberg chez Leroy Merlin",
+        support=(
+            "Leroy Merlin combine plusieurs m\u00e9canismes d'ajustement dans un magasin pilote :\n"
+            "\u2014 Supervision directe en rayon (chef de secteur).\n"
+            "\u2014 Standardisation des proc\u00e9d\u00e9s (fiches mise en rayon).\n"
+            "\u2014 Standardisation des r\u00e9sultats (objectif disponibilit\u00e9 produits 96 %).\n"
+            "\u2014 Ajustement mutuel en projet cuisine sur mesure (communication informelle).\n"
+            "Mintzberg : plus l'environnement est complexe, plus on s'\u00e9loigne de la supervision directe."
+        ),
+        consigne=(
+            "Pr\u00e9sente les m\u00e9canismes de coordination de Mintzberg "
+            "illustr\u00e9s par Leroy Merlin."
+        ),
+        questions=[
+            "Cite et d\u00e9finis au moins quatre m\u00e9canismes d'ajustement Mintzberg.",
+            "Quel m\u00e9canisme pour chaque situation du support ?",
+            "Pourquoi le projet cuisine utilise-t-il l'ajustement mutuel ?",
+        ],
+        correction=(
+            "1) Supervision directe, standardisation proc\u00e9d\u00e9s/r\u00e9sultats/qualifications/normes, ajustement mutuel.\n\n"
+            "2) Rayon : supervision + proc\u00e9d\u00e9s. Disponibilit\u00e9 96 % : r\u00e9sultats. "
+            "Cuisine sur mesure : ajustement mutuel (complexit\u00e9, autonomie).\n\n"
+            "3) Environnement complexe (produits diff\u00e9renci\u00e9s) : "
+            "coordination informelle plus adapt\u00e9e que proc\u00e9dures rigides."
+        ),
+        attendu="Quatre m\u00e9canismes d\u00e9finis, application au support.",
+        notions=["Mintzberg", "coordination", "standardisation"],
+    ),
+    I(
+        "e5",
+        "Toyotisme chez Habitat",
+        support=(
+            "Habitat (groupe IKEA) d\u00e9ploie des pratiques toyotisme dans son atelier de restauration meubles :\n"
+            "\u2014 Autonomisation : op\u00e9rateur peut arr\u00eater la ligne si d\u00e9faut d\u00e9tect\u00e9.\n"
+            "\u2014 Kaizen continu : 52 propositions d'am\u00e9lioration/an par les \u00e9quipes.\n"
+            "\u2014 Cercles qualit\u00e9 hebdomadaires (8 op\u00e9rateurs + 2 cadres).\n"
+            "\u2014 Polyvalence : 3 postes ma\u00eetris\u00e9s minimum.\n"
+            "Contrairement au taylorisme : information remonte, pas seulement ordres qui descendent."
+        ),
+        consigne=(
+            "Compare toyotisme et taylorisme \u00e0 partir des pratiques de Habitat."
+        ),
+        questions=[
+            "Cite les principes du toyotisme (juste \u00e0 temps, kaizen, kanban, cercles qualit\u00e9).",
+            "En quoi Habitat s'\u00e9loigne-t-il du taylorisme pur ?",
+            "Quel r\u00f4le de la polyvalence et de la remont\u00e9e d'information ?",
+        ],
+        correction=(
+            "1) Juste \u00e0 temps, kaizen, kanban, autonomisation machines, cercles qualit\u00e9, polyvalence.\n\n"
+            "2) Remont\u00e9e info base\u2192haut, polyvalence (vs sp\u00e9cialisation), "
+            "am\u00e9lioration continue participative (52 propositions/an).\n\n"
+            "3) Polyvalence = flexibilit\u00e9. Remont\u00e9e info = d\u00e9tection probl\u00e8mes terrain, motivation."
+        ),
+        attendu="Principes toyotisme, comparaison Taylor, polyvalence.",
+        notions=["toyotisme", "kaizen", "am\u00e9lioration continue"],
+    ),
+    I(
+        "e6",
+        "Lean occidental chez Emma\u00fcs",
+        support=(
+            "Emma\u00fcs d\u00e9ploie le lean management occidental dans ses ateliers de r\u00e9emploi "
+            "(Lille, Lyon, Toulouse) : r\u00e9duction gaspillages et participation salari\u00e9s. "
+            "R\u00e9sultats : productivit\u00e9 +14 % en 2 ans, taux de rebut \u22120,8 pt. "
+            "Risques identifi\u00e9s : stress sur cadences, image n\u00e9gative (lean = pression). "
+            "Le CSE a obtenu des pauses suppl\u00e9mentaires et un comit\u00e9 ergonomie. "
+            "D\u00e9centralisation : op\u00e9rateurs peuvent arr\u00eater la cha\u00eene de tri."
+        ),
+        consigne=(
+            "Pr\u00e9sente le lean management occidental, ses b\u00e9n\u00e9fices et ses risques sociaux "
+            "chez Emma\u00fcs."
+        ),
+        questions=[
+            "Qu'est-ce que le lean management occidental ?",
+            "Quels b\u00e9n\u00e9fices et risques chez Emma\u00fcs ?",
+            "Comment concilier lean et conditions de travail ?",
+        ],
+        correction=(
+            "1) Adaptation toyotisme : r\u00e9duction gaspillages, participation salari\u00e9s, "
+            "am\u00e9lioration continue.\n\n"
+            "2) B\u00e9n\u00e9fices : productivit\u00e9 +14 %, rebuts \u22120,8 pt.\n"
+            f"{D}Risques : stress, fatigue, image pression.\n\n"
+            "3) Comit\u00e9 ergonomie, pauses, droit arr\u00eat cha\u00eene, dialogue CSE, d\u00e9centralisation pouvoir."
+        ),
+        attendu="D\u00e9finition lean occidental, b\u00e9n\u00e9fices/risques, conciliation sociale.",
+        notions=["lean management", "conditions de travail", "CSE"],
+    ),
+    I(
+        "e7",
+        "Goulots d'\u00e9tranglement (TOC) \u2014 Office HLM",
+        support=(
+            "Office HLM (Office public de l'habitat de la m\u00e9tropole lilloise) "
+            "g\u00e8re la r\u00e9novation de 2 400 logements/an. "
+            "La VSM r\u00e9v\u00e8le l'\u00e9tape \u00ab pose menuiseries ext\u00e9rieures \u00bb comme goulot : "
+            "100 % des chantiers y passent, capacit\u00e9 18 logements/semaine vs 24 demand\u00e9s. "
+            "Actions TOC : buffer de 6 logements en attente, heures modulables, "
+            "sous-traitance ponctuelle. D\u00e9lai moyen chantier : 14 sem \u2192 11 sem en 4 mois."
+        ),
+        consigne=(
+            "Applique la th\u00e9orie des contraintes (TOC) au goulet menuiseries Office HLM."
+        ),
+        questions=[
+            "Qu'est-ce qu'un goulot d'\u00e9tranglement en production ?",
+            "Pourquoi l'\u00e9tape menuiseries est-elle le goulot ?",
+            "Quelles actions TOC Office HLM met-il en \u0153uvre ?",
+        ],
+        correction=(
+            "1) Goulot : \u00e9tape limitant le d\u00e9bit global (100 % flux, capacit\u00e9 < demande).\n\n"
+            "2) 24 demand\u00e9s vs 18 capacit\u00e9/semaine, tous chantiers passent par menuiseries.\n\n"
+            "3) Buffer 6 logements, heures modulables, sous-traitance ponctuelle "
+            "\u2192 d\u00e9lai 14\u219211 sem."
+        ),
+        attendu="D\u00e9finition goulot, identification, actions TOC chiffr\u00e9es.",
+        notions=["goulot d'\u00e9tranglement", "TOC", "VSM"],
+    ),
+    I(
+        "e8",
+        "Cellules flexibles \u2014 Les Compagnons du devoir",
+        support=(
+            "Les Compagnons du devoir organisent la formation en \u00e9b\u00e9nisterie "
+            "en cellules en U \u00e0 Paris (15 apprenants/cellule) pour les pi\u00e8ces sur mesure, "
+            "et conserve une ligne flow pour les pi\u00e8ces standardis\u00e9es (30 apprenants). "
+            "Apprenants cellules : polyvalents (4 comp\u00e9tences), autonomes, responsables qualit\u00e9. "
+            "Ligne standard : sp\u00e9cialisation, supervision directe ma\u00eetre compagnon. "
+            "Cellule sur mesure : taux de rebuts 0,4 % vs 1,1 % en ligne flow."
+        ),
+        consigne=(
+            "Explique l'adaptation de l'organisation du travail au mode de production "
+            "(s\u00e9rie vs diff\u00e9renci\u00e9) chez Les Compagnons du devoir."
+        ),
+        questions=[
+            "Compare cellules U (sur mesure) et ligne flow (standard).",
+            "Quel lien entre polyvalence et organisation souple ?",
+            "Pourquoi deux modes coexistent chez Les Compagnons du devoir ?",
+        ],
+        correction=(
+            "1) Cellules U : petites s\u00e9ries, polyvalence, autonomie. "
+            "Ligne flow : grande s\u00e9rie, sp\u00e9cialisation, productivit\u00e9.\n\n"
+            "2) Polyvalence = flexibilit\u00e9, adaptation demande, enrichissement t\u00e2ches.\n\n"
+            "3) Environnement mixte : standard (stable, co\u00fbt) + sur mesure (diff\u00e9renciation, qualit\u00e9 0,4 % rebuts)."
+        ),
+        attendu="Comparaison modes, polyvalence, coh\u00e9rence strat\u00e9gique.",
+        notions=["cellules flexibles", "polyvalence", "organisation du travail"],
+    ),
+    I(
+        "e9",
+        "KPI pilotage chez Renault",
+        support=(
+            "L'usine Renault de Cl\u00e9on publie un tableau de bord production :\n"
+            "\u2014 OTD (On Time Delivery) 96,2 % (cible 98 %).\n"
+            "\u2014 WIP (Work In Progress) r\u00e9duit de 18 %.\n"
+            "\u2014 Productivit\u00e9 +6 % vs 2024.\n"
+            "\u2014 Lead time 8,5 jours (cible 7 jours).\n"
+            "\u2014 Taux rebuts 0,9 % (cible < 0,7 %).\n"
+            "Reporting hebdomadaire atelier + mensuel direction. "
+            "WIP r\u00e9duit lib\u00e8re 2,4 M\u20ac de fonds de roulement."
+        ),
+        consigne=(
+            "Pr\u00e9sente les indicateurs de pilotage de la production "
+            "et interpr\u00e8te les r\u00e9sultats Renault Cl\u00e9on."
+        ),
+        questions=[
+            "D\u00e9finis OTD, WIP, lead time et productivit\u00e9.",
+            "Interpr\u00e8te les r\u00e9sultats actuels et les \u00e9carts aux cibles.",
+            "Quel r\u00f4le du reporting hebdomadaire vs mensuel ?",
+        ],
+        correction=(
+            "1) OTD : livraisons \u00e0 temps. WIP : encours production. "
+            "Lead time : d\u00e9lai total. Productivit\u00e9 : output/input.\n\n"
+            "2) OTD 96,2 % (cible 98 %), WIP \u221218 %, productivit\u00e9 +6 %, "
+            "lead time 8,5 j (cible 7 j), rebuts 0,9 % (cible < 0,7 %).\n\n"
+            "3) Hebdo : actions rapides atelier. Mensuel : strat\u00e9gie direction, tendances."
+        ),
+        attendu="D\u00e9finitions indicateurs, interpr\u00e9tation, r\u00f4le reporting.",
+        notions=["OTD", "WIP", "indicateurs de production"],
+    ),
+    I(
+        "e10",
+        "Synth\u00e8se pilotage \u2014 Anah",
+        support=(
+            "L'Anah (Agence nationale de l'habitat) pilote le programme MaPrimeR\u00e9nov' : "
+            "pic de demandes +35 % pr\u00e9vu en janvier 2026 (passoire thermique). "
+            "Capacit\u00e9 traitement dossiers : 12 000/semaine vs pic demand\u00e9 16 200/semaine pendant 6 semaines. "
+            "Options : heures sup agents (+420 000 \u20ac), sous-traitance instruction (+580 000 \u20ac), "
+            "refus dossiers (perte politique), digitalisation workflow (+310 000 \u20ac, d\u00e9lai 4 mois)."
+        ),
+        consigne=(
+            "Propose un plan de capacit\u00e9 temporaire mobilisant lean, flux tendu et TOC "
+            "pour l'Anah."
+        ),
+        questions=[
+            "Calcule le d\u00e9ficit de capacit\u00e9 sur 6 semaines.",
+            "Compare les quatre options (heures sup, sous-traitance, refus, digitalisation).",
+            "Quelle strat\u00e9gie mixte recommandes-tu ?",
+        ],
+        correction=(
+            "1) D\u00e9ficit : (16 200 \u2212 12 000) \u00d7 6 = 25 200 dossiers.\n\n"
+            "2) Heures sup : 420 k\u20ac. Sous-traitance : 580 k\u20ac. "
+            "Refus : inacceptable politiquement. Digitalisation : 310 k\u20ac mais d\u00e9lai 4 mois.\n\n"
+            "3) Mixte : heures sup + sous-traitance partielle (15 000 dossiers) "
+            "+ lancement digitalisation pour pic suivant."
+        ),
+        attendu="Calcul d\u00e9ficit, comparaison options, strat\u00e9gie mixte.",
+        notions=["capacit\u00e9 de production", "TOC", "pilotage"],
+    ),
+    I(
+        "cas1",
+        "\u00c9tude de cas : retards \u2014 Minist\u00e8re du Logement",
+        support=(
+            "Le Minist\u00e8re du Logement publie en octobre 2025 un bilan : "
+            "objectif 500 000 logements neufs/an, r\u00e9alis\u00e9 380 000 (\u221224 %). "
+            "Causes identifi\u00e9es : goulot permis de construire (d\u00e9lai moyen 14 mois vs 9 promis), "
+            "p\u00e9nurie main-d'\u0153uvre BTP (\u221218 % effectifs disponibles), "
+            "retards mat\u00e9riaux (+22 % d\u00e9lai approvisionnement). "
+            "OTD promoteurs : 71 % (cible 90 %). P\u00e9nalit\u00e9s contractuelles : 890 M\u20ac cumul\u00e9s. "
+            "Trois promoteurs menacent de r\u00e9duire leurs investissements 2026."
+        ),
+        consigne=(
+            "R\u00e9alise un diagnostic lean complet et un plan d'action 90 jours "
+            "pour r\u00e9duire les retards de livraison logements."
+        ),
+        questions=[
+            "Cartographie le flux (VSM simplifi\u00e9e) et identifie le goulot principal.",
+            "Analyse les causes des retards (permis, main-d'\u0153uvre, mat\u00e9riaux).",
+            "Propose au moins quatre actions lean/TOC chiffr\u00e9es.",
+            "D\u00e9finis des indicateurs cibles \u00e0 90 jours.",
+            "Plan de communication promoteurs et collectivit\u00e9s.",
+        ],
+        correction=(
+            "1) Flux permis\u2192chantier\u2192livraison. Goulot : permis de construire (14 mois vs 9).\n\n"
+            "2) Triple contrainte : administratif, RH BTP, supply chain mat\u00e9riaux.\n\n"
+            "3) Guichet unique permis, buffer stocks mat\u00e9riaux critiques, "
+            "formation BTP acc\u00e9l\u00e9r\u00e9e, lissage planification promoteurs.\n\n"
+            "4) OTD cible 82 % \u00e0 90 j, d\u00e9lai permis \u22122 mois.\n\n"
+            "5) Transparence d\u00e9lais, plan rattrapage, table ronde promoteurs."
+        ),
+        attendu="Diagnostic OTD complet, plan 90 jours chiffr\u00e9.",
+        notions=["lean management", "OTD", "goulot d'\u00e9tranglement"],
+    ),
+    I(
+        "cas2",
+        "\u00c9tude de cas : usine agile \u2014 Banque des territoires",
+        support=(
+            "La Banque des territoires finance un projet d'usine agile \u00e0 Saint-\u00c9tienne "
+            "(PME m\u00e9tallurgie, 145 salari\u00e9s) : investissement 6,8 M\u20ac. "
+            "Concept : usine 4.0 lean, MES int\u00e9gr\u00e9, cellules flexibles, "
+            "effectif \u22126 % mais mont\u00e9e comp\u00e9tences (+140 h formation/salari\u00e9). "
+            "CSE inquiet (plans sociaux). Client Renault exige OTD 97 % et tra\u00e7abilit\u00e9 lot par lot. "
+            "Capacit\u00e9 +35 % vs site actuel. D\u00e9lai mise en service : 22 mois. "
+            "Banque des territoires exige protocole social sign\u00e9 avant d\u00e9caissement tranche 2."
+        ),
+        consigne=(
+            "Con\u00e7ois l'organisation de la nouvelle usine (lean, SI, RH, KPI) "
+            "pour le dossier Banque des territoires."
+        ),
+        questions=[
+            "Quels principes lean et toyotisme int\u00e9grer ?",
+            "Quel SI de pilotage (MES, ERP, IoT) ?",
+            "Plan formation et accompagnement social (CSE).",
+            "Risques du projet et mesures de mitigation.",
+            "KPI cibles \u00e0 22 mois.",
+        ],
+        correction=(
+            "1) Flux tendu, cellules flexibles, kaizen, kanban, 5S, polyvalence.\n\n"
+            "2) MES temps r\u00e9el, ERP int\u00e9gr\u00e9, capteurs IoT maintenance pr\u00e9dictive.\n\n"
+            "3) 140 h formation, reclassement \u22126 % n\u00e9goci\u00e9 CSE, comit\u00e9s ergonomie.\n\n"
+            "4) Risques : social, d\u00e9passement budget, retard. Mitigation : dialogue CSE, phasage, pilotes.\n\n"
+            "5) OTD 97 %, lead time \u221225 %, productivit\u00e9 +15 %, rebuts < 0,8 %."
+        ),
+        attendu="Projet usine 4.0 lean structur\u00e9, dimension sociale int\u00e9gr\u00e9e.",
+        notions=["usine 4.0", "lean", "conduite du changement"],
+    ),
+]

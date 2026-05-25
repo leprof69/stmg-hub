@@ -37,6 +37,7 @@ EXERCISES = [
             "stabilité pour la rigueur, etc."
         ),
         "attendu": "Traits nommés correctement, effets sur le comportement, complémentarité.",
+        "notions": ["Traits nommés correctement", "effets sur le comportement", "complémentarité."],
         "minChars": 120,
     },
     {
@@ -70,6 +71,7 @@ EXERCISES = [
             "professionnelle et d'éviter une escalade conflictuelle."
         ),
         "attendu": "Émotions et signes classés, lien avec l'efficacité de la communication.",
+        "notions": ["Émotions et signes classés"],
         "minChars": 140,
     },
     {
@@ -105,6 +107,7 @@ EXERCISES = [
             "les canaux de communication."
         ),
         "attendu": "Processus de perception appliqué, dissonance expliquée, piste d'amélioration.",
+        "notions": ["Processus de perception appliqué", "dissonance expliquée", "piste d'amélioration."],
         "minChars": 150,
     },
     {
@@ -142,6 +145,7 @@ EXERCISES = [
             "favorise les supports partagés pour compenser."
         ),
         "attendu": "Schéma complet de communication interpersonnelle, enjeux identifiés.",
+        "notions": ["enjeux identifiés."],
         "minChars": 180,
     },
     {
@@ -175,6 +179,7 @@ EXERCISES = [
             "des métriques quantitatives au détriment de la qualité réelle du profil."
         ),
         "attendu": "Trois dimensions distinguées, lien avec recrutement et e-réputation.",
+        "notions": ["Trois dimensions distinguées", "lien avec recrutement et e-réputation."],
         "minChars": 160,
     },
     {
@@ -210,6 +215,7 @@ EXERCISES = [
             "sécuriser les traitements ; efficacité limitée par la viralité mondiale."
         ),
         "attendu": "Mesures de gestion + cadre juridique, limites de l'effacement en ligne.",
+        "notions": ["Mesures de gestion + cadre juridique", "limites de l'effacement en ligne."],
         "minChars": 180,
     },
     {
@@ -243,6 +249,7 @@ EXERCISES = [
             "« CV vivant » renforçant la communication professionnelle."
         ),
         "attendu": "Personal branding défini, bonnes pratiques, lien carrière.",
+        "notions": ["Personal branding défini", "bonnes pratiques", "lien carrière."],
         "minChars": 200,
     },
     {
@@ -277,6 +284,7 @@ EXERCISES = [
             "la relation. Chef apprenant à modérer son affectif pour une meilleure intelligence émotionnelle."
         ),
         "attendu": "Émotions gérées, traits mobilisés, lien avec conflit et communication pro.",
+        "notions": ["Émotions gérées", "traits mobilisés", "lien avec conflit et communication pro."],
         "minChars": 220,
     },
     {
@@ -309,6 +317,7 @@ EXERCISES = [
             "Rumeur non vérifiée, déformation, tensions et quiproquos (communication informelle)."
         ),
         "attendu": "Typologie des groupes maîtrisée, statut/rôle distingués.",
+        "notions": ["Typologie des groupes maîtrisée", "statut/rôle distingués."],
         "minChars": 240,
     },
     {
@@ -340,9 +349,10 @@ EXERCISES = [
             "3) Conseils lycéen :\n"
             "— Connaître ses traits et choisir des canaux adaptés.\n"
             "— Soigner identité déclarative et surveiller identité agissante.\n"
-            "— Gérer les émotions et la perception en entretien (préparation, écoute active)."
+            "— Gérer les émotions et la perception en entretien (préparation, écoûte active)."
         ),
         "attendu": "Synthèse cohérente du chapitre 2, conseils actionnables.",
+        "notions": ["Synthèse cohérente du chapitre 2", "conseils actionnables."],
         "minChars": 260,
     },
     {
@@ -385,6 +395,7 @@ EXERCISES = [
             "distinction erreur passée corrigée / comportement récurrent, critères transparents."
         ),
         "attendu": "Cas complet, décision RH argumentée avec nuances juridiques et humaines.",
+        "notions": ["Cas complet"],
         "minChars": 400,
     },
     {
@@ -418,7 +429,7 @@ EXERCISES = [
             "Enjeu d'influence. Signes non verbaux et paraverbaux conflictuels. Contexte relationnel "
             "tendu, premier tour confrontationnel.\n\n"
             "3) Coopération :\n"
-            "Pause, écoute réciproque, compromis 3 %, critères objectifs (qualité) = stratégie "
+            "Pause, écoûte réciproque, compromis 3 %, critères objectifs (qualité) = stratégie "
             "donnant-donnant.\n\n"
             "4) Perception :\n"
             "Chacun corrige les stéréotypes (fournisseur « trop émotif », acheteuse « froide ») en "

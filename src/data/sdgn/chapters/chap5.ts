@@ -18,6 +18,7 @@ export const SDGN_CHAP5_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Finalités :\nBilan année, objectifs suivants, évolution carrière, formations, conditions de travail.\n\n2) Exemples Michelin :\nObjectifs, formation sécurité, évolution carrière, ergonomie.\n\n3) Auto-évaluation :\nPermet au salarié d'exprimer sa perception, réduit l'écart avec le jugement du manager.",
     attendu: "Cinq finalités présentes, exemples précis, subjectivité évoquée.",
+    notionsCibles: ["Cinq finalités présentes", "exemples précis", "subjectivité évoquée."],
   },
   {
     id: "sdgn5-e2",
@@ -35,6 +36,7 @@ export const SDGN_CHAP5_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Entretien professionnel :\nMoment d'échange manager-collaborateur sur résultats, objectifs, formation, conditions.\n\n2) Subjectivité :\nMême données interprétées différemment (8 % vs 5 %), jugement du manager influencé.\n\n3) Grille d'évaluation :\nCritères explicites partagés avant l'entretien, plus d'objectivité, traçabilité signée.",
     attendu: "Entretien défini, subjectivité expliquée, grille justifiée.",
+    notionsCibles: ["Entretien défini", "subjectivité expliquée", "grille justifiée."],
   },
   {
     id: "sdgn5-e3",
@@ -54,6 +56,7 @@ export const SDGN_CHAP5_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Indicateurs d'activité :\nVolume production (baguettes), rebuts, heures, effectif.\n\n2) Calculs février :\nProductivité horaire = 1 050 000 / 4 100 ? 256 baguettes/heure.\nProductivité par tête = 1 050 000 / 94 ? 11 170 baguettes/salarié.\n\n3) Aide à l'évaluation :\nMesure objective de l'efficacité, repère baisses ou progressions, alimente tableau de bord.",
     attendu: "Formules correctes, calculs février, lien évaluation.",
+    notionsCibles: ["Formules correctes", "calculs février", "lien évaluation."],
   },
   {
     id: "sdgn5-e4",
@@ -71,6 +74,7 @@ export const SDGN_CHAP5_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Brut = 2 200 + 80 + 120 = 2 400 €.\n\n2) Cotisations 22 % = 528 €. Reste 1 872 €. Impôt source 3 % de 2 400 = 72 €. Net ? 1 800 € (arrondi selon assiette réelle).\n\n3) Employeur :\nCotisations patronales (Urssaf, retraite) s'ajoutent au brut = coût total employeur.",
     attendu: "Calculs brut/net corrects, composantes nommées.",
+    notionsCibles: ["Calculs brut/net corrects", "composantes nommées."],
   },
   {
     id: "sdgn5-e5",
@@ -88,6 +92,7 @@ export const SDGN_CHAP5_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Prime : complément récompensant performance ou risque (rendement, risque atelier).\nAvantage en nature : tickets restaurant, véhicule à conditions préférentielles.\n\n2) Indemnité :\nDédommagement de frais professionnels (transport), pas rémunération du travail en soi.\n\n3) Équité interne :\nCritères connus de tous, lien primes-indicateurs, réduit sentiment d'injustice.",
     attendu: "Composantes de rémunération classées, équité interne expliquée.",
+    notionsCibles: ["Composantes de rémunération classées", "équité interne expliquée."],
   },
   {
     id: "sdgn5-e6",
@@ -105,6 +110,7 @@ export const SDGN_CHAP5_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Participation : obligatoire >50 salariés, part des bénéfices à tous les salariés.\n\n2) Intéressement : facultatif, lié performance (ROE > 8 %), 1 200 € versés.\n\n3) Motivation :\nRémunération collective aligne intérêts salariés/organisation, renforce engagement.",
     attendu: "Participation vs intéressement, seuil 50 salariés, motivation.",
+    notionsCibles: ["Participation vs intéressement", "seuil 50 salariés", "motivation."],
   },
   {
     id: "sdgn5-e7",
@@ -122,6 +128,7 @@ export const SDGN_CHAP5_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Équité externe : comparaison avec autres organisations (Thales).\nÉquité interne : comparaison entre postes d'un même employeur.\n\n2) Justifications DRH :\nGrille métiers, convention collective, prime ancienneté = critères objectivés.\n\n3) Enquête sectorielle :\nAjuster rémunération externe pour limiter départs (turn-over, coût recrutement).",
     attendu: "Deux équités distinguées, leviers RH identifiés.",
+    notionsCibles: ["Deux équités distinguées", "leviers RH identifiés."],
   },
   {
     id: "sdgn5-e8",
@@ -158,6 +165,7 @@ export const SDGN_CHAP5_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Taux = (1 240 / 18 500) × 100 ? 6,7 %.\n\n2) Préoccupant :\nProche de 7 %, au-dessus de l'objectif 5 %, signale dysfonctionnements.\n\n3) Coûts :\nMaintien salaire, charge sur présents, baisse productivité, image employeur.",
     attendu: "Calcul correct, interprétation et coûts cités.",
+    notionsCibles: ["correct", "interprétation et coûts cités."],
   },
   {
     id: "sdgn5-e10",
@@ -177,6 +185,7 @@ export const SDGN_CHAP5_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Taux = ((14 + 18) / 2) / 80 × 100 = 16 / 80 × 100 = 20 %.\n\n2) Interprétation :\nTurn-over élevé = faible fidélité, instabilité des équipes.\n\n3) Recrutement :\nCoût direct (100 000 € si échec) + fuite compétences + baisse productivité ; rétribution compétitive limite départs.",
     attendu: "Formule turn-over correcte, coûts multiples identifiés.",
+    notionsCibles: ["Formule turn-over correcte", "coûts multiples identifiés."],
   },
   {
     id: "sdgn5-cas1",
@@ -196,6 +205,7 @@ export const SDGN_CHAP5_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Rémunération : base, primes rendement, participation, intéressement, tickets restaurant.\n\n2) Évaluation : entretien, 3 objectifs notés ? prime liée.\n\n3) Équité :\nInterne : grève = grille opaque ? transparence. Externe : benchmark concurrents.\n\n4) Indicateurs :\nAbsentéisme 4,2 % modéré, turn-over 9 % acceptable, vigilance site en grève.\n\n5) Synthèse :\nPolitique globalement équilibrée si transparence et mix fixe/variable ; motivation par collectif et RSE ; améliorer communication primes.",
     attendu: "Cas intégré chapitre 5, recommandations concrètes.",
+    notionsCibles: ["Cas intégré chapitre 5", "recommandations concrètes."],
   },
   {
     id: "sdgn5-cas2",
@@ -217,5 +227,6 @@ export const SDGN_CHAP5_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Diagnostic :\nMauvaises conditions + primes faibles + évaluation subjective ? absentéisme et départs.\n\n2) Mesures :\nPrime risque, grille, auto-évaluation, intéressement qualité ? équité et motivation.\n\n3) ROI :\nÉconomie 180 000 € si absentéisme 7 % vs coût primes/recrutement à modéliser.\n\n4) CSE :\nNégociation conditions et primes, légitimité sociale.\n\n5) Synthèse :\nRétribution seule insuffisante ; nécessite effectifs, QVCT, évaluation juste ; rétribution + organisation = pérennité.",
     attendu: "Argumentaire chiffré, diagnostic systémique, synthèse nuancée.",
+    notionsCibles: ["Argumentaire chiffré", "diagnostic systémique", "synthèse nuancée."],
   },
 ];

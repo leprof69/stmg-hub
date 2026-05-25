@@ -30,6 +30,7 @@ EXERCISES = [
             "Collecte, stocke, traite, diffuse ; rend la donnée exploitable."
         ),
         "attendu": "Trois niveaux distingués, exemple Cdiscount appliqué.",
+        "notions": ["Trois niveaux distingués", "exemple Cdiscount appliqué."],
         "minChars": 120,
     },
     {
@@ -58,6 +59,7 @@ EXERCISES = [
             "Sans valeur business, les autres V n'ont pas d'intérêt économique."
         ),
         "attendu": "5V tous illustrés, Big Data défini.",
+        "notions": ["5V tous illustrés", "Big Data défini."],
         "minChars": 140,
     },
     {
@@ -85,6 +87,7 @@ EXERCISES = [
             "Permettre aux citoyens de contrôler et comprendre l'action publique."
         ),
         "attendu": "Open data défini, réutilisation concrète, cadre légal cité.",
+        "notions": ["Open data défini", "réutilisation concrète", "cadre légal cité."],
         "minChars": 150,
     },
     {
@@ -112,6 +115,7 @@ EXERCISES = [
             "Consentement parental requis, protection renforcée."
         ),
         "attendu": "Données personnelles repérées, droits RGPD mobilisés.",
+        "notions": ["Données personnelles repérées", "droits RGPD mobilisés."],
         "minChars": 160,
     },
     {
@@ -139,6 +143,7 @@ EXERCISES = [
             "Données non fiabilisées, pas d'actualité, pas de cohérence groupe."
         ),
         "attendu": "SI et PGI définis, intégration expliquée.",
+        "notions": ["SI et PGI définis", "intégration expliquée."],
         "minChars": 180,
     },
     {
@@ -166,6 +171,7 @@ EXERCISES = [
             "Réallocation ressources vers segment rentable — aide à la décision du manuel."
         ),
         "attendu": "CRM situé dans le SI, lien décision explicite.",
+        "notions": ["CRM situé dans le SI", "lien décision explicite."],
         "minChars": 180,
     },
     {
@@ -176,7 +182,7 @@ EXERCISES = [
             "mais la donnée source comptait les retours comme ventes (fiabilité faible), le rapport "
             "date de six mois (actualité faible) et ne concerne pas son rayon (pertinence faible). "
             "Il refuse de commander du stock supplémentaire. Le manuel exige : pertinence, fiabilité, "
-            "objectivité, actualité, accessibilité, rentabilité."
+            "objectivité, actualité, accèssibilité, rentabilité."
         ),
         "consigne": (
             "Évalue le rapport selon les critères de qualité de l'information. Explique le refus du directeur."
@@ -187,7 +193,7 @@ EXERCISES = [
             "Pourquoi une information de mauvaise qualité conduit-elle à une mauvaise décision ?",
         ],
         "correctionModele": (
-            "1) Critères : pertinence, fiabilité, objectivité, actualité, accessibilité, rentabilité.\n\n"
+            "1) Critères : pertinence, fiabilité, objectivité, actualité, accèssibilité, rentabilité.\n\n"
             "2) Non respectés :\n"
             "Fiabilité (retours comptés), actualité (6 mois), pertinence (mauvais rayon).\n\n"
             "3) Mauvaise décision :\n"
@@ -222,6 +228,7 @@ EXERCISES = [
             "Sensibles, consentement explicite, sécurisation renforcée obligatoire."
         ),
         "attendu": "RGPD opérationnel sur un cas HealthTrack.",
+        "notions": ["RGPD opérationnel sur un cas HealthTrack."],
         "minChars": 220,
     },
     {
@@ -251,6 +258,7 @@ EXERCISES = [
             "Donnée entrée fausse ? information et décision fausses malgré outils performants."
         ),
         "attendu": "Usages et limites articulés, qualité de l'information reliée.",
+        "notions": ["Usages et limites articulés", "qualité de l'information reliée."],
         "minChars": 240,
     },
     {
@@ -322,6 +330,7 @@ EXERCISES = [
             "données internes et expertise humaine."
         ),
         "attendu": "Open data et qualité maîtrisés, charte proposée, synthèse critique.",
+        "notions": ["Open data et qualité maîtrisés", "charte proposée", "synthèse critique."],
         "minChars": 400,
         "supportTables": [
             {
@@ -371,6 +380,7 @@ EXERCISES = [
             "« données personnelles » — performance durable si confiance préservée."
         ),
         "attendu": "Cas e-commerce complet, RGPD et limites, gouvernance recommandée.",
+        "notions": ["Cas e-commerce complet", "RGPD et limites", "gouvernance recommandée."],
         "minChars": 450,
     },
 ]

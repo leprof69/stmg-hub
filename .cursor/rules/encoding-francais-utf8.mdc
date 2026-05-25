@@ -1,0 +1,52 @@
+---
+description: Encodage UTF-8 obligatoire � texte fran�ais sans symboles cass�s (U+FFFD)
+alwaysApply: true
+---
+
+# Encodage fran�ais (STMG HUB)
+
+## Interdit
+
+- Caract�re **U+FFFD** () dans tout fichier sous `src/`
+- Remplacements globaux de `?` (casse les `?:`, ternaires, `?.`, `??` en TypeScript)
+- Fichiers sauvegard�s en Latin-1 / Windows-1252
+- Texte fran�ais illisible type `Prnom`, `Rponse`, `lments`
+
+## Obligatoire
+
+1. **UTF-8** pour tous les `.ts`, `.tsx`, `.css`, `.json` du projet
+2. Accents fran�ais corrects dans l�UI : �, �, �, �, �, �, �, �, �, � �, etc.
+3. Apr�s toute modification de texte fran�ais dans `src/` :
+   ```bash
+   npm run check:encoding
+   ```
+4. Si `check:encoding` �choue :
+   ```bash
+   npm run fix:encoding
+   npm run check:encoding
+   ```
+   Puis v�rifier manuellement qu�aucun `?` TypeScript n�a �t� cass�.
+
+## �criture s�re (recommand�)
+
+Pour les cha�nes UI avec accents, pr�f�rer les **�chappements Unicode** dans le source :
+
+```tsx
+// Bon � stable quel que soit l��diteur
+<InfoRow label={"Pr\u00e9nom"} value={...} />
+title={"\u00c9changes en attente"}
+
+// Acceptable si le fichier est bien en UTF-8 v�rifi�
+<InfoRow label="Pr�nom" value={...} />
+```
+
+## Fichiers sensibles
+
+- `src/services/correctionIA.ts` � feedback Missions / Objectif Bac
+- `src/components/profile/ProfilPageView.tsx` � libell�s Profil
+- Tout composant avec copy fran�aise visible �l�ve
+
+## Avant de terminer une t�che
+
+- Lancer `npm run check:encoding` (ou s�assurer que `npm run build` passe � le build l�inclut)
+- Ne pas livrer de PR / commit avec des `` visibles � l��cran

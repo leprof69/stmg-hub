@@ -36,6 +36,7 @@ EXERCISES = [
             "l'organisation."
         ),
         "attendu": "Trois composantes distinguées, lien appartenance, risque de rejet.",
+        "notions": ["Trois composantes distinguées", "lien appartenance", "risque de rejet."],
         "minChars": 120,
     },
     {
@@ -97,6 +98,7 @@ EXERCISES = [
             "Pouvoir conféré par le statut de chef d'établissement et les règles connues de tous."
         ),
         "attendu": "Note de service caractérisée, autorité nommée correctement.",
+        "notions": ["Note de service caractérisée", "autorité nommée correctement."],
         "minChars": 150,
     },
     {
@@ -159,6 +161,7 @@ EXERCISES = [
             "image employeur dégradée, perte de talents."
         ),
         "attendu": "Définitions exactes, discrimination identifiée.",
+        "notions": ["Définitions exactes", "discrimination identifiée."],
         "minChars": 160,
     },
     {
@@ -191,6 +194,7 @@ EXERCISES = [
             "Autorité (Gartner), communauté (clients fidèles), cadrage possible sur l'innovation."
         ),
         "attendu": "Enjeux et stratégies nommés, arguments classés.",
+        "notions": ["Enjeux et stratégies nommés", "arguments classés."],
         "minChars": 180,
     },
     {
@@ -221,6 +225,7 @@ EXERCISES = [
             "Vendeur : affectif (rêve d'argent). RH : logique (chiffres) et appartenance (carrière interne)."
         ),
         "attendu": "Distinction nette manipulation/influence, ressorts identifiés.",
+        "notions": ["nette manipulation/influence", "ressorts identifiés."],
         "minChars": 200,
     },
     {
@@ -251,6 +256,7 @@ EXERCISES = [
             "nouvelle norme possible."
         ),
         "attendu": "Conformisme et minorité active appliqués, effets doubles.",
+        "notions": ["Conformisme et minorité active appliqués", "effets doubles."],
         "minChars": 220,
     },
     {
@@ -353,6 +359,7 @@ EXERCISES = [
             "modéré, réaction rapide du management, association systématique du CSE."
         ),
         "attendu": "Crise communication interne analysée, mesures préventives concrètes.",
+        "notions": ["Crise communication interne analysée", "mesures préventives concrètes."],
         "minChars": 400,
     },
     {
@@ -394,6 +401,7 @@ EXERCISES = [
             "lentement ; nécessite contrôle des dirigeants et alliances minorités actives."
         ),
         "attendu": "Transformation culturelle nuancée, toutes notions du chapitre 3.",
+        "notions": ["Transformation culturelle nuancée", "toutes notions du chapitre 3."],
         "minChars": 450,
     },
 ]

@@ -18,8 +18,9 @@ export const SDGN_CHAP12_EXERCISES: SdgnMissionExercise[] = [
       "Calcule la marge commerciale unitaire sur une paire de chaussures.",
       "Pourquoi le gestionnaire doit-il fixer un prix supérieur au coût ?"
     ],
-    correctionModele: "1) Formule :\nPrix de vente ? Coût (d'achat ou de revient) = Marge.\n\n2) Calcul :\nMarge commerciale unitaire = 89   − 52 = 37 € HT.\nLe prix (89 €) est bien supérieur au coût d'achat (52 €).\n\n3) Prix > coût :\nPour dégager un résultat et couvrir charges du magasin (loyer, salaires, marketing), le prix doit excéder le coût. Sinon, chaque vente appauvrit l'entreprise.",
+    correctionModele: "1) Formule :\nPrix de vente − coût (d'achat ou de revient) = marge commerciale.\n\n2) Calcul :\nMarge commerciale unitaire = 89   − 52 = 37 € HT.\nLe prix (89 €) est bien supérieur au coût d'achat (52 €).\n\n3) Prix > coût :\nPour dégager un résultat et couvrir charges du magasin (loyer, salaires, marketing), le prix doit excéder le coût. Sinon, chaque vente appauvrit l'entreprise.",
     attendu: "Formule appliquée, marge 37 €, justification économique.",
+    notionsCibles: ["Formule appliquée", "marge 37 €", "justification économique."],
   },
   {
     id: "sdgn12-e2",
@@ -37,8 +38,9 @@ export const SDGN_CHAP12_EXERCISES: SdgnMissionExercise[] = [
       "Calcule le taux de marge commerciale (marge / coût d'achat × 100).",
       "Que signifie ce taux pour la négociation avec les fournisseurs ?"
     ],
-    correctionModele: "1) Marge unitaire :\n1,36   − 0,85 = 0,51 € HT.\n\n2) Taux de marge :\n0,51 / 0,85 × 100   − 60 %.\nSur chaque euro d'achat, ProSnack dégage 0,60 € de marge commerciale.\n\n3) Interprétation :\nUn taux élevé offre une marge de manœuvre pour baisser le prix en promotion ou absorber une hausse du coût fournisseur sans devenir déficitaire sur le produit.",
+    correctionModele: "1) Marge unitaire :\n1,36   − 0,85 = 0,51 € HT.\n\n2) Taux de marge :\n0,51 / 0,85 × 100 ≈ 60 %.\nSur chaque euro d'achat, ProSnack dégage 0,60 € de marge commerciale.\n\n3) Interprétation :\nUn taux élevé offre une marge de manœuvre pour baisser le prix en promotion ou absorber une hausse du coût fournisseur sans devenir déficitaire sur le produit.",
     attendu: "Marge 0,51 €, taux ≈ 60 %, interprétation gestion.",
+    notionsCibles: ["Marge 0", "51 €", "taux ≈ 60 %"],
   },
   {
     id: "sdgn12-e3",
@@ -58,6 +60,7 @@ export const SDGN_CHAP12_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Coût de revient :\nSomme des charges affectées à la production du produit (matières, MO, énergie, etc.).\n\n2) Coût total et unitaire :\nTotal = 42 000 + 28 000 + 6 000 + 8 000 + 4 000 = 88 000 €.\nCoût unitaire = 88 000 / 10 000 = 8,80 € HT.\n\n3) Marge nette :\nMarge unitaire = 18   − 8,80 = 9,20 €.\nMarge totale = 9,20 × 10 000 = 92 000 € (ou 180 000   − 88 000).",
     attendu: "Coût revient 88 000 € / 8,80 € unité, marge nette calculée.",
+    notionsCibles: ["Coût revient 88 000 € / 8", "80 € unité", "marge nette calculée."],
   },
   {
     id: "sdgn12-e4",
@@ -77,6 +80,7 @@ export const SDGN_CHAP12_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Marge unitaire :\nAvant : 600   − 420 = 180 €. Après : 540   − 420 = 120 € (−60 € par unité).\n\n2) Marge totale :\nAvant : 180 × 800 = 144 000 €.\nAprès : 120 × 1 150 = 138 000 €.\n\n3) Conclusion :\nMalgré +350 ventes, la marge totale baisse de 6 000 € : la hausse des volumes ne compense pas assez la chute de marge unitaire. Performance commerciale ↑ (parts de marché), performance financière ↓ (risque du manuel si volumes n'explosent pas).",
     attendu: "Calculs avant/après, distinction performance commerciale vs financière.",
+    notionsCibles: ["Calculs avant/après"],
   },
   {
     id: "sdgn12-e5",
@@ -96,6 +100,7 @@ export const SDGN_CHAP12_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Lien qualité / coût :\nEn simplification : hausse de la qualité entraîne hausse du coût (matières, temps, finitions).\n\n2) Marges unitaires :\nStandard : 6,50   − 2,40 = 4,10 €.\nAOP : 6,50   − 3,10 = 3,40 € (marge unitaire plus faible).\n\n3) Arbitrage :\nImpossible d'avoir prix bas, qualité maximale et marge élevée simultanément. Stratégie premium : justifier 6,50 € par label AOP et satisfaction (+18), communication sur la qualité. Sinon baisser le prix ou accepter une marge réduite pour gagner des volumes.",
     attendu: "Lien qualité-coût, deux marges calculées, arbitrage cohérent.",
+    notionsCibles: ["Lien qualité-coût", "deux marges calculées", "arbitrage cohérent."],
   },
   {
     id: "sdgn12-e6",
@@ -111,8 +116,9 @@ export const SDGN_CHAP12_EXERCISES: SdgnMissionExercise[] = [
       "Quel rôle de la saisonnalité chez EasyJet ?",
       "Pourquoi Apple peut-elle pratiquer un prix élevé avec de fortes quantités ?"
     ],
-    correctionModele: "1) Concurrence :\nProduits homogènes : un prix trop élevé fait fuir les clients vers des offres similaires moins chères : Samsung aligne ses prix.\n\n2) Saisonnalité :\nDemande variable : tarifs dynamiques pour maximiser le profit (prix élevés quand demande forte, bas pour remplir avions hors pic).\n\n3) Innovation :\nProduit différencié : Apple fixe un prix premium justifié par l'innovation ; volumes élevés car avantage concurrentiel fort ? marge unitaire élevée × quantités = performance financière.",
+    correctionModele: "1) Concurrence :\nProduits homogènes : un prix trop élevé fait fuir les clients vers des offres similaires moins chères : Samsung aligne ses prix.\n\n2) Saisonnalité :\nDemande variable : tarifs dynamiques pour maximiser le profit (prix élevés quand demande forte, bas pour remplir avions hors pic).\n\n3) Innovation :\nProduit différencié : Apple fixe un prix premium justifié par l'innovation ; volumes élevés grâce à l'avantage concurrentiel : marge unitaire élevée × quantités → performance financière.",
     attendu: "Trois déterminants illustrés, effet sur prix et marge expliqué.",
+    notionsCibles: ["Trois déterminants illustrés", "effet sur prix et marge expliqué."],
   },
   {
     id: "sdgn12-e7",
@@ -132,6 +138,7 @@ export const SDGN_CHAP12_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Prix Dupont :\n420 × 1,35 = 567 € HT.\n\n2) Comparaison :\n567 € < 580 € : prix théoriquement compétitif, mais devis perdus : autres critères (délai, réputation) ou coût réel supérieur au CR calculé.\n\n3) Risque marge fixe :\nSi le CR est sous-estimé ou la concurrence baisse ses prix, la marge forfaitaire peut produire un prix trop élevé et faire perdre des volumes — d'où l'intérêt d'intégrer concurrence et attentes clients, pas seulement le CR.",
     attendu: "Prix 567 € calculé, comparaison concurrent, risque identifié.",
+    notionsCibles: ["Prix 567 € calculé", "comparaison concurrent", "risque identifié."],
   },
   {
     id: "sdgn12-e8",
@@ -151,6 +158,7 @@ export const SDGN_CHAP12_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Marges :\nAvant : 7,20   − 3,80 = 3,40 €.\nAprès : 7,20   − 4,45 = 2,75 € (−0,65 € par colis).\n\n2) Maîtrise des charges :\n— Carburant : contrainte externe, peu maîtrisable.\n— Intérimaires : ajustable (sureffectif).\n— Loyer : partiellement maîtrisable (renégociation).\n— Emballages : action corrective réussie (−0,05 €).\n\n3) Leviers :\nAugmenter le prix (risque volumes), réduire coûts maîtrisables, ou compenser par hausse des quantités livrées. Arbitrage selon concurrence et attentes clients.",
     attendu: "Marges calculées, charges classées, leviers identifiés.",
+    notionsCibles: ["Marges calculées", "charges classées", "leviers identifiés."],
   },
   {
     id: "sdgn12-e9",
@@ -170,6 +178,7 @@ export const SDGN_CHAP12_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Marge unitaire :\nAvant : 4,20   − 1,90 = 2,30 €. Après : 4,80   − 1,90 = 2,90 € (+0,60 €).\n\n2) Marge totale :\nAvant : 2,30 × 50 000 = 115 000 €.\nAprès : 2,90 × 38 000 = 110 200 €.\n\n3) Conclusion :\nLe responsable commercial a raison : marge unitaire ↑ mais marge totale ↓ de 4 800 €. Hausse de prix sans tenir compte des quantités peut dégrader la performance globale — d'où l'intérêt de suivre la marge totale.",
     attendu: "Calculs unitaire et total, conclusion contre l'argument simpliste.",
+    notionsCibles: ["Calculs unitaire et total", "conclusion contre l'argument simpliste."],
   },
   {
     id: "sdgn12-e10",
@@ -189,6 +198,7 @@ export const SDGN_CHAP12_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Tableau :\nA : marge unitaire 279 €, totale 334 800 €.\nB : marge unitaire 179 €, totale 277 450 €.\nC : marge unitaire 269 €, totale 295 900 €.\n\n2) Maximisation marge totale :\nScénario A (334 800 €).\n\n3) Priorité part de marché :\nScénario B : prix le plus bas, volumes les plus élevés (1 550) — performance commerciale ↑, mais marge totale plus faible. Arbitrage nécessaire selon objectif défini.",
     attendu: "Trois scénarios calculés, recommandation liée à l'objectif.",
+    notionsCibles: ["Trois scénarios calculés", "recommandation liée à l'objectif."],
   },
   {
     id: "sdgn12-cas1",
@@ -210,6 +220,7 @@ export const SDGN_CHAP12_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Yaourt :\nAvant : 0,89   − 0,42 = 0,47 € ; totale 0,47 × 12 000 = 5 640 €.\nAprès : 0,69   − 0,42 = 0,27 € ; totale 0,27 × 19 500 = 5 265 €.\nMarge unitaire ↓, marge totale ↓ malgré volumes ↓.\n\n2) Concurrence :\n0,69 € > 0,65 € : Carrefour reste légèrement plus cher ; l'image « garantie » doit compenser.\n\n3) Performances :\nCommerciale ↑ (trafic, volumes). Financière rayon ↓. Effet panier global possible.\n\n4) Déterminants :\nConcurrence hard-discount, coût d'achat maintenu, attentes clients prix bas.\n\n5) Synthèse :\nLe gestionnaire ne peut pas optimiser prix, marge et qualité simultanément. Promo = sacrifice de marge pour parts de marché et trafic. Il doit simuler l'impact sur le CA total magasin et éviter une guerre des prix sans fin.",
     attendu: "Cas distributeur complet, calculs, arbitrage prix/marge/volume.",
+    notionsCibles: ["Cas distributeur complet", "calculs", "arbitrage prix/marge/volume."],
   },
   {
     id: "sdgn12-cas2",
@@ -231,5 +242,6 @@ export const SDGN_CHAP12_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Marges catalogue :\nThermique : 24 500   − 11 800 = 12 700 €.\nHybride : 28 900   − 14 200 = 14 700 €.\n\n2) Coût hybride :\nHausse liée à qualité/innovation (batterie, R&D), pas seulement inefficience. Charges R&D contraintes à court terme, amorties sur volumes futurs.\n\n3) Simulation 27 500 € :\nMarge unitaire = 27 500   − 14 200 = 13 300 € (< 14 700 €). Volumes +15 % : performance commerciale ↑, marge totale à simuler selon quantités de base.\n\n4) Innovation et concurrence :\nInnovation justifie prix premium ; Toyota à 27 400 € impose contrainte concurrentielle.\n\n5) Synthèse :\nRenault arbitre entre différenciation qualité (garantie 8 ans), coût élevé et pression prix. Baisser le prix sans réduire le CR fragilise la marge ; améliorer la qualité sans prix adapté détruit la performance financière. Simulation et objectifs (marge vs parts de marché) sont indispensables.",
     attendu: "Cas industriel, marges calculées, qualité/coût/concurrence articulés.",
+    notionsCibles: ["Cas industriel", "marges calculées", "qualité/coût/concurrence articulés."],
   },
 ];

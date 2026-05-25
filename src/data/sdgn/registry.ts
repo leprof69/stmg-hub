@@ -32,18 +32,18 @@ export const SDGN_EXERCISES_BY_CHAPTER: Record<SdgnMissionChapter, SdgnMissionEx
 
 export const SDGN_CHAPTER_LABELS: Record<SdgnMissionChapter, string> = {
   1: "Types d'organisation",
-  2: "Identite et fonctionnement de l'individu",
+  2: "Identité et fonctionnement de l'individu",
   3: "Individu dans l'organisation",
-  4: "Activite de travail",
-  5: "Evaluation et retribution",
+  4: "Activité de travail",
+  5: "Évaluation et rétribution",
   6: "Technologies et information",
-  7: "Technologies numeriques collaboratives",
-  8: "Influence du numerique sur l'organisation du travail",
-  9: "Valeur percue",
-  10: "Valeur financiere et boursiere",
-  11: "Valeur ajoutee et partenariale",
-  12: "Prix, cout et marge",
-  13: "Performance commerciale et financiere",
+  7: "Technologies numériques collaboratives",
+  8: "Influence du numérique sur l'organisation du travail",
+  9: "Valeur perçue",
+  10: "Valeur financière et boursière",
+  11: "Valeur ajoutée et partenariale",
+  12: "Prix, coût et marge",
+  13: "Performance commerciale et financière",
 };
 
 /** Numeros de chapitres presents dans le pack Missions (cles de SDGN_EXERCISES_BY_CHAPTER). */
@@ -56,6 +56,18 @@ export function getSdgnMissionChapterNumbers(): number[] {
 
 export function isSdgnMissionChapter(chapter: number): boolean {
   return String(chapter) in SDGN_EXERCISES_BY_CHAPTER;
+}
+
+/**
+ * Chapitres SDGN Première STMG pour les jeux (QCM, Mot mystère).
+ * Couvre l'intégralité du programme Première (chapitres 1 à 13).
+ */
+export const SDGN_PREMIERE_CHAPTER_NUMBERS: readonly SdgnMissionChapter[] = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
+];
+
+export function isSdgnPremiereChapter(chapter: number): chapter is SdgnMissionChapter {
+  return (SDGN_PREMIERE_CHAPTER_NUMBERS as readonly number[]).includes(chapter);
 }
 
 export function normalizeChapterTitle(value = ""): string {
@@ -91,5 +103,5 @@ export function getSdgnProgressLabel(chapter: SdgnMissionChapter): string {
 }
 
 export function getSdgnChapterBlurb(chapter: SdgnMissionChapter): string {
-  return `Pack complet : 10 exercices progressifs + 2 etudes de cas - ${SDGN_CHAPTER_LABELS[chapter]}.`;
+  return `Pack complet : 10 exercices progressifs + 2 \u00e9tudes de cas \u2014 ${SDGN_CHAPTER_LABELS[chapter]}.`;
 }

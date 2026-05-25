@@ -1,5 +1,5 @@
 import type { SdgnMissionQcm } from "../data/sdgn/sdgnMissionQcmBank";
-import { SDGN_MISSION_QCM_BANK } from "./sdgnMissionQcmPool";
+import { SDGN_MISSION_QCM_BANK_PREMIERE } from "./sdgnMissionQcmPool";
 
 /** Format commun aux jeux (Serpent, Casino, Grand Oral). */
 export type GameQuizQ = {
@@ -43,8 +43,8 @@ export function sdgnQcmToGameQuiz(item: SdgnMissionQcm): GameQuizQ {
   };
 }
 
-/** Pool unique : QCM des chapitres SDGN presents dans Missions (registry + referentiel + exercices). */
-export const GAME_QCM_POOL: GameQuizQ[] = SDGN_MISSION_QCM_BANK.map(sdgnQcmToGameQuiz);
+/** Pool jeux : QCM SDGN Première (chapitres 1 à 13), tirage aléatoire à chaque partie. */
+export const GAME_QCM_POOL: GameQuizQ[] = SDGN_MISSION_QCM_BANK_PREMIERE.map(sdgnQcmToGameQuiz);
 
 export function pickRandomGameQcm(count: number, excludeSourceIds: string[] = []): GameQuizQ[] {
   const exclude = new Set(excludeSourceIds);

@@ -8,6 +8,7 @@ const CalculExpress = lazy(() => import("./CalculExpress"));
 const AvatarCreator = lazy(() => import("./AvatarCreator"));
 const Duel          = lazy(() => import("./Duel"));
 const QuiVeutGagnerDesJetons = lazy(() => import("./QuiVeutGagnerDesJetons"));
+const MotMystere = lazy(() => import("./MotMystere"));
 
 const EJ = {
   snake:   "🐍",
@@ -23,10 +24,11 @@ const EJ = {
   palette: "🎨",
   swords:  "⚔️",
   money:   "💰",
+  mic:     "🎤",
 };
 
 type Props = { profil: UserProfile; onXPGagne: () => void };
-type View  = "hub"|"snake"|"casino"|"grandoral"|"calcul"|"avatar"|"duel"|"jetons";
+type View  = "hub"|"snake"|"casino"|"grandoral"|"calcul"|"avatar"|"duel"|"jetons"|"motmystere";
 
 const GAMES = [
   {
@@ -75,12 +77,27 @@ const GAMES = [
     grad:     "radial-gradient(ellipse 90% 60% at 80% 20%,rgba(251,191,36,0.15) 0%,transparent 60%),rgba(12,6,2,0.72)",
   },
   {
+    id: "motmystere" as const,
+    emoji: EJ.mic,
+    title: "Mot mystère",
+    subtitle: "Style Slam / jeu télé",
+    desc: "Devine un terme du cours SDGN Première (chapitres 1 à 13) grâce à des indices de cours. En secours : une vraie question QCM du programme, pas un choix de mots au hasard.",
+    tags: ["SDGN Première", "Indices cours", "QCM secours"],
+    border:   "border-violet-400/30",
+    glow:     "rgba(167,139,250,0.35)",
+    tagColor: "bg-violet-500/15 text-violet-200 border-violet-400/25",
+    btnFrom:  "#a78bfa", btnTo: "#ec4899",
+    btnShadow:"rgba(167,139,250,0.5)",
+    accent:   "#a78bfa",
+    grad:     "radial-gradient(ellipse 90% 60% at 80% 20%,rgba(167,139,250,0.18) 0%,transparent 60%),rgba(12,6,18,0.78)",
+  },
+  {
     id: "jetons" as const,
     emoji: EJ.money,
     title: "Qui veut gagner des jetons ?",
     subtitle: "Quiz paliers",
-    desc: "15 questions SDGN, paliers de jetons qui montent, cases sécurisées et jokers 50:50 / indice. Arrête-toi ou vise le jackpot !",
-    tags: ["15 paliers", "Jokers", "SDGN Missions"],
+    desc: "15 questions SDGN tirées au hasard (chapitres 1 à 13), paliers de jetons, cases sécurisées et jokers 50:50 / indice.",
+    tags: ["15 paliers", "Tirage aléatoire", "SDGN Première"],
     border:   "border-yellow-400/30",
     glow:     "rgba(234,179,8,0.35)",
     tagColor: "bg-yellow-500/15 text-yellow-100 border-yellow-400/25",
@@ -208,6 +225,9 @@ export default function Jeux({ profil, onXPGagne }: Props) {
 
   if (view === "duel")
     return <SubShell bg="#0f0303" back={()=>setView("hub")} label={`${EJ.swords} Duel STMG`} accent="#ef4444"><Duel profil={profil} onXPGagne={onXPGagne}/></SubShell>;
+
+  if (view === "motmystere")
+    return <SubShell bg="#0c0618" back={()=>setView("hub")} label={`${EJ.mic} Mot mystère`} accent="#a78bfa"><MotMystere profil={profil} onXPGagne={onXPGagne}/></SubShell>;
 
   if (view === "jetons")
     return <SubShell bg="#050818" back={()=>setView("hub")} label={`${EJ.money} Qui veut gagner des jetons ?`} accent="#eab308"><QuiVeutGagnerDesJetons profil={profil} onXPGagne={onXPGagne}/></SubShell>;

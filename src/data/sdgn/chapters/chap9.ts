@@ -18,6 +18,7 @@ export const SDGN_CHAP9_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Définition de la valeur perçue :\nLa valeur perçue est la valeur qu'un bien ou un service revêt dans l'esprit du consommateur. Elle correspond au prix maximal que le consommateur est prêt à payer. Elle résulte d'un arbitrage entre les avantages attendus et les sacrifices consentis.\n\n2) Avantages et sacrifices repérés :\nAvantages : amorti du pied (performance objective), image « Kiprun Pro » / appartenance aux coureurs (subjectif), réduction du risque de blessure.\nSacrifices : prix 129 € (sacrifice monétaire), temps passé à lire les avis, effort de comparaison entre modèles.\n\n3) Distinction valeur perçue / valeur réelle :\nLa valeur réelle (économique) reflète le coût de fabrication et la fonction utilitaire objective. La valeur perçue est subjective : Léa intègre des critères personnels (fréquence de course, crainte des blessures, image de marque). Deux consommateurs peuvent payer des prix différents pour le même produit selon leur arbitrage.",
     attendu: "Définition exacte, repérage avantages/sacrifices, distinction perçue/réelle.",
+    notionsCibles: ["exacte", "repérage avantages/sacrifices", "perçue/réelle."],
   },
   {
     id: "sdgn9-e2",
@@ -35,6 +36,7 @@ export const SDGN_CHAP9_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Éléments objectifs :\nPression 19 bars, température contrôlée, recyclage des capsules — caractéristiques mesurables du produit et du service.\n\n2) Éléments subjectifs :\nImage de marque portée par George Clooney, boutiques design, club fidélité, rituel d'exclusivité — représentations mentales et émotionnelles.\n\n3) Échec possible du discount :\nLe consommateur n'arbitre pas uniquement sur la composition : il intègre l'image, la confiance, le SAV. Nespresso agit sur le design, la publicité, l'expérience boutique pour élever les avantages perçus et justifier un prix supérieur.",
     attendu: "Classification objectif/subjectif correcte, lien avec stratégie marketing.",
+    notionsCibles: ["Classification objectif/subjectif correcte", "lien avec stratégie marketing."],
   },
   {
     id: "sdgn9-e3",
@@ -52,6 +54,7 @@ export const SDGN_CHAP9_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Image de marque :\nEnsemble des représentations mentales, positives ou négatives, associées à une marque ou une organisation. Une image positive attire des clients ; une image négative les éloigne.\n\n2) Impact du documentaire :\nL'image devient négative (surconsommation, précarité) : la valeur perçue baisse, les consommateurs ne sont plus prêts à payer le même prix : chute des ventes (-9 %).\n\n3) Action « seconde vie » :\nTransparence, partenariat ONG : l'entreprise agit sur les éléments subjectifs et objectifs de l'arbitrage (éthique, traçabilité). L'enquête montre une amélioration de l'image perçue (42 %), ce qui peut restaurer la valeur perçue et les performances commerciales.",
     attendu: "Définition image de marque, enchaînement crise / action / reprise.",
+    notionsCibles: ["image de marque", "enchaînement crise / action / reprise."],
   },
   {
     id: "sdgn9-e4",
@@ -71,6 +74,7 @@ export const SDGN_CHAP9_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Notoriété :\nDegré de connaissance de la marque par les consommateurs, mesuré par sondages.\n\n2) Trois indicateurs pour Andros :\n— Assistée 78 % : citée quand on la propose — bonne reconnaissance aidée.\n— Spontanée 12 % : peu citée sans aide — faible présence dans l'esprit.\n— Top of mind 3 % : rarement première marque — faible domination mentale.\nÉcart assistée/spontanée = marque connue si rappelée, mais pas leader naturel.\n\n3) Cible spontanée :\nPour un lancement, il faut que les consommateurs pensent à Andros sans liste : la publicité et les échantillons renforcent le rappel spontané et le top of mind.",
     attendu: "Trois indicateurs définis, interprétation des écarts, stratégie Andros justifiée.",
+    notionsCibles: ["Trois indicateurs définis", "interprétation des écarts", "stratégie Andros justifiée."],
   },
   {
     id: "sdgn9-e5",
@@ -88,6 +92,7 @@ export const SDGN_CHAP9_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Qualité perçue :\nCaractéristiques du service (débit, délai installation, hotline, appli) permettant de satisfaire les besoins. Les services associés (48 h, 24h/7j) renforcent la qualité perçue.\n\n2) Insatisfaction :\nLa satisfaction naît de la comparaison attentes / expérience vécue. Attente : résolution en un appel. Expérience : accueil 2/5 : écart négatif malgré qualité technique correcte.\n\n3) Fidélisation :\nFree corrige l'expérience (mois offert, rappel prioritaire) pour réduire l'écart. Note 4/5 et renouvellement : la satisfaction est un préalable à la fidélisation ; sans elle, le prix seul ne suffit pas.",
     attendu: "Qualité vs satisfaction distinguées, mécanisme attentes/expérience.",
+    notionsCibles: ["Qualité vs satisfaction distinguées", "mécanisme attentes/expérience."],
   },
   {
     id: "sdgn9-e6",
@@ -105,6 +110,7 @@ export const SDGN_CHAP9_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Médias sociaux :\nPlateformes digitales (réseaux, blogs…) permettant d'établir des réseaux et de partager des contenus (infos produits, photos, vidéos, avis).\n\n2) Usages GlowLab :\n— Diffusion d'informations et tutoriels (Instagram, YouTube).\n— Avis et contenus générés par les utilisateurs (#GlowLabChallenge).\n— Communauté en ligne autour du thème « peau sensible ».\n\n3) Brand content :\nContenus de marque (expérience maquilleuse pro) créant une relation personnalisée et une expérience privilégiée. Cela élève les avantages perçus (apprentissage, appartenance) sans baisser le prix : valeur perçue et ventes en hausse.",
     attendu: "Définition médias sociaux, usages repérés, brand content relié à la valeur perçue.",
+    notionsCibles: ["médias sociaux", "usages repérés", "brand content relié à la valeur perçue."],
   },
   {
     id: "sdgn9-e7",
@@ -122,6 +128,7 @@ export const SDGN_CHAP9_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Influenceur :\nIndividu dont le statut, la position ou l'exposition médiatique peut influencer les comportements d'achat. Ici, la youtubeuse renforce positivement la valeur perçue éco-responsable.\n\n2) E-réputation :\nEnsemble de ce qui se dit sur la marque via les médias digitaux. Le « mauvais buzz » dégrade l'image et la valeur perçue (suspicion sur le plastique) : chute des ventes.\n\n3) Community manager :\nVeille et réaction rapide : preuve laboratoire, échange clients. Objectif : limiter la détérioration de l'image, restaurer la confiance. Négliger les avis négatifs aurait aggravé la performance globale.",
     attendu: "Influenceur et e-réputation définis, crise et réaction analysées.",
+    notionsCibles: ["Influenceur et e-réputation définis", "crise et réaction analysées."],
   },
   {
     id: "sdgn9-e8",
@@ -141,6 +148,7 @@ export const SDGN_CHAP9_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) KPI :\nKey Performance Indicators : indicateurs mesurant l'efficacité de la présence digitale et des campagnes social media.\n\n2) Indicateurs quantitatifs :\nNombre de followers, publications, mentions, interactions, utilisateurs engagés.\n\n3) Calcul et interprétation :\nTaux d'engagement = 892 000 / 2 100 000 ≈ 42,5 % (ordre de grandeur selon méthode retenue). Volume d'interactions élevé : contenu mobilise la communauté. Comparaison internationale permet d'optimiser la stratégie en temps réel.",
     attendu: "KPI définis, indicateurs quantitatifs listés, calcul d'engagement commenté.",
+    notionsCibles: ["KPI définis", "indicateurs quantitatifs listés", "d'engagement commenté."],
   },
   {
     id: "sdgn9-e9",
@@ -158,6 +166,7 @@ export const SDGN_CHAP9_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) KPI qualitatifs :\nProfil des utilisateurs, influenceurs clés, contenu des mentions (positif/négatif sur prix et produit), types de posts les plus commentés positivement.\n\n2) Décisions :\n— Mini-flacon à 39 € : réponse aux critiques prix, adaptation à la cible jeune.\n— Ambassadeurs lycéens : s'appuyer sur les créateurs mode et le format unboxing performant.\n\n3) Lien performance :\nMesurer la valeur perçue (image, satisfaction, notoriété digitale) permet de gagner en notoriété, fidéliser, repositionner l'offre et augmenter les ventes — amélioration globale des performances.",
     attendu: "KPI qualitatifs identifiés, décisions cohérentes, lien avec performance.",
+    notionsCibles: ["KPI qualitatifs identifiés", "décisions cohérentes", "lien avec performance."],
   },
   {
     id: "sdgn9-e10",
@@ -177,6 +186,7 @@ export const SDGN_CHAP9_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Quatre éléments :\n— Image : 67 % favorable.\n— Notoriété : spontanée 41 %, en hausse.\n— Qualité perçue : 4,2/5 sur goût et naturel.\n— Satisfaction : 76 % de recommandation.\n\n2) Médias sociaux et KPI :\nCampagne influenceurs → notoriété. KPI quanti (+28 % interactions). Veille e-réputation (rumeur sucre) → réaction rapide, stabilisation image.\n\n3) Priorité conseillée :\nConsolider la notoriété spontanée et la qualité perçue (ingrédients) via brand content et transparence nutritionnelle, car la satisfaction et l'image progressent déjà — éviter une nouvelle crise e-réputation.",
     attendu: "Quatre piliers mobilisés, KPI intégrés, priorité argumentée.",
+    notionsCibles: ["Quatre piliers mobilisés", "KPI intégrés", "priorité argumentée."],
   },
   {
     id: "sdgn9-cas1",
@@ -196,6 +206,7 @@ export const SDGN_CHAP9_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Construction valeur perçue :\nArbitrage favorable : avantages (sécurité, garantie, service, prestige Guide) vs sacrifices (prix +25 %, recherche d'info). Éléments objectifs (tests) et subjectifs (pilotes, image premium).\n\n2) Image, notoriété, qualité :\nImage d'excellence et sécurité. Notoriété spontanée 71 %. Qualité perçue via garantie et services associés. Satisfaction mesurée par renouvellement 88 %.\n\n3) Médias sociaux et e-réputation :\nBrand content sécurité ; influenceur = risque mais aussi portée. Réponse data → veille active, limitation du mauvais buzz, 92 % mentions positives.\n\n4) KPI :\nQuanti : followers, interactions. Quali : tonalité mentions. Pilotage campagnes et comparaison concurrentielle.\n\n5) Synthèse :\nMichelin transforme une valeur réelle (technologie pneu) en valeur perçue élevée grâce aux quatre piliers et au digital. Le consommateur accepte un prix supérieur car l'arbitrage lui paraît gagnant — performance commerciale et fidélisation en découlent.",
     attendu: "Cas complet avec toutes les notions du chapitre 9, synthèse argumentée.",
+    notionsCibles: ["synthèse argumentée."],
   },
   {
     id: "sdgn9-cas2",
@@ -215,5 +226,6 @@ export const SDGN_CHAP9_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Contraste KPI :\nQuanti : audience et engagement élevés. Quali : mentions négatives éthique, satisfaction éthique 2,1/5 vs prix 4,5/5 — valeur perçue scindée.\n\n2) E-réputation et image :\nMauvaise buzz, pétition : image négative, notoriété « pour de mauvaises raisons ». Arbitrage des clients sensibles : avantage prix insuffisant face au sacrifice moral : ralentissement ventes.\n\n3) Influenceurs :\nRenforcent la notoriété et les ventes court terme, mais peuvent amplifier les critiques si la marque n'est pas crédible sur l'éthique.\n\n4) Actions :\n— Transparence supply chain (rapport public, labels).\n— Brand content RSE et produits « eco-line ».\n— Veille permanente et réponse rapide aux signalements (community manager + cellule crise).\n\n5) Synthèse :\nPerformance durable exige cohérence entre prix, image et satisfaction globale. Des KPI sociaux élevés ne compensent pas une valeur perçue éthique effondrée : l'organisation doit arbitrer entre volume et réputation.",
     attendu: "Contradiction KPI/éthique analysée, actions réalistes, synthèse performance.",
+    notionsCibles: ["Contradiction KPI/éthique analysée", "actions réalistes", "synthèse performance."],
   },
 ];

@@ -26,3 +26,7 @@ Le **build** et le **typecheck** exécutent `check:encoding` automatiquement.
 
 - Langue interface : **français** avec accents corrects.
 - Ne pas confondre point médian UI (`·`) et opérateur `?` du code.
+
+## Feuille de route pédagogique
+
+Voir `docs/PEDAGOGIE_PRIORITES.md` (priorités produit : Défis, matières, Missions, etc.).

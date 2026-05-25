@@ -421,7 +421,7 @@ export default function ProfilPageView({
           </Panel>
 
           <button type="button" className="pp-logout" onClick={onLogout}>
-            Se d\u00e9connecter
+            {"Se \u00e9connecter"}
           </button>
         </div>
       </div>

@@ -35,11 +35,6 @@ const matieres = [
   { nom: "Gestion Finance", emoji: "💰", couleur: "orange" },
 ];
 
-const getTodayKey = () => {
-  const d = new Date();
-  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
-};
-
 export default function Dashboard({ profil }) {
   const [nouvelEvenement, setNouvelEvenement] = useState("");
   const [dateEvenement, setDateEvenement] = useState("");
@@ -54,16 +49,6 @@ export default function Dashboard({ profil }) {
   const progression =
     palierHaut > palierBas ? ((prestigeNiveau - palierBas) / (palierHaut - palierBas)) * 100 : 0;
   const pointsVersPalier = Math.max(0, palierHaut - prestigeNiveau);
-  const todayKey = getTodayKey();
-  const hasConnectedToday = profil?.lastConnectionDay === todayKey;
-  const hasFocusToday = Boolean(
-    Object.values(profil?.focusProgress?.claims || {}).find((c) => c?.lastClaimDate === todayKey)
-  );
-  const hasMissionToday = Boolean(
-    Object.values(profil?.missionsHistorique || {}).find((h) => h?.date === todayKey)
-  );
-  const dailyDoneCount = [hasConnectedToday, hasFocusToday, hasMissionToday].filter(Boolean).length;
-  const dailyProgress = Math.round((dailyDoneCount / 3) * 100);
 
   const ajouterEvenement = async () => {
     if (!nouvelEvenement || !dateEvenement) return;
@@ -147,67 +132,21 @@ export default function Dashboard({ profil }) {
           </p>
         </div>
 
-        {/* ENGAGEMENT QUOTIDIEN */}
+        {/* CLASSEMENT */}
         <div className="rounded-2xl p-4 mb-4 border border-slate-200 shadow-sm bg-white">
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="text-lg font-bold">🔥 Routine quotidienne</h2>
-            <span className="text-sm font-semibold" style={{ color: dailyDoneCount === 3 ? "#16A34A" : "#0284C7" }}>
-              {dailyDoneCount}/3
-            </span>
-          </div>
-          <div className="w-full bg-slate-200 rounded-full h-2.5 mb-3">
-            <div
-              className="h-2.5 rounded-full transition-all"
-              style={{ width: `${dailyProgress}%`, background: "linear-gradient(90deg, #22C55E, #16A34A)" }}
-            />
-          </div>
+          <h2 className="text-lg font-bold mb-3">🏆 Classement National</h2>
           <div className="space-y-2">
-            <div className="flex justify-between items-center bg-slate-50 border border-slate-200 rounded-lg p-2.5">
-              <span className="text-sm text-slate-700">Connexion du jour</span>
-              <span>{hasConnectedToday ? "✅" : "⬜"}</span>
+            <div className="flex justify-between items-center bg-slate-50 border border-slate-200 rounded-lg p-3">
+              <span className="text-slate-600">👤 Ta position</span>
+              <span className="font-bold" style={{ color: "#D97706" }}>— ème</span>
             </div>
-            <div className="flex justify-between items-center bg-slate-50 border border-slate-200 rounded-lg p-2.5">
-              <span className="text-sm text-slate-700">1 activité Focus validée</span>
-              <span>{hasFocusToday ? "✅" : "⬜"}</span>
+            <div className="flex justify-between items-center bg-slate-50 border border-slate-200 rounded-lg p-3">
+              <span className="text-slate-600">🏫 Ton lycée</span>
+              <span className="font-bold" style={{ color: "#0284C7" }}>— ème</span>
             </div>
-            <div className="flex justify-between items-center bg-slate-50 border border-slate-200 rounded-lg p-2.5">
-              <span className="text-sm text-slate-700">1 mission soumise</span>
-              <span>{hasMissionToday ? "✅" : "⬜"}</span>
-            </div>
-          </div>
-          <p className="text-xs mt-3" style={{ color: "#64748B" }}>
-            Objectif: compléter le 3/3 chaque jour pour ancrer les révisions.
-          </p>
-        </div>
-
-        {/* GRILLE PRINCIPALE */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-
-          {/* CLASSEMENT */}
-          <div className="rounded-2xl p-4 border border-slate-200 shadow-sm bg-white">
-            <h2 className="text-lg font-bold mb-3">🏆 Classement National</h2>
-            <div className="space-y-2">
-              <div className="flex justify-between items-center bg-slate-50 border border-slate-200 rounded-lg p-3">
-                <span className="text-slate-600">👤 Ta position</span>
-                <span className="font-bold" style={{ color: "#D97706" }}>— ème</span>
-              </div>
-              <div className="flex justify-between items-center bg-slate-50 border border-slate-200 rounded-lg p-3">
-                <span className="text-slate-600">🏫 Ton lycée</span>
-                <span className="font-bold" style={{ color: "#0284C7" }}>— ème</span>
-              </div>
-              <div className="flex justify-between items-center bg-slate-50 border border-slate-200 rounded-lg p-3">
-                <span className="text-slate-600">{emojis[profil.famille]} Famille {profil.famille}</span>
-                <span className="font-bold" style={{ color: "#16A34A" }}>— ème</span>
-              </div>
-            </div>
-          </div>
-
-          {/* MISSION ACTIVE */}
-          <div className="rounded-2xl p-4 border border-slate-200 shadow-sm bg-white">
-            <h2 className="text-lg font-bold mb-3">🎯 Mission de la semaine</h2>
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 text-center">
-              <p className="text-slate-500 text-sm">Aucune mission active pour l'instant</p>
-              <p className="text-slate-400 text-xs mt-1">Les missions arrivent bientôt !</p>
+            <div className="flex justify-between items-center bg-slate-50 border border-slate-200 rounded-lg p-3">
+              <span className="text-slate-600">{emojis[profil.famille]} Famille {profil.famille}</span>
+              <span className="font-bold" style={{ color: "#16A34A" }}>— ème</span>
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { useState, useEffect, useMemo } from "react";
+import AdminReportingEleves from "../components/admin/AdminReportingEleves";
 import { auth, db } from "../services/firebase";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { doc, setDoc, collection, getDocs, deleteDoc, updateDoc, deleteField } from "firebase/firestore";
@@ -9,10 +10,10 @@ import { COLLECTIONS } from "../services/collectionsData";
 import { formatJetons, formatJetonsDelta } from "../lib/jetons";
 import { getPrestigeTotal } from "../services/userProfileService";
 import {
-  SDGN_MISSIONS_PROGRESS_VERSION,
   compareSdgnExerciseIds,
   getSdgnMissionMeta,
 } from "../data/sdgnMissionCatalog";
+import { MISSIONS_PROGRESS_VERSION } from "../lib/missionsProgress";
 
 const COLORS = {
   S: "#3B82F6", T: "#7C3AED", M: "#F97316",
@@ -163,6 +164,8 @@ export default function Admin() {
   const [resetPwdUserId, setResetPwdUserId] = useState(null);
   const [flashReporting, setFlashReporting] = useState("");
   const [quickJetons, setQuickJetons] = useState({});
+  const [triReporting, setTriReporting] = useState("activite");
+  const [reportingDetailId, setReportingDetailId] = useState(null);
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -363,7 +366,7 @@ export default function Admin() {
       const missionsToday = missionEntries.filter((m) => m?.date === todayKey).length;
 
       const mp = eleve.missionsProgress || {};
-      const mpClaims = mp.version === SDGN_MISSIONS_PROGRESS_VERSION ? (mp.claims || {}) : {};
+      const mpClaims = mp.version === MISSIONS_PROGRESS_VERSION ? (mp.claims || {}) : {};
       const sdgnClaimEntries = Object.entries(mpClaims).filter(([id]) => String(id).startsWith("sdgn"));
       const sdgnClaimsToday = sdgnClaimEntries.filter(([, c]) => c?.lastClaimDate === todayKey).length;
       const sdgnExerciseCount = sdgnClaimEntries.length;
@@ -486,14 +489,33 @@ export default function Admin() {
       if (filtreActivite === "focus") okActivite = (eleve.focusTotal || 0) > 0;
       if (filtreActivite === "pas_focus") okActivite = (eleve.focusTotal || 0) === 0;
       if (filtreActivite === "sdgn") okActivite = (eleve.sdgnExerciseCount || 0) > 0;
+      if (filtreActivite === "participation") okActivite = (eleve.participationPoints || 0) >= 1;
+      if (filtreActivite === "sans_participation") okActivite = (eleve.participationPoints || 0) <= 0;
 
       return okClasse && okLycee && okRecherche && okActivite;
     }).sort((a, b) => {
+      if (triReporting === "nom") {
+        return String(a.nomAffiche).localeCompare(String(b.nomAffiche), "fr");
+      }
+      if (triReporting === "participation" || triReporting === "participation_note") {
+        return (b.participationPoints || 0) - (a.participationPoints || 0);
+      }
+      if (triReporting === "sdgn") {
+        return (b.sdgnExerciseCount || 0) - (a.sdgnExerciseCount || 0);
+      }
+      if (triReporting === "jetons") {
+        return (b.xp || 0) - (a.xp || 0);
+      }
       const da = a.lastActivity ? a.lastActivity.getTime() : 0;
       const db = b.lastActivity ? b.lastActivity.getTime() : 0;
       return db - da;
     });
-  }, [reportingRows, filtreClasse, filtreLycee, filtreActivite, rechercheEleve]);
+  }, [reportingRows, filtreClasse, filtreLycee, filtreActivite, rechercheEleve, triReporting]);
+
+  const maxParticipationReporting = useMemo(() => {
+    if (!reportingFiltres.length) return 0;
+    return Math.max(...reportingFiltres.map((e) => Number(e.participationPoints) || 0));
+  }, [reportingFiltres]);
 
   const dashboardStats = useMemo(() => {
     const total = reportingRows.length;
@@ -1016,344 +1038,39 @@ export default function Admin() {
                   <option value="focus">Ont fait Focus</option>
                   <option value="pas_focus">N’ont pas fait Focus</option>
                   <option value="sdgn">Au moins une mission SDGN</option>
+                  <option value="participation">Participation cartes (&ge; 1 pt)</option>
+                  <option value="sans_participation">Sans participation (0 pt)</option>
                 </select>
               </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                {reportingFiltres.map((eleve) => (
-                  <div
-                    key={eleve.id}
-                    style={{
-                      border: "1px solid #E2E8F0",
-                      borderRadius: 16,
-                      overflow: "hidden",
-                      background: "#FAFBFC",
-                      boxShadow: "0 1px 2px rgba(15,23,42,0.04)",
-                    }}
-                  >
-                    <div
-                      style={{
-                        padding: "14px 16px",
-                        background: "linear-gradient(90deg,#FFFFFF,#F1F5F9)",
-                        borderBottom: "1px solid #E2E8F0",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        gap: 12,
-                        flexWrap: "wrap",
-                        alignItems: "flex-start",
-                      }}
-                    >
-                      <div style={{ flex: "1 1 220px", minWidth: 0 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                          <p style={{ margin: 0, fontFamily: "'Fredoka One', cursive", color: "#0F172A", fontSize: "1.02rem" }}>{eleve.nomAffiche}</p>
-                          {(eleve.sdgnExerciseCount || 0) > 0 ? (
-                            <span
-                              style={{
-                                borderRadius: 999,
-                                padding: "3px 10px",
-                                fontSize: "0.72rem",
-                                fontWeight: 800,
-                                background: "#EDE9FE",
-                                color: "#5B21B6",
-                                border: "1px solid #C4B5FD",
-                              }}
-                            >
-                              SDGN {eleve.sdgnExerciseCount} exo.
-                            </span>
-                          ) : null}
-                          {eleve.platformIntegrity?.xpSuspended ? (
-                            <span
-                              title="Suspension jetons après changement d'onglet — bouton « Rétablir » ci-dessous"
-                              style={{
-                                borderRadius: 999,
-                                padding: "3px 10px",
-                                fontSize: "0.72rem",
-                                fontWeight: 800,
-                                background: "#FEE2E2",
-                                color: "#991B1B",
-                                border: "1px solid #FECACA",
-                              }}
-                            >
-                              Jetons suspendus (onglet)
-                            </span>
-                          ) : null}
-                        </div>
-                        <p style={{ margin: "6px 0 0", color: "#64748B", fontSize: "0.82rem" }}>
-                          {eleve.classe || "-"} ? {eleve.lycee || "-"} ? {eleve.email || "email non renseigné"}
-                        </p>
-                        <p style={{ margin: "4px 0 0", color: eleve.joursSansActivite !== null && eleve.joursSansActivite > 7 ? "#DC2626" : "#16A34A", fontSize: "0.78rem", fontWeight: 700 }}>
-                          {eleve.joursSansActivite === null
-                            ? "Aucune activité datée"
-                            : eleve.joursSansActivite === 0
-                              ? "Actif aujourd'hui"
-                              : `${eleve.joursSansActivite} jour(s) sans activité`}
-                          {" ? "}
-                          Dernière activité : <strong>{formatDateFr(eleve.lastActivity)}</strong>
-                        </p>
-                      </div>
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8, flex: "0 0 auto" }}>
-                        <div style={{ textAlign: "right" }}>
-                          <p style={{ margin: 0, color: "#64748B", fontSize: "0.72rem", fontWeight: 700 }}>Solde jetons</p>
-                          <p style={{ margin: "2px 0 0", color: "#1D4ED8", fontWeight: 900, fontSize: "1.15rem" }}>{formatJetons(eleve.xp || 0)}</p>
-                        </div>
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, justifyContent: "flex-end", alignItems: "center" }}>
-                          <input
-                            type="number"
-                            min={0}
-                            placeholder="Montant"
-                            value={quickJetons[eleve.id] ?? ""}
-                            onChange={(e) => setQuickJetons((prev) => ({ ...prev, [eleve.id]: e.target.value }))}
-                            style={{
-                              width: 88,
-                              padding: "6px 8px",
-                              borderRadius: 10,
-                              border: "1px solid #CBD5E1",
-                              fontSize: "0.88rem",
-                              textAlign: "center",
-                            }}
-                          />
-                          <Btn
-                            onClick={() => {
-                              const amt = parseInt(String(quickJetons[eleve.id] ?? "").trim(), 10) || 0;
-                              if (!amt) return;
-                              void distribuerXPIndividuel(eleve.id, amt, eleve.prenom || eleve.nomAffiche);
-                            }}
-                            color={COLORS.G}
-                            small
-                            disabled={recompenseEnCours}
-                          >
-                            + Ajouter
-                          </Btn>
-                          <Btn
-                            onClick={() => {
-                              const amt = parseInt(String(quickJetons[eleve.id] ?? "").trim(), 10) || 0;
-                              if (!amt) return;
-                              void retirerXPIndividuel(eleve.id, amt, eleve.prenom || eleve.nomAffiche);
-                            }}
-                            color={COLORS.H}
-                            small
-                            disabled={recompenseEnCours}
-                          >
-                            − Retirer
-                          </Btn>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div style={{ padding: "10px 16px 12px", display: "flex", gap: 8, flexWrap: "wrap", background: "#FFFFFF", borderBottom: "1px solid #F1F5F9" }}>
-                      {eleve.actionsToday.map((action, ai) => (
-                        <span
-                          key={`${eleve.id}-a-${ai}`}
-                          style={{
-                            background: action === "Aucune action détectée" ? "#F1F5F9" : "#DBEAFE",
-                            color: action === "Aucune action détectée" ? "#64748B" : "#1D4ED8",
-                            borderRadius: 999,
-                            padding: "4px 10px",
-                            fontSize: "0.76rem",
-                            fontWeight: 700,
-                          }}
-                        >
-                          {action}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div style={{ padding: "14px 16px 16px", display: "flex", flexDirection: "column", gap: 12 }}>
-                      <div style={{ background: "#FFFFFF", borderRadius: 12, padding: 12, border: "1px solid #E2E8F0" }}>
-                        <p style={{ margin: "0 0 8px", fontFamily: "'Fredoka One', cursive", fontSize: "0.82rem", color: "#0369A1" }}>Temps de connexion</p>
-                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(155px, 1fr))", gap: 8 }}>
-                          <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>
-                            Aujourd'hui : <strong>{formatDuration(eleve.sessionTodaySec)}</strong>
-                          </p>
-                          <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>
-                            Cumulé : <strong>{formatDuration(eleve.sessionTotalSec)}</strong> ({eleve.sessionCount || 0} session(s))
-                          </p>
-                          <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>
-                            Dernière session : <strong>{formatDuration(eleve.lastSessionDurationSec)}</strong>
-                          </p>
-                        </div>
-                      </div>
-
-                      <div style={{ background: "#FFFFFF", borderRadius: 12, padding: 12, border: "1px solid #DDD6FE" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-                          <div>
-                            <p style={{ margin: 0, fontFamily: "'Fredoka One', cursive", fontSize: "0.82rem", color: "#5B21B6" }}>Missions SDGN (page Missions)</p>
-                            <p style={{ margin: "4px 0 0", color: "#64748B", fontSize: "0.78rem" }}>
-                              Champ{" "}
-                              <span style={{ fontFamily: "ui-monospace, monospace", fontSize: "0.72rem", color: "#475569" }}>missionsProgress</span>
-                              {" ? "}Dernière rubrique enregistrée : <strong>{eleve.missionsProgressChapter || "—"}</strong>
-                            </p>
-                          </div>
-                          <div style={{ textAlign: "right" }}>
-                            <p style={{ margin: 0, fontSize: "0.8rem", color: "#334155" }}>
-                              <strong>{eleve.sdgnExerciseCount || 0}</strong> exercice(s) ? <strong>{eleve.sdgnTotalAttempts || 0}</strong> tentative(s)
-                            </p>
-                            <p style={{ margin: "4px 0 0", fontSize: "0.78rem", color: "#6D28D9", fontWeight: 700 }}>
-                              Somme des derniers jetons par exo. : {formatJetons(eleve.sdgnLastXpSum || 0)}
-                            </p>
-                            <p style={{ margin: "2px 0 0", fontSize: "0.72rem", color: "#64748B" }}>
-                              Validations aujourd'hui : {eleve.sdgnClaimsToday || 0}
-                            </p>
-                          </div>
-                        </div>
-                        {eleve.sdgnRows?.length ? (
-                          <>
-                            <button
-                              type="button"
-                              onClick={() => setSdgnExpanded((prev) => ({ ...prev, [eleve.id]: !prev[eleve.id] }))}
-                              style={{
-                                marginTop: 10,
-                                background: "#F5F3FF",
-                                border: "1px solid #C4B5FD",
-                                borderRadius: 10,
-                                padding: "8px 12px",
-                                fontWeight: 800,
-                                fontSize: "0.78rem",
-                                cursor: "pointer",
-                                fontFamily: "'Fredoka One', cursive",
-                                color: "#5B21B6",
-                              }}
-                            >
-                              {sdgnExpanded[eleve.id] ? "▲ Masquer le détail par exercice" : `▼ Détail des ${eleve.sdgnRows.length} exercice(s)`}
-                            </button>
-                            {sdgnExpanded[eleve.id] ? (
-                              <div style={{ marginTop: 10, overflowX: "auto", borderRadius: 10, border: "1px solid #EDE9FE" }}>
-                                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.76rem" }}>
-                                  <thead>
-                                    <tr style={{ background: "#F5F3FF", color: "#4C1D95", textAlign: "left" }}>
-                                      <th style={{ padding: "8px 10px", fontWeight: 800 }}>Chapitre</th>
-                                      <th style={{ padding: "8px 10px", fontWeight: 800 }}>Exercice</th>
-                                      <th style={{ padding: "8px 10px", fontWeight: 800 }}>Note</th>
-                                      <th style={{ padding: "8px 10px", fontWeight: 800 }}>%</th>
-                                      <th style={{ padding: "8px 10px", fontWeight: 800 }}>Jetons</th>
-                                      <th style={{ padding: "8px 10px", fontWeight: 800 }}>Tent.</th>
-                                      <th style={{ padding: "8px 10px", fontWeight: 800 }}>Dernière fois</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {eleve.sdgnRows.map((row) => (
-                                      <tr key={row.exerciseId} style={{ borderTop: "1px solid #EDE9FE", background: "#FFFFFF" }}>
-                                        <td style={{ padding: "8px 10px", color: "#475569", verticalAlign: "top", whiteSpace: "nowrap" }}>
-                                          {row.chapter.replace(/^SDGN\s+/i, "")}
-                                        </td>
-                                        <td style={{ padding: "8px 10px", color: "#0F172A", verticalAlign: "top" }}>
-                                          <span style={{ fontWeight: 700 }}>{row.title}</span>
-                                          <span style={{ display: "block", color: "#94A3B8", fontSize: "0.7rem", marginTop: 2 }}>{row.exerciseId}</span>
-                                        </td>
-                                        <td style={{ padding: "8px 10px", whiteSpace: "nowrap" }}>
-                                          {row.lastScore !== undefined && row.lastScore !== null ? `${row.lastScore}/10` : "—"}
-                                        </td>
-                                        <td style={{ padding: "8px 10px", whiteSpace: "nowrap" }}>
-                                          {row.lastPercent !== undefined && row.lastPercent !== null ? `${row.lastPercent}%` : "—"}
-                                        </td>
-                                        <td style={{ padding: "8px 10px", whiteSpace: "nowrap", fontWeight: 800 }}>
-                                          {formatJetons(row.lastXpAwarded || 0)}
-                                          {row.xpMax ? (
-                                            <span style={{ color: "#64748B", fontWeight: 600, fontSize: "0.72rem" }}> / {formatJetons(row.xpMax)}</span>
-                                          ) : null}
-                                        </td>
-                                        <td style={{ padding: "8px 10px", whiteSpace: "nowrap" }}>{row.totalClaims || 0}</td>
-                                        <td style={{ padding: "8px 10px", whiteSpace: "nowrap", color: "#475569" }}>{row.lastClaimDate || "—"}</td>
-                                      </tr>
-                                    ))}
-                                  </tbody>
-                                </table>
-                              </div>
-                            ) : null}
-                          </>
-                        ) : (
-                          <p style={{ margin: "10px 0 0", color: "#94A3B8", fontSize: "0.8rem" }}>Aucune mission SDGN validée pour cet élève.</p>
-                        )}
-                      </div>
-
-                      <div style={{ background: "#FFFFFF", borderRadius: 12, padding: 12, border: "1px solid #E2E8F0" }}>
-                        <p style={{ margin: "0 0 8px", fontFamily: "'Fredoka One', cursive", fontSize: "0.82rem", color: "#0F172A" }}>Autres activités</p>
-                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 8 }}>
-                          <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>
-                            Missions (historique) : <strong>{eleve.missionsTotal}</strong> (aujourd'hui {eleve.missionsToday})
-                          </p>
-                          <p style={{ margin: 0, color: (eleve.antiCheatEvents || 0) > 0 ? "#BE123C" : "#334155", fontSize: "0.8rem", fontWeight: (eleve.antiCheatEvents || 0) > 0 ? 700 : 400 }}>
-                            Anti-triche (historique) : <strong>{eleve.antiCheatEvents || 0}</strong> (aujourd'hui {eleve.antiCheatToday || 0})
-                          </p>
-                          <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>
-                            Objectif Bac : <strong>{eleve.objectifTotal}</strong> (aujourd'hui {eleve.objectifToday})
-                          </p>
-                          <p style={{ margin: 0, color: "#334155", fontSize: "0.8rem" }}>
-                            Cartes : <strong>{eleve.cartesTotal}</strong> ({eleve.cartesUniques} uniques)
-                          </p>
-                        </div>
-                      </div>
-
-                      <div
-                        style={{
-                          background: "#F8FAFC",
-                          borderRadius: 12,
-                          padding: 12,
-                          border: "1px solid #E2E8F0",
-                          display: "flex",
-                          flexWrap: "wrap",
-                          gap: 10,
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <div>
-                          <p style={{ margin: "0 0 4px", fontFamily: "'Fredoka One', cursive", fontSize: "0.82rem", color: "#0F172A" }}>
-                            Compte / connexion
-                          </p>
-                          <p style={{ margin: 0, color: "#64748B", fontSize: "0.78rem" }}>
-                            E-mail : <strong>{eleve.email || "non renseigné dans Firestore"}</strong>
-                            {" · "}UID : <code style={{ fontSize: "0.72rem" }}>{eleve.id}</code>
-                          </p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => void envoyerLienResetMdp(eleve)}
-                          disabled={resetPwdUserId === eleve.id}
-                          style={{
-                            background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
-                            color: "white",
-                            border: "none",
-                            borderRadius: 10,
-                            padding: "8px 14px",
-                            fontWeight: 800,
-                            fontSize: "0.82rem",
-                            cursor: resetPwdUserId !== eleve.id ? "pointer" : "not-allowed",
-                            fontFamily: "'Fredoka One', cursive",
-                          }}
-                        >
-                          {resetPwdUserId === eleve.id ? "Envoi en cours…" : "Envoyer lien mot de passe oublié"}
-                        </button>
-                      </div>
-
-                      {eleve.platformIntegrity?.xpSuspended ? (
-                        <div>
-                          <button
-                            type="button"
-                            onClick={() => void retablirJetonsAntiTriche(eleve.id, eleve.nomAffiche)}
-                            style={{
-                              background: "linear-gradient(135deg, #059669, #047857)",
-                              color: "white",
-                              border: "none",
-                              borderRadius: 10,
-                              padding: "8px 14px",
-                              fontWeight: 800,
-                              fontSize: "0.82rem",
-                              cursor: "pointer",
-                              fontFamily: "'Fredoka One', cursive",
-                            }}
-                          >
-                            Rétablir les jetons (annuler anti-onglet)
-                          </button>
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-                ))}
-                {!reportingFiltres.length && (
-                  <p style={{ margin: 0, color: "#64748B", fontSize: "0.92rem" }}>Aucun élève ne correspond aux filtres.</p>
-                )}
-              </div>
+              <AdminReportingEleves
+                rows={reportingFiltres}
+                maxParticipation={maxParticipationReporting}
+                triReporting={triReporting}
+                onTriChange={setTriReporting}
+                detailId={reportingDetailId}
+                onToggleDetail={(id) => setReportingDetailId((cur) => (cur === id ? null : id))}
+                quickJetons={quickJetons}
+                onQuickJetonsChange={(id, val) => setQuickJetons((prev) => ({ ...prev, [id]: val }))}
+                sdgnExpanded={sdgnExpanded}
+                onToggleSdgn={(id) => setSdgnExpanded((prev) => ({ ...prev, [id]: !prev[id] }))}
+                recompenseEnCours={recompenseEnCours}
+                resetPwdUserId={resetPwdUserId}
+                onAjouterJetons={(eleve) => {
+                  const amt = parseInt(String(quickJetons[eleve.id] ?? "").trim(), 10) || 0;
+                  if (!amt) return;
+                  void distribuerXPIndividuel(eleve.id, amt, eleve.prenom || eleve.nomAffiche);
+                }}
+                onRetirerJetons={(eleve) => {
+                  const amt = parseInt(String(quickJetons[eleve.id] ?? "").trim(), 10) || 0;
+                  if (!amt) return;
+                  void retirerXPIndividuel(eleve.id, amt, eleve.prenom || eleve.nomAffiche);
+                }}
+                onResetMdp={(eleve) => void envoyerLienResetMdp(eleve)}
+                onRetablirJetons={(eleve) => void retablirJetonsAntiTriche(eleve.id, eleve.nomAffiche)}
+                formatDateFr={formatDateFr}
+                formatDuration={formatDuration}
+              />
             </div>
           </>
         )}

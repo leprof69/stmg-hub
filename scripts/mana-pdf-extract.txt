@@ -1,0 +1,3134 @@
+
+================================================================================
+FILE: chap10.pdf
+================================================================================
+PAGES: 2
+--- page 1 ---
+1 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+Chapitre 9 Comment le management prend-il 
+en compte les attentes des acteurs dans 
+l’organisation ? 
+ 
+Les acteurs internes de l’organisation peuvent avoir des intérêts convergents ou divergents pouvant être 
+sources de conflits. La culture d’entreprise et le style de direction des dirigeants permettent d’assurer la 
+cohésion de tous.  
+1. Les intérêts et attentes des acteurs de l’organisation 
+Les différents acteurs internes de l’organisation sont nombreux, leurs rôles et leurs attentes sont différents. 
+ 
+ Rôle Intérêts et attentes 
+Dirigeant de 
+l’entreprise et 
+actionnaires 
+– Diriger l’organisation 
+– Fixer les grands objectifs 
+stratégiques 
+– Augmenter les bénéfices 
+– Satisfaire les clients et les fidéliser 
+Cadres – Fixer des objectifs opérationnels 
+– Organiser le travail des équipes 
+– Contrôler les résultats et les faire 
+remonter à la direction 
+– Assurer la performance des équipes 
+– Fidéliser les collaborateurs 
+– Éviter tout conflit entre les salariés et entre 
+les salariés et les dirigeants 
+Représentants des 
+salariés et syndicats 
+– Transmettre aux dirigeants toute 
+réclamation individuelle ou 
+collective en matière d'application 
+de la réglementation du travail 
+(Code du travail, salaires, conditions 
+de travail…) 
+– Représenter les intérêts des salariés 
+Salariés – Fabriquer des produits et les 
+vendre  
+– Travailler dans de bonnes conditions 
+– Percevoir un salaire correspondant à leur 
+travail et à leurs compétences 
+ 
+Les intérêts des différents acteurs internes à l’organisation peuvent être divergents ou convergents : 
+ 
+ Intérêts divergents : les acteurs ont des relations conflictuelles ; 
+Exemple : les salariés d’un restaurant McDonald’s à Marseille ont fait grève pendant de longs 
+mois pour demander une amélioration de leurs conditions de travail qui s’étaient fortement 
+dégradées. 
+ Intérêts convergents : les acteurs ont des relations partenariales.  
+ Exemple : Air France a débloqué un budget très conséquent en 2019 pour améliorer le bien-être au 
+travail de ses salariés avec la création de salles de repos, de crèches pour les enfants du personnel ou 
+   
+L’essentiel 
+--- page 2 ---
+2 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+encore de salles de sport. Les intérêts de chacun sont convergents : les salariés travaillent dans de 
+meilleures conditions et leur performance augmente. 
+2. La culture d’organisation 
+La culture d’organisation peut être définie comme un ensemble de valeurs, de mythes, de rituels et de 
+symboles qui participent à la cohérence de tous les acteurs internes à l’entreprise en suscitant leur adhésion et 
+leur permettant de se reconnaître et de se mobiliser autour d’objectifscommuns.  
+ 
+ Exemple : La marque Apple a une culture d’organisation très forte, avec le mythe de son créateur 
+Steve Jobs, qui créa la marque dans son garage, et avec ses valeurs autour du « Think different », qui 
+évoque la rupture technologique de la marque avec son environnement Mac pour les ordinateurs et 
+avec l’iPhone pour les smartphones. 
+3. La dynamique de groupe  
+La dynamique de groupe est définie par Kurt Lewin comme un système d’interdépendance entre les 
+membres d’un groupe, dont la cohésion est assurée par un sentiment d’appartenance, des solidarités, des 
+échanges et des décisions de groupe. Le rôle du leadership, c’est-à-dire du dirigeant, est essentiel à cette 
+dynamique, il permet de fédérer le groupe et de l’influencer pour atteindre les objectifs. 
+A. Assurer une coopération efficace dans les groupes de travail 
+De manière à faciliter la coopération, différents dispositifs et outils numériques peuvent être mis en place. 
+ Au niveau des dispositifs : l’organisation en mode projet constitue une méthode de gestion 
+permettant de travailler ensemble et de coordonner différentes tâches pour répondre à un besoin 
+défini, en respectant des délais et un budget.  La mise en place de communautés de pratique peut 
+également faciliter le travail collectif. Il s’agit de dispositifs au sein desquels un groupe de personnes 
+partage un domaine d’expertise et échange autour des savoir-faire et savoir-être de chacun, en 
+transmettant leurs expériences et leurs connaissances au sein de cette communauté. 
+ Au niveau des outils numériques : de nombreux outils numériques concourent à l’efficacité du 
+travail en équipe (outils d’animation de réunion, outils de centralisation des sources de 
+communication, outils de chats, outils de gestion de projet…).  
+ 
+Par ailleurs, un nombre croissant d’entreprises recourent aux réseaux pour partager l’information. On peut 
+citer l’exemple des Réseaux sociaux d’entreprise (RSE), espaces communautaires présentant les 
+fonctionnalités classiques d'un réseau social, mais réservés aux salariés de l'entreprise (ou parfois même à 
+ses partenaires : clients, fournisseurs). Ils permettent une communication plus souple, plus vivante et 
+rapprochent les salariés parfois éloignés les uns des autres géographiquement. Ils augmentent l'efficacité des 
+salariés (recherche d'information plus simple donc plus rapide).  Le travail collaboratif peut également être 
+plus efficace avec la mise en place de communautés de pratiques dans lesquelles des personnes se réunissent 
+autour d'un projet et partagent leurs connaissances, leurs outils, leurs pratiques, leurs solutions pour résoudre 
+des problèmes.  
+
+================================================================================
+FILE: chap13.pdf
+================================================================================
+PAGES: 3
+--- page 1 ---
+1 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+ 
+Chapitre 13  Quels enjeux éthiques dans 
+l’activité des organisations ? 
+ 
+L’objectif n’est pas ici de procéder à une analyse théorique de la notion d’éthique. Il s’agit d’en donner une 
+définition élémentaire et de rappeler les évènements à l’origine du questionnement éthique dans les 
+organisations (pratiques de corruption, grandes affaires financières, etc.). Il s’agit aussi, par l’étude 
+d’exemples concrets, de montrer que l’action d’une organisation peut : 
+ Soulever des questions d’ordre éthique lorsque sa sincérité peut être questionnée (lobbying, green 
+washing, social washing, etc...), 
+ Permettre de lutter contre des pratiques posant des questions d’éthique : atteinte à la vie privée ou à 
+la dignité, discriminations au travail (mesures en faveur de l’égalité femmes-hommes, contre les 
+discriminations raciales, pour la diversité, pour la prise en compte du handicap, etc...). 
+1. Comment l’éthique dans les affaires est devenue une 
+préoccupation managériale ? 
+L’éthique est l’ensemble des valeurs ou principes fondamentaux qui vont au-delà des exigences légales de 
+la société. Elle trouve ses racines historiques  dans la pensée  philosophique de la Grèce antique. 
+ 
+L’éthique des affaires s’est imposée grâce à des groupes de pression qui ont refusé de faire des profits au 
+détriment de valeurs. Ainsi des affaires financières et des pratiques de corruption ont pu être dénoncées. Les 
+organisations, tout en poursuivant leurs propres buts, tiennent désormais compte des attentes et des 
+contraintes de l’environnement. La surveillance des organisations et la dénonciation des pratiques non 
+conformes à l’éthique sont favorisées par les réseaux sociaux.  
+ L’éthique dans les affaires, c’est-à-dire les principes éthiques dans la gestion et la conduite des 
+organisations, est ainsi devenue un enjeu managérial. Aussi, les organisations mettent en place et 
+communiquent leur système de valeurs à l’aide d’un code de déontologie ou d’une charte éthique.  
+ 
+2. Quelles sont les organisations concernées par les questions 
+éthiques ? 
+Les organisations non gouvernementales (ONG) agissent pour questionner et développer la responsabilité 
+environnementale, la consommation responsable, mais également la responsabilité sociale et sociétale. 
+Les organisations gouvernementales et territoriales, chargées de mettre en place les décisions de l’état, 
+permettent la régulation des affaires de l’État. Citons : 
+ Les administrations gouvernementales qui dépendant des ministères : hôpitaux publics, éducation 
+   
+L’essentiel 
+--- page 2 ---
+2 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+nationale, gendarmerie, police nationale… 
+ L’administration territoriale assurée par les collectivités territoriales : communes, départements, 
+régions, collectivités d’outre-mer, établissements publics de coopération intercommunale... 
+ Les entreprises publiques chargées par l’État de gérer une activité de service public : cité de la 
+musique, RATP, Comédie Française… et qui ont le statut d’établissements publics industriels et 
+commercial (EPIC). 
+Des organismes de contrôle comme la Cour des comptes sont garants de la bonne utilisation des fonds 
+publics. 
+Par extension, toutes les organisations sont concernées par les questions éthiques dans leur activité. 
+ Les questions d’ordre éthique soulevées par ces organisations concernent les pratiques de 
+lobbying, de greenwashing, de socialwashing, et de la RSE washing. Parfois la sincérité de la mise 
+en œuvre d’une démarche éthique dans les organisations, notamment concernant les principes de 
+responsabilité sociale et environnementale, est questionnée. 
+Notons que les organisations non gouvernementales jouent un rôle particulier en luttant contre les pratiques 
+posant des questions éthiques. 
+ 
+3. Quelles sont les actions mises en œuvre pour lutter contre les 
+pratiques contraires à l’éthique ?  
+ Les pratiques qui posent des questions éthiques sont le harcèlement, la discrimination dans les 
+relations de travail, l’égalité hommes-femmes, l’atteinte à la vie privée, la prise en compte du 
+handicap, la corruption et les affaires financières.  
+ 
+Mises sous pression par le législateur, les actionnaires ou les clients, les organisations savent qu’on leur 
+demande plus que la seule qualité des produits ou services qu’elles fournissent.  
+Les organisations jouent par conséquent un rôle actif pour lutter contre ces pratiques, en favorisant la 
+transparence de leurs propres pratiques, en luttant contre les pratiques de corruption, en produisant une 
+comptabilité sincère. Elles véhiculent ainsi une image transparente de leurs activités et de leurs pratiques. 
+ 
+L’éthique est devenue un enjeu de management pour les organisations, un moyen de se démarquer de 
+leurs concurrents de manière très positive tout en apportant leur soutien à une cause noble. Véhiculer des 
+valeurs et les mettre concrètement en application est devenu un enjeu stratégique pour les organisations qui 
+interviennent dans un environnement complexe, en perpétuel mouvement, dont elles doivent tenir compte. 
+ 
+4. Comment les organisations intègrent-elles des préoccupations 
+civiques ? 
+Les organisations montrent leurs préoccupations civiques par leur engagement dans des actions 
+civiques telles le mécénat et la démocratie participative :  
+ Les actions de mécénat permettent de partager des valeurs humanistes : participation à des œuvres 
+conduites en lien avec des partenaires engagés dans des actions d’intérêt général, qu’elles soient 
+sportives, sociales, éducatives, financières, culturelles, médicales et de recherche, de solidarité 
+internationale, et plus récemment environnementales. 
+--- page 3 ---
+3 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+Les trois formes principales de mécénat sont : 
+ 
+o Le mécénat financier (dons, cotisations, subventions…),  
+o Le mécénat en nature ou matériel et immatériel (mise à disposition d’équipements, de 
+brevets…) et  
+o Le mécénat de compétences ou humain (mobilisation de savoir-faire, mise à disposition de 
+compétences, bénévolat, congés solidaires, coformation, interventions…). Toutes les 
+organisations peuvent être mécènes, quelle que soit leur taille, leur activité, leur implantation. 
+Les bénéficiaires sont généralement les citoyens, mais aussi les établissements publics, les 
+ONG et les associations. 
+ 
+ Les actions de démocratie participative, ou d’implication des salariés dans la vie de l’organisation, 
+ou outils de participation citoyenne dans les organisations publiques, sont généralement menées 
+après consultation.  
+Les organisations s’appuient sur les acteurs partenaires de leur écosystème engagés dans des actions 
+d’intérêt général. Elles intègrent dans leurs actions les évolutions sociétales, environnementales et 
+comportementales des parties prenantes, c’est-à-dire des acteurs liés à leur environnement : les citoyens dans 
+les organisations publiques, les personnels, associés, clients et fournisseurs dans les organisations privées et 
+les adhérents et salariés dans les organisations non gouvernementales. 
+ 
+Pour conclure, l’action des organisations liée à l’éthique managériale ne saurait être menée sans la prise en 
+compte de toutes leurs parties prenantes. 
+ 
+5. Rendre l’information transparente 
+Les pouvoir publics peuvent obliger les organisations à adopter un comportement éthique en présentant à ses 
+parties prenantes une image transparente de son activité.  
+ 
+ La règlementation oblige les entreprises à respecter les normes comptables, c’est-à-dire un 
+ensemble de règles communes qui permettent d’uniformiser et de rationaliser la présentation des 
+informations comptables.  Les sociétés qui font appel à des investisseurs financiers sont également 
+dans l’obligation de leur présenter un certain nombre d’informations (rapport financier annuel 
+notamment).  
+ 
+ Les entreprises peuvent encore aller plus loin, en publiant chaque année par exemple le 
+document de référence (dont seule la partie financière est obligatoire, et ce uniquement pour les 
+société cotées). Il s’agit d’un document d’information présentant toutes les informations nécessaires 
+pour évaluer l’activité, la situation financière, les résultats. Ce document d’information constitue un 
+outil de communication en donnant aux parties prenantes (analystes financiers, investisseurs 
+institutionnels ou actionnaires individuels), toutes les informations juridiques, économiques, 
+financières et comptables concourant à une présentation exhaustive d’une société pour un exercice 
+donné.    
+ 
+ Au-delà de certains seuils de taille, les grandes entreprises sont également obligées de présenter 
+une déclaration de performance extra-financière qui synthétise et rend publiques toutes les 
+informations sur les actions mises en place par l’entreprise pour respecter les principes du 
+développement durable. 
+
+================================================================================
+FILE: cours-du-chapitre-47.pdf
+================================================================================
+PAGES: 6
+--- page 1 ---
+1 
+ 
+ 
+ 
+ 
+Chapitre 4  Quelles ressources humaines 
+pour produire ? 
+ 
+ 
+Les choix stratégiques des organisations ont des conséquences sur ses besoins en ressources 
+humaines. La gestion prévisionnelle des emplois et des compétences permet d’anticiper et 
+d’adapter les ressources humaines dont l’organisation aura besoin aux niveaux quantitatif et 
+qualitatif. 
+ 
+1. Prévoir les ressources humaines sur le plan quantitatif 
+pour produire 
+A. La démarche de gestion prévisionnelle des emplois et des 
+compétences 
+La gestion prévisionnelle des emplois et des compétences (GPEC)est une démarche qui 
+permet à l’organisation d’anticiper en fonction de ses choix stratégiques et de l’évolution de 
+l’environnement ses besoins en ressources humaines sur le plan quantitatif et sur le plan 
+qualitatif pour les comparer à ses ressources prévisibles et ainsi analyser les écarts afin de 
+procéder aux ajustements nécessaires.  
+ 
+La GPEC est une démarche qui se déroule en plusieurs étapes : 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+L’essentiel 
+Prévision des RH sur trois à cinq ans à partir des 
+RH actuelles en tenant compte des départs 
+prévisibles : 
+Ressources prévisionnelles des RH 
+Anticipation des besoins en RH sur trois à cinq ans 
+en fonction des choix stratégiques et des 
+évolutions de l’environnement : 
+Besoins anticipés en RH 
+Mesures d’ajustement sur le plan quantitatif :  
+recrutement – licenciement – mobilité 
+géographique – flexibilité du temps de travail... 
+Mesures d’ajustement sur le plan qualitatif :  
+formation – promotion –mobilité 
+professionnelle – flexibilité des compétences... 
+Comparaison des besoins par rapport aux ressources  
+Diagnostic des écarts sur les plans quantitatif et qualitatif 
+Stratégie de 
+l’organisation 
+Changements 
+technologiques 
+Évolution 
+démographique 
+Évolution des 
+compétences 
+ 
+   
+ : 
+L’essentiel 
+--- page 2 ---
+2 
+ 
+B. L’anticipation des besoins en ressources humaines futurs sur 
+le plan quantitatif 
+La GPEC s’établit en fonction des contraintes de l’environnement et des choix stratégiques de 
+l’organisation. Pour cela, l’organisation va anticiper les effectifs dont elle aura besoin selon la 
+stratégie envisagée. Cette analyse quantitative lui permet de se préparer afin de détenir les 
+effectifs qui lui seront nécessaires. 
+C. L’évaluation des ressources humaines prévisibles sur le plan 
+quantitatif 
+L’organisation va projeter ses ressources humaines dans le futur pour connaître ses ressources 
+quantitatives prévisibles. Pour cela, elle utilise des indicateurs sociaux afin de prévoir 
+l’évolution de son effectif, tels que le taux de rotation du personnel ou la répartition par 
+tranches d’âge dans une pyramide des âges, en tenant compte des événements suivants : les 
+départs à la retraite, les fins de contrats, les recrutements, les démissions, les licenciements, 
+les salariés à temps partiel… 
+2. Prévoir les ressources humaines sur le plan qualitatif 
+pour produire 
+A. L’anticipation des besoins en ressources humaines futurs sur 
+le plan qualitatif 
+ Sur le plan qualitatif, l’organisation doit anticiper les qualifications et les 
+compétences dont elle aura besoin pour réaliser ses choix stratégiques en tenant 
+compte de l’évolution de son environnement. 
+ 
+Cette analyse qualitative lui permet de se préparer afin de détenir les compétences qui lui 
+seront nécessaires. 
+ 
+ La qualification désigne l’ensemble des diplômes, titres ou certifications qui sont 
+requis pour l’accès à un emploi. Elle est sanctionnée par un niveau de formation et 
+justifiée par son expérience professionnelle. Cependant, la qualification ne prend pas 
+en compte les compétences mises en œuvre au travail. 
+ 
+ La compétence repose sur la combinaison du savoir (l’ensemble des connaissances), 
+du savoir-faire (la capacité à mettre en œuvre les savoirs) et du savoir-être (l’ensemble 
+des attitudes comportementales) d’un salarié dans une situation de travail. 
+ 
+En plus des compétences techniques, les organisations recherchent aussi des 
+compétences comportementales appelées soft skills, qui sont des compétences douces, non 
+techniques, transversales, comme la créativité, l’esprit critique, l’aptitude à travailler en 
+équipe ou la curiosité qui relèvent du savoir-être de l’individu. 
+ 
+De plus en plus recherchées, ces compétences comportementales permettent d'améliorer la 
+performance des organisations. 
+--- page 3 ---
+3 
+ 
+ 
+B. L’évaluation des ressources humaines prévisibles sur le plan 
+qualitatif 
+D’un point de vue qualitatif, les ressources humaines sont évaluées pour connaître les 
+compétences dont dispose l’organisation. Pour cela, l’organisation peut réaliser des entretiens 
+professionnels de ses salariés afin d’établir : 
+ 
+– un référentiel de compétences qui répertorie l’ensemble des compétences 
+détenues par les membres de l’organisation ; 
+– une cartographie des métiers qui présente une vue d’ensemble des métiers 
+exercés au sein de l’organisation. 
+3. Adapter les ressources humaines à la stratégie 
+Une fois que l’organisation a estimé ses besoins en ressources humaines et analysé les 
+ressources futures dont elle pourra disposer sur les plans quantitatif et qualitatif, elle va devoir 
+les comparer et mettre en œuvre un plan d’actions afin de réduire les écarts entre les 
+ressources et les besoins. 
+A. L’adaptation des ressources humaines sur les plans quantitatif 
+et qualitatif 
+1. L’adaptation des ressources humaines sur le plan quantitatif 
+Sur le plan quantitatif, l’organisation a la possibilité de faire augmenter ou diminuer son 
+effectif. 
+Pour cela, elle dispose de plusieurs mesures d’ajustement : 
+ 
+ elle peut augmenter ses effectifs grâce au recrutement. Le recrutement est un 
+processus en plusieurs étapes qui va permettre de trouver un candidat correspondant 
+aux besoins de l’organisation  
+ 
+ à l’inverse, elle peut réduire ses effectifs en ayant recours à des ruptures 
+conventionnelles, à des licenciements économiques ou bien grâce à des départs 
+naturels liés à la retraite  
+ 
+ elle peut également utiliser la mobilité géographique pour adapter ses ressources 
+humaines à ses besoins de production ou de variations d’activité suivant ses 
+différentes implantations géographiques. 
+2. L’adaptation des ressources humaines sur le plan qualitatif 
+Sur le plan qualitatif, l’organisation cherche à faire évoluer les compétences de ses 
+ressources humaines. Pour faire évoluer les compétences, l’organisation peut recourir à 
+plusieurs dispositifs : 
+ 
+--- page 4 ---
+4 
+ 
+ elle peut mettre en place des actions de formation. La formation est un 
+investissement immatériel permettant de maintenir et de développer les compétences 
+des ressources humaines ; 
+ 
+ elle peut également utiliser le tutorat pour faciliter la transmission des compétences 
+au sein de l’organisation  
+ 
+ elle peut avoir recours à la promotion professionnelle pour faire évoluer ses salariés 
+vers des postes plus qualifiés et développer leurs compétences. 
+B. Le développement de nouvelles formes de travail pour 
+accroître la flexibilité 
+Pour s’adapter à leur environnement et répondre aux besoins des salariés, les organisations 
+mettent en place de nouvelles relations de travail dans lesquelles le numérique va être un 
+facilitateur en rendant notamment possible le travail à distance à domicile (le télétravail), dans 
+des espaces de travail collaboratif (coworking) ou chez les clients. 
+1. Un besoin de flexibilité quantitative 
+Ces nouvelles relations de travail permettent d’adapter les ressources humaines aux variations 
+quantitatives de l’activité : 
+ 
+ La flexibilité du temps de travail : recours au temps partiel, aux heures 
+supplémentaires, à l’annualisation du temps de travail...  
+ 
+ la flexibilité des effectifs : recours aux CDD, aux intérimaires, mise en place de 
+partage de poste de travail, recours à la sous-traitance ou à la franchise… 
+2. Un besoin de flexibilité qualitative 
+Ces nouvelles relations de travail permettent d’adapter les ressources humaines au niveau 
+qualitatif à travers la flexibilité des compétences avec le développement de la polyvalence des 
+salariés ou le recours à la mobilité professionnelle comme le changement de métier. 
+ 
+C. Les enjeux de performance économique 
+ La performance économique d’une organisation est étroitement liée à la manière 
+dont elle gère ses effectifs mais aussi son capital humain, c’est-à-dire l’ensemble des 
+aptitudes et des talents qui rendent les salariés plus productifs.  
+ 
+Face aux évolutions de leurs environnements (politique, économique, sociologique, 
+technologique, écologique et légal), les organisations doivent anticiper leurs besoins en 
+matière d’emplois, d’effectifs et de compétences pour maintenir, voire développer leur niveau 
+de performance, de compétitivité et accompagner les changements auxquels leurs salariés sont 
+confrontés.  
+ 
+ Le capital humain est un facteur clé qui contribue fortement au développement et à 
+la pérennité des organisations sur leur marché. À ce titre, il convient d’optimiser les 
+
+================================================================================
+FILE: cours-du-chapitre-49.pdf
+================================================================================
+PAGES: 4
+--- page 1 ---
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+ 
+Chapitre 1 Quels produits ou quels 
+services pour quels besoins  
+ 
+I. Comment mettre en place une démarche marketing ? 
+A. La collecte d’informations pour une veille commerciale ou marketing 
+L’organisation choisit les biens ou services qu’elle va produire en fonction de ses finalités  ; elle doit 
+avoir une connaissance des marchés sur lesquels elle évolue. L’organisation possède et recherche des 
+informations sur les consommateurs ou usagers, et sur ses concurrents.  
+Cette recherche d’informations a pour nom la veille commerciale, c’est-à-dire l’activité de surveillance 
+et d’analyse du marché pris dans son ensemble (l’offre, la demande, la distribution). Cette veille 
+commerciale a recou rs à différents outils numériques de recueil et de traitement de l’information et 
+peut se saisir des possibilités offertes par l’analyse des données massives (bigdata).  
+ 
+ Le bigdata, ou mégadonnées, désigne des ensembles de données devenus si volumineux qu’ils 
+dépassent l’intuition et les capacités humaines d’analyse, et même celles de certains outils 
+informatiques classiques de gestion de base de données ou de l’information.  
+ 
+B. L’approche marketing découle de cette veille commerciale 
+La définition de l’offre proposée est du ressort du marketing. L’objectif du marketing est d’aider à 
+répondre à un besoin non satisfait par une offre, que ce besoin soit exprimé ou non par le 
+consommateur (client ou usager). Les choix marketing doivent êtr e cohérents avec les orientations 
+stratégiques, en particulier quand l’organisation dispose d’avantages concurrentiels. On distingue alors 
+les approches réactive, anticipative, proactive ou médiatrice : 
+ 
+ L’approche réactive : l’entreprise identifie un besoin exprimé, puis le satisfait. L’offre est 
+conçue en réaction aux offres concurrentes ou en réaction aux demandes exprimées par le 
+consommateur. Exemple : le yaourt nature. 
+ 
+ L’approche anticipative  : l’entreprise détecte un besoin non encore exprimé pa r le 
+consommateur et conçoit une offre de nature à favoriser l’émergence, le développement et la 
+commercialisation d’un produit pour répondre à ce besoin latent. Exemple : le smartphone. 
+ 
+ L’approche proactive  : l’entreprise recherche une solution à propose r aux clients afin de 
+créer un nouveau besoin (forcément non exprimé) sur un nouveau marché (innovation 
+radicale). Exemple : la montre connectée. 
+ 
+   
+ 
+L’essentiel 
+--- page 2 ---
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ L’approche médiatrice : L’entreprise recherche la participation du client dans la création de 
+la valeur de l’o ffre, soit en impliquant directement le client, soit en observant ses 
+comportements. Exemple : les sneakers personnalisés. 
+ 
+II. Comment mettre en place un produit et mesurer la 
+réussite de la démarche marketing ? 
+La démarche marketing permet d’orienter l’entreprise quant aux décisions stratégiques à prendre. Ces 
+décisions stratégiques sont risquées, portent sur le long terme, et sont irréversibles. Elles mettent en 
+jeu la pérennité de l’entreprise  ; la performance commerciale et financ ière de l’entreprise peut être 
+analysée grâce aux documents comptables que sont le compte de résultat et le bilan.  
+La démarche marketing consiste à détecter les besoins et les tendances du marché pour y répondre en 
+élaborant une offre adaptée. La démarche marketing comprend plusieurs étapes : 
+ 
+ Connaître le marché : études de marché, veille commerciale, big data  
+ 2. Identifier des besoins  
+ 3. Concevoir une offre qui satisfait les besoins repérés. 
+ 
+Les choix marketing de l’entreprise vont déterminer son offre, c’est-à-dire les biens et les services 
+qu’elle va commercialiser. Les choix marketing de l’entreprise ont donc une dimension stratégique, ils 
+doivent être cohérents avec :  
+ 
+ les finalités de l’entreprise  
+ les orientations stratégiques de l’entreprise  
+ les avantages concurrentiels de l’entreprise. 
+ 
+Document 1 : La démarche Marketing 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+--- page 3 ---
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+Document 2 : Les différents types d’études 
+ 
+ 
+ 
+A. Pour les organisations publiques et les associations, la valeur créée 
+repose sur la valeur sociale. 
+La performance sociale désigne les résultats en termes de bien-être des différentes parties-prenantes de 
+l’organisation. Elle cherche à améliorer la réputation d’une entreprise (comme l’image de marque 
+externe), le travail d’équipe, les rapports hiérarchiques. Quelques outils permettent d’évaluer cette 
+performance sociale  : le taux de départ dans l’entreprise, l’absentéisme,  la détermination du 
+pourcentage de salariés intérimaires et des salariés en contrat à durée déterminée.  
+ 
+III. Quel est le rôle de l’innovation dans le choix et 
+l’adaptation du modèle économique ? 
+L’innovation occupe une place primordiale dans le processus de production. Elle peut porter sur le 
+bien ou le service. Elle peut également porter sur un ou plusieur s aspects du modèle économique, 
+notamment celui des modalités de mise à disposition d’un produit et celui de fixation du prix.  
+L’innovation désigne l’introduction sur le marché d’un produit ou d’un procédé nouveau ou 
+significativement amélioré par rapport à ceux précédemment élaborés par l’unité légale. Deux types 
+d’innovation sont ainsi caractérisés : les innovations de produits ou de procédés 
+ 
+ L’innovation de produit  inclut les changements significatifs de design et les biens ou 
+services numériques. Elle correspond à la mise au point et/ou la commercialisation d’un 
+produit nouveau (bien ou service) ou d’un produit existant mais incorporant une nouveauté.  
+ 
+ L’innovation de procédés  concerne la production et les méthodes de développement, la 
+logistique et la distribution, le système d’information et de communication, le marketing, la 
+tarification et le service après-vente.  
+ 
+La transformation numérique a contraint les entreprises à adapter leurs activités, et l’environnement 
+incertain, prop ice à l’émergence de concurrents inattendus, a entraîné l’émergence de nouveaux 
+
+--- page 4 ---
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+modèles économiques :  
+ Les modèles économiques de plateformes  : ils reposent sur une digitalisation de la mise en 
+relation entre acheteurs et des vendeurs. Les premières plateformes se caractérisaient par un 
+modèle classique «  biface » de mise en relation entre des acheteurs et des vendeurs, mais 
+depuis quelques années, ces plateformes se sont enrichis et sont devenus «  multifaces ». En 
+effet, certains sites permettant l’a ppariement entre deux agents (vendeur et acheteur par 
+exemple), peuvent monétiser leurs plateformes grâce à de la publicité ou du contenu optionnel. 
+ 
+ Les modèles économiques low cost : le modèle économique low cost repose principalement 
+sur une option stra tégique qui est la domination par les coûts, et permet l’offre d’un bien ou 
+service à tarif concurrentiel. Pour cela, l’entreprise se concentre sur un cœur de métier et 
+facture les options additionnelles à un prix supérieur au coût marginal qu’il coûte.  
+ 
+ Les modèles de gratuité : ce modèle a eu un succès retentissant dans la sphère numérique. Il 
+permet aux usagers ou consommateurs de ne pas payer un service, cependant le coût de ce 
+modèle est financé grâce à un autre acteur intéressé par la masse importante d’utilisateurs. Les 
+entreprises par exemple en profitent pour communiquer sur leurs produits grâce à la publicité. 
+C’est le cas de YouTube par exemple.  
+ 
+ Le freemium est une stratégie commerciale par laquelle un produit ou un service est proposé 
+gratuitement, en libre accès. Cette stratégie est destinée à attirer dans un premier temps un 
+grand nombre d’utilisateurs. L’entreprise cherchera ensuite à convertir ces  utilisateurs en 
+clients en les incitants à payer pour un service complémentaire. Souvent ce se rvice 
+complémentaire sera de meilleure qualité, ou dépourvu de publicités. 
+ 
+
+================================================================================
+FILE: cours-du-chapitre-50.pdf
+================================================================================
+PAGES: 4
+--- page 1 ---
+1 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+ 
+ 
+Chapitre 2 Comment créer de la valeur et la 
+mesurer ? 
+ 
+1. Analyser le modèle économique d’une organisation 
+A. L’innovation de produits 
+L’innovation occupe une place primordiale dans le processus de production d’une organisation. L’innovation 
+peut porter sur le bien ou le service. Il convient de distinguer : 
+ 
+ l’innovation de nouveaux produits  
+ les améliorations de produits existants  
+ l’intégration de services à l’offre de biens 
+ 
+De nombreuses organisations ont développé leur production en proposant non pas de nouveaux produits, mais 
+en adaptant leur modèle économique sur un ou plusieurs de ses aspects. 
+ 
+B. Le modèle économique 
+La notion de modèle économique (ou BUSINESS MODEL : BM, ou encore modèle d’affaires) est apparue 
+dans les années 90, essentiellement pour expliquer les modèles des start-up. Aujourd’hui, ce terme est utilisé 
+pour tout projet entrepreneurial. Un modèle économique décrit de façon détaillée de quelle manière une 
+organisation fonctionne et va gagner de l’argent.  
+ 
+ Chaque modèle économique présente des avantages et des limites, notamment en matière de 
+génération de revenus. En conséquence, une organisation peut opter pour plusieurs modèles 
+économiques et ainsi diversifier ses sources de revenus, ses offres aux différentes cibles. Air France a 
+par exemple une activité traditionnelle et une activité low cost, Hop. 
+ 
+La réflexion sur le modèle économique est essentielle pour la création et la croissance d’une organisation. En 
+effet, le BM permet de concrétiser le projet de l’entrepreneur, de comprendre le fonctionnement global de 
+l’activité de l’organisation, de s’interroger sur la réelle réponse aux besoins d’un client/usager et sur sa 
+capacité à se démarquer des concurrents (par sa nouveauté notamment). Un modèle économique formalisé 
+permettra davantage au projet de création d’aboutir. Il permet également de convaincre les partenaires clés 
+(investisseurs, banquiers, fournisseurs, collaborateurs…). 
+ 
+Enfin, un modèle économique n’est pas figé : il est amené à évoluer et accompagne le développement de 
+l’organisation. À ce titre, la place de l’innovation est primordiale dans le BUSINESS MODEL. Elle permet 
+d’adapter, de faire évoluer le modèle économique : développer la production, s’inscrire en rupture avec les 
+concurrents, trouver de nouveaux relais de croissance…  Le modèle économique (ou business model) de l’organisation décrit la façon dont elle crée de la valeur et 
+   
+L’essentiel 
+--- page 2 ---
+2 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+s’organise pour la créer. Il convient de distinguer les trois composantes du modèle économique   
+ 
+ 1. La proposition d’une offre de valeur aux clients (quelle offre ? à qui s’adresse cette offre ?).   
+Qui ? Quoi ? Description de la proposition de valeur (produits, clients, prix)  
+ 
+ 2. L’organisation mise en place pour produire et distribuer cette proposition (comment s’organiser ?) : 
+ à partir des ressources internes (chaîne de valeur) 
+ à l’aide d’un réseau de partenaires externes (réseau de valeur)  
+Comment ? Description du mécanisme de création de valeur (activités mises en œuvre, partenaires clés, 
+ressources nécessaires)  
+ 
+ 3. La rentabilité du modèle qui concerne la valeur captée, c'est-à-dire la différence entre les revenus 
+générés par l’offre proposée et les coûts engagés pour la produire et la distribuer.   
+Combien ? Description du mode de génération des revenus (chiffre d’affaires, coûts, profit attendu).Lors du 
+projet de création de l’organisation, il faut choisir son modèle économique. Le créateur du projet d’organisation 
+a le choix entre un grand nombre de modèles, dont voici les principaux : 
+ 
+L’innovation de modèle économique consiste à adapter le modèle en le présentant différemment, en le 
+proposant à un autre public, en démocratisant son accès. Dans un environnement de moins en moins prévisible 
+propice à l’émergence de concurrents inattendus, de nouveaux modèles économiques en rupture avec les 
+« standards habituels » (nouvelles modalités de mise à disposition du bien, de fixation du prix…) apparaissent, 
+tels que les modèles économiques de plateformes, les modèles économiques low-cost, les modèles de gratuité, 
+les modèles freemium… 
+ 
+2. Identifier les indicateurs de création de valeur 
+Comme vu précédemment, le modèle économique d’une organisation se base notamment sur la proposition de 
+valeur. Un produit ne sera proposé que s’il est susceptible de créer de la valeur. Avant de lancer son activité, le 
+créateur doit donc s’assurer que son (ou ses) produit(s) est (sont) susceptible(s) de créer de la valeur. Pour un projet 
+d’entreprise, un compte de résultat prévisionnel est notamment établi. Ce document permet de lister tous les produits 
+et charges prévus pour les trois premières années d’existence et de mesurer les indicateurs de la création de valeur 
+attendue. Ce document est basé sur des prévisions, la création de valeur estimée est donc incertaine. Il est en effet 
+possible de mal détecter les besoins des clients (mauvaise évaluation des ventes), de se tromper dans l’estimation des 
+charges…  
+ 
+ Sur le plan financier, la création de valeur consiste, pour une entreprise, à générer des flux permettant 
+de garantir une rentabilité. Pour un projet d’entreprise, elle peut se mesurer grâce à la valeur ajoutée 
+(VA), à partir du compte de résultat prévisionnel. En effet, la VA mesure le supplément de richesse 
+qu’une entreprise apporte aux biens et aux services qu’elle se procure auprès de ses fournisseurs. C’est 
+donc en ce sens qu’elle évalue la création de valeur.  
+VA= Marge commerciale +Production de l’exercice  – Consommations en provenance des tiers  
+Grâce au compte de résultat prévisionnel, un deuxième indicateur de création de valeur peut également être 
+calculé : le résultat prévu.  Résultat= Produits – Charges  
+--- page 3 ---
+3 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+Dans les organisations publiques et les organisations de la société civile, la création de valeur s’évalue au 
+niveau financier plutôt en termes de couverture des coûts, d’équilibre budgétaire (égalité entre les recettes et les 
+dépenses). La mesure de la valeur créée doit également être appréhendée dans une dimension sociale, plus 
+difficile à chiffrer. Elle se base par exemple sur des indicateurs plus qualitatifs : résultats d’enquête de 
+satisfaction sur la prise en compte des besoins des usagers, des citoyens, des fonctionnaires, des bénévoles… 
+ 
+Un produit ne sera mis sur le marché ou proposé à des usagers que s’il permet de créer de la valeur, c'est-à-dire 
+des flux permettant de garantir une rentabilité ou, selon les types d’organisation, une couverture des coûts ou un 
+équilibre budgétaire. 
+A. La création de valeur et sa mesure dans les entreprises 
+Dans les entreprises, la création de valeur se mesure à l’aide d’indicateurs financiers extraits du bilan et du 
+compte de résultat. 
+Les indicateurs de création de valeur que l’on peut calculer à partir du bilan comptable sont par exemple : 
+ 
+ La valeur patrimoniale qui correspond à sa valeur financière. Elle se calcule en soustrayant les dettes à 
+l’actif au bilan 
+ 
+ La rentabilité économique qui mesure la performance d'une entreprise à créer de la valeur en comparant le 
+résultat d’exploitation issu de son activité aux moyens mise en œuvre (capitaux propres + endettement) pour 
+générer ce résultat. Elle se calcule en divisant le résultat d’exploitation par l’ensemble des capitaux engagés 
+(capitaux propres + dettes financières nettes). 
+Les indicateurs de création de valeur que l’on peut calculer à partir du compte de résultat sont, par 
+exemple 
+ 
+ La valeur ajoutée, indicateur économique de richesse d’une entreprise qui mesure le supplément de 
+valeur qu’elle est capable d’apporter à un bien ou à un service (provenant d’un tiers) grâce à son 
+activité. Elle se calcule en soustrayant les consommations intermédiaires au chiffre d’affaires  
+o  
+ le résultat d’exploitation concerne le résultat dégagé par l’activité de l’entreprise. Il se calcule par 
+différence entre les produits d’exploitation et les charges d’exploitation  
+ 
+Le résultat net comptable se compose du résultat d'exploitation, du résultat financier et du résultat 
+exceptionnel auxquels il faut retirer l’impôt sur les sociétés et la participation des salariés. Il représente 
+la différence entre l’ensemble des produits et des charges de l’entreprise. Il se trouve également dans les 
+capitaux propres de l’entreprise. 
+B. La création de valeur et sa mesure dans les organisations publiques et 
+les organisations de la société civile 
+Dans les organisations publiques et les organisations de la société civile, il est parfois difficile de mesurer la 
+création de valeur à l’aide d’indicateurs purement financiers compte tenu de leur finalité non lucrative. La 
+mesure de la valeur créée est alors basée sur des indicateurs sociaux (ex. : taux de satisfaction des usagers, 
+volume de déchets recyclés…). 
+ 
+La création de valeur est néanmoins incertaine car elle dépend de la capacité de l’organisation à détecter les 
+besoins des clients et des usagers, et à y répondre de manière durable. 
+--- page 4 ---
+4 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+ 
+3. Quels sont les nouveaux modèles économiques liés à la transformation numérique? 
+ 
+Avec la transformation numérique, de nouveaux modèles économiques sont apparus ou certains se sont modernisés. 
+En effet, les organisations doivent faire face quotidiennement à un environnement de moins en moins prévisible, qui 
+fait parfois apparaître de nouveaux concurrents. Les modèles économiques de ces concurrents inattendus se 
+démarquent par leur rupture avec les modèles standards : bouleversement de l’offre, du prix, des coûts…  Quatre modèles économiques issus de la transformation numérique peuvent être identifiés. 
+ 
+ Modèles de gratuité: dons, publicité. Exemples : Wikipédia, Facebook, Google…Ces BM 
+proposent un contenu gratuit à l’utilisateur. Les revenus générés proviennent de sommes d’argent 
+données par la communauté (tiers, usagers), de la monétisation des données personnelles des 
+utilisateurs et/ ou de la commercialisation d’espaces publicitaires payés par les annonceurs. Ils sont 
+adaptés à la transformation numérique, car ils nécessitent un grand nombre d’utilisateurs pour être 
+performants. 
+ 
+ Modèle freemium. Exemples : certaines applications de jeux, Le Bon Coin, Yuka…Ce BM 
+propose un premier produit gratuit permettant d’attirer un grand nombre d’utilisateurs. Pour 
+générer des revenus, l’organisation cherche à transformer ces utilisateurs en clients en 
+proposant un produit plus enrichi et payant. C’est donc un modèle mi- gratuit mi- payant. 
+Contraint à attirer un très grand nombre d’utilisateurs, ce BM est également bien adapté à la 
+transformation numérique. 
+ 
+ Modèle low cost. Exemples : EasyJet, OuiGo, Hop, Electro Dépôt, Dacia…  Ce BM est basé sur une offre de produits standards et épurés grâce à une redéfinition des besoins des 
+clients vers plus de simplicité. Les coûts supportés par l’organisation sont ainsi fortement réduits. 
+Cela permet de proposer des prix beaucoup plus bas. Les fonctions secondaires du produit sont 
+payantes. La transformation numérique accompagne ce type de BM en permettant notamment de 
+réduire les coûts. 
+ 
+ Plateformes. Exemples : Uber, Airbnb, BlaBlaCar, Vinted…  Ce BM consiste à mettre en relation des acheteurs et des vendeurs et à se rémunérer grâce à une 
+commission sur leurs transactions. La transformation numérique a permis de développer ce type 
+de BM car elle facilite beaucoup la mise en relation des acheteurs et des vendeurs. 
+ 
+
+================================================================================
+FILE: cours-du-chapitre-51.pdf
+================================================================================
+PAGES: 5
+--- page 1 ---
+1 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+ 
+Chapitre 5 Quels choix d’organisation de la 
+production pour concilier qualité et 
+flexibilité ? 
+ 
+ 
+1. Comment l’innovation et la flexibilité peuvent-elles être 
+obtenues ? 
+A. L’innovation de procédés 
+L’innovation de procédé consiste à adopter de nouvelles méthodes de production ou de 
+distribution. Ces innovations permettent aux organisations de gagner en productivité et de 
+leur assurer davantage de flexibilité. Des innovations portant sur les méthodes de production 
+peuvent par exemple leur permettre de produire à un moindre coût tandis qu’une innovation 
+sur la façon de distribuer leur produit peut leur permettre de conquérir une nouvelle clientèle.  
+L’innovation peut prendre différentes formes : 
+ 
+– l’innovation de produit : l’introduction d’un bien ou d’un service nouveau 
+présentant une rupture radicale ou majeure (innovation de rupture comme l’Internet) 
+ou enrichissant l’existant grâce à ses caractéristiques sans le remettre en cause (on 
+parle d’innovation incrémentale comme la souris sans fil)  
+ 
+– l’innovation de procédé : la mise en œuvre d’une nouvelle méthode de production 
+ou de distribution qui implique des changements significatifs dans les techniques, le 
+matériel et/ou le logiciel utilisés. 
+B. Les avantages de l’innovation de procédés 
+La mise en place d’une démarche innovation est un processus indispensable qui permet à 
+l’entreprise d’assurer son développement en lui procurant un avantage concurrentiel. En effet, 
+l’innovation va permettre à l’entreprise d’améliorer ses performances internes, de s’adapter à 
+son environnement, de gagner en compétitivité, de conquérir de nouveaux clients et de se 
+distinguer des concurrents. 
+L’innovation de procédés a pour avantages de rendre l’entreprise : 
+ 
+– productive en utilisant au mieux les ressources dont elle dispose pour fabriquer ses biens et 
+ses services ; 
+ 
+   
+ 
+ L’essentiel 
+--- page 2 ---
+2 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+– flexible en répondant rapidement aux fluctuations de la demande et aux évolutions de 
+l’environnement. 
+ 
+Remarque : Joseph Schumpeter distingue cinq types d’innovations : un nouveau produit, 
+une nouvelle matière première, une nouvelle organisation, un nouveau marché, une nouvelle 
+méthode de production. 
+ 
+C. Des choix stratégiques d’organisation de la production 
+Pour rechercher la flexibilité et mettre en place des innovations de procédés, les 
+organisations vont choisir entre différentes stratégies d’organisation de la production. 
+ L’organisation peut choisir un mode de fabrication unitaire. Dans ce cas, elle va 
+produire les biens unité par unité. La production ne permettra pas de réaliser des 
+volumes élevés. Cependant ce mode de fabrication permet une personnalisation forte 
+du produit ainsi qu’une fabrication de qualité. Ce mode est donc particulièrement 
+adapté aux produits à forte valeur ajoutée ((exemples : un avion, un barrage, un film, 
+biens de luxe…). 
+ L’entreprise peut faire le choix d’une production en série. Cela signifie qu’elle va 
+produire un bien en grandes quantités. Pour produire en série, l’entreprise va être 
+amenée à investir dans des ressources matérielles (machines…) et à mettre en place 
+une organisation du travail particulière (division du travail). L’avantage réside dans la 
+baisse du coût de production puisqu’elle produira plus de quantités, et donc en 
+réduisant ses coûts. 
+ Une organisation peut choisir de produire un bien de façon continue ou discontinue. 
+Pour cela, elle devra arbitrer en fonction de ses besoins et de son environnement. 
+Produire de manière continue peut se justifier s’il existe une demande particulière pour 
+ses biens et services (aires d’autoroute) ou si cela répond à une contrainte de 
+l’organisation (centrale nucléaire).  
+L’organisation continue de la production va engendrer des contraintes spécifiques 
+(travail de nuit, abstreinte…). Produire de manière discontinue nécessite de mener une 
+réflexion stratégique sur les horaires de fonctionnement de l’entreprise en essayant de 
+coller aux attentes des clients tout en proposant des horaires satisfaisants pour le 
+personnel.  
+Un service est un produit qui n’est pas stockable. Lors de sa production, le client joue un rôle 
+prépondérant. En effet, il détermine en partie la qualité du service. Un coiffeur, par exemple, a 
+besoin d’une description précise des envies du client pour réaliser une prestation aboutie. 
+Avec le développement des nouvelles technologies, les plateformes en ligne réservent une 
+place importante au client dans la réalisation du service (Vinted, PAP…). 
+Les modes de production diffèrent selon la nature du produit  
+ 
+ La fabrication en petites et moyennes séries : les opérations de production réalisent 
+des produits identiques (exemple : machine outils…)  
+ 
+--- page 3 ---
+3 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ La fabrication en grande série (appelée aussi production de masse) : les opérations de 
+production réalisent un grand nombre de produits identiques (exemples : 
+électroménager, journaux…)  
+ 
+ La fabrication en continu : la production est effectuée par opérations successives sans 
+interruption ou presque afin de ne pas remettre en cause l’intégrité du produit 
+(exemples : la production d’acier, la production d’électricité nucléaire, la production 
+pétrolière, les boissons…)  
+ 
+ La fabrication en discontinu : le processus de production peut être interrompu avant 
+d’aboutir au produit fini (exemple : smartphones). 
+D. Les caractéristiques de la production de services 
+La production de services consiste à fabriquer un produit immatériel. Le processus de la 
+production de services englobe aussi plusieurs étapes (approvisionnement, fabrication, 
+distribution) et la consommation de ressources humaines, matérielles et financières. 
+ 
+La production de services possède des caractéristiques spécifiques 
+ 
+ Le service est une prestation de travail non stockable (exemple : une coupe de 
+cheveux chez un coiffeur)  
+ 
+ Le client participe à la production du service en réalisant certains actes de la 
+production : il fournit l’information nécessaire, coopère, exécute certains actes 
+(exemple : dans un restaurant, le client réalise certains actes de production comme le 
+fait de prendre un plateau…)  
+ 
+ Le service est parfois consommé en même temps qu’il est produit. 
+  
+Le choix d’un mode de production pour adapter l’offre aux besoins 
+Avec les nouvelles technologies et la dématérialisation des documents, certaines étapes de la 
+production d’un service peuvent être automatisées dans le cadre d’un workflow (flux de 
+travaux) afin d’améliorer la productivité. 
+ 
+La production de services présente des particularités en matière de mode de production. Ainsi, 
+le workflow ou « flux de travaux » est un outil informatique qui permet d’automatiser un 
+processus ou une procédure comprenant des tâches successives et des flux d’informations 
+correspondants.  
+Il est alors possible, pour tous les acteurs du processus, de visualiser les tâches à accomplir et 
+d’utiliser les documents correspondants à ces tâches.  
+L’organisation gagne en productivité et en performance en termes de délais et de qualité car le 
+workflow permet d’une part de réduire les temps d’exécution des tâches et de traitement de 
+l’information et d’autre part de diminuer les risques d’erreurs. 
+--- page 4 ---
+4 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+Remarque : les auteurs P. Eiglier et E. Langeard ont proposé en 1987 de nommer le 
+processus de création d’un service la « servuction ». C’est un néologisme contractant les 
+mots « service » et « production ». La servuction peut se définir comme l’ensemble des 
+opérations constitutives du processus de création du service. Il faut retenir le principe 
+suivant : le client est systématiquement impliqué dans l’élaboration du service. De plus, la 
+valeur du service n’est réelle que parce que le client consomme ce service. Exemple : une 
+place d’avion ou une nuit d’hôtel sont des services perdus à tout jamais que l’on ne pourra 
+pas représenter le lendemain à un autre client. À l’inverse, une voiture non vendue peut être 
+stockée et présentée à la vente à d’autres clients potentiels. 
+ 
+2. Comment la chaine logistique participe-t-elle à la création de 
+valeur ? (Supply chain management) 
+La gestion de la chaîne logistique (appelée supply chain management) mobilise des 
+ressources et des méthodes destinées à piloter le plus efficacement possible la chaîne globale 
+d’approvisionnement, du premier fournisseur jusqu’au client final, afin de maîtriser les délais, 
+les coûts et de garantir la traçabilité des produits. Pour l’organisation, l’optimisation des flux 
+logistiques (d’informations et physiques) est une réelle source de création de valeur. 
+La logistique, c’est-à-dire l’organisation de la chaîne d’approvisionnement d’une 
+organisation, notamment la gestion de l’ensemble de ses flux physiques et informationnels, 
+permet à l’organisation de gagner en efficacité. La logistique permet en effet de rationaliser 
+les flux au sein d’une organisation et de diminuer les coûts de transport, les pertes 
+d’information… 
+ L’organisation peut choisir de produire en flux poussés. Une production en flux 
+poussés signifie que l’approvisionnement en matières premières et le centre de 
+production commandent le niveau de stocks de l’entreprise. Le rôle des commerciaux 
+est alors d’écouler les stocks de l’entreprise.  
+Cette approche logistique nécessite de mettre en place des stocks importants, ce qui engrange 
+des coûts. Elle convient bien aux produits facilement stockables et repose sur la capacité des 
+commerciaux à susciter l’achat du consommateur. 
+ 
+ L’organisation peut choisir de produire en flux tendus. Dans cette approche, c’est 
+le client qui est à l’origine de la production en faisant une commande. L’organisation 
+va alors commencer la production du bien qui sera expédiée directement au client sans 
+être stockée.  
+Cette approche a l’avantage d’éviter les stocks et de permettre une production plus 
+personnalisée. L’inconvénient réside dans le décalage entre la commande du client et son 
+obtention du bien. 
+ 
+ 
+
+================================================================================
+FILE: cours-du-chapitre-52.pdf
+================================================================================
+PAGES: 4
+--- page 1 ---
+1 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+ 
+ 
+Chapitre 6 Pourquoi contrôler les coûts ? 
+ 
+ 
+Le contrôle des coûts est indispensable dans la mesure de la performance d’une entreprise. Ce contrôle 
+permet de mesurer la rentabilité d’un produit et de voir dans quelle mesure il contribue à couvrir certaines 
+charges de l’entreprise. Il est aussi essentiel, aujourd’hui, de mesurer l’impact de la prise en compte du 
+développement durable sur le coût des produits. 
+ 
+1. Comment le contrôle des coûts participe-t-il à la performance 
+d’une entreprise ?  
+L’évaluation de la performance se mesure notamment grâce au contrôle des coûts. Les méthodes et les choix 
+de charges retenues pour le calcul d’un coût dépendent du contexte de l’organisation et de ses objectifs. 
+Aucune organisation n’échappe à la question du suivi de ses coûts. Pour analyser les coûts qui sont un 
+ensemble de charges, nous devons caractériser quatre types de charges : 
+ 
+ Charges directes : elles ne concernent qu’un seul produit ou fonction. 
+ Charges indirectes : elles doivent être analysées en détail pour être imputées aux articles concernés. 
+ Charges fixes : elles sont supportées par l’entreprise quelque soit son activité. 
+ Charges variables : elles évoluent en fonction des volumes fabriqués. 
+ 
+A. La méthode des coûts complets 
+La méthode des coûts complets cherche à évaluer les coûts intermédiaires : coûts d’acquisition, de 
+production, de distribution, pour déterminer le coût de revient qui correspond à l’ensemble des charges de 
+l’approvisionnement des matières premières à la commercialisation d’un produit ou d’un service.  
+La méthode des coûts complets procède au reclassement des charges selon qu’elles sontdirectes ou 
+indirectes.  
+Les charges indirectes sont ventilées par centre d’analyse pour déterminer le coût de chaque unité d’œuvre, 
+et ainsi les imputer à chaque coût de revient.  
+ 
+Le coût complet correspond au coût de revient total du produit et englobe toutes les charges directes et 
+indirectes qui ont été nécessaires. Il est calculé de façon progressive afin de mettre en évidence les 
+différents coûts qui le composent : 
+ 
+ Coût d’achat des matières premières  
+ 
+ Coût de production des produits fabriqués  
+ 
+ Coût de revient des produits vendus. 
+ 
+   
+L’essentiel 
+--- page 2 ---
+2 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+B. La méthode des coûts spécifiques  
+Alors que la méthode des coûts complets repose sur la ventilation des charges indirectes et des charges 
+directes, la méthode des coûts spécifiques se fonde sur une distinction entre charges variables et charges 
+fixes. L’objectif est de calculer une marge sur le coût variable pour pouvoir analyser la rentabilité d’un 
+produit et sa capacité à couvrir les charges fixes.  
+Cette méthode prend en compte dans son calcul toutes les charges directes, variables ou fixes. Elle ne prend 
+pas en compte les éléments indirects, intégrés dans les coûts de structure. L’objectif est de faire ressortir une 
+marge sur coût spécifique.  
+Chiffre d’affaires (CA) 
+-  Coûts variables (CV) 
+= Marge sur Coût Variable (MCV) 
+- Charges fixes spécifiques (MCS) 
+= Marge sur Coût Spécifique (MCS) 
+- Coût Fixe Commun (CFC) 
+= Résultat 
+C. Intérêts et limites de chaque méthode de coûts 
+La méthode des coûts complets a plusieurs intérêts : 
+ Elle permet de calculer un coût de revient par produit et de connaître ainsi la contribution de chaque 
+activité à la profitabilité de l’entreprise. 
+ Elle est complémentaire de la comptabilité générale qui ne fournit qu’un résultat global. 
+ Elle permet de définir un prix de vente pour les produits. 
+ Elle permet de comparer, dans le cadre du contrôle de gestion, les coûts réels aux coûts antérieurs. La 
+mise en évidence d’écarts peut se révéler utile à la prise de décision. 
+Mais elle a aussi plusieurs limites : 
+ Elle est longue, lourde et coûteuse à mettre en œuvre. 
+ La part des charges indirectes ne cesse de croître dans les schémas de production actuels, ce qui 
+rend de plus en plus complexe son application. 
+ Le coût complet ne permet que d’évaluer a posteriori et non d’anticiper. 
+ Les résultats sont approximatifs dans la mesure où la ventilation des charges indirectes au sein 
+des centres d’analyse comporte une part d’arbitraire et que le choix de l’unité d’œuvre est parfois 
+délicat. 
+La méthode des coûts spécifiques a plusieurs intérêts : 
+ Elle prend en compte la variabilité de l’activité et se place dans un environnement incertain. 
+ Elle permet le calcul des seuils de rentabilité, du point mort et d’autres indicateurs nécessaires à 
+l’analyse de la performance de l’entreprise 
+La principale limite de la méthode des coûts spécifiques vient du fait qu’elle prend comme hypothèse que les 
+prix sont fixes, et que seule la quantité varie selon la demande.  
+ 
+--- page 3 ---
+3 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+2. Qu’est-ce que la gestion du cycle de vie des produits ?  
+Le cycle de vie du produit regroupe l’ensemble des étapes par lesquelles passe un produit de sa mise en 
+place sur le marché jusqu’à la fin de sa production. Le cycle de vie d’un produit comprend généralement 
+quatre phases : 
+ 
+1. Une phase de lancement : elle correspond à la mise du produit sur le marché. C’est une phase 
+gourmande en besoins de financement car les investissements marketing de lancement (publicité, 
+référencement, promotion et animation des ventes…) sont élevés alors que les volumes de ventes sont 
+encore faibles. 
+ 
+2. Une phrase de croissance : c’est la phase du cycle de vie du produit qui correspond à la diffusion 
+continue d’usage du produit et à une situation de présence établie en distribution. Le plus souvent, 
+l’activité liée au produit peut devenir rentable en fin de phase.  
+ 
+3. Une phase de maturité : elle est caractérisée par un ralentissement du rythme des ventes du produit : il 
+a atteint sa maturité. D’autre part, la concurrence est plus vive que lors des précédentes étapes, 
+l’entreprise doit alors réduire ses prix. C’est une phase plus longue que les deux précédentes : la plupart 
+des produits courants sont en phase de maturité et il faut faire preuve d’imagination afin de garder sa 
+clientèle et séduire de nouveaux clients.  
+ 
+4. Une phase de déclin : c’est une phase au cours de laquelle les ventes baissent plus ou moins fortement 
+parce que des produits concurrents ou des produits de substitution sont apparus, ou parce qu’on passe 
+d’un marché de premier d’équipement à un marché de renouvellement. Le bénéfice global réalisé sur le 
+produit baisse, mais le bénéfice unitaire peut se maintenir, car les investissements marketing sont limités 
+et l’outil de production est le plus souvent amorti.  
+L’analyse du cycle de vie du produit permet d’utiliser de manière plus pertinente les allocations de moyens 
+sur le mix-marketing, de modifier les stratégies concurrentielles et les actions auprès du marché. Elle peut 
+être utilisée dans plusieurs contextes : 
+ En phase de lancement de produit, notamment pour évaluer la durée de vie prévisionnelle du produit 
+et évaluer son seuil de rentabilité. 
+ Pour gérer l’ensemble d’un portefeuille de produits et équilibrer les actions spécifiques à chacun 
+d’eux. 
+ À l’occasion du plan marketing annuel, pour redéfinir les plans d’action.  
+3.  Mesurer l’impact sur les coûts d’une décision de recyclage des 
+déchets 
+A. La prise en compte du développement durable dans le cycle de vie 
+du produit 
+De plus en plus, les entreprises doivent, dans leurs processus de production, tenir compte du 
+développement durable. Cette nouvelle façon de produire induit notamment le recyclage des déchets aux 
+différents stades de production, mais également la gestion de la fin de vie du produit lui-même lorsque cela 
+est possible. 
+--- page 4 ---
+4 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+Tenir compte du développement durable dans sa production passe également par un choix plus réfléchi et 
+plus respectueux de l’environnement des matières, fournitures ainsi que des modes de fabrication. 
+B. L’impact sur le coût du produit 
+Le coût du produit est forcément impacté par cette prise en compte du développement durable. 
+Dans la grande majorité des cas, toutes les décisions relatives à une production plus respectueuse de 
+l’environnement induisent une augmentation des coûts : matières premières et fournitures plus chères, 
+financement du recyclage, temps de fabrication plus long et donc plus coûteux, etc. 
+ 
+
+================================================================================
+FILE: cours-du-chapitre-53.pdf
+================================================================================
+PAGES: 6
+--- page 1 ---
+1 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+Chapitre 7 Quel est le rôle des 
+technologies numériques dans la 
+production ?  
+La révolution numérique a profondément modifié la production des entreprises. Cette 
+digitalisation repose sur des systèmes d’information qui, via l’exploitation de données 
+numériques, ont permis de dématérialiser et d’automatiser les processus. En outre, de 
+nouvelles technologies sont intégrées progressivement aux systèmes de production, 
+permettant d’améliorer considérablement leur efficacité.  
+1. Comment les transformations digitales impactent-elles 
+les processus de production ? 
+A. L’automatisation et la dématérialisation des processus de 
+production 
+1. Le premier impact des transformations digitales est l’automatisation des 
+processus de production. 
+Dans l’industrie, l’automatisation désigne le processus d’intégration de machines, 
+d’équipements industriels et de robots pour effectuer automatiquement des tâches réalisées 
+auparavant par des opérateurs. Souvent associée à la robotisation, l’automatisation repose 
+donc sur l’utilisation d’outils numériques (ordinateurs) reliés à des machines. Elle permet de 
+réduire les coûts de production, d’améliorer la productivité et la qualité tout en réduisant la 
+pénibilité des tâches pour les opérateurs.  
+L’automatisation industrielle est particulièrement développée dans certains secteurs comme 
+l’automobile ou l’électronique et tend à se généraliser à l’ensemble des secteurs industriels 
+(exemple : dans l’aéronautique avec Airbus).  
+Dans les services, l’automatisation s’appuie notamment sur la RPA (RoboticProcess 
+Automation ou automatisation robotisée des processus), une technologie permettant 
+d’automatiser des tâches répétitives qui nécessitaient auparavant l’intervention humaine. Les 
+avantages offerts par la RPA sont nombreux. Cette technologie permet tout d’abord de 
+réaliser des économies sur l’exécution des tâches répétitives et manuelles.  
+Elle permet aussi d’effectuer ces tâches plus rapidement, et de garantir la conformité avec les 
+standards et régulations. Par ailleurs, elle permet de décharger les employés de tâches 
+rébarbatives pour qu’ils puissent se consacrer à d’autres tâches plus importantes, à plus forte 
+valeur ajoutée et gagner ainsi en productivité. La RPA est utilisée dans de nombreux 
+processus métiers et de nombreux secteurs : la comptabilité, la banque et les assurances 
+ 
+   
+ 
+ L’essentiel 
+--- page 2 ---
+2 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+(exemple : BNP Paribas), les ressources humaines… 
+1. Le deuxième impact des transformations digitales concerne la 
+dématérialisation des processus de production. 
+La dématérialisation est en effet au cœur de la transformation numérique des organisations. 
+C’est l’un des principaux piliers de leur transformation digitale. Elle consiste à remplacer des 
+supports matériels par des supports (fichiers ou documents) numériques.  
+Pour faire face à l’augmentation continue des flux d’informations et gagner en réactivité, les 
+organisations doivent numériser et dématérialiser leurs processus de production et l’ensemble 
+de leurs processus métiers. Cette dématérialisation passe par la digitalisation de l’ensemble 
+des flux documentaires. 
+En outre, les organisations sont en interaction permanente avec leur environnement et leurs 
+parties prenantes. Cette interaction passe par le partage et donc la numérisation et 
+dématérialisation de leur patrimoine documentaire et informationnel.  
+La dématérialisation répond ainsi à de nombreux enjeux pour les entreprises : 
+ Amélioration des délais (réactivité). 
+ Réduction des coûts. 
+ Amélioration de la traçabilité. 
+ Démarche de responsabilité environnementale (zéro papier). 
+ 
+B. Le rôle central des systèmes d’information dans la 
+digitalisation des processus de production 
+Les processus de production (qu’ils soient liés à l’industrie ou aux services) sont aujourd’hui 
+traversés par un flot continu de données. Dans l’industrie par exemple, tout le cycle de vie 
+d’un produit peut désormais être numérisé, de la conception à la distribution en passant par le 
+prototypage et la fabrication. Ce principe de continuité numérique implique, pour les 
+organisations, d’être capable d’exploiter et d’analyser ces données.  
+Cette exploitation des données passe par le recours à des systèmes d’information de 
+production et de gestion. Dans l’industrie, l’automatisation repose ainsi sur l’utilisation de 
+logiciels de pilotage de la production (MES : Manufacturing Execution System). Le secteur 
+des services s’appuie quant à lui sur une variété de systèmes d’information spécifiques aux 
+différents processus métiers (exemple : logiciels de gestion de la relation client ou CRM).  
+ Pour modéliser les flux de données, les organisations cartographient la circulation de 
+ces données à travers leurs systèmes d’information à l’aide de diagramme des flux. 
+Elles s’appuient également sur des flux de travaux (ou workflow) pour modéliser 
+l’ensemble des tâches et des différents acteurs impliqués dans la réalisation d’un 
+processus métier. 
+Une fois cette modélisation effectuée, les organisations s’appuient sur des logiciels de gestion 
+des processus métiers (BPM : Business Process Management) pour les optimiser et les 
+automatiser autant que possible. Les logiciels de gestion des processus métiers sont ainsi au 
+--- page 3 ---
+3 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+cœur de la transformation numérique des organisations. 
+ Enfin, les progiciels de gestion intégrée (PGI ou ERP en anglais) jouent un rôle 
+majeur dans la digitalisation des processus de production. En effet, les PGI gèrent 
+l’interface entre les systèmes de production et les systèmes d’information de gestion. 
+Le cycle numérique doit parfaitement intégrer et relier tous les processus, ceux liés à 
+la production comme ceux liés à la gestion (achats, logistique, stockage, comptabilité 
+…). Les PGI permettent ainsi d’éliminer les silos d’informations qui entravent les 
+échanges de données entre les systèmes d’information de production et ceux de 
+gestion. Dans l’industrie, l’ERP coordonne les échanges d’informations entre 
+l’entreprise et son écosystème, de la commande client à la livraison en passant par 
+toutes les étapes d’approvisionnement et de production, jouant ainsi un véritable rôle 
+de chef d’orchestre.  
+ 
+2. Comment les nouvelles technologies améliorent-elles les 
+processus de production ? 
+A. Les objets connectés ou Internet des objets (IoT) 
+Les objets connectés (IoT en anglais) connaissent un développement fulgurant ces dernières 
+années. 
+Leur usage est ainsi de plus en plus développé dans l’industrie sous l’appellation Internet 
+industriel des objets (IIoT). L’intégration d’objets connectés au sein même des chaînes de 
+production permet d’obtenir, via des capteurs, un grand nombre d’informations en temps réel. 
+En effet, l’internet industriel des objets, en plus de les interconnecter entre eux, les connecte 
+également aux autres équipements. Ce qui permet de collecter une importante quantité de 
+données (le fameux big data) tout au long de la chaîne de fabrication. Ce flux continu 
+d’informations contribue à l’amélioration de la qualité de la production grâce notamment à 
+une surveillance et un suivi plus performant des différentes étapes de production. Depuis les 
+opérateurs qui pourront disposer d’informations de terrain sur les chaînes de production, 
+jusqu’aux décideurs qui pourront surveiller en temps réel le fonctionnement de l’usine, l’IoT 
+peut ainsi améliorer la productivité, la qualité et la sécurité. 
+Mais le champ d’application des objets connectés ne se limite pas à l’industrie. Les secteurs 
+de la logistique, du commerce, de la santé et même l’agriculture s’appuient désormais sur les 
+objets connectés pour optimiser leurs processus de production.  
+B. L’informatique en nuage (cloud computing) 
+L’informatique en nuage ou cloud computing consiste à utiliser des serveurs informatiques 
+distants par l’intermédiaire d’un réseau, généralement Internet, pour stocker des données 
+et/ou les exploiter. 
+L’impact du cloud computing sur les processus de production est considérable. Le recours aux 
+objets connectés et à l’intelligence artificielle repose en effet sur des solutions informatiques 
+(applications, plateformes) basées sur le cloud et qui permettent de stocker et d’analyser les 
+très grandes quantités de données générées. 
+--- page 4 ---
+4 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ Le cloud s’appuie notamment sur la dématérialisation croissante d’un certain 
+nombre de fonctions des produits pour offrir de très nombreuses possibilités : 
+configuration à distance, surveillance proactive, assistance connectée, mises à jour 
+logicielles à distance… 
+ Le cloud offre également aux industriels la possibilité d’effectuer des opérations de 
+maintenance à distance des produits et des équipements. Via un accès en ligne à toutes 
+les données d’un appareil, il est ainsi possible d’identifier et de rectifier les pannes à 
+distance et  ce 24h/24.  
+ Le cloud permet de détecter, collecter, organiser et exécuter des analyses 
+sophistiquées des données ce qui permet d’optimiser la production et d’améliorer 
+l’efficacité des processus (industriels ou serviciels). 
+Le cloud computing présente des avantages et des inconvénients : 
+ 
+Avantages Inconvénients 
+ Limitation des pertes de données 
+ Données accessibles partout grâce 
+une connexion Internet 
+ Gain de place et diminution de la 
+consommation d’énergie 
+ Possibles pannes de serveur 
+ Nécessité de disposer d’une 
+connexion Internet performante 
+ 
+C. L’intelligence artificielle (IA) 
+L’intelligence artificielle (IA) désigne un ensemble de techniques permettant à des 
+machines d’accomplir des tâches et de résoudre des problèmes normalement réservés aux 
+humains.  
+Elle s’appuie notamment sur des algorithmes d’apprentissage automatique (machine learning) 
+qui leur permettent d’analyser des quantités massives de données pour en extraire du sens et 
+prendre les meilleures décisions le plus rapidement possible. L’apprentissage automatique 
+permet d’améliorer les performances cognitives des ordinateurs pour résoudre des problèmes 
+ou accomplir des tâches pour lesquelles ils n’ont pas été programmés a priori. 
+Les organisations utilisent l’intelligence artificielle et l’apprentissage automatique pour 
+développer des capacités d’analyse prédictive.  
+L’un des champs d’application majeurs de l’analyse prédictive est la maintenance prédictive. 
+La maintenance prédictive enrichit la maintenance traditionnelle par l’analyse continue de 
+l’état de fonctionnement réel de l’appareil dans son environnement. Elle permet de détecter 
+très en amont de la panne, les signaux faibles d’une baisse dans la qualité de fonctionnement 
+et de prévoir la probable défaillance d’un composant pour le changer immédiatement. Elle 
+permet ainsi d’éviter la panne, mais aussi de prolonger la durée de vie de l’équipement.  
+ La maintenance prédictive a d’abord été développée pour assurer la continuité de 
+fonctionnement des équipements industriels et des outils de production, dont une 
+
+================================================================================
+FILE: cours-du-chapitre-54.pdf
+================================================================================
+PAGES: 4
+--- page 1 ---
+1 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+Chapitre 8 Comment organiser et 
+coordonner le travail ? 
+ 
+Les modes de production de biens et services requièrent une organisation du travail adaptée. 
+Les organisations qui fonctionnent dans un environnement incertain et instable doivent 
+disposer d’un haut degré de flexibilité et de réactivité. Toutes les organisations doivent veiller 
+à assurer la coordination entre les services et les unités avec plus ou moins de formalisme 
+dans les interactions (procédures, règles et de contrôle …). 
+ 
+1. Pourquoi un environnement stable favorise-t-il une 
+organisation du travail rigide ? 
+ 
+A. Une organisation rigide du travail 
+ 
+Une organisation du travail rigide s’apparente au taylorisme et repose sur trois principes qui 
+trouvent leur origine dans l’OST (organisation scientifique du travail) mise en place par 
+Taylor : 
+ 
+ Une division horizontale du travail : La division horizontale du travail consiste à 
+répartir les tâches entre les salariés d’un même niveau hiérarchique avec une forte 
+spécialisation des postes de travail (les tâches sont répétitives).  La répartition des 
+tâches conduit à définir les postes de travail dans l’organisation. Cette définition des 
+postes de travail peut privilégier : 
+ La spécialisation des salariés qui réalisent des tâches réduites et 
+répétitives : l’organisation parcellise les tâches  
+ La polyvalence des salariés qui réalisent des tâches nombreuses et 
+variées : l’organisation favorise l’enrichissement des tâches. 
+ 
+ Une division verticale du travail : La division verticale du travail consiste à séparer 
+les tâches d’encadrement et les tâches d’exécution. Elle détermine le nombre de 
+niveaux hiérarchiques dans l’organisation. Une ligne hiérarchique qui correspond aux 
+cadres assurant la liaison entre la direction générale et les exécutants est alors 
+constituée. Celle-ci peut être plus ou moins importante avec une forte hiérarchie 
+(séparation des postes d’encadrement et d’exécution) 
+ 
+ Un salaire au rendement qui consiste à rémunérer le salarié à la tâche pour gagner en 
+productivité. 
+ 
+ 
+   
+ 
+ L’essentiel 
+--- page 2 ---
+2 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+Cette forme d’organisation du travail est adaptée à un environnement stable, prévisible et à un 
+mode de production en grande série (produits standardisés). 
+L’une des fonctions principales d’un manager est la répartition des tâches. Celle-ci est un 
+facteur important de motivation des équipes, qui va être source de productivité pour 
+l’organisation. La répartition des tâches est un autre terme pour désigner l’organisation du 
+travail. 
+ La division horizontale du travail est une répartition des tâches qui consiste à 
+spécialiser chaque acteur sur une tâche spécifique. La tâche doit être simple à 
+réaliser. Ainsi le salarié au fur et à mesure de la répétition de la même tâche deviendra 
+de plus en plus efficace (effet d’expérience), et cela lui permettra d’être plus productif. 
+L’inconvénient de la division du travail réside dans la perte de sens que cause la 
+répétition élevée d’une tâche élémentaire. 
+ 
+ La division verticale du travail consiste à séparer les tâches d’encadrement et les 
+tâches d’exécution. Elle détermine le nombre de niveaux hiérarchiques dans 
+l’organisation. Une ligne hiérarchique qui correspond aux cadres assurant la liaison 
+entre la direction générale et les exécutants est alors constituée. Celle-ci peut être plus 
+ou moins importante. 
+ 
+La hiérarchisation forte d’une organisation permet de clarifier les responsabilités de chaque 
+acteur, ce qui est source d’efficacité. En effet, lors de la prise de décisions au sein de 
+l’organisation, la chaîne de commandement sera connue de tous et lors du contrôle de la mise 
+en place de la stratégie, les problèmes pourront apparaître plus clairement. En même temps, 
+une hiérarchie forte ne valorise pas le personnel situé en bas de l’échelle, ce qui est un facteur 
+de démotivation des équipes et donc de baisse de la performance. 
+Les organisations dotées d’une forte spécialisation des tâches et d’une forte hiérarchie sont 
+des organisations dites rigides.  
+Elles sont particulièrement efficaces lorsque leur environnement est peu évolutif et qu’elles 
+évoluent sur des secteurs où le prix des produits doit être très compétitif. En effet, les gains de 
+productivité permettent de produire une grande quantité à moindre coût. 
+ 
+B. Une organisation souple du travail 
+ 
+Une organisation du travail souple s’apparente au toyotisme inventé par l’ingénieur japonais 
+Ohno et repose sur : 
+ 
+ Une polyvalence des salariés qui réalisent des tâches nombreuses et variées. Ces 
+derniers sont autonomes et responsables  
+ Une production à la demande du client en flux tendus qui permet de réduire les 
+gaspillages (lean management). 
+ 
+Cette forme d’organisation du travail est adaptée à un environnement complexe, instable, 
+imprévisible, en perpétuelle évolution et à un mode de production à l’unité ou en petites séries 
+(produits différenciés). Elle permet d’obtenir un haut niveau de flexibilité (adaptation aux 
+sollicitations de l’environnement) et de réactivité (rapidité de réponse à la demande). 
+--- page 3 ---
+3 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+2. Pourquoi un environnement complexe favorise-t-il une 
+organisation du travail souple ? 
+A. Les mécanismes de coordination 
+H. Mintzberg montre que plus la complexité des organisations s’accroit, plus leurs 
+mécanismes d’ajustement évoluent. Dans un environnement peu complexe, les organisations 
+font reposer l’ajustement sur des « arrangements » ou de la supervision directe. Mais lorsque 
+l’environnement est très complexe, l’ajustement repose davantage sur la standardisation des 
+objectifs ou sur la mise en place de valeurs et culture communes. 
+On distingue les mécanismes d’ajustement suivants  
+ 
+L’ajustement mutuel La coordination du travail est effectuée par simple communication 
+informelle (généralement orale).  
+La supervision directe 
+La coordination du travail est effectuée grâce à un responsable 
+hiérarchique qui donne des ordres à ses subordonnés et contrôle leur 
+travail. 
+La standardisation des 
+procédés de travail 
+La coordination du travail est effectuée grâce à des procédures de travail 
+définies avec précision. Ces procédures peuvent être automatisées. 
+La standardisation des 
+résultats 
+La coordination du travail est effectuée par la fixation d’objectifs à 
+atteindre. Elle nécessite un système de contrôle (reporting). 
+La standardisation des 
+qualifications 
+Cette méthode est utilisée quand le travail nécessite une large autonomie 
+due à la formation spécifique de celui qui exécute le travail.  
+La standardisation des 
+normes 
+Les membres de l’organisation adhèrent à des normes établies pour 
+l’organisation dans sa globalité, qui correspondent à des valeurs 
+collectives partagées, des croyances provenant de l’histoire de 
+l’organisation, de pratiques communes aux membres de l’organisation. 
+ 
+B. La naissance du toyotisme 
+L’entreprise japonaise Toyota se démarqua par son organisation du travail, le toyotisme, 
+beaucoup plus souple que celle des entreprises américaines concurrentes. Le toyotisme 
+repose sur les points suivants : 
+ Juste à temps : les stocks sont inutiles. 
+ Autonomisation des machines : la machine s’arrête dès qu’elle rencontre un problème. 
+ Kaizen : l’amélioration doit être continue et pas radicale. 
+ Kanban : système d’étiquetage qui permet la transmission d’information. 
+ Cercles de qualité : les ouvriers et les cadres constituent des réunions afin d’améliorer 
+le processus de production. 
+Le toyotisme promeut donc la polyvalence des salariés, le contraire de la division du travail, 
+et la remontée de l’information de la base vers le haut de la hiérarchie au contraire des firmes 
+très hiérarchisées. 
+--- page 4 ---
+4 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+C. Vers des répartitions du pouvoir décentralisées 
+Le toyotisme a été adapté dans le monde occidental sous la forme du lean management. 
+Cette forme d’organisation souligne l’importance de la réduction du gaspillage au sein des 
+entreprises et l’amélioration constante du processus de production par la participation des 
+salariés à la recherche de solutions.  
+La mise en œuvre du lean management est cependant risquée. Elle peut aboutir au 
+développement de stress et de fatigue professionnelle chez certains salariés. Cette 
+organisation du travail a également une mauvaise image car elle peut être synonyme de plans 
+sociaux dans les entreprises lorsqu’elle est appliquée. 
+ Les organisations souples du travail favorisent donc une polyvalence forte des 
+salariés ainsi qu’une décentralisation du pouvoir afin d’augmenter la motivation des 
+salariés et donc leur implication dans leur travail et dans le processus de décision de 
+l’organisation. Les organisations du travail souples favorisent la recherche de 
+l’innovation et la compétitivité par la qualité de la production. Elles sont 
+particulièrement efficaces lorsque l’entreprise doit s’adapter à un environnement 
+fortement concurrentiel et évolutif. 
+ 
+
+================================================================================
+FILE: cours-du-chapitre-55 (1).pdf
+================================================================================
+PAGES: 2
+--- page 1 ---
+1 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+Chapitre 9 Comment le management prend-il 
+en compte les attentes des acteurs dans 
+l’organisation ? 
+ 
+Les acteurs internes de l’organisation peuvent avoir des intérêts convergents ou divergents pouvant être 
+sources de conflits. La culture d’entreprise et le style de direction des dirigeants permettent d’assurer la 
+cohésion de tous.  
+1. Les intérêts et attentes des acteurs de l’organisation 
+Les différents acteurs internes de l’organisation sont nombreux, leurs rôles et leurs attentes sont différents. 
+ 
+ Rôle Intérêts et attentes 
+Dirigeant de 
+l’entreprise et 
+actionnaires 
+– Diriger l’organisation 
+– Fixer les grands objectifs 
+stratégiques 
+– Augmenter les bénéfices 
+– Satisfaire les clients et les fidéliser 
+Cadres – Fixer des objectifs opérationnels 
+– Organiser le travail des équipes 
+– Contrôler les résultats et les faire 
+remonter à la direction 
+– Assurer la performance des équipes 
+– Fidéliser les collaborateurs 
+– Éviter tout conflit entre les salariés et entre 
+les salariés et les dirigeants 
+Représentants des 
+salariés et syndicats 
+– Transmettre aux dirigeants toute 
+réclamation individuelle ou 
+collective en matière d'application 
+de la réglementation du travail 
+(Code du travail, salaires, conditions 
+de travail…) 
+– Représenter les intérêts des salariés 
+Salariés – Fabriquer des produits et les 
+vendre  
+– Travailler dans de bonnes conditions 
+– Percevoir un salaire correspondant à leur 
+travail et à leurs compétences 
+ 
+Les intérêts des différents acteurs internes à l’organisation peuvent être divergents ou convergents : 
+ 
+ Intérêts divergents : les acteurs ont des relations conflictuelles ; 
+Exemple : les salariés d’un restaurant McDonald’s à Marseille ont fait grève pendant de longs 
+mois pour demander une amélioration de leurs conditions de travail qui s’étaient fortement 
+dégradées. 
+ Intérêts convergents : les acteurs ont des relations partenariales.  
+ Exemple : Air France a débloqué un budget très conséquent en 2019 pour améliorer le bien-être au 
+travail de ses salariés avec la création de salles de repos, de crèches pour les enfants du personnel ou 
+   
+L’essentiel 
+--- page 2 ---
+2 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+encore de salles de sport. Les intérêts de chacun sont convergents : les salariés travaillent dans de 
+meilleures conditions et leur performance augmente. 
+2. La culture d’organisation 
+La culture d’organisation peut être définie comme un ensemble de valeurs, de mythes, de rituels et de 
+symboles qui participent à la cohérence de tous les acteurs internes à l’entreprise en suscitant leur adhésion et 
+leur permettant de se reconnaître et de se mobiliser autour d’objectifscommuns.  
+ 
+ Exemple : La marque Apple a une culture d’organisation très forte, avec le mythe de son créateur 
+Steve Jobs, qui créa la marque dans son garage, et avec ses valeurs autour du « Think different », qui 
+évoque la rupture technologique de la marque avec son environnement Mac pour les ordinateurs et 
+avec l’iPhone pour les smartphones. 
+3. La dynamique de groupe  
+La dynamique de groupe est définie par Kurt Lewin comme un système d’interdépendance entre les 
+membres d’un groupe, dont la cohésion est assurée par un sentiment d’appartenance, des solidarités, des 
+échanges et des décisions de groupe. Le rôle du leadership, c’est-à-dire du dirigeant, est essentiel à cette 
+dynamique, il permet de fédérer le groupe et de l’influencer pour atteindre les objectifs. 
+A. Assurer une coopération efficace dans les groupes de travail 
+De manière à faciliter la coopération, différents dispositifs et outils numériques peuvent être mis en place. 
+ Au niveau des dispositifs : l’organisation en mode projet constitue une méthode de gestion 
+permettant de travailler ensemble et de coordonner différentes tâches pour répondre à un besoin 
+défini, en respectant des délais et un budget.  La mise en place de communautés de pratique peut 
+également faciliter le travail collectif. Il s’agit de dispositifs au sein desquels un groupe de personnes 
+partage un domaine d’expertise et échange autour des savoir-faire et savoir-être de chacun, en 
+transmettant leurs expériences et leurs connaissances au sein de cette communauté. 
+ Au niveau des outils numériques : de nombreux outils numériques concourent à l’efficacité du 
+travail en équipe (outils d’animation de réunion, outils de centralisation des sources de 
+communication, outils de chats, outils de gestion de projet…).  
+ 
+Par ailleurs, un nombre croissant d’entreprises recourent aux réseaux pour partager l’information. On peut 
+citer l’exemple des Réseaux sociaux d’entreprise (RSE), espaces communautaires présentant les 
+fonctionnalités classiques d'un réseau social, mais réservés aux salariés de l'entreprise (ou parfois même à 
+ses partenaires : clients, fournisseurs). Ils permettent une communication plus souple, plus vivante et 
+rapprochent les salariés parfois éloignés les uns des autres géographiquement. Ils augmentent l'efficacité des 
+salariés (recherche d'information plus simple donc plus rapide).  Le travail collaboratif peut également être 
+plus efficace avec la mise en place de communautés de pratiques dans lesquelles des personnes se réunissent 
+autour d'un projet et partagent leurs connaissances, leurs outils, leurs pratiques, leurs solutions pour résoudre 
+des problèmes.  
+
+================================================================================
+FILE: cours-du-chapitre-55.pdf
+================================================================================
+PAGES: 2
+--- page 1 ---
+1 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+Chapitre 9 Comment le management prend-il 
+en compte les attentes des acteurs dans 
+l’organisation ? 
+ 
+Les acteurs internes de l’organisation peuvent avoir des intérêts convergents ou divergents pouvant être 
+sources de conflits. La culture d’entreprise et le style de direction des dirigeants permettent d’assurer la 
+cohésion de tous.  
+1. Les intérêts et attentes des acteurs de l’organisation 
+Les différents acteurs internes de l’organisation sont nombreux, leurs rôles et leurs attentes sont différents. 
+ 
+ Rôle Intérêts et attentes 
+Dirigeant de 
+l’entreprise et 
+actionnaires 
+– Diriger l’organisation 
+– Fixer les grands objectifs 
+stratégiques 
+– Augmenter les bénéfices 
+– Satisfaire les clients et les fidéliser 
+Cadres – Fixer des objectifs opérationnels 
+– Organiser le travail des équipes 
+– Contrôler les résultats et les faire 
+remonter à la direction 
+– Assurer la performance des équipes 
+– Fidéliser les collaborateurs 
+– Éviter tout conflit entre les salariés et entre 
+les salariés et les dirigeants 
+Représentants des 
+salariés et syndicats 
+– Transmettre aux dirigeants toute 
+réclamation individuelle ou 
+collective en matière d'application 
+de la réglementation du travail 
+(Code du travail, salaires, conditions 
+de travail…) 
+– Représenter les intérêts des salariés 
+Salariés – Fabriquer des produits et les 
+vendre  
+– Travailler dans de bonnes conditions 
+– Percevoir un salaire correspondant à leur 
+travail et à leurs compétences 
+ 
+Les intérêts des différents acteurs internes à l’organisation peuvent être divergents ou convergents : 
+ 
+ Intérêts divergents : les acteurs ont des relations conflictuelles ; 
+Exemple : les salariés d’un restaurant McDonald’s à Marseille ont fait grève pendant de longs 
+mois pour demander une amélioration de leurs conditions de travail qui s’étaient fortement 
+dégradées. 
+ Intérêts convergents : les acteurs ont des relations partenariales.  
+ Exemple : Air France a débloqué un budget très conséquent en 2019 pour améliorer le bien-être au 
+travail de ses salariés avec la création de salles de repos, de crèches pour les enfants du personnel ou 
+   
+L’essentiel 
+--- page 2 ---
+2 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+encore de salles de sport. Les intérêts de chacun sont convergents : les salariés travaillent dans de 
+meilleures conditions et leur performance augmente. 
+2. La culture d’organisation 
+La culture d’organisation peut être définie comme un ensemble de valeurs, de mythes, de rituels et de 
+symboles qui participent à la cohérence de tous les acteurs internes à l’entreprise en suscitant leur adhésion et 
+leur permettant de se reconnaître et de se mobiliser autour d’objectifscommuns.  
+ 
+ Exemple : La marque Apple a une culture d’organisation très forte, avec le mythe de son créateur 
+Steve Jobs, qui créa la marque dans son garage, et avec ses valeurs autour du « Think different », qui 
+évoque la rupture technologique de la marque avec son environnement Mac pour les ordinateurs et 
+avec l’iPhone pour les smartphones. 
+3. La dynamique de groupe  
+La dynamique de groupe est définie par Kurt Lewin comme un système d’interdépendance entre les 
+membres d’un groupe, dont la cohésion est assurée par un sentiment d’appartenance, des solidarités, des 
+échanges et des décisions de groupe. Le rôle du leadership, c’est-à-dire du dirigeant, est essentiel à cette 
+dynamique, il permet de fédérer le groupe et de l’influencer pour atteindre les objectifs. 
+A. Assurer une coopération efficace dans les groupes de travail 
+De manière à faciliter la coopération, différents dispositifs et outils numériques peuvent être mis en place. 
+ Au niveau des dispositifs : l’organisation en mode projet constitue une méthode de gestion 
+permettant de travailler ensemble et de coordonner différentes tâches pour répondre à un besoin 
+défini, en respectant des délais et un budget.  La mise en place de communautés de pratique peut 
+également faciliter le travail collectif. Il s’agit de dispositifs au sein desquels un groupe de personnes 
+partage un domaine d’expertise et échange autour des savoir-faire et savoir-être de chacun, en 
+transmettant leurs expériences et leurs connaissances au sein de cette communauté. 
+ Au niveau des outils numériques : de nombreux outils numériques concourent à l’efficacité du 
+travail en équipe (outils d’animation de réunion, outils de centralisation des sources de 
+communication, outils de chats, outils de gestion de projet…).  
+ 
+Par ailleurs, un nombre croissant d’entreprises recourent aux réseaux pour partager l’information. On peut 
+citer l’exemple des Réseaux sociaux d’entreprise (RSE), espaces communautaires présentant les 
+fonctionnalités classiques d'un réseau social, mais réservés aux salariés de l'entreprise (ou parfois même à 
+ses partenaires : clients, fournisseurs). Ils permettent une communication plus souple, plus vivante et 
+rapprochent les salariés parfois éloignés les uns des autres géographiquement. Ils augmentent l'efficacité des 
+salariés (recherche d'information plus simple donc plus rapide).  Le travail collaboratif peut également être 
+plus efficace avec la mise en place de communautés de pratiques dans lesquelles des personnes se réunissent 
+autour d'un projet et partagent leurs connaissances, leurs outils, leurs pratiques, leurs solutions pour résoudre 
+des problèmes.  
+
+================================================================================
+FILE: cours-du-chapitre-56.pdf
+================================================================================
+PAGES: 6
+--- page 1 ---
+1 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+ 
+Chapitre 10 Comment fédérer les acteurs 
+de l’organisation ? 
+ 
+La mobilisation des ressources humaines consiste, pour l’organisation, à rassembler ses 
+membres afin qu’ils conjuguent leurs énergies pour atteindre des objectifs dans une logique de 
+performance. Mobiliser ne suffit pas, encore faut-il que chacun soit motivé. Or la motivation 
+ne se décrète pas non plus ; elle dépend de facteurs internes et externes à l’individu qui 
+influencent son comportement. Le cadre et les conditions de travail, la rémunération, la 
+communication interne, le contenu du travail sont autant de facteurs qui peuvent renforcer la 
+mobilisation, la motivation et la satisfaction.  
+1. Les styles de direction 
+Le style de direction est la façon d’exercer le pouvoir pour un dirigeant d’entreprise.  
+Rensis Likert distingue quatre grands styles de direction : 
+ Autoritaire : le dirigeant ne laisse aucune autonomie à ses salariés, il donne des ordres 
+et exige qu’on les respecte. Il fonde son pouvoir sur la peur, la menace et la sanction  
+ 
+ Paternaliste : le dirigeant est à la fois autoritaire et proche de ses salariés. Il utilise les 
+sanctions et les récompenses comme outils de motivation  
+ 
+ Consultatif : le dirigeant fait confiance à ses subordonnés qui sont régulièrement 
+consultés pour donner leur avis lors de la prise de décision. Il favorise le travail 
+d’équipe et l’implication de tous  
+ 
+ Participatif : le dirigeant encourage les salariés à participer activement à toutes les 
+décisions et à la gestion de l’organisation. Les salariés sont totalement impliqués et 
+intéressés aux résultats.   
+ 
+Plus le style de direction est autoritaire et plus le pouvoir dans l’organisation est concentré. 
+Inversement, plus le style de direction est participatif et moins le pouvoir est concentré. 
+ 
+ 
+   
+ 
+ L’essentiel 
+--- page 2 ---
+2 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+  
+La tendance actuelle, dans les start-ups, est de privilégier le mode participatif, qui semble 
+favoriser la libre expression des idées, la sensation de bien-être au travail et donc l’innovation. 
+2. Pourquoi privilégier la dynamique de groupe et la 
+coopération ? 
+A. Dynamique de groupe : leadership, cohésion, décision de 
+groupe 
+ Il existe donc plusieurs types de leaders. Cependant la coopération ainsi que la 
+dynamique de groupe sont des moteurs puissants qui offrent plusieurs avantages : 
+accroissement du volume d’idées produites et traitées, informations souvent 
+pertinentes et issues du terrain, meilleure acceptation par la communauté des 
+collaborateurs, loyauté des collaborateurs à l’organisation.  
+Les idées destinées à l’amélioration des performances collectives sont ainsi diffusées dans 
+toute l’organisation au lieu d’être concentrées dans les mains de certains. L’émergence de 
+solutions novatrices peut prendre la forme, comme chez Alphabet (la maison mère de Google) 
+d’une partie du temps de travail qui sera dédiée à la créativité personnelle, aidée en cela par 
+l’utilisation gratuite des ressources (humaines, matérielles et financières) de l’organisation. 
+
+--- page 3 ---
+3 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+B. La coopération 
+La coopération est un mode de relation où les salariés participent volontairement à un travail 
+commun en mutualisant leurs compétences.  
+Les différentes modes d’action coopératifs sont : 
+ 
+Le groupe-projet Groupe de travail réunissant différents métiers et différentes 
+compétences pour travailler ensemble autour d’un projet commun. 
+La réunion 
+Réunions permettent aux salariés d’être informés par les dirigeants 
+des grandes orientations stratégiques de l’entreprise et les actions 
+à mener pour les atteindre. Elles permettent aussi aux salariés 
+de faire remonter des informations vers les dirigeants, d’échanger, 
+de résoudre des problèmes ou encore de gérer des projets. 
+Les techniques de créativité 
+Techniques permettant à un groupe de travail de trouver des idées 
+originales et inventives :  
+– brainstorming : rréunion de personnes qui proposent des idées sur 
+un sujet donné ; 
+– techniques associatives : création de carte mentale à partir d’une 
+idée de départ ; 
+– technique du concassage : proposer aux participants une liste 
+de questions sur un thème qui leur permet de trouver des idées. 
+Les outils collaboratifs 
+de la coopération 
+Agendas partagés, messageries instantanées, plateformes 
+collaboratives, intranet et extranet. 
+Les réseaux sociaux d’entreprise 
+Système de communication interne entre les différents acteurs de 
+l’organisation qui permet les échanges et facilite la communication 
+transversale. 
+La communauté de pratique 
+Groupe de personnes qui partagent un domaine d’expertise et qui 
+échangent des idées en transmettant leurs expériences et leurs 
+connaissances au sein de cette communauté. 
+ 
+C. Le travail collaboratif 
+Les produits et les services innovants sont de plus en plus issus d’un travail d’équipe que d’un 
+seul individu. L’innovation technologique facilite désormais le travail collaboratif. Par 
+exemple, Klaxoon est utilisé par de nombreuses entreprises partout dans le monde pour faire 
+émerger, nourrir et développer les projets industriels, commerciaux ou sociaux. 
+Il existe de nombreux autres outils permettant de collaborer : 
+ Trello et Asana ou encore Wrike sont des solutions collaboratives facilitant la gestion 
+de projets ; 
+ Google G suite, Microsoft Office 365ou Zoho sont des suites logicielles hébergées 
+intégrant de nombreuses applications destinées au travail collaboratif. 
+ FrontApp permet aux membres d’équipes commerciales de suivre les interactions avec 
+les clientsde tout autre collaborateur, indépendamment du canal utilisé (SMS, chat, 
+email, réseaux sociaux). 
+--- page 4 ---
+4 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+3. Quels sont les facteurs de motivation au travail ? 
+A. Les enjeux de la motivation 
+La motivation est identifiée comme un levier essentiel de la performance de l’organisation. 
+La motivation des salariés est primordiale car cela sert l’entreprise de manière globale :  un 
+salarié heureux est un salarié à la fois plus performant et plus créatif. 
+ 
+ Un salarié satisfait sera mobilisé et l’organisation connaîtra moins de turnover et 
+d’absentéisme ; le salarié aura envie de manifester son implication en s’investissant 
+davantage dans ses missions.   
+ 
+B. Les facteurs internes et externes de motivation 
+Abraham Maslow analyse et classe les besoins des humains en partant des besoins 
+physiologiques jusqu’au besoin d’accomplissement de soi. Transposée aux organisations, 
+cette pyramide permet de mieux comprendre les sources de motivation des collaborateurs.Son 
+analyse présente, malgré tout, des limites dans le cadre d’une organisation car elle n’explique 
+que partiellement la dimension collective de la motivation. 
+ 
+Différents facteurs peuvent inciter un salarié à s’engager dans une activité professionnelle.  
+Il s’agit : 
+ Des facteurs internes : on les appelle motivations intrinsèques, ce sont les 
+motivations qui sont liées à l’activité elle-même ; le salarié prend plaisir à réaliser ses 
+tâches. Il se sent en confiance, maîtrise des méthodes de travail et atteint ses objectifs. 
+ 
+ Des facteurs externes : ce sont les motivations extrinsèques. L’activité devient un 
+moyen d’obtenir une récompense comme une augmentation du salaire, avoir la 
+reconnaissance des autres collaborateurs 
+ 
+o Mettre en place une stratégie de communication interne incluant des leviers 
+motivationnels, renforce l’épanouissement professionnel et l’ambiance de 
+travail s’améliore. Les salariés aiment se sentir concernés en ayant 
+connaissance des enjeux de l'entreprise. 
+ 
+Selon Herzberg, les facteurs de motivation dits « moteurs »sont essentiellement internes, 
+c’est-à-dire propres à l’individu. Herzberg identifie également les facteurs d’hygiène, qui sont 
+extérieurs aux collaborateurs. Quand ces facteurs d’hygiène sont mal gérés par l’organisation, 
+ils génèrent de l’insatisfaction et, au mieux, quand ils sont correctement gérés, une absence 
+d’insatisfaction. 
+ 
+ 
+
+================================================================================
+FILE: cours-du-chapitre-57 (1).pdf
+================================================================================
+PAGES: 6
+--- page 1 ---
+1 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+ 
+Chapitre 11  Les transformations numériques, 
+vecteur d’amélioration de la relation avec les 
+clients et les usagers ? 
+ 
+La révolution numérique a profondément modifié les comportements et usages des individus. Elle a ainsi 
+fortement impacté le comportement d’achat des consommateurs. Les entreprises ont dû s’adapter en 
+digitalisant leur relation client et en plaçant le consommateur au cœur du processus d’achat. Il en va de 
+même pour les administrations qui ont massivement digitalisé leur relation avec les usagers des services 
+publics.  
+ 
+1. Quels sont les facteurs explicatifs du parcours client ? 
+A. Les déterminants du comportement du consommateur 
+Le comportement d’achat peut être influencé par de nombreux facteurs explicatifs, parmi lesquels les besoins, les 
+motivations, les freins et les attitudes. 
+Le besoin occupe une place centrale dans le comportement de consommation. Il désigne un état qui naît 
+d’une sensation de manque et s’accompagne du désir de la faire disparaître. Le besoin est ainsi le facteur 
+déclencheur du processus d’achat. L’individu va chercher en effet à satisfaire son besoin par l’achat d’un 
+produit. On distingue traditionnellement : 
+ Les besoins physiologiques, de nature innée et liés aux exigences de survie de l’individu : se 
+nourrir, se vêtir, se soigner, être en sécurité, etc. 
+ Les besoins psychologiques, de nature construite et liés à la vie sociale de l’individu : 
+appartenir à un groupe, se sentir estimé, s’accomplir, etc. 
+L’achat est par ailleurs souvent le résultat d’un processus d’arbitrage entre des motivations et des freins.  
+ On définit les motivations comme des forces qui poussent un individu à agir pour satisfaire un 
+besoin. Les raisons sont rationnelles, émotionnelles, physiques ou psychologiques. 
+On distingue les motivations hédonistes (pour se faire plaisir), oblatives (pour faire plaisir à autrui), et d’auto 
+expression (pour se valoriser). 
+On définit les freins comme des forces psychologiques négatives qui empêchent un individu d’agir pour 
+satisfaire un besoin.  
+Parmi ces freins, on distingue les peurs, les risques (réels ou imaginaires) liés à l’achat, et les inhibitions. 
+L’attitude d’un individu influence également le comportement d’achat. L’attitude désigne l’ensemble des 
+éléments d’évaluation dont dispose un individu à l’égard d’une marque ou d’un produit. C’est sa 
+prédisposition à évaluer, à réagir émotionnellement et à agir à l’égard d’un produit ou d’une situation. Elle 
+comprend trois composantes : 
+   
+L’essentiel 
+--- page 2 ---
+2 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ La composante cognitive concerne les connaissances et les croyances de l’individu à propos d’une 
+marque, d’une entreprise  
+ La composante affective désigne les émotions et les sentiments éprouvés par l’individu  
+ La composante conative caractérise l’intention de l’individu en termes d’action. 
+ 
+B. Le parcours client du consommateur 
+Le processus d’achat recouvre l’ensemble des étapes qui conduisent un consommateur à choisir un bien ou un 
+service. Ce processus est généralement composé de 5 étapes : 
+1. L’émergence du besoin. 
+2. La recherche et le traitement des informations auprès de sources variées : personnelles (famille, 
+amis, collègues) commerciales (publicités, vendeurs, sites Internet), publiques (articles de presse, 
+réseaux sociaux, forums). 
+3. L’évaluation des solutions : comparaison des solutions d’achat. 
+4. La décision d’achat. 
+5. L’évaluation postachat : satisfaction ou mécontentement. 
+Chaque situation d’achat étant unique, les étapes du processus d’achat peuvent notamment varier selon : 
+ le type d’achat : réfléchi, routinier ou impulsif ; 
+ l’individu acheteur. 
+Les transformations numériques ont fortement impacté ce processus d’achat qui combine désormais de plus 
+en plus recherche en ligne et achat physique (en magasin), un comportement appelé Ropo (ResearchOnline, 
+PurchaseOffline). Les étapes de recherche d’informations, d’évaluation des solutions et d’évaluation 
+postachat ont ainsi été profondément modifiées sous l’effet du numérique.  
+Dans le cadre de la relation client, on fait davantage référence à la notion de parcours client. Le parcours 
+client est une notion proche du parcours d’achat mais plus large ou plus globale.  
+Le parcours client désigne ainsi le parcours que suit un client dans sa relation avec une entreprise. Il intègre 
+ainsi toutes les actions des clients et leurs interactions avec l’entreprise et son produit. Cette notion de 
+parcours client s’inscrit dans une relation entre le client et l’entreprise, en général plus longue, plus 
+complexe et plus évolutive qu’un simple achat ponctuel. 
+Avec le développement du marketing digital et des moyens de communication numériques, le parcours 
+client s’est digitalisé et complexifié. Il est ainsi devenu multicanal, voire omnicanal, combinant 
+généralement des éléments online et offline. On parle également de parcours client « phygital » pour 
+désigner cette convergence entre physique et digital.  
+2. Quels sont les enjeux de la digitalisation de la relation client ? 
+A. Améliorer la connaissance du client 
+ Les traces numériques désignent les informations qu’un dispositif numérique enregistre sur 
+l’activité ou l’identité de ses utilisateurs au moyen de traceurs tels que les cookies, soit 
+--- page 3 ---
+3 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+automatiquement, soit par le biais d’un dépôt intentionnel. Moteurs de recherche, blogs, réseaux 
+sociaux, sites de commerce électronique, mais aussi cartes à puce, titres de transport, téléphones 
+mobiles : tous les systèmes qui requièrent une identification ou une interaction sont susceptibles de 
+capter des informations sur l’utilisateur – parcours, requêtes, préférences, achats, connexions, 
+évaluations, coordonnées. 
+Des solutions logicielles spécifiques permettent aux entreprises de récolter, d’analyser et d’interpréter 
+l’ensemble de ces traces ou données numériques laissées par les consommateurs. Cette analyse fournit aux 
+entreprises une compréhension plus fine du comportement d’achat des consommateurs. 
+Ces dernières années, le développement exponentiel des réseaux sociaux grand public a engendré une masse 
+considérable de « données sociales » (social data) provenant des flux de conversations.Les entreprises ont 
+donc développé une stratégie de Social Listening.  
+ Le Social Listening désigne l’activité de veille, le plus souvent automatisée, opérée sur les réseaux 
+sociaux. C’est une stratégie d’écoute et de compréhension du comportement des consommateurs au 
+travers de leurs diverses prises de paroles en ligne. Elle permet d’analyser toutes les conversations en 
+ligne afin de détecter de nouvelles tendances de consommation que des études marketing classiques 
+n’auraient pas encore révélées. Le social listening s’appuie sur des solutions logicielles, des 
+plateformes de veille automatisée.  
+Historique d’achat, profil sociologique, données comportementales… Du fait de la mutation de notre 
+environnement technologique et de la montée en puissance du bigdata, les entreprises n’ont jamais eu accès 
+à autant d’informations sur leurs clients. 
+Le service relation client trouve un grand intérêt à exploiter ces informations. Un client dont on peut prévoir 
+les requêtes, les désirs et les changements de comportement est par nature un client satisfait. 
+À l’heure du digital et de la traçabilité de toutes les actions des clients sur le Web, le principal enjeu de la 
+connaissance client est désormais moins la collecte de l’information que son organisation, son analyse et son 
+exploitation optimale. 
+La convergence des données en une seule source constitue un outil puissant au service de la connaissance 
+client. Les entreprises doivent désormais adopter une approche globale et centrée sur le client ou 
+Customer-centric. Les entreprises collectent en effet un important volume de données clients au fil des 
+échanges avec les consommateurs. Ces informations sont bien souvent stockées dans des fichiers ou des 
+logiciels métiers séparés. Une vue client à 360° est une agrégation immédiatement exploitable de toutes les 
+informations dont dispose une entreprise sur un client, collectées à travers les transactions, les outils du 
+marketing automatisé, les e-mails, les centres d’appels, les analyses Web ainsi que les enquêtes. Afin 
+d’obtenir une image complète de chaque client, l’intégralité des informations doivent être assemblées en un 
+document consolidé et unifié qui sera profitable à tous les niveaux de l’entreprise : le référentiel client 
+unique.  
+Disposer de cette image complète du client permet ensuite aux entreprises de fournir à ce dernier le service 
+optimal attendu. C’est cette connaissance client qui va pouvoir prendre en compte l’individualité de chaque
+--- page 4 ---
+4 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+B. Concevoir une offre mieux adaptée 
+Les outils numériques permettent ainsi de mieux cerner les attentes des clients, d’anticiper de nouvelles 
+demandes, d’améliorer la satisfaction… Grâce à la data collectée et analysée, les entreprises sont 
+aujourd’hui à même de créer une relation personnalisée unique avec leur client. Elles sont désormais 
+capables de proposer les meilleurs offres et produits adaptés aux besoins du moment du client. On peut citer 
+l’exemple d’Amazon ou de Netflix. Amazon, via la collecte de nos données personnelles, nos achats et notre 
+navigation, est ainsi capable de proposer des offres personnalisées à chaque client. Grâce à son algorithme, 
+Netflix peut orienter ses clients vers des offres personnalisées en fonction de leur historique de visionnage et 
+leur zone géographique.  
+ La digitalisation de la relation client permet ainsi de personnaliser l’offre à destination des 
+clients, de proposer des offres personnalisées en fonction du profil du client, de ses habitudes de 
+consommation, etc. 
+La digitalisation de la relation client permet aussi désormais de coconstruire l’offre avec le client. Les 
+entreprises s’appuient ainsi sur des plateformes digitales qui permettent aux clients de contribuer à 
+l’amélioration de l’offre, de l’expérience client, et à la création de nouveaux produits et services. Les 
+entreprises collectent les avis et les idées des clients sur un produit ou un service existant afin de le faire 
+évoluer et l’adapter davantage à leurs besoins.  
+ 
+C. Optimiser l’interaction avec les clients 
+ La gestion de la relation client s’est digitalisée et s’appuie sur des solutions logicielles 
+spécifiques de CRM (CustomerRelationshipManagement). Ce système d’information CRM permet 
+de développer et d’optimiser la relation client en disposant de données clients ou prospects 
+complètes, centralisées et partagées. Les informations centralisées au sein du CRM seront donc 
+partagées par l’ensemble des équipes impliquées (équipes commerciales, équipes marketing, services 
+clients…) afin d’assurer une gestion de la relation client optimale.  
+La gestion de la relation client s’appuie également sur de nouvelles technologies pour développer de 
+nouveaux canaux de communication avec les clients et optimiser l’interaction avec les clients.  
+Les entreprises ont de plus en plus recours à des solutions technologiques basées sur l’intelligence 
+artificielle, les assistants vocaux, les robots conversationnels et le socialmessaging (WhatsApp, 
+Messenger…). Ces nouveaux outils numériques permettent de multiplier les canaux d’interaction avec le 
+client. Ils offrent aux entreprises la possibilité d’interagir avec le client 24h/24. On parle désormais 
+d’omnicanalité de la relation client. 
+3. Comment l’administration électronique permet-elle d’améliorer 
+la relation avec l’usager ? 
+L’administration électronique désigne l’utilisation des technologies de l’information et de la communication 
+(TIC) par les administrations publiques visant à rendre les services publics plus accessibles à leurs usagers et 
+à améliorer leur fonctionnement interne. 
+ 
+ 
+
+================================================================================
+FILE: cours-du-chapitre-57.pdf
+================================================================================
+PAGES: 6
+--- page 1 ---
+1 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+ 
+Chapitre 11  Les transformations numériques, 
+vecteur d’amélioration de la relation avec les 
+clients et les usagers ? 
+ 
+La révolution numérique a profondément modifié les comportements et usages des individus. Elle a ainsi 
+fortement impacté le comportement d’achat des consommateurs. Les entreprises ont dû s’adapter en 
+digitalisant leur relation client et en plaçant le consommateur au cœur du processus d’achat. Il en va de 
+même pour les administrations qui ont massivement digitalisé leur relation avec les usagers des services 
+publics.  
+ 
+1. Quels sont les facteurs explicatifs du parcours client ? 
+A. Les déterminants du comportement du consommateur 
+Le comportement d’achat peut être influencé par de nombreux facteurs explicatifs, parmi lesquels les besoins, les 
+motivations, les freins et les attitudes. 
+Le besoin occupe une place centrale dans le comportement de consommation. Il désigne un état qui naît 
+d’une sensation de manque et s’accompagne du désir de la faire disparaître. Le besoin est ainsi le facteur 
+déclencheur du processus d’achat. L’individu va chercher en effet à satisfaire son besoin par l’achat d’un 
+produit. On distingue traditionnellement : 
+ Les besoins physiologiques, de nature innée et liés aux exigences de survie de l’individu : se 
+nourrir, se vêtir, se soigner, être en sécurité, etc. 
+ Les besoins psychologiques, de nature construite et liés à la vie sociale de l’individu : 
+appartenir à un groupe, se sentir estimé, s’accomplir, etc. 
+L’achat est par ailleurs souvent le résultat d’un processus d’arbitrage entre des motivations et des freins.  
+ On définit les motivations comme des forces qui poussent un individu à agir pour satisfaire un 
+besoin. Les raisons sont rationnelles, émotionnelles, physiques ou psychologiques. 
+On distingue les motivations hédonistes (pour se faire plaisir), oblatives (pour faire plaisir à autrui), et d’auto 
+expression (pour se valoriser). 
+On définit les freins comme des forces psychologiques négatives qui empêchent un individu d’agir pour 
+satisfaire un besoin.  
+Parmi ces freins, on distingue les peurs, les risques (réels ou imaginaires) liés à l’achat, et les inhibitions. 
+L’attitude d’un individu influence également le comportement d’achat. L’attitude désigne l’ensemble des 
+éléments d’évaluation dont dispose un individu à l’égard d’une marque ou d’un produit. C’est sa 
+prédisposition à évaluer, à réagir émotionnellement et à agir à l’égard d’un produit ou d’une situation. Elle 
+comprend trois composantes : 
+   
+L’essentiel 
+--- page 2 ---
+2 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ La composante cognitive concerne les connaissances et les croyances de l’individu à propos d’une 
+marque, d’une entreprise  
+ La composante affective désigne les émotions et les sentiments éprouvés par l’individu  
+ La composante conative caractérise l’intention de l’individu en termes d’action. 
+ 
+B. Le parcours client du consommateur 
+Le processus d’achat recouvre l’ensemble des étapes qui conduisent un consommateur à choisir un bien ou un 
+service. Ce processus est généralement composé de 5 étapes : 
+1. L’émergence du besoin. 
+2. La recherche et le traitement des informations auprès de sources variées : personnelles (famille, 
+amis, collègues) commerciales (publicités, vendeurs, sites Internet), publiques (articles de presse, 
+réseaux sociaux, forums). 
+3. L’évaluation des solutions : comparaison des solutions d’achat. 
+4. La décision d’achat. 
+5. L’évaluation postachat : satisfaction ou mécontentement. 
+Chaque situation d’achat étant unique, les étapes du processus d’achat peuvent notamment varier selon : 
+ le type d’achat : réfléchi, routinier ou impulsif ; 
+ l’individu acheteur. 
+Les transformations numériques ont fortement impacté ce processus d’achat qui combine désormais de plus 
+en plus recherche en ligne et achat physique (en magasin), un comportement appelé Ropo (ResearchOnline, 
+PurchaseOffline). Les étapes de recherche d’informations, d’évaluation des solutions et d’évaluation 
+postachat ont ainsi été profondément modifiées sous l’effet du numérique.  
+Dans le cadre de la relation client, on fait davantage référence à la notion de parcours client. Le parcours 
+client est une notion proche du parcours d’achat mais plus large ou plus globale.  
+Le parcours client désigne ainsi le parcours que suit un client dans sa relation avec une entreprise. Il intègre 
+ainsi toutes les actions des clients et leurs interactions avec l’entreprise et son produit. Cette notion de 
+parcours client s’inscrit dans une relation entre le client et l’entreprise, en général plus longue, plus 
+complexe et plus évolutive qu’un simple achat ponctuel. 
+Avec le développement du marketing digital et des moyens de communication numériques, le parcours 
+client s’est digitalisé et complexifié. Il est ainsi devenu multicanal, voire omnicanal, combinant 
+généralement des éléments online et offline. On parle également de parcours client « phygital » pour 
+désigner cette convergence entre physique et digital.  
+2. Quels sont les enjeux de la digitalisation de la relation client ? 
+A. Améliorer la connaissance du client 
+ Les traces numériques désignent les informations qu’un dispositif numérique enregistre sur 
+l’activité ou l’identité de ses utilisateurs au moyen de traceurs tels que les cookies, soit 
+--- page 3 ---
+3 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+automatiquement, soit par le biais d’un dépôt intentionnel. Moteurs de recherche, blogs, réseaux 
+sociaux, sites de commerce électronique, mais aussi cartes à puce, titres de transport, téléphones 
+mobiles : tous les systèmes qui requièrent une identification ou une interaction sont susceptibles de 
+capter des informations sur l’utilisateur – parcours, requêtes, préférences, achats, connexions, 
+évaluations, coordonnées. 
+Des solutions logicielles spécifiques permettent aux entreprises de récolter, d’analyser et d’interpréter 
+l’ensemble de ces traces ou données numériques laissées par les consommateurs. Cette analyse fournit aux 
+entreprises une compréhension plus fine du comportement d’achat des consommateurs. 
+Ces dernières années, le développement exponentiel des réseaux sociaux grand public a engendré une masse 
+considérable de « données sociales » (social data) provenant des flux de conversations.Les entreprises ont 
+donc développé une stratégie de Social Listening.  
+ Le Social Listening désigne l’activité de veille, le plus souvent automatisée, opérée sur les réseaux 
+sociaux. C’est une stratégie d’écoute et de compréhension du comportement des consommateurs au 
+travers de leurs diverses prises de paroles en ligne. Elle permet d’analyser toutes les conversations en 
+ligne afin de détecter de nouvelles tendances de consommation que des études marketing classiques 
+n’auraient pas encore révélées. Le social listening s’appuie sur des solutions logicielles, des 
+plateformes de veille automatisée.  
+Historique d’achat, profil sociologique, données comportementales… Du fait de la mutation de notre 
+environnement technologique et de la montée en puissance du bigdata, les entreprises n’ont jamais eu accès 
+à autant d’informations sur leurs clients. 
+Le service relation client trouve un grand intérêt à exploiter ces informations. Un client dont on peut prévoir 
+les requêtes, les désirs et les changements de comportement est par nature un client satisfait. 
+À l’heure du digital et de la traçabilité de toutes les actions des clients sur le Web, le principal enjeu de la 
+connaissance client est désormais moins la collecte de l’information que son organisation, son analyse et son 
+exploitation optimale. 
+La convergence des données en une seule source constitue un outil puissant au service de la connaissance 
+client. Les entreprises doivent désormais adopter une approche globale et centrée sur le client ou 
+Customer-centric. Les entreprises collectent en effet un important volume de données clients au fil des 
+échanges avec les consommateurs. Ces informations sont bien souvent stockées dans des fichiers ou des 
+logiciels métiers séparés. Une vue client à 360° est une agrégation immédiatement exploitable de toutes les 
+informations dont dispose une entreprise sur un client, collectées à travers les transactions, les outils du 
+marketing automatisé, les e-mails, les centres d’appels, les analyses Web ainsi que les enquêtes. Afin 
+d’obtenir une image complète de chaque client, l’intégralité des informations doivent être assemblées en un 
+document consolidé et unifié qui sera profitable à tous les niveaux de l’entreprise : le référentiel client 
+unique.  
+Disposer de cette image complète du client permet ensuite aux entreprises de fournir à ce dernier le service 
+optimal attendu. C’est cette connaissance client qui va pouvoir prendre en compte l’individualité de chaque
+--- page 4 ---
+4 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+B. Concevoir une offre mieux adaptée 
+Les outils numériques permettent ainsi de mieux cerner les attentes des clients, d’anticiper de nouvelles 
+demandes, d’améliorer la satisfaction… Grâce à la data collectée et analysée, les entreprises sont 
+aujourd’hui à même de créer une relation personnalisée unique avec leur client. Elles sont désormais 
+capables de proposer les meilleurs offres et produits adaptés aux besoins du moment du client. On peut citer 
+l’exemple d’Amazon ou de Netflix. Amazon, via la collecte de nos données personnelles, nos achats et notre 
+navigation, est ainsi capable de proposer des offres personnalisées à chaque client. Grâce à son algorithme, 
+Netflix peut orienter ses clients vers des offres personnalisées en fonction de leur historique de visionnage et 
+leur zone géographique.  
+ La digitalisation de la relation client permet ainsi de personnaliser l’offre à destination des 
+clients, de proposer des offres personnalisées en fonction du profil du client, de ses habitudes de 
+consommation, etc. 
+La digitalisation de la relation client permet aussi désormais de coconstruire l’offre avec le client. Les 
+entreprises s’appuient ainsi sur des plateformes digitales qui permettent aux clients de contribuer à 
+l’amélioration de l’offre, de l’expérience client, et à la création de nouveaux produits et services. Les 
+entreprises collectent les avis et les idées des clients sur un produit ou un service existant afin de le faire 
+évoluer et l’adapter davantage à leurs besoins.  
+ 
+C. Optimiser l’interaction avec les clients 
+ La gestion de la relation client s’est digitalisée et s’appuie sur des solutions logicielles 
+spécifiques de CRM (CustomerRelationshipManagement). Ce système d’information CRM permet 
+de développer et d’optimiser la relation client en disposant de données clients ou prospects 
+complètes, centralisées et partagées. Les informations centralisées au sein du CRM seront donc 
+partagées par l’ensemble des équipes impliquées (équipes commerciales, équipes marketing, services 
+clients…) afin d’assurer une gestion de la relation client optimale.  
+La gestion de la relation client s’appuie également sur de nouvelles technologies pour développer de 
+nouveaux canaux de communication avec les clients et optimiser l’interaction avec les clients.  
+Les entreprises ont de plus en plus recours à des solutions technologiques basées sur l’intelligence 
+artificielle, les assistants vocaux, les robots conversationnels et le socialmessaging (WhatsApp, 
+Messenger…). Ces nouveaux outils numériques permettent de multiplier les canaux d’interaction avec le 
+client. Ils offrent aux entreprises la possibilité d’interagir avec le client 24h/24. On parle désormais 
+d’omnicanalité de la relation client. 
+3. Comment l’administration électronique permet-elle d’améliorer 
+la relation avec l’usager ? 
+L’administration électronique désigne l’utilisation des technologies de l’information et de la communication 
+(TIC) par les administrations publiques visant à rendre les services publics plus accessibles à leurs usagers et 
+à améliorer leur fonctionnement interne. 
+ 
+ 
+
+================================================================================
+FILE: cours-du-chapitre-58.pdf
+================================================================================
+PAGES: 7
+--- page 1 ---
+1 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+Chapitre 12 Comment une organisation 
+communique-t-elle avec ses différents acteurs ? 
+ 
+Confrontées à un environnement de plus en plus concurrentiel, les organisations ont été contraintes de 
+développer des stratégies de communication à l’égard de leurs différents publics. La communication est ainsi 
+devenue omniprésente dans le quotidien des organisations. 
+1. Comment caractériser la communication des organisations ? 
+A. La dimension stratégique de la communication 
+ La communication revêt pour les organisations une dimension stratégique incarnée par ses deux 
+grands objectifs : assurer la cohésion des membres de l’organisation et valoriser l’image de 
+l’organisation. 
+La communication des organisations vise tout d’abord à développer l’adhésion des membres aux objectifs de 
+l’organisation et à assurer leur cohésion globale.  
+La communication repose sur la transmission d’informations au sein de l’organisation. Il s’agit de diffuser 
+les messages et de faciliter la circulation d’information. La communication s’appuie également sur une 
+démarche participative permettant à chacun d’être acteur de l’organisation. Enfin elle vise à favoriser 
+l’adhésion de tous à des objectifs partagés et à des valeurs communes.  
+Exemple : le groupe Safran, dans le cadre de sa fusion avec Zodiac Aerospace, a lancé une campagne de 
+communication pour favoriser l’intégration des salariés ex-Zodiac Aerospace, leur faire découvrir ce 
+nouveau groupe et fédérer dans un esprit d’équipe tous les collaborateurs de Safran et ex-Zodiac 
+Aerospace.  
+La communication d’une organisation poursuit un deuxième objectif stratégique : l’affirmation de 
+l’identité de l’organisation et la valorisation de son image. La communication vise à faire connaître 
+l’organisation, son histoire, sa culture, ses valeurs, son ou ses domaines d’activité… Elle cherche ainsi à 
+mettre en valeur l’image de l’organisation (parfois appelée image de marque) pour se démarquer des 
+organisations concurrentes.  
+Exemple : la marque de vêtement Desigual a cherché à reconquérir une cible plus jeune en mettant en 
+œuvre une refonte de son identité visuelle (changement de logo, de monogramme), en changeant son slogan 
+et en se rapprochant des cultures urbaines.  
+La communication relève donc d’une stratégie avec un plan d’actions et des objectifs à atteindre. 
+B. Les différentes formes de communication 
+La notion de communication dans les organisations est une notion très large qui renvoie à différentes formes 
+et modalités. 
+On distingue et on oppose généralement deux grandes formes de communication : la communication 
+interne et la communication externe. 
+L’essentiel 
+--- page 2 ---
+2 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ La communication interne regroupe l’ensemble des actions de communication réalisées au sein 
+d’une entreprise ou organisation à destination de ses salariés et de ses publics internes. 
+ La communication externe regroupe quant à elle l’ensemble des actions de communication 
+réalisées à destination des publics externes à l’entreprise ou à l’organisation étudiée. 
+La communication externe s’adresse aux parties prenantes externes de l’organisation : clients, fournisseurs, 
+actionnaires, banquiers, médias, société civile, « grand public »… 
+La communication externe a pour rôle de contrôler la diffusion des informations de l’organisation afin de 
+maîtriser son image et de créer une relation de confiance avec ses parties prenantes. 
+Il existe deux modalités de communication externe : 
+ 
+ La communication commerciale pour démontrer les qualités du produit et de la marque, faire 
+connaître et vendre le produit (exemples : publicité, reportage...)  
+ 
+ La communication institutionnelle pour promouvoir l’organisation, développer sa notoriété, livrer 
+une image positive et communiquer sur les valeurs, les résultats et les performances de l’organisation 
+(exemples : communication financière, rapport annuel, site Internet, blogs…). 
+ 
+Pour décupler l’efficacité de son message, l’organisation doit mettre en œuvre une communication intégrée 
+qui correspond à la diffusion complémentaire de son message sur plusieurs canaux : presse, radio, TV, 
+cinéma, affichage, Internet, réseaux sociaux, newsletter 
+Cette distinction ne signifie cependant pas séparation et la frontière entre ces deux formes de communication 
+est de plus en plus poreuse pour deux raisons : d’une part, le numérique favorise des interactions plus 
+fréquentes entre interne et externe, d’autre part, le collaborateur a des identités multiples (salarié, mais 
+également consommateur, citoyen…).  
+ Il devient donc nécessaire pour les organisations de mettre en œuvre une communication globale et 
+intégrée. La communication globale se définit comme une approche globale de l’ensemble des 
+communications : externe (institutionnelle, commerciale, financière) et interne. Elle vise à assurer la 
+cohérence et la compatibilité entre les messages en direction de toutes les parties prenantes (clients, 
+prospects, personnel, partenaires...). 
+2. Comment distinguer communication interne et externe ? 
+A. Les caractéristiques de la communication interne 
+La communication interne poursuit de nombreux objectifs : 
+ Faire circuler l’information au sein de l’organisation. 
+ Informer et sensibiliser le personnel aux enjeux de l’organisation. 
+ Expliquer au personnel les grandes orientations stratégiques. 
+ Véhiculer des valeurs et créer une culture commune. 
+ 
+Ces dernières années, l’accompagnement des changements organisationnels est devenu un objectif 
+prioritaire de la communication interne. 
+Selon les organisations, la communication interne peut être assurée par la direction des ressources humaines 
+ou par la direction de la communication.  
+ 
+--- page 3 ---
+3 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+Les cibles de la communication interne sont l’ensemble des personnes qui contribuent en interne à l’activité 
+de l’organisation (salariés, managers, stagiaires, bénévoles…). La frontière entre les cibles de 
+communication internes et externes a été remise en question par une nouvelle vision des collaborateurs, 
+définis à la fois commedes salariés, des ambassadeurs de l’entreprise (premiers relais vers l’externe et donc 
+cibles intermédiaires de la communication externe)et des citoyens. 
+Exemple : de nombreuses campagnes de communication interne contre le harcèlement s’adressent aux 
+collaborateurs à la fois en tant que salariés, citoyens et ambassadeurs externes. 
+La communication interne repose sur trois types de circuits : 
+ La communication descendante : plus communément appelée « du haut vers le bas » ou top-down 
+c’est-à-dire des dirigeants vers les collaborateurs de l’organisation. Plus naturelle et plus 
+hiérarchique, il s’agit de la communication interne originelle dans les organisations. Elle a pour but 
+de diffuser des informations, de résoudre les conflits et d’expliquer un projet à l’ensemble du 
+personnel  
+ La communication ascendante : plus communément appelée « du bas vers le haut » ou bottom-up, 
+c’est une forme de communication plus récente au sein des organisations. Elle émane des 
+collaborateurs et a pour destinataire les dirigeants de l’organisation. Elle leur permet d’identifier 
+rapidement les disfonctionnements au sein de l’organisation, d’être à l’écoute du terrain, du climat 
+social et des besoins des salariés  
+ La communication transversale : communication « de même niveau » sans liens hiérarchiques 
+significatifs. C’est la forme de communication la plus moderne et la plus appréciée par les 
+collaborateurs. Cette communication favorise les échanges entre les différents acteurs de 
+l’organisation. Elle correspond au management transversal et a été favorisée par la transformation 
+numérique des organisations.  
+La communication interne s’appuie sur de très nombreux outils que l’on peut classer en différentes 
+catégories : 
+ Les outils traditionnels « papier » : notes de service, livrets d’accueil, affiches, flyers, brochures, 
+guides, journaux d’entreprises… 
+ Les outils d’interaction orale : directs (entretiens, réunions d’information, séminaires, conférences…) 
+ou à distance (conférence téléphonique, visioconférence…) ; 
+ Les outils numériques : e-mail, intranet, newsletter, blog, appli, plateforme sociale, web TV… 
+Il existe un lien très fort entre le circuit de communication interne utilisé et le choix des outils mobilisés. La 
+communication transversale par exemple repose de plus en plus sur des outils numériques qui ont favorisé 
+son émergence et son développement. A l’inverse, on associe souvent la communication descendante aux 
+outils traditionnels.  
+B. Les caractéristiques de la communication externe 
+La communication externe poursuit les objectifs suivants :  
+ Développer la notoriété de l’organisation. 
+ Véhiculer l’identité et les valeurs de l’organisation. 
+ Construire et développer une image positive de l’organisation. 
+ Se distinguer des organisations concurrentes. 
+ Établir et maintenir des relations avec ses parties prenantes externes. 
+ 
+--- page 4 ---
+4 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+En communiquant, l’organisation se construit une identité auprès deses diverses parties prenantes qu’elle va 
+manifester notamment à travers : 
+ 
+– sa marque employeur : son image auprès des salariés actuels et potentiels ; 
+– son e-réputation : les publications des internautes à son sujet (exemples : commentaires, 
+articles…) ; 
+– son identité numérique : les traces numériques qu’elle laisse sur Internet. 
+ 
+Les cibles de la communication externe d’une organisation sont très variées et recouvrent l’ensemble de ses 
+parties prenantes externes. On peut notamment citer : les clients, les fournisseurs, les distributeurs, l’État, les 
+collectivités territoriales, les organismes de régulation, les associations et les ONG, les citoyens et l’opinion 
+publique, les banques et les investisseurs, les médias, les populations locales… 
+L’organisation doit adapter sa communication externe à chaque public en variant les messages pour tenir 
+compte des spécificités de la cible et de ses attentes.  
+Exemple : une communication à destination de clients particuliers sera très différente d’une 
+communication à destination de clients professionnels. 
+L’organisation dispose d’une importante panoplie de moyens pour communiquer avec ses publics externes. 
+Le choix du moyen de communication est presque aussi important que le message lui-même. 
+En effet, certains moyens sont plus appropriés que d’autres pour toucher certaines cibles. 
+On distingue traditionnellement deux grandes catégories de moyens de communication externe : 
+ Les moyens média : presse, télévision, affichage (publicité extérieure), radio, cinéma et Internet (le 
+« numérique ») 
+ Les moyens hors média : promotion des ventes, relations publiques et relations presse, l’événementiel, 
+le mécénat et le sponsoring, le marketing direct, les foires et les salons. 
+Parmi les moyens média, le digital (Internet) connaît actuellement une croissance très forte et a dépassé la 
+télévision.  
+La communication externe revêt des formes différentes en fonction de ses objectifs et de ses cibles. 
+On distingue traditionnellement deux grandes formes de communication externe : la communication 
+institutionnelle et la communication commerciale. 
+La communication commerciale a pour rôle principal d’inciter le consommateur à acquérir un produit ou 
+une marque. On distingue ainsi la communication de marque et la communication produit.  
+La communication de marque vise à faire connaître la marque, l’installer durablement dans l’esprit du 
+consommateur et lui donner une image favorable.  
+La communication produit vise à promouvoir les biens ou services fabriqués et commercialisés par 
+l’entreprise, à favoriser le lancement et les ventes d’un produit en le faisant connaître et en développant sa 
+notoriété. Son discours porte sur la performance des produits (avantage produit). 
+Exemple : une campagne pour la nouvelle Clio (communication produit) et une campagne sur la marque 
+Renault. 
+La communication institutionnelle désigne les actions de communication qui visent à promouvoir l’image 
+d’une organisation vis à vis de l’ensemble de ses partenaires. Elle se distingue de la communication de 
+marque dans la mesure où c’est l’organisation dans son ensemble qui est promue. On rattache souvent à la 
+
+================================================================================
+FILE: cours-du-chapitre-59.pdf
+================================================================================
+PAGES: 3
+--- page 1 ---
+1 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+ 
+Chapitre 13  Quels enjeux éthiques dans 
+l’activité des organisations ? 
+ 
+L’objectif n’est pas ici de procéder à une analyse théorique de la notion d’éthique. Il s’agit d’en donner une 
+définition élémentaire et de rappeler les évènements à l’origine du questionnement éthique dans les 
+organisations (pratiques de corruption, grandes affaires financières, etc.). Il s’agit aussi, par l’étude 
+d’exemples concrets, de montrer que l’action d’une organisation peut : 
+ Soulever des questions d’ordre éthique lorsque sa sincérité peut être questionnée (lobbying, green 
+washing, social washing, etc...), 
+ Permettre de lutter contre des pratiques posant des questions d’éthique : atteinte à la vie privée ou à 
+la dignité, discriminations au travail (mesures en faveur de l’égalité femmes-hommes, contre les 
+discriminations raciales, pour la diversité, pour la prise en compte du handicap, etc...). 
+1. Comment l’éthique dans les affaires est devenue une 
+préoccupation managériale ? 
+L’éthique est l’ensemble des valeurs ou principes fondamentaux qui vont au-delà des exigences légales de 
+la société. Elle trouve ses racines historiques  dans la pensée  philosophique de la Grèce antique. 
+ 
+L’éthique des affaires s’est imposée grâce à des groupes de pression qui ont refusé de faire des profits au 
+détriment de valeurs. Ainsi des affaires financières et des pratiques de corruption ont pu être dénoncées. Les 
+organisations, tout en poursuivant leurs propres buts, tiennent désormais compte des attentes et des 
+contraintes de l’environnement. La surveillance des organisations et la dénonciation des pratiques non 
+conformes à l’éthique sont favorisées par les réseaux sociaux.  
+ L’éthique dans les affaires, c’est-à-dire les principes éthiques dans la gestion et la conduite des 
+organisations, est ainsi devenue un enjeu managérial. Aussi, les organisations mettent en place et 
+communiquent leur système de valeurs à l’aide d’un code de déontologie ou d’une charte éthique.  
+ 
+2. Quelles sont les organisations concernées par les questions 
+éthiques ? 
+Les organisations non gouvernementales (ONG) agissent pour questionner et développer la responsabilité 
+environnementale, la consommation responsable, mais également la responsabilité sociale et sociétale. 
+Les organisations gouvernementales et territoriales, chargées de mettre en place les décisions de l’état, 
+permettent la régulation des affaires de l’État. Citons : 
+ Les administrations gouvernementales qui dépendant des ministères : hôpitaux publics, éducation 
+   
+L’essentiel 
+--- page 2 ---
+2 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+nationale, gendarmerie, police nationale… 
+ L’administration territoriale assurée par les collectivités territoriales : communes, départements, 
+régions, collectivités d’outre-mer, établissements publics de coopération intercommunale... 
+ Les entreprises publiques chargées par l’État de gérer une activité de service public : cité de la 
+musique, RATP, Comédie Française… et qui ont le statut d’établissements publics industriels et 
+commercial (EPIC). 
+Des organismes de contrôle comme la Cour des comptes sont garants de la bonne utilisation des fonds 
+publics. 
+Par extension, toutes les organisations sont concernées par les questions éthiques dans leur activité. 
+ Les questions d’ordre éthique soulevées par ces organisations concernent les pratiques de 
+lobbying, de greenwashing, de socialwashing, et de la RSE washing. Parfois la sincérité de la mise 
+en œuvre d’une démarche éthique dans les organisations, notamment concernant les principes de 
+responsabilité sociale et environnementale, est questionnée. 
+Notons que les organisations non gouvernementales jouent un rôle particulier en luttant contre les pratiques 
+posant des questions éthiques. 
+ 
+3. Quelles sont les actions mises en œuvre pour lutter contre les 
+pratiques contraires à l’éthique ?  
+ Les pratiques qui posent des questions éthiques sont le harcèlement, la discrimination dans les 
+relations de travail, l’égalité hommes-femmes, l’atteinte à la vie privée, la prise en compte du 
+handicap, la corruption et les affaires financières.  
+ 
+Mises sous pression par le législateur, les actionnaires ou les clients, les organisations savent qu’on leur 
+demande plus que la seule qualité des produits ou services qu’elles fournissent.  
+Les organisations jouent par conséquent un rôle actif pour lutter contre ces pratiques, en favorisant la 
+transparence de leurs propres pratiques, en luttant contre les pratiques de corruption, en produisant une 
+comptabilité sincère. Elles véhiculent ainsi une image transparente de leurs activités et de leurs pratiques. 
+ 
+L’éthique est devenue un enjeu de management pour les organisations, un moyen de se démarquer de 
+leurs concurrents de manière très positive tout en apportant leur soutien à une cause noble. Véhiculer des 
+valeurs et les mettre concrètement en application est devenu un enjeu stratégique pour les organisations qui 
+interviennent dans un environnement complexe, en perpétuel mouvement, dont elles doivent tenir compte. 
+ 
+4. Comment les organisations intègrent-elles des préoccupations 
+civiques ? 
+Les organisations montrent leurs préoccupations civiques par leur engagement dans des actions 
+civiques telles le mécénat et la démocratie participative :  
+ Les actions de mécénat permettent de partager des valeurs humanistes : participation à des œuvres 
+conduites en lien avec des partenaires engagés dans des actions d’intérêt général, qu’elles soient 
+sportives, sociales, éducatives, financières, culturelles, médicales et de recherche, de solidarité 
+internationale, et plus récemment environnementales. 
+--- page 3 ---
+3 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+Les trois formes principales de mécénat sont : 
+ 
+o Le mécénat financier (dons, cotisations, subventions…),  
+o Le mécénat en nature ou matériel et immatériel (mise à disposition d’équipements, de 
+brevets…) et  
+o Le mécénat de compétences ou humain (mobilisation de savoir-faire, mise à disposition de 
+compétences, bénévolat, congés solidaires, coformation, interventions…). Toutes les 
+organisations peuvent être mécènes, quelle que soit leur taille, leur activité, leur implantation. 
+Les bénéficiaires sont généralement les citoyens, mais aussi les établissements publics, les 
+ONG et les associations. 
+ 
+ Les actions de démocratie participative, ou d’implication des salariés dans la vie de l’organisation, 
+ou outils de participation citoyenne dans les organisations publiques, sont généralement menées 
+après consultation.  
+Les organisations s’appuient sur les acteurs partenaires de leur écosystème engagés dans des actions 
+d’intérêt général. Elles intègrent dans leurs actions les évolutions sociétales, environnementales et 
+comportementales des parties prenantes, c’est-à-dire des acteurs liés à leur environnement : les citoyens dans 
+les organisations publiques, les personnels, associés, clients et fournisseurs dans les organisations privées et 
+les adhérents et salariés dans les organisations non gouvernementales. 
+ 
+Pour conclure, l’action des organisations liée à l’éthique managériale ne saurait être menée sans la prise en 
+compte de toutes leurs parties prenantes. 
+ 
+5. Rendre l’information transparente 
+Les pouvoir publics peuvent obliger les organisations à adopter un comportement éthique en présentant à ses 
+parties prenantes une image transparente de son activité.  
+ 
+ La règlementation oblige les entreprises à respecter les normes comptables, c’est-à-dire un 
+ensemble de règles communes qui permettent d’uniformiser et de rationaliser la présentation des 
+informations comptables.  Les sociétés qui font appel à des investisseurs financiers sont également 
+dans l’obligation de leur présenter un certain nombre d’informations (rapport financier annuel 
+notamment).  
+ 
+ Les entreprises peuvent encore aller plus loin, en publiant chaque année par exemple le 
+document de référence (dont seule la partie financière est obligatoire, et ce uniquement pour les 
+société cotées). Il s’agit d’un document d’information présentant toutes les informations nécessaires 
+pour évaluer l’activité, la situation financière, les résultats. Ce document d’information constitue un 
+outil de communication en donnant aux parties prenantes (analystes financiers, investisseurs 
+institutionnels ou actionnaires individuels), toutes les informations juridiques, économiques, 
+financières et comptables concourant à une présentation exhaustive d’une société pour un exercice 
+donné.    
+ 
+ Au-delà de certains seuils de taille, les grandes entreprises sont également obligées de présenter 
+une déclaration de performance extra-financière qui synthétise et rend publiques toutes les 
+informations sur les actions mises en place par l’entreprise pour respecter les principes du 
+développement durable. 
+
+================================================================================
+FILE: cours-du-chapitre-60 (1).pdf
+================================================================================
+PAGES: 3
+--- page 1 ---
+1 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+ 
+Chapitre 14 Comment les organisations 
+prennent-elles en compte les changements des 
+modes de vie ? 
+ 
+Les changements sociétaux et de mode de vie influencent les pratiques des organisations. Les 
+transformations digitales ont créé des changements dans les modes de vie qui s’opèrent au niveau des 
+attentes des salariés et des modes de consommation. Ces tendances ont un impact sur l’organisation et le 
+management. 
+ 
+1. Quels sont les nouveaux rapports au travail ?  
+Le contexte sociétal a changé : avant 1990, c’est-à-dire avant la démocratisation des ordinateurs, des 
+téléphones et des outils de communication numériques, la création, l’interaction et le maintien de relation se 
+faisaient exclusivement par le présentiel au travail. 
+L’omniprésence des réseaux de communication dans notre environnement a changé les comportements. 
+Concrètement, cela se matérialise par une dépendance à l’utilisation d’Internet.  
+Ces tendances sociétales ont un impact sur l’individu au travail, sur l’organisation du travail et le 
+management de l’organisation.  
+ 
+A. Les nouvelles attentes des salariés 
+Dans leur travail, les salariés souhaitent s’exprimer librement et être écoutés sans avoir à supporter le poids 
+de la hiérarchie. 
+Ils souhaitent évoluer dans un environnement de travail agréable avec des espaces dédiés à l’épanouissement 
+personnel. Pour leur bien-être, ils aspirent à concilier leur vie professionnelle et leur vie privée. 
+ 
+B. Les réponses du management aux nouvelles attentes des salariés 
+Pour répondre aux nouvelles attentes des salariés, l’organisation doit supprimer des niveaux hiérarchiques et 
+développer un management de proximité fondé sur le respect mutuel et la confiance. 
+L’aménagement du lieu de travail doit être convivial, propice aux échanges et proposer des espaces de 
+détente. 
+ Le télétravail, qui permet aux salariés de travailler de chez eux, est une solution pour concilier 
+vie professionnelle et vie privée. 
+Le droit à la déconnexion donne le droit aux salariés de ne plus être connectables en dehors de leurs horaires 
+de travail. Il a pour but de lutter contre le surmenage et le burn-out 
+ 
+Le rapport au lieu de travail a changé : les outils numériques rendent le travailleur disponible en 
+permanence, le temps de travail n’est plus effectué uniquement aux horaires de bureau. La présence des 
+travailleurs n’est plus forcément obligatoire sur le lieu de travail. Le télétravail permet le travail nomade, 
+   
+L’essentiel 
+--- page 2 ---
+2 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+sans bureau fixe. Il est possible de travailler de chez soi ou depuis des espaces de coworking. Les frontières 
+entre le travail et la vie personnelle sont plus poreuses. Elles permettent de répondre à la volonté affirmée 
+par les millenialsd’un meilleur équilibre entre vie privée et vie professionnelle, et de disposer de davantage 
+d’autonomie au travail. (Les Millenials sont des individus devenus adultes aux environs de l’an 2000) 
+ 
+Les organisations adaptent leur mode d’organisation en adoptant les outils numériques de travail. Grâce à 
+ces outils, les salariés peuvent être suivis à distance. Le travailleur en 2020 est plus volontiers indépendant, 
+autoentrepreneur, cumule plusieurs activités, travaille en temps partagé. 
+Le rapport à la hiérarchie se modifie, le manager devenant un accompagnateur de développement de 
+compétences et un coach de salariés travaillant en équipes de projets. 
+ 
+Les réponses du management aux nouveaux modes de consommation : Des solutions ont été mises en 
+place pour répondre aux nouvelles attentes des consommateurs et pour les fidéliser. 
+ 
+ Caractéristiques 
+Plateformes 
+d’intermédiation 
+Les plateformes d’intermédiation mettent en relation une offre et une demande dans 
+de nombreux domaines (hébergement, covoiturage, livraison de repas à domicile…). 
+Économie 
+collaborative 
+L’économie collaborative ou de partage repose sur une plateforme numérique qui va 
+permettre l’échange de biens ou de services avec ou sans contrepartie monétaire. 
+Économie de la 
+fonctionnalité 
+L’économie de la fonctionnalité remplace la notion de vente d’un bien par celle de la 
+vente de son usage. 
+ 
+La révolution digitale apporte des bouleversements dans les modes de consommation qui définissent les 
+usages et les pratiques dans les achats de produits et de services. 
+Mieux informés, les consommateurs peuvent acheter n’importe où et à n’importe quel moment. Ils disposent 
+d’un choix immense qui les rend plus volatils. 
+ 
+Enfin, de plus en plus préoccupés par les changements climatiques, les consommateurs sont à la recherche 
+d’une consommation responsable qui respecte l’environnement. Des nouvelles pratiques apparaissent : 
+ Le mouvement Locavore : les consommateurs cherchent à favoriser les producteurs locaux dans 
+leurs achats  
+ Le glanage, qui consiste à récolter ou récupérer des biens abandonnés par leurs propriétaires (fruits 
+et légumes dans les champs après la récolte, produits jetés par les magasins…). 
+ 
+Pour répondre aux préoccupations environnementales des consommateurs, les entreprises mettent en place 
+des mesures pour participer au développement durable : réduction des quantités de matières premières 
+utilisées dans la production, intégration de matériaux renouvelables, recyclage… 
+ 
+2. Quels sont les nouveaux modes de consommation ? 
+A. Les nouveaux comportements de consommation 
+Le numérique et les plateformes d’intermédiation ont modifié les pratiques de consommation. Elles 
+favorisent la consommation à la demande, l’achat spontané. 
+Les préoccupations environnementales encouragent les organisations et les consommateurs à faire mieux 
+--- page 3 ---
+3 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+avec moins.C’est le principe de l’économie de fonctionnalité, ou économie circulaire, système privilégiant 
+l’usage plutôt que la vente de produits. 
+Les échanges via Internet tournés vers la mutualisation et le partage ont favorisé l’économie collaborative ou 
+économie de partage. 
+ 
+Pendant la crise, la pratique du glanage, consistant à refuser le gaspillage et à récupérer des objets, s’est 
+répandue.Favoriser le respect de la nature dans ses pratiques de consommation, dire non au gaspillage 
+alimentaire, favoriser le zéro plastique et le zéro déchet, choisir une production à échelle humaine, sont des 
+pratiques de consommation responsable. 
+ 
+Refuser le transport des marchandises et favoriser l’agriculture urbaine de proximité ont donné 
+naissance au mouvement locavore.Ne rien perdre, tout récupérer, éviter le gaspillage, vivre de manière 
+durable ont initié le mouvement anticonsumérisme. 
+B. Les enjeux de la vie connectée 
+Nous sommes entrés dans une ère hyperconnectée. Les objets connectés, les robots sont aujourd’hui dans 
+tous les secteurs d’activité. Les particuliers, dans leur environnement de travail et à domicile, sont également 
+concernés par ce phénomène. 
+ 
+ Le télétravail, qui permet aux salariés de travailler de chez eux, est une solution pour concilier vie 
+professionnelle et vie privée. 
+ 
+ Le droit à la déconnexion donne le droit aux salariés de ne plus être connectables en dehors de leurs 
+horaires de travail. Il a pour but de lutter contre le surmenage et le burn-out. 
+ 
+Il s’agit d’une véritable révolution pour l’homme, autant dans sa relation au travail que dans ses modes de 
+consommation, au point de devenir parfois un véritable esclavage. Gagner du temps, être joignable en 
+permanence, sont de grands enjeux, mais avec le risque de donner une place trop importante au virtuel au 
+détriment de la relation humaine, et de se voir exclu de la société. 
+Aussi, afin de la protéger les individus et les salariés, le législateur a légiféré sur le droit à la déconnexion. 
+
+================================================================================
+FILE: cours-du-chapitre-60.pdf
+================================================================================
+PAGES: 3
+--- page 1 ---
+1 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+ 
+Chapitre 14 Comment les organisations 
+prennent-elles en compte les changements des 
+modes de vie ? 
+ 
+Les changements sociétaux et de mode de vie influencent les pratiques des organisations. Les 
+transformations digitales ont créé des changements dans les modes de vie qui s’opèrent au niveau des 
+attentes des salariés et des modes de consommation. Ces tendances ont un impact sur l’organisation et le 
+management. 
+ 
+1. Quels sont les nouveaux rapports au travail ?  
+Le contexte sociétal a changé : avant 1990, c’est-à-dire avant la démocratisation des ordinateurs, des 
+téléphones et des outils de communication numériques, la création, l’interaction et le maintien de relation se 
+faisaient exclusivement par le présentiel au travail. 
+L’omniprésence des réseaux de communication dans notre environnement a changé les comportements. 
+Concrètement, cela se matérialise par une dépendance à l’utilisation d’Internet.  
+Ces tendances sociétales ont un impact sur l’individu au travail, sur l’organisation du travail et le 
+management de l’organisation.  
+ 
+A. Les nouvelles attentes des salariés 
+Dans leur travail, les salariés souhaitent s’exprimer librement et être écoutés sans avoir à supporter le poids 
+de la hiérarchie. 
+Ils souhaitent évoluer dans un environnement de travail agréable avec des espaces dédiés à l’épanouissement 
+personnel. Pour leur bien-être, ils aspirent à concilier leur vie professionnelle et leur vie privée. 
+ 
+B. Les réponses du management aux nouvelles attentes des salariés 
+Pour répondre aux nouvelles attentes des salariés, l’organisation doit supprimer des niveaux hiérarchiques et 
+développer un management de proximité fondé sur le respect mutuel et la confiance. 
+L’aménagement du lieu de travail doit être convivial, propice aux échanges et proposer des espaces de 
+détente. 
+ Le télétravail, qui permet aux salariés de travailler de chez eux, est une solution pour concilier 
+vie professionnelle et vie privée. 
+Le droit à la déconnexion donne le droit aux salariés de ne plus être connectables en dehors de leurs horaires 
+de travail. Il a pour but de lutter contre le surmenage et le burn-out 
+ 
+Le rapport au lieu de travail a changé : les outils numériques rendent le travailleur disponible en 
+permanence, le temps de travail n’est plus effectué uniquement aux horaires de bureau. La présence des 
+travailleurs n’est plus forcément obligatoire sur le lieu de travail. Le télétravail permet le travail nomade, 
+   
+L’essentiel 
+--- page 2 ---
+2 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+sans bureau fixe. Il est possible de travailler de chez soi ou depuis des espaces de coworking. Les frontières 
+entre le travail et la vie personnelle sont plus poreuses. Elles permettent de répondre à la volonté affirmée 
+par les millenialsd’un meilleur équilibre entre vie privée et vie professionnelle, et de disposer de davantage 
+d’autonomie au travail. (Les Millenials sont des individus devenus adultes aux environs de l’an 2000) 
+ 
+Les organisations adaptent leur mode d’organisation en adoptant les outils numériques de travail. Grâce à 
+ces outils, les salariés peuvent être suivis à distance. Le travailleur en 2020 est plus volontiers indépendant, 
+autoentrepreneur, cumule plusieurs activités, travaille en temps partagé. 
+Le rapport à la hiérarchie se modifie, le manager devenant un accompagnateur de développement de 
+compétences et un coach de salariés travaillant en équipes de projets. 
+ 
+Les réponses du management aux nouveaux modes de consommation : Des solutions ont été mises en 
+place pour répondre aux nouvelles attentes des consommateurs et pour les fidéliser. 
+ 
+ Caractéristiques 
+Plateformes 
+d’intermédiation 
+Les plateformes d’intermédiation mettent en relation une offre et une demande dans 
+de nombreux domaines (hébergement, covoiturage, livraison de repas à domicile…). 
+Économie 
+collaborative 
+L’économie collaborative ou de partage repose sur une plateforme numérique qui va 
+permettre l’échange de biens ou de services avec ou sans contrepartie monétaire. 
+Économie de la 
+fonctionnalité 
+L’économie de la fonctionnalité remplace la notion de vente d’un bien par celle de la 
+vente de son usage. 
+ 
+La révolution digitale apporte des bouleversements dans les modes de consommation qui définissent les 
+usages et les pratiques dans les achats de produits et de services. 
+Mieux informés, les consommateurs peuvent acheter n’importe où et à n’importe quel moment. Ils disposent 
+d’un choix immense qui les rend plus volatils. 
+ 
+Enfin, de plus en plus préoccupés par les changements climatiques, les consommateurs sont à la recherche 
+d’une consommation responsable qui respecte l’environnement. Des nouvelles pratiques apparaissent : 
+ Le mouvement Locavore : les consommateurs cherchent à favoriser les producteurs locaux dans 
+leurs achats  
+ Le glanage, qui consiste à récolter ou récupérer des biens abandonnés par leurs propriétaires (fruits 
+et légumes dans les champs après la récolte, produits jetés par les magasins…). 
+ 
+Pour répondre aux préoccupations environnementales des consommateurs, les entreprises mettent en place 
+des mesures pour participer au développement durable : réduction des quantités de matières premières 
+utilisées dans la production, intégration de matériaux renouvelables, recyclage… 
+ 
+2. Quels sont les nouveaux modes de consommation ? 
+A. Les nouveaux comportements de consommation 
+Le numérique et les plateformes d’intermédiation ont modifié les pratiques de consommation. Elles 
+favorisent la consommation à la demande, l’achat spontané. 
+Les préoccupations environnementales encouragent les organisations et les consommateurs à faire mieux 
+--- page 3 ---
+3 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+avec moins.C’est le principe de l’économie de fonctionnalité, ou économie circulaire, système privilégiant 
+l’usage plutôt que la vente de produits. 
+Les échanges via Internet tournés vers la mutualisation et le partage ont favorisé l’économie collaborative ou 
+économie de partage. 
+ 
+Pendant la crise, la pratique du glanage, consistant à refuser le gaspillage et à récupérer des objets, s’est 
+répandue.Favoriser le respect de la nature dans ses pratiques de consommation, dire non au gaspillage 
+alimentaire, favoriser le zéro plastique et le zéro déchet, choisir une production à échelle humaine, sont des 
+pratiques de consommation responsable. 
+ 
+Refuser le transport des marchandises et favoriser l’agriculture urbaine de proximité ont donné 
+naissance au mouvement locavore.Ne rien perdre, tout récupérer, éviter le gaspillage, vivre de manière 
+durable ont initié le mouvement anticonsumérisme. 
+B. Les enjeux de la vie connectée 
+Nous sommes entrés dans une ère hyperconnectée. Les objets connectés, les robots sont aujourd’hui dans 
+tous les secteurs d’activité. Les particuliers, dans leur environnement de travail et à domicile, sont également 
+concernés par ce phénomène. 
+ 
+ Le télétravail, qui permet aux salariés de travailler de chez eux, est une solution pour concilier vie 
+professionnelle et vie privée. 
+ 
+ Le droit à la déconnexion donne le droit aux salariés de ne plus être connectables en dehors de leurs 
+horaires de travail. Il a pour but de lutter contre le surmenage et le burn-out. 
+ 
+Il s’agit d’une véritable révolution pour l’homme, autant dans sa relation au travail que dans ses modes de 
+consommation, au point de devenir parfois un véritable esclavage. Gagner du temps, être joignable en 
+permanence, sont de grands enjeux, mais avec le risque de donner une place trop importante au virtuel au 
+détriment de la relation humaine, et de se voir exclu de la société. 
+Aussi, afin de la protéger les individus et les salariés, le législateur a légiféré sur le droit à la déconnexion. 
+
+================================================================================
+FILE: cours-du-chapitre-61.pdf
+================================================================================
+PAGES: 4
+--- page 1 ---
+1 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+ 
+ 
+ 
+Chapitre 15 Quelles responsabilités le 
+numérique crée-t-il pour les organisations ? 
+ 
+Les transformations numériques offrent aux organisations de nouvelles occasions et peuvent toucher 
+l’ensemble des chaînes de valeurs. Elles transforment les relations entre les citoyens et les organisations. 
+L’exploitation des données personnelles oblige les organisations à respecter le règlement général sur la 
+protection des données (RGPD). 
+Les données stratégiques de l’organisation constituent un patrimoine qu’il convient de protéger. 
+L’exploitation des données oblige les administrations à la transparence des algorithmes lorsqu’elles prennent 
+des décisions concernant les individus. Le développement des chaînes de blocs (blockchains) modifie la 
+sécurisation des échanges et la médiation des contrats. 
+ 
+1. Comment le RGPD permet-il de contrôler l’utilisation des 
+données personnelles ? 
+A. Les principes fondateurs du RGPD 
+Le RGPD (Règlement général sur la protection des données) est un texte qui encadre le traitement des 
+données de manière égalitaire sur tout le territoire de l’Union européenne. Il est entré en application le 25 
+mai 2018. 
+ 
+À l’origine, chaque État membre disposait de son propre outil de protection des données personnelles. Le 
+modèle français prend appui sur la loi Informatique et Libertés de 1978, qui a institué la CNIL. L’adoption 
+du RGPD s’impose donc de fait à l’État français qui charge la CNIL de veiller au respect des nouvelles 
+règles en vigueur. 
+Le RGPD s’applique désormais dans toute l’Union européenne, mais concerne en réalité toutes les 
+organisations ayant à traiter les données personnelles d’Européens ou de personnes résidant en Europe. 
+ 
+Voici les principes fondateurs du RGPD : 
+ Les organisations sont tenues de préciser la finalité de la collecte de données. 
+ Les organisations sont dans l’obligation d’informer leurs utilisateurs des traitements informatiques 
+effectués sur leurs données personnelles. 
+ Les données ne peuvent être conservées indéfiniment, et la durée de conservation doit correspondre à 
+la finalité visée. Les données non utilisées doivent être supprimées. 
+ Les droits à l’accès, à la rectification ou à l’effacement des données sont renforcés et les méthodes 
+clairement expliquées par les organisations. 
+ Les entreprises doivent concevoir leur système de façon à garantir la sécurité des données et avertir 
+les utilisateurs des risques. 
+   
+L’essentiel 
+--- page 2 ---
+2 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ Les organisations doivent être, à tout moment, en mesure de démontrer une utilisation correcte et 
+légale des données personnelles. 
+ Un DPD (Délégué à la protection des données – DPO en anglais) doit être désigné (en interne ou en 
+externe) par chaque entreprise. C’est l’interlocuteur de la CNIL en cas d’incident. 
+ Des sanctions très sévères sont prévues en cas de manquement : jusqu’à 4% du chiffre d’affaires 
+global. 
+B. Une sévérité accrue pour contrôler l’utilisation des données 
+personnelles 
+Avec le RGPD, le montant des sanctions peut s’élever jusqu’à 20 millions d’euros ou, dans le cas d’une 
+entreprise, jusqu’à 4 % du chiffre d’affaires annuel mondial.Ces sanctions peuvent être rendues publiques. 
+Lorsque des manquements au RGPD ou à la loi sont portés à sa connaissance, la formation restreinte de la 
+CNIL peut : 
+ Prononcer un rappel à l’ordre. 
+ Enjoindre de mettre le traitement en conformité, y compris sous astreinte. 
+ Limiter temporairement ou définitivement un traitement. 
+ Suspendre les flux de données. 
+ Ordonner de satisfaire aux demandes d’exercice des droits des personnes, y compris sous astreinte. 
+ Prononcer une amende administrative. 
+ 
+De nombreuses entreprises, par exemple Google, ont été sanctionnées par la CNIL.  
+2. Comment sécuriser les données stratégiques ? 
+A. Les enjeux de la sécurité des données stratégiques 
+Les organisations, qu’elles soient publiques ou privées, génèrent, obtiennent, manipulent, traitent des 
+données de nature très différentes.  
+ 
+ Les données stratégiques sont définies comme « toute information de valeur indispensable à la 
+pérennité de l’organisation » (Mallowan, 2012). Certaines données doivent absolument être 
+protégées contre les fuites, ou au contraire contre les risques d’intrusion. 
+ 
+La maitrise de la sécurité des données stratégiques constitue un levier important pour de nombreuses 
+organisations, car elle permet d’améliorer son image et surtout le degré de confiance que ses clients peuvent 
+lui attribuer, incitant dans la foulée d’autres clients à utiliser ses produits et/ou services. 
+ 
+En revanche, un déficit de sécurité des données stratégiques peut fragiliser les organisations vis-à-vis de ses 
+concurrents (perte de part de marché), de ses clients (fuite des clients actuels, moins de nouveaux clients), de 
+ses partenaires financiers (prime d’assurance plus élevée…), des autorités administratives (amendes 
+imposées par la formation restreinte de la CNIL et publication de la sanction). 
+ 
+Les systèmes d’information des services publics sont également concernés car il en va a minima de la 
+crédibilité, et parfois de la sécurité d’êtres humains (par exemple lors des attaques contre les logiciels de 
+l’hôpital universitaire de Brno, en République tchèque, des patients ont dû être renvoyés à leur domicile ; de 
+--- page 3 ---
+3 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+même les ordinateurs du réseau de la métropole de Marseille ont été attaqués par un ransomware en mars 
+2020). 
+B. Les méthodes pour sécuriser les données stratégiques 
+Les maillons faibles constituent souvent la clé d’entrée des personnes malveillantes souhaitant infiltrer ou 
+attaquer les organisations publiques ou privées afin de récupérer des informations stratégiques.  
+L’ANSSI (Agence nationale de la sécurité des systèmes d’information) est l’autorité nationale en matière de 
+sécurité et de défense des systèmes d’information. Elle formule des recommandations aux entreprises pour 
+qu’elles se protègent mieux contre la cybercriminalité, l’espionnage ou encore le sabotage. 
+ 
+Pour se protéger, les organisations doivent (sans exhaustivité ni exclusivité) : 
+ Réaliser un audit des risques cyber en utilisant la méthode EBios. 
+ Former régulièrement leurs membres à la cybersécurité. 
+ Lors de la réception d’e-mails, se méfier des pièces jointes, ne pas ouvrir celles provenant de sources 
+inconnues, contacter l’expéditeur par un autre moyen, et ne pas cliquer sur les liens.  
+ Mettre à jour régulièrement les systèmes d’exploitation. 
+ Procéder à des sauvegardes externes régulières. 
+ S’attacher les services de SSII spécialisées. 
+ Porter plainte en cas d’attaque. 
+ Recommander l’utilisation de mots de passe longs, complexes, uniques à chaque collaborateur. 
+ 
+3. Vers une nécessaire transparence des outils de traitement 
+numérique et de sécurisation des échanges ? 
+Les organisations publiques ou privées ont de plus en plus recours à des outils digitaux, dont des 
+algorithmes. 
+Un algorithme est une suite d’instructions informatiques destinées à résoudre un ou plusieurs problèmes. 
+Pour l’administration, elle est souvent source de performance. En effet, dans certaines situations (par 
+exemple pour le calcul du droit aux bourses), la somme attribuée ou la décision prise par l’administration 
+dépend d’une vérification automatique de la situation de l’usager, sans intervention humaine. 
+A. La transparence des algorithmes 
+Si la règle est bien codée dans l’algorithme et si les données fournies par l’usager (ou récupérées voire 
+contre-vérifiées) par le système d’information de l’administration, la décision (ou le calcul, ou l’action 
+générée) sera adaptée. 
+ 
+ Dans Parcoursup, le fait de demander l’attribution d’une place dans un internat génère un 
+formulaire destiné à calculer des bourses : les données prises en compte sont le revenu net global, le 
+nombre de frères et de sœurs à charge, et le nombre d’étudiants parmi les membres de la fratrie. À 
+l’issue du questionnaire, une réponse est attribuée au répondant. Par ailleurs, on comprend aisément 
+que l’ensemble des demandes ne pourrait pas être traité individuellement par un agent désigné : le 
+système ne pourrait plus fonctionner. 
+Le calcul effectué se révèle exact dans la plupart des situations. Cependant, rien ne garantit que l’algorithme 
+--- page 4 ---
+4 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+sous-jacent tient bien compte de toutes les informations ou qu’il exprime fidèlement les nouvelles règles de 
+l’administration. 
+ 
+À ce titre, les algorithmes méritent d’être transparents. En cas d’erreur, les conséquences sur les citoyens 
+peuvent être dramatiques et durables. Il est donc nécessaire d’exercer des contrôles. La loi pour une 
+République numérique de 2016 fait entrer dans le débat le principe de transparence pour les algorithmes 
+publics.Trois nouveaux droits sont introduits : 
+ 
+ La mention explicite : c’est l’obligation pour l’administration d’indiquer aux usagers qu’un 
+algorithme est utilisé, et quels sont leurs droits  
+ 
+ Les administrations doivent publier la nature des algorithmes s’ils concernent les particuliers  
+ 
+ Tout particulier (usager) concerné doit pouvoir accéder à un ensemble d’informations concernant 
+l’algorithme, son fonctionnement précis et avec la clarté requise. Les données traitées pour son cas 
+doivent également être fournies. 
+ 
+B. La blockchain : outil de sécurisation des échanges 
+Les données sont potentiellement menacées par de nombreux acteurs (hackers, gouvernements étrangers 
+hostiles…). L’arrivée de technologies permettant la création et la diffusion de cryptomonnaies peutêtre 
+étendue à toute la sphère économique : la blockchain. 
+La blockchain est un outil technologique qui permet de stocker et de transmettre les informations de manière 
+fiable, transparente et sécurisée. Elle associe l’horodatage, la cryptographie et de nombreux calculs effectués 
+par des ordinateurs disposant de puissantes cartes graphiques. 
+ 
+ La totalité des opérations effectuées depuis la création de la chaîne de blocs est traçable par les 
+utilisateurs. Chacun peut donc vérifier la solidité de la chaîne. La sécurité étant au cœur même de la 
+création des blockchains, celles-ci sont utilisées par exemple pour créer et diffuser des monnaies 
+virtuelles, garantir des transactions financières (achat/vente de monnaie, d’actions et d’autres titres) 
+ou gérer des contrats de toute nature. 
+Correctement utilisée, la blockchain s’impose donc comme l’une des technologies les plus pertinentes pour 
+assurer la sécurité des échanges.Il est cependant probable qu’elle ne restera pas unique, car les hackers 
+continuent inlassablement d’arriver à leurs fins et de nouvelles parades doivent sans cesse être trouvées. 
+1. L’utilisation de la Blockchain 
+L’utilisation de la blockchain peut être classée dans trois catégories : 
+ 
+– les applications pour effectuer des transferts d’actifs : de la monnaie, des votes, des actions… ; 
+– les applications pour assurer une meilleure traçabilité des produits et des actifs : des colis, des 
+aliments pour connaître la provenance des produits ; 
+– les applications qui exécutent automatiquement les conditions des contrats sans nécessité 
+d’intervention humaine. 
+ 
+Les champs d’exploitation de la blockchain sont nombreux : la banque, les assurances, la santé, 
+l’agroalimentaire, la logistique, l’industrie musicale, l’immobilier, le commerce international… 
+ 
+
+================================================================================
+FILE: cours-n-1-du-chapitre-5.pdf
+================================================================================
+PAGES: 6
+--- page 1 ---
+1 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+ 
+ 
+Chapitre 3 Quelles ressources financières 
+pour produire ?  
+ 
+ 
+ 
+1. Comment les organisations arbitrent-elles entre 
+différentes modalités de financement ?  
+A. Les différentes modalités de financement  
+Les entreprises disposent de différentes modalités de financement qui se répartissent entre 
+financement interne et financement externe. 
+ 
+Le financement interne correspond à l’action de procurer des fonds (somme d’argent) à une 
+entreprise grâce à l’épargne de l’entreprise. IL peut s’agir d’autofinancement ou 
+d’augmentation de capital : 
+ L’autofinancement correspond à la part dégagée par l’activité de l’entreprise et 
+conservée pour financer ses investissements futurs, c’est-à-dire sa croissance. Le 
+principal avantage de l’autofinancement est sa gratuité, en effet comme il provient de 
+l’épargne de l’agent (l’entreprise), aucune charge ne peut être imputée.  
+ L’augmentation de capital par apports personnels représente des avances de fonds 
+que les associés ou les dirigeants mettent à disposition de l’entreprise. En échange, ces 
+apporteurs de fonds reçoivent un versement d’intérêt, dont le taux est fixé entre les 
+dirigeants et les associés prêteurs. 
+Le financement externe regroupe les moyens financiers que l’entreprise trouve à l’extérieur 
+soit en empruntant, soit en augmentant son capital, soit en contractant un crédit-bail, soit 
+grâce à des subventions : 
+ 
+ L’emprunt bancaire correspond à un engagement entre une banque et une entreprise, 
+la banque prête une somme d’argent à une entreprise, en échange du remboursement 
+emprunté et d’un intérêt. Un intérêt est tout simplement le revenu dû par l’emprunteur 
+au prêteur.  
+ L’augmentation de capital consiste à augmenter le capital social de l’entreprise en 
+créant de nouvelles actions qui seront achetées par des actionnaires, nouveaux ou 
+ 
+   
+ : 
+L’essentiel 
+--- page 2 ---
+2 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+anciens. Ces actions donnent des droits aux actionnaires. La rémunération des 
+actionnaires est appelée dividendes. 
+ Le crédit-bail est un contrat entre une société financière (le crédit-bailleur) et une 
+entreprise. Le crédit-bailleur met à disposition un bien d’équipement à l’entreprise 
+pour une période déterminée. En échange, il reçoit un paiement d’une redevance 
+périodique. Au terme du contrat, l’entreprise bénéficiaire a généralement le choix 
+entre plusieurs options : restituer le bien, l’acquérir pour un montant défini lors de la 
+conclusion du contrat, ou renouveler le contrat.  
+ Une subvention est une aide financière réelle, qui n’est ni un prêt ni une avance de 
+trésorerie, accordée par l’État, une collectivité territoriale ou un organisme privé, pour 
+financer ou favoriser le développement d’une activité. Cette subvention peut permettre 
+à des entreprises de faire baisser artificiellement le prix de vente afin de les rendre plus 
+compétitives. 
+B. La situation financière de l’entreprise et de son environnement 
+En partant du fait que l’entreprise est une entité économique combinant les facteurs de 
+production (capital, travail, matières premières) dans le but de produire des biens et services 
+destinés à être vendus sur un marché solvable, le financement peut être défini comme ce qui 
+lui permet de disposer des ressources nécessaires sur le plan pécuniaire. Ce financement 
+conditionne la survie de l’entreprise. 
+ 
+ Le financement de l’entreprise dépend à la base de sa forme (il existe plus de 3,2 
+millions d’entreprises en France) et de sa taille (une entreprise regroupe de un individu 
+– entreprise artisanale – jusqu’à plusieurs milliers – entreprise multinationale). 
+ 
+Par ailleurs, les entreprises, selon leur maturité, n’ont pas le même rapport aux banques, et 
+certaines peuvent avoir des contraintes plus importantes pour trouver des liquidités ; en 
+revanche, certaines politiques économiques peuvent faire des PME les cibles privilégiées des 
+subventions, et ainsi permettre leur croissance. 
+ 
+2. Comment une organisation couvre-t-elle ses besoins de 
+financement ? 
+A. Le bilan fonctionnel 
+Le bilan fonctionnel permet d’analyser le bilan comptable l’origine des flux financiers (d’où 
+vient l’argent) et à quelles fins ils sont utilisés. Présenté de cette façon, le bilan fonctionnel 
+permet de rattacher des opérations à l’exploitation, aux flux ou aux investissements, et de 
+réaliser une analyse financière de l’entreprise à partir de quelques ratios. 
+Les ressources (qui sont les passifs de l’entreprise) sont composées :  
+--- page 3 ---
+3 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ des ressources stables : ressources destinées à rester longtemps dans l’entreprise 
+(capitaux propres auxquels il faut ajouter la partie des dettes à rembourser à plus d’un 
+an) 
+ des ressources à court terme : passif circulant d’exploitation et passif circulant hors 
+exploitation (fournisseurs, impôts, charges sociales à payer). 
+ de la trésorerie passive. 
+Les emplois (actifs de l’entreprise) sont organisés de la manière suivante : 
+ Les emplois stables : éléments identifiables du patrimoine de l’entreprise destinés à 
+rester longtemps dans l’entreprise (actif immobilisé) 
+ Les emplois à court terme : l’actif circulant d’exploitation et l’actif circulant hors 
+exploitation (créances clients, stocks, impôts à récupérer). 
+ La trésorerie active. 
+B. Les ratios permettent d’analyser le bilan fonctionnel 
+Il y a trois ratios à prendre en compte : le fonds de roulement, le besoin en fonds de 
+roulement, et la trésorerie.  
+ 
+ 1er ratio : Fonds de roulement net global (FR) = Ressources stables – 
+Emplois stables 
+ 
+ Si le FR est positif, les ressources stables suffisent à financer les emplois stables, 
+et l’excédent va servir à financer les dépenses courantes d’exploitation (actif 
+circulant). 
+ 
+ Si le FR est négatif, les ressources stables ne suffisent pas à financer les emplois 
+stables, l’entreprise doit trouver d’autres moyens pour financer sa trésorerie. On 
+peut citer :  
+ les découverts bancaires ; 
+ l’allongement du délai de paiement des fournisseurs ; 
+ la diminution des délais de paiement accordés aux clients ; 
+ l’appel aux associés (comptes courants d’associés) pour apporter des 
+liquidités. 
+Bien souvent la solution sera un mix de ces possibilités.  Une entreprise équilibrée possède un 
+fonds de roulement positif. 
+ 
+ 2ème ratio : Besoin en fonds de roulement (BFR) = Actif circulant – Passif 
+circulant 
+Il s’agit de la différence entre les emplois à court terme (actif circulant) et les ressources à 
+court terme (passif circulant).  
+--- page 4 ---
+4 
+Mr Hamou K.  Management Sciences de gestion et numérique Terminale STMG 
+ 
+ 
+ Si le BFR est positif, la société a un actif circulant supérieur à son passif circulant, et 
+les ressources à court terme ne couvrent pas les emplois à court terme. Il lui faut donc 
+financer le décalage grâce à un fonds de roulement positif, ou à défaut se financer à 
+court terme. 
+ 
+ Si le BFR est négatif, le passif circulant suffit à couvrir l’actif circulant, ce qui génère 
+un excédent de trésorerie qui pourra éventuellement servir à financer un fonds de 
+roulement négatif, ou constituer une trésorerie pour l’entreprise. 
+ 
+ 3ème ratio : Trésorerie = Fonds de roulement – Besoin en fonds de 
+roulement 
+La trésorerie rassemble toutes les sommes d’argent qui sont directement disponibles pour 
+l’entreprise. 
+ Si la trésorerie nette est positive, elle constitue une ressource à court terme pour 
+l’entreprise avec des liquidités qui appartiennent en propre à l’entreprise. 
+ Si la trésorerie nette est négative, elle constitue un emploi à court terme pour 
+l’entreprise. La trésorerie est alors constituée de liquidités empruntées (en général des 
+découverts). 
+ 
+3. Comment financer le cycle d’exploitation et gérer la 
+trésorerie ? 
+A. Comment financer le cycle d’exploitation ? 
+Le cycle d’exploitation est le temps dont une entreprise a besoin pour transformer des 
+marchandises achetées et produites en espèces. En d’autres termes, il s’agit de la période entre 
+l’achat des matières premières et le paiement de la facture par le client. 
+Plus le cycle d’exploitation (conversion des paiements sortants en revenus) est long, plus le 
+capital bloqué est important. Ce capital bloqué ne peut pas être utilisé à d’autres fins. 
+Si le cycle d’exploitation se traduit par un besoin en fond de roulement positif, il faudra le 
+financer soit par une large trésorerie excédentaire soit en ayant recours à des financements de 
+court terme. 
+Voici différentes solutions afin de financer le cycle d’exploitation : 
+ L’affacturage : cette solution permet aux entreprises d’obtenir un financement 
+anticipé de leurs factures anticipé.  
+ Facilité de caisse : elle correspond à une permission momentanée de découvert en 
+compte accordée par la banque : c’est à dire que le solde du compte bancaire est 
+autorisé à être négatif pour une courte durée.  

@@ -18,6 +18,7 @@ export const SDGN_CHAP1_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Définition de l'action collective organisée :\nL'action collective organisée suppose un groupe d'individus partageant un ou plusieurs objectifs communs. Ces individus se coordonnent, se répartissent les tâches selon leurs capacités et mobilisent des ressources (humaines, financières, matérielles, immatérielles) pour atteindre les objectifs fixés.\n\n2) Éléments repérés dans le support :\n— Objectif commun : accueillir 200 visiteurs.\n— Coordination et répartition des tâches : communication, accueil, ateliers, budget.\n— Mobilisation de ressources : salle, matériel, budget de 800 €.\n— Règles et prise de décision : réunions hebdomadaires, vote en cas de conflit.\n\n3) Absence d'organisation juridique :\nLe groupe n'a pas constitué de personne morale distincte de ses membres. L'action est limitée dans le temps (trois mois) et ne vise pas une pérennité indéterminée. Il n'y a pas de statuts juridiques ni d'existence reconnue par les tiers comme entité autonome.",
     attendu: "Définition précise, repérage dans le texte, distinction action collective / organisation.",
+    notionsCibles: ["action collective organisée", "organisation"],
   },
   {
     id: "sdgn1-e2",
@@ -35,6 +36,7 @@ export const SDGN_CHAP1_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Personne morale :\nUne personne morale est une entité juridique distincte des individus qui la composent, reconnue par les tiers. « Farine & Partage » peut contracter, posséder un capital et être poursuivie en son nom propre, indépendamment des boulangers fondateurs.\n\n2) Statuts juridiques :\nLes statuts fixent les règles de fonctionnement adaptées aux objectifs : objet social, mode de gouvernance (une voix par associé), répartition des responsabilités. Ils mettent le groupe en conformité avec les contraintes juridiques obligatoires.\n\n3) Pérennité et immatriculation :\nL'action collective initiale était limitée et informelle. La création d'une société coopérative avec durée indéterminée traduit une volonté de pérennité. L'immatriculation au RCS confère une existence juridique officielle : l'organisation peut mener des actions collectives dans la durée.",
     attendu: "Articulation claire action collective ? organisation, vocabulaire juridique exact.",
+    notionsCibles: ["vocabulaire juridique exact."],
   },
   {
     id: "sdgn1-e3",
@@ -52,6 +54,7 @@ export const SDGN_CHAP1_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Objet social :\nL'objet social est la déclaration juridique définissant la finalité de l'organisation. Il conditionne les activités autorisées pour réaliser cette finalité.\n\n2) Classification :\n— LVMH : entreprise à finalité lucrative ; objet social lié à la production et la commercialisation de produits de luxe ; but principal = profit et pérennité.\n— Hôpital public : organisation publique à finalité non lucrative ; objet social = mission de santé publique et intérêt général.\n— Restos du Cœur : association à finalité non lucrative ; objet social = aide sociale alimentaire ; bénéfices réinvestis, pas de distribution de profit.\n\n3) Buts non lucratifs compatibles dans une entreprise :\nUne entreprise peut poursuivre des objectifs RSE, mécénat ou qualité de vie au travail sans renoncer à sa finalité lucrative principale, tant que ces actions restent compatibles avec son activité économique.",
     attendu: "Trois cas distincts, finalités et types correctement nommés.",
+    notionsCibles: ["Trois cas distincts", "finalités et types correctement nommés."],
   },
   {
     id: "sdgn1-e4",
@@ -103,6 +106,7 @@ export const SDGN_CHAP1_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Association Sprint 78 :\nLe pouvoir appartient à l'ensemble des adhérents. Ils se réunissent en assemblée générale pour élire le bureau, approuver les comptes et voter les projets. Gouvernement collégial des adhérents.\n\n2) Organisation publique :\nLe pouvoir est détenu par les élus (conseil municipal) représentant la population. Ils nomment le directeur de la régie et organisent les services publics.\n\n3) Modes de contrôle (organisations publiques) :\n— La Cour des comptes vérifie la bonne utilisation de l'argent public.\n— Les électeurs valident ou sanctionnent les élus par leur vote.\n— Contrôle citoyen indirect : l'usager conteste les tarifs auprès de la mairie.",
     attendu: "Comparaison association / secteur public, contrôle citoyen et institutionnel.",
+    notionsCibles: ["Comparaison association / secteur public", "contrôle citoyen et institutionnel."],
   },
   {
     id: "sdgn1-e7",
@@ -120,6 +124,7 @@ export const SDGN_CHAP1_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Contrôle des dirigeants :\nEnsemble d'actions du gouvernement permettant aux propriétaires de contrôler les dirigeants lorsque la politique menée ne défend pas leurs intérêts.\n\n2) Modes repérés :\n— Assemblée générale : refuse la rémunération variable du PDG, nomme/révoque les dirigeants.\n— Cours de Bourse : baisse de 12 % signale l'insatisfaction des actionnaires qui vendent.\n— Expert-comptable : certification des comptes avec réserve, contrôle financier externe.\n— CSE : droit d'alerte économique sur le plan social.\n— Clients : boycott et baisse des ventes, pression indirecte sur la stratégie produit.\n\n3) Séparation propriété / direction :\nLes actionnaires sont propriétaires mais délèguent la gestion quotidienne à des dirigeants salariés, d'où la nécessité de mécanismes de contrôle pour aligner leurs intérêts.",
     attendu: "Quatre modes distincts, mécanismes expliqués, pas de confusion propriété/direction.",
+    notionsCibles: ["Quatre modes distincts", "mécanismes expliqués", "pas de confusion propriété/direction."],
   },
   {
     id: "sdgn1-e8",
@@ -137,6 +142,7 @@ export const SDGN_CHAP1_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Tableau comparatif :\nSAS : finalité lucrative ; gouvernement = associés/actionnaires en AG ; contrôle = AG, comptes certifiés, marché.\nAssociation : finalité non lucrative ; gouvernement = adhérents en AG ; contrôle = AG approuve comptes, nomme/révoque le bureau.\nAgence publique : finalité non lucrative, intérêt général ; gouvernement = État, élus ; contrôle = Cour des comptes, vote des électeurs, tutelle ministérielle.\n\n2) Statuts juridiques :\nLa SAS est une forme de société commerciale adaptée à une activité lucrative, avec souplesse statutaire et possibilité d'accueillir des investisseurs.\n\n3) Conseil selon l'objectif :\n— Revenu et développement économique ? SAS.\n— Engagement militant sans distribution de profit ? association.\n— Mission d'intérêt général et stabilité de l'emploi public ? ADEME.",
     attendu: "Comparaison structurée des trois types, conseil argumenté.",
+    notionsCibles: ["Comparaison structurée des trois types", "conseil argumenté."],
   },
   {
     id: "sdgn1-e9",
@@ -154,6 +160,7 @@ export const SDGN_CHAP1_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Étapes :\n— Phase 1 : action collective organisée informelle (animations, pas de personne morale).\n— Phase 2 : association = personne morale non lucrative, conventions et subventions.\n— Phase 3 : SARL = personne morale lucrative, objet social commercial de logistique.\n\n2) Deux personnes morales :\nFinalités différentes : mission associative (animation du centre, non lucratif) vs activité économique de livraison (lucratif). Séparer les entités clarifie comptabilité, responsabilités et statuts.\n\n3) Risque de distribution par l'association :\nViolation du régime associatif : les bénéfices doivent être réinvestis. Distribution = requalification possible, sanctions, perte de confiance des financeurs publics.",
     attendu: "Enchaînement logique, distinction des finalités, argument juridique.",
+    notionsCibles: ["Enchaînement logique", "des finalités", "argument juridique."],
   },
   {
     id: "sdgn1-e10",
@@ -171,6 +178,7 @@ export const SDGN_CHAP1_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Structure de propriété coopérative :\nPouvoir réparti entre sociétaires avec règle démocratique « une personne = une voix », indépendamment du capital. Hiérarchie atténuée entre petits et gros propriétaires.\n\n2) Gouvernement par l'AG :\nLa fusion stratégique est soumise au vote des sociétaires, qui refusent la cession au groupe privé : décision collégiale des propriétaires sur l'orientation.\n\n3) Conflits d'intérêts :\n— Sociétaires vs fonds : le fonds veut rentabilité financière, les sociétaires défendent le modèle coopératif.\n— Salariés vs sociétaires : soutien à la direction mais alertes surcharge (conditions de travail).\n— Fonds en filiale logistique : exige un siège au CA, pression sur les dirigeants pour des décisions court-termistes.",
     attendu: "Analyse fine propriété/gouvernement/conflits, vocabulaire coopératif maîtrisé.",
+    notionsCibles: ["vocabulaire coopératif maîtrisé."],
   },
   {
     id: "sdgn1-cas1",
@@ -190,6 +198,7 @@ export const SDGN_CHAP1_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Type d'organisation :\nLVMH est une entreprise à finalité lucrative : création de profit, dividendes, croissance. Objet social : conception et commercialisation de produits de luxe. Buts secondaires non lucratifs compatibles : mécénat, RSE environnementale.\n\n2) Structure de propriété et gouvernement :\nActionnariat dispersé mais contrôle familial (48 % des droits de vote). AG annuelle : comptes, administrateurs, stratégie. Direction opérationnelle déléguée au PDG.\n\n3) Modes de contrôle :\n— AG : approbation comptes et stratégie.\n— Cours de Bourse : indicateur de satisfaction (+15 %).\n— Expert-comptable : certification sans réserve.\n— CSE/syndicats : alerte conditions de travail.\n— Clients/influenceurs : pression sur l'image et les prix.\n\n4) Mécénat et finalité lucrative :\nPas de contradiction : le mécénat renforce l'image de marque et la valeur perçue, compatible avec une stratégie lucrative long terme.\n\n5) Synthèse :\nLVMH illustre une entreprise cotée où les actionnaires contrôlent via AG et marché, tandis que dirigeants et managers opèrent au quotidien. La performance financière (dividendes, cours) reste centrale, mais l'organisation intègre des objectifs non lucratifs compatibles pour légitimer son pouvoir face aux parties prenantes.",
     attendu: "Cas LVMH analysé avec toutes les notions du chapitre 1, synthèse argumentée.",
+    notionsCibles: ["synthèse argumentée."],
   },
   {
     id: "sdgn1-cas2",
@@ -209,5 +218,6 @@ export const SDGN_CHAP1_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Finalités :\nRestos du Cœur : association, aide alimentaire aux démunis, intérêt général social, non lucratif.\nAP-HP : organisation publique, mission de santé, service public, non lucratif.\n\n2) Gouvernement :\nRestos : adhérents/membres en AG, bureau élu.\nAP-HP : État, tutelle ministérielle, direction nommée, élus représentent la population.\n\n3) Contrôles :\nAssociation : AG approuve comptes, révoque responsables ; contrôle médiatique/donateurs.\nPublic : Cour des comptes, vote électoral, pression citoyenne (pétition), tutelle.\n\n4) Bénévoles :\nIls ne sont pas propriétaires au sens capitalistique mais participent à l'action collective organisée ; certains sont adhérents avec voix en AG.\n\n5) Synthèse :\nLes deux structures poursuent l'intérêt général sans distribution de profit, mais l'association repose sur l'engagement civique et l'AG des membres, tandis que l'hôpital public relève de la souveraineté étatique et du contrôle démocratique institutionnel. Elles se complètent dans la chaîne sociale et sanitaire.",
     attendu: "Comparaison systématique association / public, synthèse sur l'économie sociale.",
+    notionsCibles: ["synthèse sur l'économie sociale."],
   },
 ];

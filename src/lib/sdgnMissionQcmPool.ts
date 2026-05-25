@@ -1,4 +1,8 @@
-import { getSdgnMissionChapterNumbers, isSdgnMissionChapter } from "../data/sdgn/registry";
+import {
+  getSdgnMissionChapterNumbers,
+  isSdgnMissionChapter,
+  isSdgnPremiereChapter,
+} from "../data/sdgn/registry";
 import {
   SDGN_MISSION_QCM_CURATED,
   type SdgnMissionQcm,
@@ -23,6 +27,11 @@ function buildMissionQcmBank(): SdgnMissionQcm[] {
 
 export const SDGN_MISSION_QCM_BANK: SdgnMissionQcm[] = buildMissionQcmBank();
 
+/** Banque jeux : SDGN Première uniquement (chapitres 1 à 13). */
+export const SDGN_MISSION_QCM_BANK_PREMIERE: SdgnMissionQcm[] = SDGN_MISSION_QCM_BANK.filter((q) =>
+  isSdgnPremiereChapter(q.chapter),
+);
+
 export function getSdgnMissionChaptersWithQcm(): number[] {
   const chapters = new Set<number>();
   for (const q of SDGN_MISSION_QCM_BANK) {
@@ -36,9 +45,14 @@ export function getGameQcmForChapter(chapter: number): SdgnMissionQcm[] {
   return SDGN_MISSION_QCM_BANK.filter((q) => q.chapter === chapter);
 }
 
+export function getSdgnPremiereChaptersWithQcm(): number[] {
+  const chapters = new Set<number>();
+  for (const q of SDGN_MISSION_QCM_BANK_PREMIERE) {
+    chapters.add(q.chapter);
+  }
+  return [...chapters].sort((a, b) => a - b);
+}
+
 export function formatSdgnMissionChaptersLabel(): string {
-  const ch = getSdgnMissionChaptersWithQcm();
-  if (ch.length === 0) return "chapitres Missions SDGN";
-  if (ch.length === 1) return `chapitre Missions ${ch[0]}`;
-  return `chapitres Missions ${ch[0]}\u2013${ch[ch.length - 1]}`;
+  return "chapitres SDGN Première (1 à 13)";
 }

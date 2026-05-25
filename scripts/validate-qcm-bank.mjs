@@ -10,7 +10,7 @@ const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const BANK = path.join(ROOT, "src/data/sdgn/sdgnMissionQcmBank.ts");
 
 const MOJIBAKE = /\u251c|\u2510|\u2524|\u00e2\u20ac|\u00c2[\u00a0-\u00bf]/;
-const BAD_I = /rel\u00efve|acc\u00efs|si\u00efge|th\u00efme|r\u00efgle|apr\u00efs|mod\u00efles/;
+const BAD_I = /rel\u00efve|acc\u00efs|si\u00efge|th\u00efme|r\u00efgle|apr\u00efs|mod\u00efles|concern\u00e9\s*:|r\u00e9alis\u00e9r|pred\?/;
 const R = "\uFFFD";
 
 /** Questions interdites : meta-programme, pas sur la notion elle-meme. */

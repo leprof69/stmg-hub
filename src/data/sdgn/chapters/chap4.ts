@@ -18,6 +18,7 @@ export const SDGN_CHAP4_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Classification :\nSavoirs : Bourse, épargne, crédit. Savoir-faire : KYC, comptes rendus. Savoir-être : accueil, dynamisme, gestion du conflit.\n\n2) Savoir-être subjectif :\nInterprétation des qualités par autrui, pas de mesure objective unique.\n\n3) Lacunes promotion :\nSavoirs management, savoir-être décisionnel plus affirmé.",
     attendu: "Trois piliers distingués, exemples du support, analyse promotion.",
+    notionsCibles: ["Trois piliers distingués", "exemples du support", "analyse promotion."],
   },
   {
     id: "sdgn4-e2",
@@ -52,6 +53,7 @@ export const SDGN_CHAP4_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Rôle :\nDécrire précisément le contenu du poste, guider recrutement et attentes.\n\n2) Rubriques présentes :\nIntitulé, tâches, compétences, qualifications, conditions d'exercice, rattachement.\n\n3) Rémunération :\nPeut figurer dans conditions ou offre séparée ; la fiche reste exhaustive sur le travail.",
     attendu: "Fiche de poste structurée, rubriques identifiées.",
+    notionsCibles: ["Fiche de poste structurée", "rubriques identifiées."],
   },
   {
     id: "sdgn4-e4",
@@ -77,14 +79,14 @@ export const SDGN_CHAP4_EXERCISES: SdgnMissionExercise[] = [
     difficulty: "Moyen",
     xp: 190,
     minChars: 180,
-    support: "Dans un entrepôt Amazon, les préparateurs de commandes effectuent 12 km de marche par shift (facteur physique), dans un bruit constant de 78 dB (environnemental), avec des objectifs chiffrés minute par minute (organisationnel). Les relations entre collègues sont tendues après un changement de manager autoritaire (social). Un salarié confie des difficultés à « déconnecter » mentalement (psychologique).",
+    support: "Dans un entrepôt Amazon, les préparateurs de commandes effectuent 12 km de marché par shift (facteur physique), dans un bruit constant de 78 dB (environnemental), avec des objectifs chiffrés minute par minute (organisationnel). Les relations entre collègues sont tendues après un changement de manager autoritaire (social). Un salarié confie des difficultés à « déconnectér » mentalement (psychologique).",
     consigne: "Classe chaque élément du support dans les facteurs physiques, environnementaux, organisationnels, sociaux et psychologiques des conditions de travail.",
     questions: [
       "Rappelle l'obligation légale de l'employeur (Code du travail).",
       "Associe chaque difficulté au bon facteur.",
       "Pourquoi faut-il analyser ces facteurs ensemble ?"
     ],
-    correctionModele: "1) Obligation L.4121 :\nAssurer sécurité et protéger santé physique et mentale.\n\n2) Classification :\nPhysique : marche 12 km. Environnemental : bruit 78 dB. Organisationnel : objectifs minute. Social : manager autoritaire. Psychologique : difficulté déconnexion.\n\n3) Analyse globale :\nFacteurs liés ; négliger un volet fausse le diagnostic des risques.",
+    correctionModele: "1) Obligation L.4121 :\nAssurer sécurité et protéger santé physique et mentale.\n\n2) Classification :\nPhysique : marché 12 km. Environnemental : bruit 78 dB. Organisationnel : objectifs minute. Social : manager autoritaire. Psychologique : difficulté déconnexion.\n\n3) Analyse globale :\nFacteurs liés ; négliger un volet fausse le diagnostic des risques.",
     attendu: "Cinq familles de facteurs correctement appliquées.",
   },
   {
@@ -103,6 +105,7 @@ export const SDGN_CHAP4_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) QVCT :\nDémarche pour optimiser conditions de travail, productivité et bien-être.\n\n2) Acteurs :\nEmployeur : garant, finance. Salarié : enquête, propositions. CSE : promotion santé/sécurité. Médecine du travail : prévention. Anact : amélioration conditions. INRS : prévention risques.\n\n3) Investissement :\nRéduction coûts absentéisme, fidélisation, performance et image.",
     attendu: "QVCT et acteurs nommés avec rôles précis.",
+    notionsCibles: ["QVCT et acteurs nommés avec rôles précis."],
   },
   {
     id: "sdgn4-e7",
@@ -137,6 +140,7 @@ export const SDGN_CHAP4_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Usine A :\nBaisse absentéisme/turnover, motivation, fidélisation, image positive.\n\n2) Usine B :\nAbsentéisme, turnover, grève, coûts cachés, stress, TMS, démotivation.\n\n3) Gage de performance :\nInvestissement formation/ergonomie < coûts turnover et conflits.",
     attendu: "Comparaison chiffrée, conséquences doubles (orga/salarié).",
+    notionsCibles: ["Comparaison chiffrée", "conséquences doubles (orga/salarié)."],
   },
   {
     id: "sdgn4-e9",
@@ -154,6 +158,7 @@ export const SDGN_CHAP4_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Conflit : opposition violente ou fermée de sentiments.\n\n2) Effets négatifs : retard projet, tension, risque démotivation.\n\n3) Médiation :\nIntervenant facilite discussion, terrain d'entente ? parole libérée, cohésion, dynamique de changement.",
     attendu: "Conflit et résolution, effets négatifs/positifs distingués.",
+    notionsCibles: ["Conflit et résolution", "effets négatifs/positifs distingués."],
   },
   {
     id: "sdgn4-e10",
@@ -171,6 +176,7 @@ export const SDGN_CHAP4_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Avantages :\nComplément revenu, lancement peu coûteux, cotisations si CA.\n\n2) Risques :\nFatigue, isolement, dépendance client, confusion vie pro/perso.\n\n3) Protection salarié :\nCDI : congés, sécurité sociale employeur, CSE possible ; auto-entrepreneur : pas congés payés, pas chômage, autonomie mais précarité.",
     attendu: "Double statut analysé, complémentarité et tensions.",
+    notionsCibles: ["Double statut analysé", "complémentarité et tensions."],
   },
   {
     id: "sdgn4-cas1",
@@ -190,6 +196,7 @@ export const SDGN_CHAP4_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Fiche cohérente : toutes rubriques présentes, compétences alignées poste.\n\n2) Nadia : savoir-faire client fort, lacunes savoirs management. Karim : savoirs théoriques, faible savoir-faire terrain.\n\n3) Assessment savoir-être : critère différenciant, difficile à observer autrement.\n\n4) Plan développement : formation management (Nadia) ou immersion terrain (Karim).\n\n5) Synthèse :\nApproche par compétences combine savoirs, savoir-faire et savoir-être ; qualification seule insuffisante. Priorité au poste : leadership + stress ? évaluer savoir-être et compléter par formation.",
     attendu: "Décision RH argumentée, outils du chapitre 4 mobilisés.",
+    notionsCibles: ["Décision RH argumentée", "outils du chapitre 4 mobilisés."],
   },
   {
     id: "sdgn4-cas2",
@@ -207,7 +214,8 @@ export const SDGN_CHAP4_EXERCISES: SdgnMissionExercise[] = [
       "Analyse le conflit sur primes et sa résolution.",
       "Synthèse (15-18 lignes) : la QVCT est-elle rentable pour l'employeur ?"
     ],
-    correctionModele: "1) Diagnostic : chaleur physique, cadence organisationnel, relations sociales tendues.\n\n2) Acteurs : employeur investit, CSE alerte, Anact conseille, médecine travail suit TMS.\n\n3) Effets : baisse absentéisme, fidélisation, baisse coûts cachés, motivation.\n\n4) Conflit primes : opposition ? négociation, consensus possible, effets positifs si écouté.\n\n5) Synthèse rentabilité :\nCoût ventilation/formation < coût absentéisme et grèves ; QVCT = performance sociale et pérennité.",
+    correctionModele: "1) Diagnostic : chaleur physique, cadence organisationnel, relations sociales tendues.\n\n2) Acteurs : employeur investit, CSE alerte, Anact conseille, médecine travail suit TMS.\n\n3) Effets : baisse absentéisme, fidélisation, baisse coûts cachés, motivation.\n\n4) Conflit primes : opposition ? négociation, consensus possible, effets positifs si écoûté.\n\n5) Synthèse rentabilité :\nCoût ventilation/formation < coût absentéisme et grèves ; QVCT = performance sociale et pérennité.",
     attendu: "Diagnostic complet, plan QVCT, rentabilité argumentée.",
+    notionsCibles: ["Diagnostic complet", "plan QVCT", "rentabilité argumentée."],
   },
 ];

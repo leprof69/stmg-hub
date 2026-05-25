@@ -32,6 +32,7 @@ EXERCISES = [
             "Permet au salarié d'exprimer sa perception, réduit l'écart avec le jugement du manager."
         ),
         "attendu": "Cinq finalités présentes, exemples précis, subjectivité évoquée.",
+        "notions": ["Cinq finalités présentes", "exemples précis", "subjectivité évoquée."],
         "minChars": 120,
     },
     {
@@ -62,6 +63,7 @@ EXERCISES = [
             "Critères explicites partagés avant l'entretien, plus d'objectivité, traçabilité signée."
         ),
         "attendu": "Entretien défini, subjectivité expliquée, grille justifiée.",
+        "notions": ["Entretien défini", "subjectivité expliquée", "grille justifiée."],
         "minChars": 140,
     },
     {
@@ -92,6 +94,7 @@ EXERCISES = [
             "Mesure objective de l'efficacité, repère baisses ou progressions, alimente tableau de bord."
         ),
         "attendu": "Formules correctes, calculs février, lien évaluation.",
+        "notions": ["Formules correctes", "calculs février", "lien évaluation."],
         "minChars": 150,
         "supportTables": [
             {
@@ -131,6 +134,7 @@ EXERCISES = [
             "Cotisations patronales (Urssaf, retraite) s'ajoutent au brut = coût total employeur."
         ),
         "attendu": "Calculs brut/net corrects, composantes nommées.",
+        "notions": ["Calculs brut/net corrects", "composantes nommées."],
         "minChars": 160,
     },
     {
@@ -161,6 +165,7 @@ EXERCISES = [
             "Critères connus de tous, lien primes-indicateurs, réduit sentiment d'injustice."
         ),
         "attendu": "Composantes de rémunération classées, équité interne expliquée.",
+        "notions": ["Composantes de rémunération classées", "équité interne expliquée."],
         "minChars": 180,
     },
     {
@@ -189,6 +194,7 @@ EXERCISES = [
             "Rémunération collective aligne intérêts salariés/organisation, renforce engagement."
         ),
         "attendu": "Participation vs intéressement, seuil 50 salariés, motivation.",
+        "notions": ["Participation vs intéressement", "seuil 50 salariés", "motivation."],
         "minChars": 180,
     },
     {
@@ -218,6 +224,7 @@ EXERCISES = [
             "Ajuster rémunération externe pour limiter départs (turn-over, coût recrutement)."
         ),
         "attendu": "Deux équités distinguées, leviers RH identifiés.",
+        "notions": ["Deux équités distinguées", "leviers RH identifiés."],
         "minChars": 200,
     },
     {
@@ -274,6 +281,7 @@ EXERCISES = [
             "Maintien salaire, charge sur présents, baisse productivité, image employeur."
         ),
         "attendu": "Calcul correct, interprétation et coûts cités.",
+        "notions": ["correct", "interprétation et coûts cités."],
         "minChars": 200,
         "supportTables": [
             {
@@ -313,6 +321,7 @@ EXERCISES = [
             "rétribution compétitive limite départs."
         ),
         "attendu": "Formule turn-over correcte, coûts multiples identifiés.",
+        "notions": ["Formule turn-over correcte", "coûts multiples identifiés."],
         "minChars": 240,
         "supportTables": [
             {
@@ -360,6 +369,7 @@ EXERCISES = [
             "collectif et RSE ; améliorer communication primes."
         ),
         "attendu": "Cas intégré chapitre 5, recommandations concrètes.",
+        "notions": ["Cas intégré chapitre 5", "recommandations concrètes."],
         "minChars": 400,
     },
     {
@@ -397,6 +407,7 @@ EXERCISES = [
             "rétribution + organisation = pérennité."
         ),
         "attendu": "Argumentaire chiffré, diagnostic systémique, synthèse nuancée.",
+        "notions": ["Argumentaire chiffré", "diagnostic systémique", "synthèse nuancée."],
         "minChars": 450,
         "supportTables": [
             {

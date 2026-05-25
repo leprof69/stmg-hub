@@ -207,7 +207,7 @@ export const FLASHCARDS: FlashcardItem[] = [
   {
     id: "drt-13", programme: "droit", notion: "Personne morale",
     question: "Qu'est-ce qu'une personne morale ?",
-    reponse: "Une personne morale est une entité juridique distincte des personnes physiques qui la composent (société, association, État...). Elle a des droits et des obligations : elle peut contracter, ester en justice, posséder des biens.",
+    reponse: "Une personne morale est une entité juridique distincte des personnes physiques qui la composent (société, association, État...). Elle à des droits et des obligations : elle peut contracter, ester en justice, posséder des biens.",
     xp: 8,
   },
   {
@@ -593,7 +593,7 @@ export const FLASHCARDS: FlashcardItem[] = [
   {
     id: "mkt-12", programme: "mercatique", notion: "Fidélisation",
     question: "Qu'est-ce que la fidélisation client ?",
-    reponse: "La fidélisation regroupe les actions visant à conserver durablement les clients en renforçant leur satisfaction et leur attachement à la marque. Les outils incluent les programmes de fidélité, les offres personnalisées et le service après-vente.",
+    reponse: "La fidélisation regroupe les actions visant à conserver durablement les clients en renforçant leur satisfaction et leur attâchement à la marque. Les outils incluent les programmes de fidélité, les offres personnalisées et le service après-vente.",
     xp: 8,
   },
   {

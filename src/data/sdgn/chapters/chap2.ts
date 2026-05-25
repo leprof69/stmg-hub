@@ -18,6 +18,7 @@ export const SDGN_CHAP2_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Léa — extravertie :\nOuverte aux autres, s'exprime facilement à l'oral, enthousiaste en entretien. Effets : aisance relationnelle, facilité à participer en groupe ; besoin néanmoins de réflexion sur les questions techniques (complémentarité avec introversion ponctuelle).\n\n2) Karim — introverti et stable :\nRéservé, préfère les consignes écrites, apprécie l'habitude et les processus. Poste d'analyse des stocks sans contact client adapté à son profil.\n\n3) Pas de trait idéal :\nUne équipe efficace combine des traits complémentaires : extraversion pour le contact, stabilité pour la rigueur, etc.",
     attendu: "Traits nommés correctement, effets sur le comportement, complémentarité.",
+    notionsCibles: ["Traits nommés correctement", "effets sur le comportement", "complémentarité."],
   },
   {
     id: "sdgn2-e2",
@@ -35,6 +36,7 @@ export const SDGN_CHAP2_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Émotions :\nConseiller : surprise puis colère. Client : gêne proche de la peur ou de la tristesse.\n\n2) Classification des signes :\nNon verbaux : mâchoire serrée, rougeur, regard baissé.\nPara verbaux : voix plus rapide et plus forte, puis ton posé après la pause.\n\n3) Gestion des émotions :\nUne émotion trop retenue s'intensifie. La pause permet de retrouver une communication professionnelle et d'éviter une escalade conflictuelle.",
     attendu: "Émotions et signes classés, lien avec l'efficacité de la communication.",
+    notionsCibles: ["Émotions et signes classés"],
   },
   {
     id: "sdgn2-e3",
@@ -52,6 +54,7 @@ export const SDGN_CHAP2_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Processus de perception (Nadia) :\nSensation : Thomas silencieux en réunion. Attention : focalisation sur l'oral. Interprétation : culture extravertie = engagement = parole. Compréhension erronée : « il ne s'engage pas ». Mémorisation du biais.\n\n2) Dissonance :\nComportement observable (silence) ne reflète pas l'attitude réelle (engagement par écrit). Impossible de discerner l'attitude sans interpréter correctement le comportement.\n\n3) Correction :\nTenir compte des traits introverti/logique, valoriser les contributions écrites, adapter les canaux de communication.",
     attendu: "Processus de perception appliqué, dissonance expliquée, piste d'amélioration.",
+    notionsCibles: ["Processus de perception appliqué", "dissonance expliquée", "piste d'amélioration."],
   },
   {
     id: "sdgn2-e4",
@@ -69,6 +72,7 @@ export const SDGN_CHAP2_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Composantes :\nActeurs : commercial et acheteur, interdépendants. Message : offre tarifaire. Canal : visioconférence. Support : écran. Signes : verbaux (registre soutenu), non verbaux (regard, posture), para verbaux (débit). Contexte : spatial, temporel (45 min), relationnel (première collaboration).\n\n2) Enjeu dominant :\nEnjeu d'influence (convaincre) et identitaire (prouver l'expertise), combinés à un enjeu relationnel (créer la confiance).\n\n3) Canal audiovisuel :\nRéduit les signes non verbaux (cadrage limité) ; oblige à exagérer regard et articulation ; favorise les supports partagés pour compenser.",
     attendu: "Schéma complet de communication interpersonnelle, enjeux identifiés.",
+    notionsCibles: ["enjeux identifiés."],
   },
   {
     id: "sdgn2-e5",
@@ -86,6 +90,7 @@ export const SDGN_CHAP2_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Identité déclarative :\nRenseignée par l'utilisateur : photo, titre, compétences sur LinkedIn.\n\n2) Identité agissante :\nRenseignée indirectement par les activités : abonnements éco-responsables, likes, historique de navigation. Le recruteur en déduit des centres d'intérêt.\n\n3) Identité calculée :\nProduite par les plateformes (scores, recommandations). Risque : importance démesurée des métriques quantitatives au détriment de la qualité réelle du profil.",
     attendu: "Trois dimensions distinguées, lien avec recrutement et e-réputation.",
+    notionsCibles: ["Trois dimensions distinguées", "lien avec recrutement et e-réputation."],
   },
   {
     id: "sdgn2-e6",
@@ -103,6 +108,7 @@ export const SDGN_CHAP2_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Risques :\nMauvaise e-réputation, piratage d'informations, situations indésirables en entretien si d'autres construisent son image en ligne.\n\n2) Démarches :\nDemande de suppression au webmaster, paramétrage confidentialité, séparation profils perso/pro, veille par moteurs de recherche, signalement CNIL.\n\n3) CNIL et RGPD :\nCNIL : garante de la protection des données personnelles en France.\nRGPD : renforce les droits (information, effacement) et oblige les organisations à sécuriser les traitements ; efficacité limitée par la viralité mondiale.",
     attendu: "Mesures de gestion + cadre juridique, limites de l'effacement en ligne.",
+    notionsCibles: ["Mesures de gestion + cadre juridique", "limites de l'effacement en ligne."],
   },
   {
     id: "sdgn2-e7",
@@ -120,6 +126,7 @@ export const SDGN_CHAP2_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Personal branding :\nTechniques pour valoriser son image en ligne (savoir-faire, publications) afin d'être remarqué. Sarah : études de cas, podcasts, recommandations.\n\n2) Séparation des profils :\nÉvite que des contenus personnels nuisent à l'e-réputation professionnelle ; contrôle des traces visibles par les recruteurs et clients.\n\n3) Bénéfices :\nOpportunités commerciales (client via article), crédibilité (recommandations), « CV vivant » renforçant la communication professionnelle.",
     attendu: "Personal branding défini, bonnes pratiques, lien carrière.",
+    notionsCibles: ["Personal branding défini", "bonnes pratiques", "lien carrière."],
   },
   {
     id: "sdgn2-e8",
@@ -137,6 +144,7 @@ export const SDGN_CHAP2_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Erreurs :\nCritique publique déclenchant colère, pas de prise en compte des émotions, communication non professionnelle.\n\n2) Stratégies :\nPause, faits précis, ton neutre, adaptation au trait logique (consignes écrites), médiation du collègue stable.\n\n3) Traits :\nTechnicien logique : besoin de cohérence écrite. Collègue extraverti/stable : facilite la relation. Chef apprenant à modérer son affectif pour une meilleure intelligence émotionnelle.",
     attendu: "Émotions gérées, traits mobilisés, lien avec conflit et communication pro.",
+    notionsCibles: ["Émotions gérées", "traits mobilisés", "lien avec conflit et communication pro."],
   },
   {
     id: "sdgn2-e9",
@@ -154,6 +162,7 @@ export const SDGN_CHAP2_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Classification :\nBinôme créatif = primaire + appartenance. Comptes = secondaire + formel. Pauses café = informel. Créatifs parisiens sur réseaux = référence.\n\n2) Statut et rôle :\nStatut = place du senior. Rôle = comportements attendus (mentorat, validation).\n\n3) Danger informel :\nRumeur non vérifiée, déformation, tensions et quiproquos (communication informelle).",
     attendu: "Typologie des groupes maîtrisée, statut/rôle distingués.",
+    notionsCibles: ["Typologie des groupes maîtrisée", "statut/rôle distingués."],
   },
   {
     id: "sdgn2-e10",
@@ -169,8 +178,9 @@ export const SDGN_CHAP2_EXERCISES: SdgnMissionExercise[] = [
       "Pourquoi le candidat introverti est-il retenu ?",
       "Formule trois conseils pour un lycéen qui prépare un stage (personnalité + identité numérique)."
     ],
-    correctionModele: "1) Refus de l'extraverti :\nE-réputation dégradée : identité numérique non maîtrisée, risque pour l'image de l'entreprise.\n\n2) Retenue de l'introverti :\nLinkedIn soigné = personal branding ; canal écrit valorisé = adaptation au trait ; compétences visibles sans extraversion forcée.\n\n3) Conseils lycéen :\n— Connaître ses traits et choisir des canaux adaptés.\n— Soigner identité déclarative et surveiller identité agissante.\n— Gérer les émotions et la perception en entretien (préparation, écoute active).",
+    correctionModele: "1) Refus de l'extraverti :\nE-réputation dégradée : identité numérique non maîtrisée, risque pour l'image de l'entreprise.\n\n2) Retenue de l'introverti :\nLinkedIn soigné = personal branding ; canal écrit valorisé = adaptation au trait ; compétences visibles sans extraversion forcée.\n\n3) Conseils lycéen :\n— Connaître ses traits et choisir des canaux adaptés.\n— Soigner identité déclarative et surveiller identité agissante.\n— Gérer les émotions et la perception en entretien (préparation, écoûte active).",
     attendu: "Synthèse cohérente du chapitre 2, conseils actionnables.",
+    notionsCibles: ["Synthèse cohérente du chapitre 2", "conseils actionnables."],
   },
   {
     id: "sdgn2-cas1",
@@ -190,6 +200,7 @@ export const SDGN_CHAP2_EXERCISES: SdgnMissionExercise[] = [
     ],
     correctionModele: "1) Trois dimensions :\nDéclarative : profil professionnel récent soigné. Agissante : tweets anciens, forums, tags. Calculée : faible engagement pro vs concurrent.\n\n2) Risques :\nAccor : image employeur, scandale client. Julien : discrimination si erreurs jeunesse sans recidive et démarches correctives.\n\n3) Actions correctives :\nSéparation profils, droit à l'effacement, demande retrait photo = gestion active des traces.\n\n4) Personal branding seul insuffisant :\nCompétences, personnalité, éthique comptent ; le branding ne doit pas masquer l'incompétence.\n\n5) Synthèse politique RH :\nCharte d'usage des réseaux, formation des jeunes recrues, veille avec droit de réponse, distinction erreur passée corrigée / comportement récurrent, critères transparents.",
     attendu: "Cas complet, décision RH argumentée avec nuances juridiques et humaines.",
+    notionsCibles: ["Cas complet"],
   },
   {
     id: "sdgn2-cas2",
@@ -207,7 +218,7 @@ export const SDGN_CHAP2_EXERCISES: SdgnMissionExercise[] = [
       "Quel rôle joue la perception de l'autre dans le succès final ?",
       "Synthèse (12-18 lignes) : comment adapter sa communication à un interlocuteur différent ?"
     ],
-    correctionModele: "1) Traits :\nLogique/stable : données, faits, retenue émotionnelle. Affectif/extraverti : appel sentiments, oral, gestuelle.\n\n2) Situation :\nEnjeu d'influence. Signes non verbaux et paraverbaux conflictuels. Contexte relationnel tendu, premier tour confrontationnel.\n\n3) Coopération :\nPause, écoute réciproque, compromis 3 %, critères objectifs (qualité) = stratégie donnant-donnant.\n\n4) Perception :\nChacun corrige les stéréotypes (fournisseur « trop émotif », acheteuse « froide ») en reconnaissant la légitimité des arguments de l'autre.\n\n5) Synthèse :\nAdapter canal et signes au profil de l'interlocuteur, gérer ses émotions, choisir la stratégie selon le rapport de force, viser la coopération quand l'objectif est commun.",
+    correctionModele: "1) Traits :\nLogique/stable : données, faits, retenue émotionnelle. Affectif/extraverti : appel sentiments, oral, gestuelle.\n\n2) Situation :\nEnjeu d'influence. Signes non verbaux et paraverbaux conflictuels. Contexte relationnel tendu, premier tour confrontationnel.\n\n3) Coopération :\nPause, écoûte réciproque, compromis 3 %, critères objectifs (qualité) = stratégie donnant-donnant.\n\n4) Perception :\nChacun corrige les stéréotypes (fournisseur « trop émotif », acheteuse « froide ») en reconnaissant la légitimité des arguments de l'autre.\n\n5) Synthèse :\nAdapter canal et signes au profil de l'interlocuteur, gérer ses émotions, choisir la stratégie selon le rapport de force, viser la coopération quand l'objectif est commun.",
     attendu: "Négociation décortiquée avec tout le vocabulaire du chapitre 2.",
   },
 ];
