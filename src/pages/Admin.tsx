@@ -13,7 +13,7 @@ import {
   compareSdgnExerciseIds,
   getSdgnMissionMeta,
 } from "../data/sdgnMissionCatalog";
-import { MISSIONS_PROGRESS_VERSION } from "../lib/missionsProgress";
+import { readMissionClaims } from "../lib/missionsProgress";
 
 const COLORS = {
   S: "#3B82F6", T: "#7C3AED", M: "#F97316",
@@ -366,7 +366,7 @@ export default function Admin() {
       const missionsToday = missionEntries.filter((m) => m?.date === todayKey).length;
 
       const mp = eleve.missionsProgress || {};
-      const mpClaims = mp.version === MISSIONS_PROGRESS_VERSION ? (mp.claims || {}) : {};
+      const mpClaims = readMissionClaims(mp);
       const sdgnClaimEntries = Object.entries(mpClaims).filter(([id]) => String(id).startsWith("sdgn"));
       const sdgnClaimsToday = sdgnClaimEntries.filter(([, c]) => c?.lastClaimDate === todayKey).length;
       const sdgnExerciseCount = sdgnClaimEntries.length;

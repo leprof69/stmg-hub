@@ -1,5 +1,5 @@
 /** Genere par scripts/regen_sdgn_catalog.py */
-export const SDGN_MISSIONS_PROGRESS_VERSION = 2 as const;
+export const SDGN_MISSIONS_PROGRESS_VERSION = 1 as const;
 export type SdgnMissionMeta = { title: string; chapter: string; xpMax: number };
 export const SDGN_MISSION_BY_ID: Record<string, SdgnMissionMeta> = {
   "sdgn1-e1": { title: "Caract\u00e9ristiques de l'action collective organis\u00e9e", chapter: "SDGN Chapitre 1", xpMax: 120 },

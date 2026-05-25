@@ -22,7 +22,13 @@ import {
 } from "../lib/missionPack";
 import { rubricCorrectionMissions } from "../lib/missionRubric";
 import { getMissionRubricPack } from "../lib/missionRubric/registry";
-import { MISSIONS_PROGRESS_VERSION } from "../lib/missionsProgress";
+import {
+  MISSIONS_PROGRESS_VERSION,
+  MISSIONS_XP_REWARD_WAVE,
+  missionJetonsDejaGagnesPourVague,
+  readMissionClaims,
+  type MissionClaimEntry,
+} from "../lib/missionsProgress";
 
 /** Même clé `matiere` que dans Firestore / import Admin ; libellé court à l'écran. */
 const MATIERES_MISSIONS = [
@@ -219,8 +225,6 @@ function getExerciseNotionChips(exercise: MissionExercise): string[] {
     .filter((part) => part.length > 4 && part.length <= 42 && !/\b(correctement|distincts|nommés)\b/i.test(part))
     .slice(0, 4);
 }
-
-type MissionClaimEntry = { lastClaimDate?: string; totalClaims?: number };
 
 function isMissionExerciseCompleted(exerciseId: string, claims: Record<string, MissionClaimEntry>): boolean {
   return (claims[exerciseId]?.totalClaims ?? 0) > 0;
@@ -528,7 +532,7 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
   const [chapitres, setChapitres] = useState<ChapitreRow[]>([]);
   const [chapitreIdSelectionne, setChapitreIdSelectionne] = useState<string>("");
   const [chargementChapitres, setChargementChapitres] = useState(false);
-  const [claims, setClaims] = useState<Record<string, { lastClaimDate?: string; totalClaims?: number }>>({});
+  const [claims, setClaims] = useState<Record<string, MissionClaimEntry>>({});
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [evaluations, setEvaluations] = useState<Record<string, MissionEvalResult>>({});
   const [uiMessage, setUiMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -581,8 +585,7 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
         const snap = await getDoc(doc(db, "users", user.uid));
         if (!snap.exists()) return;
         const raw = snap.data()?.missionsProgress || {};
-        const nextClaims = raw?.version === MISSIONS_PROGRESS_VERSION ? (raw.claims || {}) : {};
-        setClaims(nextClaims);
+        setClaims(readMissionClaims(raw));
       } catch (err) {
         console.error("Chargement progression missions impossible", err);
       }
@@ -689,9 +692,9 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
       }
       const data = snap.data();
       const stored = data.missionsProgress || {};
-      const prevClaims = stored?.version === MISSIONS_PROGRESS_VERSION ? (stored.claims || {}) : {};
+      const prevClaims = readMissionClaims(stored);
       const prevEntry = prevClaims[exercise.id];
-      const entrainementSansXp = (prevEntry?.totalClaims ?? 0) >= 1;
+      const entrainementSansXp = missionJetonsDejaGagnesPourVague(prevEntry);
       const today = getTodayKey();
 
       const rubric = rubricPack?.getRubric(exercise.id);
@@ -741,28 +744,23 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
       const xpAccordee = entrainementSansXp ? 0 : xpBrute;
       const pourcentageXP = entrainementSansXp ? 0 : pourcentageBrute;
 
-      const nextClaims = {
-        ...prevClaims,
-        [exercise.id]: {
-          lastClaimDate: today,
-          totalClaims: (prevEntry?.totalClaims || 0) + 1,
-        },
+      const nextEntry: MissionClaimEntry = {
+        lastClaimDate: today,
+        totalClaims: (prevEntry?.totalClaims || 0) + 1,
+        lastScore: score,
+        lastPercent: pourcentageBrute,
+        lastXpAwarded: xpAccordee,
+        lastXpWave: xpAccordee > 0 ? MISSIONS_XP_REWARD_WAVE : (prevEntry?.lastXpWave ?? 1),
       };
+      const nextClaims = { ...prevClaims, [exercise.id]: nextEntry };
       await updateDoc(ref, {
         xp: (data.xp || 0) + xpAccordee,
         missionsProgress: {
           ...(stored || {}),
           version: MISSIONS_PROGRESS_VERSION,
+          xpRewardWave: MISSIONS_XP_REWARD_WAVE,
           chapter: missionProgressChapterLabel,
-          claims: {
-            ...nextClaims,
-            [exercise.id]: {
-              ...(nextClaims[exercise.id] || {}),
-              lastScore: score,
-              lastPercent: pourcentageBrute,
-              lastXpAwarded: xpAccordee,
-            },
-          },
+          claims: nextClaims,
         },
       });
       setClaims(nextClaims);

@@ -1,5 +1,5 @@
 /** Genere par scripts/regen_management_catalog.py */
-export const MANAGEMENT_MISSIONS_PROGRESS_VERSION = 2 as const;
+export const MANAGEMENT_MISSIONS_PROGRESS_VERSION = 1 as const;
 export type ManagementMissionMeta = { title: string; chapter: string; xpMax: number };
 export const MANAGEMENT_MISSION_BY_ID: Record<string, ManagementMissionMeta> = {
   "mgt1-e1": { title: "La veille commerciale chez Picard", chapter: "Management Chapitre 1", xpMax: 120 },
