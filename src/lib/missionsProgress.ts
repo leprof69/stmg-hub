@@ -1,25 +1,28 @@
-/** Schema Firestore `missionsProgress.version` (ne pas utiliser pour effacer la progression). */
-export const MISSIONS_PROGRESS_VERSION = 1 as const;
+import { getMissionExerciseContentRevision } from "./missionExerciseRevision";
 
-/**
- * Vague de recompense jetons. Incrementer pour redonner une chance de jetons
- * sur les exos deja valides, sans reset du deblocage (totalClaims conserve).
- */
-export const MISSIONS_XP_REWARD_WAVE = 2 as const;
+/** Schema Firestore `missionsProgress.version` (structure, pas reset de progression). */
+export const MISSIONS_PROGRESS_VERSION = 1 as const;
 
 export type MissionClaimEntry = {
   lastClaimDate?: string;
   totalClaims?: number;
-  lastXpWave?: number;
+  /** Revision de contenu pour laquelle des jetons ont deja ete accordes. */
+  jetonsAtRevision?: number;
   lastScore?: number;
   lastPercent?: number;
   lastXpAwarded?: number;
 };
 
-/** Jetons deja gagnes pour cette vague sur un exo deja valide au moins une fois. */
-export function missionJetonsDejaGagnesPourVague(entry?: MissionClaimEntry): boolean {
-  if ((entry?.totalClaims ?? 0) < 1) return false;
-  return (entry?.lastXpWave ?? 1) >= MISSIONS_XP_REWARD_WAVE;
+function jetonsRevisionDejaAccordee(exerciseId: string, entry?: MissionClaimEntry): number {
+  if (entry?.jetonsAtRevision != null) return entry.jetonsAtRevision;
+  if ((entry?.lastXpAwarded ?? 0) > 0) return 1;
+  return 0;
+}
+
+/** Regle habituelle : 1 chance de jetons par revision de contenu de l'exercice. */
+export function missionJetonsDejaGagnes(exerciseId: string, entry?: MissionClaimEntry): boolean {
+  const current = getMissionExerciseContentRevision(exerciseId);
+  return jetonsRevisionDejaAccordee(exerciseId, entry) >= current;
 }
 
 export function readMissionClaims(raw: { claims?: Record<string, MissionClaimEntry> } | undefined): Record<

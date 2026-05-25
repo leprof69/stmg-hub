@@ -24,11 +24,11 @@ import { rubricCorrectionMissions } from "../lib/missionRubric";
 import { getMissionRubricPack } from "../lib/missionRubric/registry";
 import {
   MISSIONS_PROGRESS_VERSION,
-  MISSIONS_XP_REWARD_WAVE,
-  missionJetonsDejaGagnesPourVague,
+  missionJetonsDejaGagnes,
   readMissionClaims,
   type MissionClaimEntry,
 } from "../lib/missionsProgress";
+import { getMissionExerciseContentRevision } from "../lib/missionExerciseRevision";
 
 /** Même clé `matiere` que dans Firestore / import Admin ; libellé court à l'écran. */
 const MATIERES_MISSIONS = [
@@ -257,7 +257,8 @@ type MissionExerciseCardProps = {
   questionAnswers: string[];
   onQuestionAnswerChange: (questionIndex: number, value: string) => void;
   evalResult?: MissionEvalResult;
-  xpDejaAccorde: boolean;
+  jetonsObtenus: boolean;
+  contenuMisAJour: boolean;
   savingId: string;
   canClaim: boolean;
   onSubmit: () => void;
@@ -276,7 +277,8 @@ function MissionExerciseCard({
   questionAnswers,
   onQuestionAnswerChange,
   evalResult,
-  xpDejaAccorde,
+  jetonsObtenus,
+  contenuMisAJour,
   savingId,
   canClaim,
   onSubmit,
@@ -311,7 +313,11 @@ function MissionExerciseCard({
             <span className="mission-exercise__progress-sep">/</span>
             {totalCount}
           </p>
-          {xpDejaAccorde ? (
+          {contenuMisAJour ? (
+            <span className="mission-exercise__updated" aria-label="Contenu mis à jour">
+              Mis à jour
+            </span>
+          ) : jetonsObtenus ? (
             <span className="mission-exercise__validated" aria-label="Exercice validé">
               Validé
             </span>
@@ -429,12 +435,17 @@ function MissionExerciseCard({
               <button type="button" className="mission-submit" disabled={!canClaim} onClick={onSubmit}>
                 {savingId === exercise.id
                   ? "Correction…"
-                  : xpDejaAccorde
+                  : jetonsObtenus
                     ? "Corriger (entraînement)"
                     : "Corriger et valider"}
               </button>
             </div>
-            {xpDejaAccorde ? (
+            {contenuMisAJour ? (
+              <p className="mission-hint mission-hint--updated">
+                Le contenu de cet exercice a changé : tu peux le refaire une fois pour tenter les jetons (même règle
+                qu&apos;avant).
+              </p>
+            ) : jetonsObtenus ? (
               <p className="mission-hint">
                 Jetons déjà obtenus pour cet exercice : tu peux t&apos;entraîner sans nouvelle récompense.
               </p>
@@ -497,7 +508,7 @@ function MissionExerciseCard({
                 <MissionReadableText text={evalResult.propositionReponse} sanitize={false} className="mission-result__model-text" />
               </details>
 
-              {xpDejaAccorde && hasNext && onGoNext ? (
+              {jetonsObtenus && hasNext && onGoNext ? (
                 <button type="button" className="mission-next-btn" onClick={onGoNext}>
                   Exercice suivant
                 </button>
@@ -694,7 +705,8 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
       const stored = data.missionsProgress || {};
       const prevClaims = readMissionClaims(stored);
       const prevEntry = prevClaims[exercise.id];
-      const entrainementSansXp = missionJetonsDejaGagnesPourVague(prevEntry);
+      const entrainementSansXp = missionJetonsDejaGagnes(exercise.id, prevEntry);
+      const contentRevision = getMissionExerciseContentRevision(exercise.id);
       const today = getTodayKey();
 
       const rubric = rubricPack?.getRubric(exercise.id);
@@ -750,7 +762,10 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
         lastScore: score,
         lastPercent: pourcentageBrute,
         lastXpAwarded: xpAccordee,
-        lastXpWave: xpAccordee > 0 ? MISSIONS_XP_REWARD_WAVE : (prevEntry?.lastXpWave ?? 1),
+        jetonsAtRevision:
+          xpAccordee > 0
+            ? contentRevision
+            : (prevEntry?.jetonsAtRevision ?? (prevEntry?.lastXpAwarded ? 1 : undefined)),
       };
       const nextClaims = { ...prevClaims, [exercise.id]: nextEntry };
       await updateDoc(ref, {
@@ -758,7 +773,6 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
         missionsProgress: {
           ...(stored || {}),
           version: MISSIONS_PROGRESS_VERSION,
-          xpRewardWave: MISSIONS_XP_REWARD_WAVE,
           chapter: missionProgressChapterLabel,
           claims: nextClaims,
         },
@@ -1019,7 +1033,10 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
                       ? questionAnswers.reduce((sum, part) => sum + (part || "").trim().length, 0)
                       : answer.trim().length;
                     const evalResult = evaluations[exercise.id];
-                    const xpDejaAccorde = isMissionExerciseCompleted(exercise.id, claims);
+                    const claimEntry = claims[exercise.id];
+                    const jetonsObtenus = missionJetonsDejaGagnes(exercise.id, claimEntry);
+                    const contenuMisAJour =
+                      isMissionExerciseCompleted(exercise.id, claims) && !jetonsObtenus;
                     const canClaim = combinedLen >= exercise.minChars && savingId !== exercise.id;
                     const hasNext = index < missionPackExercises.length - 1;
                     return (
@@ -1039,7 +1056,8 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
                           }))
                         }
                         evalResult={evalResult}
-                        xpDejaAccorde={xpDejaAccorde}
+                        jetonsObtenus={jetonsObtenus}
+                        contenuMisAJour={contenuMisAJour}
                         savingId={savingId}
                         canClaim={canClaim}
                         onSubmit={() => void evaluateAndClaimXP(exercise)}

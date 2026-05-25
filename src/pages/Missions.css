@@ -448,6 +448,25 @@
   color: #94a3b8;
 }
 
+.mission-exercise__updated {
+  flex-shrink: 0;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+
+.mission-hint--updated {
+  background: #fffbeb;
+  border-color: #fde68a;
+  color: #78350f;
+}
+
 .mission-exercise__validated {
   flex-shrink: 0;
   border-radius: 999px;
