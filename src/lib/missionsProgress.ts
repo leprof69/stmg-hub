@@ -16,7 +16,7 @@ export type MissionClaimEntry = {
   lastPointsFaibles?: string;
 };
 
-function jetonsRevisionDejaAccordee(exerciseId: string, entry?: MissionClaimEntry): number {
+export function jetonsRevisionDejaAccordee(exerciseId: string, entry?: MissionClaimEntry): number {
   if (entry?.jetonsAtRevision != null) return entry.jetonsAtRevision;
   if ((entry?.lastXpAwarded ?? 0) > 0) return 1;
   return 0;
@@ -33,4 +33,13 @@ export function readMissionClaims(raw: { claims?: Record<string, MissionClaimEnt
   MissionClaimEntry
 > {
   return raw?.claims && typeof raw.claims === "object" ? raw.claims : {};
+}
+
+/** Firestore refuse les champs a `undefined` : les retirer avant updateDoc. */
+export function missionClaimEntryForFirestore(entry: MissionClaimEntry): MissionClaimEntry {
+  const out: MissionClaimEntry = { ...entry };
+  (Object.keys(out) as (keyof MissionClaimEntry)[]).forEach((key) => {
+    if (out[key] === undefined) delete out[key];
+  });
+  return out;
 }

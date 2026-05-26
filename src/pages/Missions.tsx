@@ -10,6 +10,7 @@ import { getMissionLetterGradeMeta, sanitizeMissionEvaluationText } from "../lib
 import { splitReadableParagraphs } from "../lib/missionReadableText";
 import { PLATFORM_XP_BLOCKED_MESSAGE, usePlatformIntegrity } from "../contexts/PlatformIntegrityContext";
 import type { SdgnMissionExercise } from "../data/sdgn/types";
+import { DROIT_CHAPTER_LABELS } from "../data/droit/registry";
 import { MANAGEMENT_CHAPTER_LABELS } from "../data/management/registry";
 import { getSdgnChapterReferential } from "../data/sdgn/chapterReferential";
 import { SDGN_CHAPTER_LABELS } from "../data/sdgn/registry";
@@ -25,18 +26,18 @@ import { getMissionRubricPack } from "../lib/missionRubric/registry";
 import {
   MISSIONS_PROGRESS_VERSION,
   missionJetonsDejaGagnes,
+  jetonsRevisionDejaAccordee,
+  missionClaimEntryForFirestore,
   readMissionClaims,
   type MissionClaimEntry,
 } from "../lib/missionsProgress";
 import { getMissionExerciseContentRevision } from "../lib/missionExerciseRevision";
-
-/** Même clé `matiere` que dans Firestore / import Admin ; libellé court à l'écran. */
-const MATIERES_MISSIONS = [
-  { matiere: "Management", label: "Management" },
-  { matiere: "Économie", label: "Économie" },
-  { matiere: "Droit", label: "Droit" },
-  { matiere: "Sciences de Gestion", label: "SDGN" },
-] as const;
+import {
+  getMissionsMatieresForNiveau,
+  isMissionPackAllowedForNiveau,
+  missionsEmptyStateMessage,
+  type MissionNiveau,
+} from "../lib/missionsMatiereAccess";
 
 type ChapitreRow = {
   id: string;
@@ -539,7 +540,11 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
   const [niveauSelectionne, setNiveauSelectionne] = useState<"premiere" | "terminale">(
     profil?.classe === "terminale" ? "terminale" : "premiere"
   );
-  const [matiereSelectionnee, setMatiereSelectionnee] = useState<string>(MATIERES_MISSIONS[0].matiere);
+  const matieresPourNiveau = useMemo(
+    () => getMissionsMatieresForNiveau(niveauSelectionne as MissionNiveau),
+    [niveauSelectionne]
+  );
+  const [matiereSelectionnee, setMatiereSelectionnee] = useState<string>("Sciences de Gestion");
   const [chapitres, setChapitres] = useState<ChapitreRow[]>([]);
   const [chapitreIdSelectionne, setChapitreIdSelectionne] = useState<string>("");
   const [chargementChapitres, setChargementChapitres] = useState(false);
@@ -556,6 +561,11 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
       setNiveauSelectionne(def);
     }
   }, [profil?.classe, niveauxAccessibles, niveauSelectionne]);
+
+  useEffect(() => {
+    if (matieresPourNiveau.some((m) => m.matiere === matiereSelectionnee)) return;
+    setMatiereSelectionnee(matieresPourNiveau[0]?.matiere ?? "Sciences de Gestion");
+  }, [matieresPourNiveau, matiereSelectionnee]);
 
   useEffect(() => {
     let cancelled = false;
@@ -609,7 +619,9 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
     () => detectMissionChapterNumber(chapitreActif, matiereSelectionnee),
     [chapitreActif, matiereSelectionnee]
   );
-  const hasActiveMissionPack = hasMissionPack(matiereSelectionnee, missionChapterNum);
+  const hasActiveMissionPack =
+    hasMissionPack(matiereSelectionnee, missionChapterNum) &&
+    isMissionPackAllowedForNiveau(matiereSelectionnee, niveauSelectionne as MissionNiveau);
   const missionProgressChapterLabel = useMemo(
     () =>
       missionChapterNum != null ? getMissionProgressLabel(matiereSelectionnee, missionChapterNum) : matiereSelectionnee,
@@ -655,6 +667,7 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
     if (missionChapterNum == null) return "";
     if (matiereSelectionnee === "Sciences de Gestion") return SDGN_CHAPTER_LABELS[missionChapterNum] ?? "";
     if (matiereSelectionnee === "Management") return MANAGEMENT_CHAPTER_LABELS[missionChapterNum] ?? "";
+    if (matiereSelectionnee === "Droit") return DROIT_CHAPTER_LABELS[missionChapterNum] ?? "";
     return "";
   }, [matiereSelectionnee, missionChapterNum]);
 
@@ -688,11 +701,6 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
       });
       return;
     }
-    if (xpRewardsSuspended) {
-      setUiMessage({ type: "error", text: PLATFORM_XP_BLOCKED_MESSAGE });
-      return;
-    }
-
     setSavingId(exercise.id);
     try {
       const ref = doc(db, "users", user.uid);
@@ -753,22 +761,26 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
       const score = reliable.score;
       const pourcentageBrute = Math.max(0, Math.min(100, Math.round(score * 10)));
       const xpBrute = Math.round((exercise.xp * pourcentageBrute) / 100);
-      const xpAccordee = entrainementSansXp ? 0 : xpBrute;
-      const pourcentageXP = entrainementSansXp ? 0 : pourcentageBrute;
+      const xpBloquee = xpRewardsSuspended;
+      const xpAccordee = entrainementSansXp || xpBloquee ? 0 : xpBrute;
+      const pourcentageXP = entrainementSansXp || xpBloquee ? 0 : pourcentageBrute;
 
-      const nextEntry: MissionClaimEntry = {
+      const prevJetonsRevision = jetonsRevisionDejaAccordee(exercise.id, prevEntry);
+      const nextEntry = missionClaimEntryForFirestore({
         lastClaimDate: today,
         totalClaims: (prevEntry?.totalClaims || 0) + 1,
         lastScore: score,
         lastPercent: pourcentageBrute,
         lastXpAwarded: xpAccordee,
-        lastPointsForts: reliable.pointsForts?.slice(0, 2400),
-        lastPointsFaibles: reliable.pointsFaibles?.slice(0, 2400),
+        lastPointsForts: reliable.pointsForts?.slice(0, 2400) || "",
+        lastPointsFaibles: reliable.pointsFaibles?.slice(0, 2400) || "",
         jetonsAtRevision:
           xpAccordee > 0
             ? contentRevision
-            : (prevEntry?.jetonsAtRevision ?? (prevEntry?.lastXpAwarded ? 1 : undefined)),
-      };
+            : prevJetonsRevision > 0
+              ? prevJetonsRevision
+              : undefined,
+      });
       const nextClaims = { ...prevClaims, [exercise.id]: nextEntry };
       await updateDoc(ref, {
         xp: (data.xp || 0) + xpAccordee,
@@ -796,16 +808,25 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
           entrainementSansXp,
         },
       }));
-      setUiMessage({
-        type: "success",
-        text: entrainementSansXp
-          ? `Correction terminée : ${getMissionLetterGradeMeta(score).grade}. Entraînement — pas de nouveaux jetons cette fois.`
-          : `Correction terminée : ${getMissionLetterGradeMeta(score).grade} · ${formatJetonsDelta(xpAccordee)} gagnés.`,
-      });
+      const gradeLabel = getMissionLetterGradeMeta(score).grade;
+      let successText = `Correction terminée : ${gradeLabel}`;
+      if (xpBloquee) {
+        successText += `. ${PLATFORM_XP_BLOCKED_MESSAGE}`;
+      } else if (entrainementSansXp) {
+        successText += ". Entraînement — pas de nouveaux jetons cette fois.";
+      } else {
+        successText += ` · ${formatJetonsDelta(xpAccordee)} gagnés.`;
+      }
+      setUiMessage({ type: "success", text: successText });
       if (onXPGagne && xpAccordee > 0) onXPGagne();
     } catch (err) {
       console.error("Validation jetons mission impossible", err);
-      setUiMessage({ type: "error", text: "Validation impossible pour le moment." });
+      const code = err && typeof err === "object" && "code" in err ? String((err as { code?: string }).code) : "";
+      const detail =
+        code === "permission-denied"
+          ? "Enregistrement refusé (droits). Reconnecte-toi ou contacte ton prof."
+          : "Validation impossible pour le moment. Réessaie dans quelques secondes.";
+      setUiMessage({ type: "error", text: detail });
     } finally {
       setSavingId("");
     }
@@ -873,7 +894,7 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
                 value={matiereSelectionnee}
                 onChange={(e) => setMatiereSelectionnee(e.target.value)}
               >
-                {MATIERES_MISSIONS.map((m) => (
+                {matieresPourNiveau.map((m) => (
                   <option key={m.matiere} value={m.matiere}>
                     {m.label}
                   </option>
@@ -910,7 +931,7 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
                 Exercices à venir
               </p>
               <p style={{ color: "#334155", fontSize: "0.95rem", margin: 0, fontWeight: 600, lineHeight: 1.55, textAlign: "center" }}>
-                SDGN Première (ch. 1 à 13) et Management Terminale (ch. 1 à 15) : même parcours, notes en lettres et mise en page confortable.
+                {missionsEmptyStateMessage(niveauSelectionne as MissionNiveau, matiereSelectionnee)}
               </p>
             </>
           ) : (
