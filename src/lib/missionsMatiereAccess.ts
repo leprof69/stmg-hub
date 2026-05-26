@@ -35,7 +35,7 @@ export function missionsEmptyStateMessage(niveau: MissionNiveau, matiere: string
     return "Premiere STMG : packs Missions SDGN (ch. 1 a 13). Management et Droit sont reserves a la Terminale.";
   }
   if (matiere === "Droit") {
-    return "Droit Terminale : les exercices Missions seront branches chapitre par chapitre quand les cours seront fournis.";
+    return "Droit Terminale : packs ch. 1 a 5 (formation du contrat, execution, dommage, responsabilites, exoneration).";
   }
   if (matiere === "Management") {
     return "Management Terminale : packs ch. 1 a 15 (10 exercices + 2 etudes de cas par chapitre).";

@@ -1,3 +1,4 @@
+import { compareDroitExerciseIds, getDroitMissionMeta } from "../data/droitMissionCatalog";
 import { getManagementMissionMeta } from "../data/managementMissionCatalog";
 import { compareSdgnExerciseIds, getSdgnMissionMeta } from "../data/sdgnMissionCatalog";
 import type { MissionClaimEntry } from "./missionsProgress";
@@ -6,7 +7,7 @@ export type MissionFeedbackRow = {
   exerciseId: string;
   title: string;
   chapter: string;
-  matiere: "SDGN" | "Management";
+  matiere: "SDGN" | "Management" | "Droit";
   lastClaimDate?: string;
   totalClaims: number;
   lastScore?: number;
@@ -60,7 +61,11 @@ export function splitMissionFeedbackText(text: string | undefined): string[] {
   return out;
 }
 
-function missionMeta(exerciseId: string): { title: string; chapter: string; matiere: "SDGN" | "Management" } {
+function missionMeta(exerciseId: string): { title: string; chapter: string; matiere: "SDGN" | "Management" | "Droit" } {
+  if (exerciseId.startsWith("drt")) {
+    const d = getDroitMissionMeta(exerciseId);
+    return { title: d.title, chapter: d.chapter, matiere: "Droit" };
+  }
   if (exerciseId.startsWith("mgt")) {
     const m = getManagementMissionMeta(exerciseId);
     return { title: m.title, chapter: m.chapter, matiere: "Management" };
@@ -72,14 +77,17 @@ function missionMeta(exerciseId: string): { title: string; chapter: string; mati
 function compareMissionExerciseIds(a: string, b: string): number {
   if (a.startsWith("sdgn") && b.startsWith("sdgn")) return compareSdgnExerciseIds(a, b);
   if (a.startsWith("mgt") && b.startsWith("mgt")) return a.localeCompare(b, "fr");
+  if (a.startsWith("drt") && b.startsWith("drt")) return compareDroitExerciseIds(a, b);
   if (a.startsWith("sdgn")) return -1;
   if (b.startsWith("sdgn")) return 1;
+  if (a.startsWith("drt")) return b.startsWith("mgt") ? -1 : 1;
+  if (b.startsWith("drt")) return 1;
   return a.localeCompare(b, "fr");
 }
 
 export function isMissionExerciseId(exerciseId: string): boolean {
   const id = String(exerciseId);
-  return id.startsWith("sdgn") || id.startsWith("mgt");
+  return id.startsWith("sdgn") || id.startsWith("mgt") || id.startsWith("drt");
 }
 
 /** Agregge points forts / lacunes a partir des claims Firestore missionsProgress. */
