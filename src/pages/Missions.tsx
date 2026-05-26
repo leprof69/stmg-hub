@@ -762,6 +762,8 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
         lastScore: score,
         lastPercent: pourcentageBrute,
         lastXpAwarded: xpAccordee,
+        lastPointsForts: reliable.pointsForts?.slice(0, 2400),
+        lastPointsFaibles: reliable.pointsFaibles?.slice(0, 2400),
         jetonsAtRevision:
           xpAccordee > 0
             ? contentRevision

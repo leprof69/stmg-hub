@@ -9,10 +9,7 @@ import { DS_EXAM_ID, DS_LOCK_TYPE, DS_EXERCISES } from "../services/devoirSurvei
 import { COLLECTIONS } from "../services/collectionsData";
 import { formatJetons, formatJetonsDelta } from "../lib/jetons";
 import { getPrestigeTotal } from "../services/userProfileService";
-import {
-  compareSdgnExerciseIds,
-  getSdgnMissionMeta,
-} from "../data/sdgnMissionCatalog";
+import { buildStudentMissionInsights } from "../lib/adminMissionInsights";
 import { readMissionClaims } from "../lib/missionsProgress";
 
 const COLORS = {
@@ -372,22 +369,21 @@ export default function Admin() {
       const sdgnExerciseCount = sdgnClaimEntries.length;
       const sdgnTotalAttempts = sdgnClaimEntries.reduce((sum, [, c]) => sum + (Number(c?.totalClaims) || 0), 0);
       const sdgnLastXpSum = sdgnClaimEntries.reduce((sum, [, c]) => sum + (Number(c?.lastXpAwarded) || 0), 0);
-      const sdgnRows = sdgnClaimEntries
-        .map(([exerciseId, c]) => {
-          const meta = getSdgnMissionMeta(exerciseId);
-          return {
-            exerciseId,
-            title: meta.title,
-            chapter: meta.chapter,
-            xpMax: meta.xpMax,
-            lastClaimDate: c?.lastClaimDate,
-            totalClaims: Number(c?.totalClaims) || 0,
-            lastScore: c?.lastScore,
-            lastPercent: c?.lastPercent,
-            lastXpAwarded: Number(c?.lastXpAwarded) || 0,
-          };
-        })
-        .sort((a, b) => compareSdgnExerciseIds(a.exerciseId, b.exerciseId));
+      const missionInsights = buildStudentMissionInsights(mpClaims);
+      const sdgnRows = missionInsights.rows
+        .filter((r) => r.matiere === "SDGN")
+        .map((r) => ({
+          exerciseId: r.exerciseId,
+          title: r.title,
+          chapter: r.chapter,
+          lastClaimDate: r.lastClaimDate,
+          totalClaims: r.totalClaims,
+          lastScore: r.lastScore,
+          lastPercent: r.lastPercent,
+          lastXpAwarded: r.lastXpAwarded,
+          pointsForts: r.pointsForts,
+          pointsFaibles: r.pointsFaibles,
+        }));
       const antiCheatEvents = missionEntries.filter((m) => m?.antiCheatFlags?.tricheDetectee);
       const antiCheatToday = missionEntries.filter((m) => m?.date === todayKey && m?.antiCheatFlags?.tricheDetectee).length;
       const lastMissionDate = missionEntries
@@ -458,6 +454,7 @@ export default function Admin() {
         sdgnTotalAttempts,
         sdgnLastXpSum,
         sdgnRows,
+        missionInsights,
         antiCheatEvents: antiCheatEvents.length,
         antiCheatToday,
         objectifToday,
@@ -1260,7 +1257,7 @@ export default function Admin() {
             <h2 style={{ fontFamily: "'Fredoka One', cursive", fontSize: "1.35rem", color: COLORS.G, marginBottom: "16px" }}>💡 Informations</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               {[
-                { emoji: "📊", texte: "Reporting élèves : temps de connexion, missions SDGN (notes, %, jetons par exercice), Objectif Bac, Focus, cartes, anti-triche historique, ajustement jetons.", couleur: COLORS.B },
+                { emoji: "📊", texte: "Reporting \u00e9l\u00e8ves : temps de connexion, profil missions (points forts et lacunes par \u00e9l\u00e8ve), d\u00e9tail SDGN/Management, Objectif Bac, Focus, cartes, anti-triche, ajustement jetons.", couleur: COLORS.B },
                 { emoji: "🏆", texte: "Récompenses : classement par prestige (cartes) ; distribution de jetons bonus en 1 clic.", couleur: COLORS.U },
                 { emoji: "📚", texte: "Chapitres : supporte les colonnes françaises avec URL Application et URL Fiche.", couleur: COLORS.S },
                 { emoji: "🎯", texte: "Missions : la colonne correction sert de référence à la correction IA.", couleur: COLORS.T },

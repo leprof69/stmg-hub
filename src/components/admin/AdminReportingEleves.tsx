@@ -145,7 +145,11 @@ export default function AdminReportingEleves({
                   <tr
                     style={{
                       borderTop: "1px solid #F1F5F9",
-                      background: open ? "#F8FAFC" : eleve.platformIntegrity?.xpSuspended ? "#FFF1F2" : "white",
+                      background: open
+                        ? "#F8FAFC"
+                        : eleve.platformIntegrity?.xpSuspended
+                          ? "#FFF1F2"
+                          : "white",
                       cursor: "pointer",
                     }}
                     onClick={() => onToggleDetail(eleve.id)}
@@ -276,8 +280,42 @@ export default function AdminReportingEleves({
                             ))}
                           </div>
 
-                          {eleve.sdgnRows?.length ? (
+                          {eleve.missionInsights?.exerciseCount ? (
                             <div style={{ marginBottom: 12 }}>
+                              <div
+                                style={{
+                                  display: "grid",
+                                  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                                  gap: 10,
+                                  marginBottom: 10,
+                                }}
+                              >
+                                <MissionProfileList
+                                  title={"\u2605 Points forts (synth\u00e8se)"}
+                                  items={eleve.missionInsights.pointsForts}
+                                  emptyHint={
+                                    eleve.missionInsights.hasFeedback
+                                      ? "Synth\u00e8se en cours \u2014 relance une correction r\u00e9cente."
+                                      : "Disponible apr\u00e8s la prochaine correction d'exercice."
+                                  }
+                                  accent="#059669"
+                                  bg="#ECFDF5"
+                                  border="#A7F3D0"
+                                />
+                                <MissionProfileList
+                                  title={"\u26a0 Lacunes \u00e0 travailler"}
+                                  items={eleve.missionInsights.pointsFaibles}
+                                  emptyHint={
+                                    eleve.missionInsights.hasFeedback
+                                      ? "Aucune lacune r\u00e9currente d\u00e9tect\u00e9e pour l'instant."
+                                      : "Disponible apr\u00e8s la prochaine correction d'exercice."
+                                  }
+                                  accent="#B45309"
+                                  bg="#FFFBEB"
+                                  border="#FDE68A"
+                                />
+                              </div>
+
                               <button
                                 type="button"
                                 onClick={() => onToggleSdgn(eleve.id)}
@@ -294,34 +332,50 @@ export default function AdminReportingEleves({
                                 }}
                               >
                                 {sdgnExpanded[eleve.id]
-                                  ? "\u25bc Masquer SDGN"
-                                  : `\u25b6 SDGN : ${eleve.sdgnRows.length} exercice(s)`}
+                                  ? "\u25bc Masquer le d\u00e9tail missions"
+                                  : `\u25b6 Missions : ${eleve.missionInsights.exerciseCount} exercice(s) (SDGN + Management)`}
                               </button>
                               {sdgnExpanded[eleve.id] ? (
                                 <div style={{ marginTop: 8, overflowX: "auto", borderRadius: 10, border: "1px solid #EDE9FE" }}>
-                                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.74rem" }}>
+                                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.72rem", minWidth: 720 }}>
                                     <thead>
                                       <tr style={{ background: "#F5F3FF", color: "#4C1D95" }}>
+                                        <th style={{ padding: 8, textAlign: "left" }}>Mati\u00e8re</th>
                                         <th style={{ padding: 8, textAlign: "left" }}>Ch.</th>
                                         <th style={{ padding: 8, textAlign: "left" }}>Exercice</th>
                                         <th style={{ padding: 8 }}>Note</th>
                                         <th style={{ padding: 8 }}>%</th>
-                                        <th style={{ padding: 8 }}>Jetons</th>
+                                        <th style={{ padding: 8, textAlign: "left", minWidth: 160 }}>Points forts</th>
+                                        <th style={{ padding: 8, textAlign: "left", minWidth: 160 }}>Lacunes</th>
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      {eleve.sdgnRows.map((row) => (
-                                        <tr key={row.exerciseId} style={{ borderTop: "1px solid #EDE9FE" }}>
-                                          <td style={{ padding: 8 }}>{row.chapter.replace(/^SDGN\s+/i, "")}</td>
-                                          <td style={{ padding: 8 }}>{row.title}</td>
-                                          <td style={{ padding: 8, textAlign: "center" }}>
+                                      {eleve.missionInsights.rows.map((row) => (
+                                        <tr key={row.exerciseId} style={{ borderTop: "1px solid #EDE9FE", verticalAlign: "top" }}>
+                                          <td style={{ padding: 8, whiteSpace: "nowrap", fontWeight: 700 }}>{row.matiere}</td>
+                                          <td style={{ padding: 8, whiteSpace: "nowrap" }}>
+                                            {row.chapter.replace(/^(SDGN|Management)\s+/i, "")}
+                                          </td>
+                                          <td style={{ padding: 8, maxWidth: 200 }}>{row.title}</td>
+                                          <td style={{ padding: 8, textAlign: "center", whiteSpace: "nowrap" }}>
                                             {row.lastScore != null ? scoreToMissionLetterGrade(row.lastScore) : "\u2014"}
                                           </td>
-                                          <td style={{ padding: 8, textAlign: "center" }}>
+                                          <td style={{ padding: 8, textAlign: "center", whiteSpace: "nowrap" }}>
                                             {row.lastPercent != null ? `${row.lastPercent}%` : "\u2014"}
                                           </td>
-                                          <td style={{ padding: 8, textAlign: "center", fontWeight: 800 }}>
-                                            {formatJetons(row.lastXpAwarded || 0)}
+                                          <td style={{ padding: 8, color: "#166534", lineHeight: 1.4 }}>
+                                            {row.pointsForts ? (
+                                              <MissionFeedbackSnippet text={row.pointsForts} />
+                                            ) : (
+                                              <span style={{ color: "#94A3B8" }}>{"\u2014"}</span>
+                                            )}
+                                          </td>
+                                          <td style={{ padding: 8, color: "#9A3412", lineHeight: 1.4 }}>
+                                            {row.pointsFaibles ? (
+                                              <MissionFeedbackSnippet text={row.pointsFaibles} />
+                                            ) : (
+                                              <span style={{ color: "#94A3B8" }}>{"\u2014"}</span>
+                                            )}
                                           </td>
                                         </tr>
                                       ))}
@@ -331,7 +385,9 @@ export default function AdminReportingEleves({
                               ) : null}
                             </div>
                           ) : (
-                            <p style={{ margin: "0 0 12px", color: "#94A3B8", fontSize: "0.8rem" }}>{"Aucune mission SDGN."}</p>
+                            <p style={{ margin: "0 0 12px", color: "#94A3B8", fontSize: "0.8rem" }}>
+                              {"Aucun exercice Missions compl\u00e9t\u00e9."}
+                            </p>
                           )}
 
                           <div
@@ -391,6 +447,32 @@ export default function AdminReportingEleves({
       </div>
     </div>
   );
+}
+
+function MissionProfileList({ title, items, emptyHint, accent, bg, border }) {
+  return (
+    <div style={{ background: bg, border: `1px solid ${border}`, borderRadius: 12, padding: "10px 12px" }}>
+      <p style={{ margin: "0 0 8px", fontWeight: 800, fontSize: "0.78rem", color: accent, fontFamily: "'Fredoka One', cursive" }}>
+        {title}
+      </p>
+      {items?.length ? (
+        <ul style={{ margin: 0, paddingLeft: 18, color: "#334155", fontSize: "0.76rem", lineHeight: 1.45 }}>
+          {items.map((item, i) => (
+            <li key={i} style={{ marginBottom: 4 }}>
+              {item}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p style={{ margin: 0, fontSize: "0.74rem", color: "#64748B", fontStyle: "italic" }}>{emptyHint}</p>
+      )}
+    </div>
+  );
+}
+
+function MissionFeedbackSnippet({ text }) {
+  const short = text.length > 220 ? `${text.slice(0, 217).trim()}...` : text;
+  return <span title={text}>{short}</span>;
 }
 
 function MetricBox({ label, value, accent }) {

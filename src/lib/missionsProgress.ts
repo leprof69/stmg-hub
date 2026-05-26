@@ -11,6 +11,9 @@ export type MissionClaimEntry = {
   lastScore?: number;
   lastPercent?: number;
   lastXpAwarded?: number;
+  /** Dernier retour correction (admin / suivi pedagogique). */
+  lastPointsForts?: string;
+  lastPointsFaibles?: string;
 };
 
 function jetonsRevisionDejaAccordee(exerciseId: string, entry?: MissionClaimEntry): number {
