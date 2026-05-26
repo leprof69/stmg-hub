@@ -27,6 +27,7 @@ const Flashcards = lazy(() => import("./pages/Flashcards"));
 const Duel = lazy(() => import("./pages/Duel"));
 const Jeux = lazy(() => import("./pages/Jeux"));
 const VisiteSalon = lazy(() => import("./pages/VisiteSalon"));
+const DS = lazy(() => import("./pages/DS"));
 import { PlatformIntegrityProvider } from "./contexts/PlatformIntegrityContext";
 import "./App.css";
 
@@ -212,6 +213,7 @@ function App() {
 
   useEffect(() => {
     if (profil?.role !== "admin" && page === "admin") setPage("dashboard");
+    if (page === "escape-chap6") setPage("dashboard");
   }, [page, profil]);
 
   if (chargement) {
@@ -318,6 +320,7 @@ function App() {
     duel: "#facc15",
     jeux: "#a78bfa",
     admin: "#ef4444",
+    ds: "#64748b",
   };
 
   return (
@@ -344,6 +347,9 @@ function App() {
         </button>
         <button onClick={() => setPage("missions")} className={navBtnClass("missions")} style={{ "--nav-accent": NAV_ACCENTS.missions } as CSSProperties}>
           🎯 Missions
+        </button>
+        <button onClick={() => setPage("ds")} className={navBtnClass("ds")} style={{ "--nav-accent": NAV_ACCENTS.ds } as CSSProperties}>
+          📝 DS
         </button>
         <button onClick={() => setPage("jeux")} className={navBtnClass("jeux")} style={{ "--nav-accent": NAV_ACCENTS.jeux } as CSSProperties}>
           🎮 Jeux
@@ -380,6 +386,7 @@ function App() {
         {page === "dashboard" && <Dashboard profil={profil} />}
         {page === "chapitres" && <Chapitres profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
         {page === "missions" && <Missions profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
+        {page === "ds" && <DS profil={profil} />}
         {page === "duel" && <Duel profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
         {page === "jeux" && <Jeux profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
         {page === "objectif-bac" && <ObjectifBac profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
