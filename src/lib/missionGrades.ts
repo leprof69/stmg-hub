@@ -119,3 +119,44 @@ export function getMissionLetterGradeMeta(score: number): MissionLetterGradeMeta
 export function formatMissionGradeForDisplay(score: number): string {
   return scoreToMissionLetterGrade(score);
 }
+
+const GRADE_RANK_ORDER: MissionLetterGrade[] = [
+  "F",
+  "E",
+  "D",
+  "D+",
+  "C",
+  "C+",
+  "B",
+  "B+",
+  "A",
+  "A+",
+  "S",
+  "S+",
+];
+
+export function missionLetterGradeRank(grade: MissionLetterGrade): number {
+  return GRADE_RANK_ORDER.indexOf(grade);
+}
+
+/** Notion validee : B ou mieux (premiere tentative). */
+export function isMissionNotionGradeOk(grade: MissionLetterGrade): boolean {
+  return missionLetterGradeRank(grade) >= missionLetterGradeRank("B");
+}
+
+/** Pas OK : en dessous de B (equivalent a partir de B- sur l'echelle lettres). */
+export function isMissionNotionGradePasOk(grade: MissionLetterGrade): boolean {
+  return missionLetterGradeRank(grade) < missionLetterGradeRank("B");
+}
+
+/** Urgence Bac : C, D, E (et F si en dessous). */
+export function isMissionNotionGradeUrgentBac(grade: MissionLetterGrade): boolean {
+  return grade === "C" || grade === "D" || grade === "E" || grade === "F";
+}
+
+export function worstMissionLetterGrade(grades: MissionLetterGrade[]): MissionLetterGrade | null {
+  if (!grades.length) return null;
+  return grades.reduce((worst, g) =>
+    missionLetterGradeRank(g) < missionLetterGradeRank(worst) ? g : worst
+  );
+}

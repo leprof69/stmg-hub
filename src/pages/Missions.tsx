@@ -766,12 +766,16 @@ export default function Missions({ profil, onXPGagne }: MissionsProps) {
       const pourcentageXP = entrainementSansXp || xpBloquee ? 0 : pourcentageBrute;
 
       const prevJetonsRevision = jetonsRevisionDejaAccordee(exercise.id, prevEntry);
+      const isFirstClaim = !(Number(prevEntry?.totalClaims) > 0);
       const nextEntry = missionClaimEntryForFirestore({
         lastClaimDate: today,
         totalClaims: (prevEntry?.totalClaims || 0) + 1,
         lastScore: score,
         lastPercent: pourcentageBrute,
         lastXpAwarded: xpAccordee,
+        firstClaimDate: isFirstClaim ? today : prevEntry?.firstClaimDate,
+        firstScore: isFirstClaim ? score : prevEntry?.firstScore,
+        firstPercent: isFirstClaim ? pourcentageBrute : prevEntry?.firstPercent,
         lastPointsForts: reliable.pointsForts?.slice(0, 2400) || "",
         lastPointsFaibles: reliable.pointsFaibles?.slice(0, 2400) || "",
         jetonsAtRevision:

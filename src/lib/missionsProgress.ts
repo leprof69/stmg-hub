@@ -11,6 +11,10 @@ export type MissionClaimEntry = {
   lastScore?: number;
   lastPercent?: number;
   lastXpAwarded?: number;
+  /** Premiere validation (note figee, hors entrainements suivants). */
+  firstClaimDate?: string;
+  firstScore?: number;
+  firstPercent?: number;
   /** Dernier retour correction (admin / suivi pedagogique). */
   lastPointsForts?: string;
   lastPointsFaibles?: string;

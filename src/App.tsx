@@ -29,6 +29,7 @@ const Jeux = lazy(() => import("./pages/Jeux"));
 const VisiteSalon = lazy(() => import("./pages/VisiteSalon"));
 const DS = lazy(() => import("./pages/DS"));
 import { PlatformIntegrityProvider } from "./contexts/PlatformIntegrityContext";
+import { DsImmersiveProvider } from "./contexts/DsImmersiveContext";
 import "./App.css";
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
   /** Tant que true (défaut), on affiche la page d'accueil publique même si Firebase a une session. */
   const [accueilSiteVisible, setAccueilSiteVisible] = useState(true);
   const [modeLogin, setModeLogin] = useState<"connexion" | "inscription">("connexion");
+  const [dsImmersive, setDsImmersive] = useState(false);
   const sessionConnexionMarquee = useRef(false);
   const dernierePageTrackee = useRef("");
   const sessionActive = useRef(false);
@@ -330,7 +332,9 @@ function App() {
       xpSuspendedFromProfile={Boolean(profil?.platformIntegrity?.xpSuspended)}
       onAfterViolation={onAfterPlatformIntegrityViolation}
     >
+      <DsImmersiveProvider immersive={dsImmersive} setImmersive={setDsImmersive}>
       <div className="app-shell">
+      {!dsImmersive && (
       <nav className="top-nav">
         <button onClick={() => setAfficherAccueil(true)} className="nav-brand">
           🎓 STMG HUB
@@ -375,6 +379,7 @@ function App() {
           </button>
         )}
       </nav>
+      )}
 
       <Suspense
         fallback={
@@ -386,7 +391,14 @@ function App() {
         {page === "dashboard" && <Dashboard profil={profil} />}
         {page === "chapitres" && <Chapitres profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
         {page === "missions" && <Missions profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
-        {page === "ds" && <DS profil={profil} />}
+        {page === "ds" && (
+          <DS
+            profil={profil}
+            onExamFinished={() => {
+              if (utilisateur) void chargerProfil(utilisateur);
+            }}
+          />
+        )}
         {page === "duel" && <Duel profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
         {page === "jeux" && <Jeux profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
         {page === "objectif-bac" && <ObjectifBac profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
@@ -407,6 +419,7 @@ function App() {
         {page === "admin" && <Admin />}
       </Suspense>
       </div>
+      </DsImmersiveProvider>
     </PlatformIntegrityProvider>
   );
 }

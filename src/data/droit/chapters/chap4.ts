@@ -7,9 +7,11 @@ export const DROIT_CHAP4_EXERCISES: DroitMissionExercise[] = [
     type: "Exercice",
     difficulty: "Facile",
     xp: 120,
-    minChars: 120,
-    support: "Responsabilit\u00e9 contractuelle : inex\u00e9cution d'une obligation du contrat. Extracontractuelle (d\u00e9lictuelle) : dommage hors contrat (accident).",
-    consigne: "Distingue les deux avec un exemple.",
+    minChars: 150,
+    support:
+      "Cas 1 \u2014 \u00ab TechStore \u00bb vend un ordinateur 899 \u20ac : non livr\u00e9 \u00e0 la date pr\u00e9vue. Lien contractuel : responsabilit\u00e9 contractuelle (inex\u00e9cution d'une obligation de r\u00e9sultat).\n\nCas 2 \u2014 Deux automobilistes inconnus se percutent sans relation pr\u00e9alable : responsabilit\u00e9 extracontractuelle (d\u00e9lictuelle), art. 1240.\n\nLa victime peut parfois cumuler les fondements mais ne peut pas \u00eatre indemnis\u00e9e deux fois pour le m\u00eame pr\u00e9judice.",
+    consigne:
+      "Distingue responsabilit\u00e9 contractuelle et extracontractuelle (fondement, fait g\u00e9n\u00e9rateur). Illustre avec les cas 1 et 2.",
     questions: [
       "Responsabilit\u00e9 contractuelle ?",
       "Extracontractuelle ?",
@@ -25,9 +27,11 @@ export const DROIT_CHAP4_EXERCISES: DroitMissionExercise[] = [
     type: "Exercice",
     difficulty: "Facile",
     xp: 130,
-    minChars: 130,
-    support: "Dommage (certain, personnel, l\u00e9gitime, direct) + fait g\u00e9n\u00e9rateur + lien de causalit\u00e9. Victime doit prouver (sauf pr\u00e9somptions).",
-    consigne: "Cite les trois \u00e9l\u00e9ments constitutifs.",
+    minChars: 160,
+    support:
+      "Trois \u00e9l\u00e9ments constitutifs de la responsabilit\u00e9 civile :\n1) Un dommage r\u00e9parable (certain, personnel, l\u00e9gitime, direct).\n2) Un fait g\u00e9n\u00e9rateur (inex\u00e9cution contractuelle, faute, fait d'autrui, fait des choses, produit d\u00e9fectueux\u2026).\n3) Un lien de causalit\u00e9 entre le fait et le dommage.\n\nExemple : livreur B2B casse une palette (dommage mat\u00e9riel 1 200 \u20ac) parce qu'il roule trop vite (faute) \u2192 lien direct. En principe, la victime prouve ; certaines pr\u00e9somptions all\u00e8gent la charge.",
+    consigne:
+      "Cite et explique les trois \u00e9l\u00e9ments. Applique \u00e0 l'exemple du livreur. Qui prouve en principe ?",
     questions: [
       "Les trois \u00e9l\u00e9ments ?",
       "Fait g\u00e9n\u00e9rateur en contractuel ?",
@@ -43,9 +47,11 @@ export const DROIT_CHAP4_EXERCISES: DroitMissionExercise[] = [
     type: "Exercice",
     difficulty: "Facile",
     xp: 140,
-    minChars: 140,
-    support: "Art. 1240-1241 : faute personnelle (intentionnelle ou imprudence). Victime prouve dommage, faute, causalit\u00e9.",
-    consigne: "D\u00e9finis responsabilit\u00e9 pour faute et r\u00e8gle de preuve.",
+    minChars: 170,
+    support:
+      "Articles 1240-1241 : tout fait quelconque de l'homme qui cause \u00e0 autrui un dommage oblige celui par la faute duquel il est arriv\u00e9 \u00e0 le r\u00e9parer.\n\nSituation \u2014 Un cycliste roule sur le trottoir, percute une passante : entorse. Faute = comportement contraire \u00e0 celui d'un usager prudent (imprudence) ou volontaire.\n\nEn principe, la victime prouve dommage, faute et causalit\u00e9. Pas de pr\u00e9somption automatique de faute.",
+    consigne:
+      "D\u00e9finis responsabilit\u00e9 pour faute (art. 1240). Qu'est-ce que l'imprudence ? Qui supporte la charge de la preuve ?",
     questions: [
       "Base l\u00e9gale ?",
       "Imprudence ?",
@@ -61,9 +67,11 @@ export const DROIT_CHAP4_EXERCISES: DroitMissionExercise[] = [
     type: "Exercice",
     difficulty: "Moyen",
     xp: 180,
-    minChars: 160,
-    support: "Art. 1242 : parents pour enfants mineurs ; employeur (commettant) pour salari\u00e9 (pr\u00e9pos\u00e9) dans le travail. Pr\u00e9somption : victime prouve surtout causalit\u00e9.",
-    consigne: "Compare responsabilit\u00e9 parentale et employeur.",
+    minChars: 200,
+    support:
+      "Article 1242 : responsabilit\u00e9 du fait d'autrui.\n\nCas A \u2014 Enfant mineur de 8 ans casse une vitrine en jouant au ballon : les parents sont pr\u00e9sum\u00e9s responsables (garde et surveillance).\n\nCas B \u2014 Livreur salari\u00e9 percute un pi\u00e9ton en livrant des colis (temps et lieu du travail) : l'employeur (commettant) r\u00e9pond du fait du pr\u00e9pos\u00e9.\n\nPr\u00e9somption de responsabilit\u00e9 : la victime prouve surtout le dommage et le lien de causalit\u00e9 ; le d\u00e9fendeur peut parfois s'exon\u00e9rer (faute de la victime, fait d'un tiers).",
+    consigne:
+      "Compare responsabilit\u00e9 des parents et de l'employeur (art. 1242). Quelle facilit\u00e9 de preuve pour la victime ?",
     questions: [
       "Parents / enfants ?",
       "Employeur / salari\u00e9 ?",
@@ -79,9 +87,11 @@ export const DROIT_CHAP4_EXERCISES: DroitMissionExercise[] = [
     type: "Exercice",
     difficulty: "Moyen",
     xp: 190,
-    minChars: 170,
-    support: "Chose en mouvement : pr\u00e9somption r\u00f4le actif. Chose immobile : victime prouve vice ou anomalie. Gardien de la chose responsable.",
-    consigne: "Explique responsabilit\u00e9 du fait des choses.",
+    minChars: 210,
+    support:
+      "Responsabilit\u00e9 du fait des choses (art. 1242 al. 2) : le gardien r\u00e9pond des dommages caus\u00e9s par la chose.\n\nChose en mouvement (ex. voiture en marche) : pr\u00e9somption que la chose a jou\u00e9 un r\u00f4le actif ; la victime prouve surtout causalit\u00e9.\n\nChose immobile (ex. arbre sur un trottoir) : la victime doit prouver un vice ou une anomalie de la chose (branche pourrie non \u00e9lagu\u00e9e).\n\nGardien = celui qui a la garde mat\u00e9rielle ou juridique (propri\u00e9taire, locataire selon cas).",
+    consigne:
+      "Explique la responsabilit\u00e9 du fait des choses. Compare chose en mouvement et immobile. Qui est le gardien ?",
     questions: [
       "Qui est le gardien ?",
       "Chose en mouvement ?",
@@ -97,9 +107,11 @@ export const DROIT_CHAP4_EXERCISES: DroitMissionExercise[] = [
     type: "Exercice",
     difficulty: "Moyen",
     xp: 210,
-    minChars: 180,
-    support: "Accident circulation, v\u00e9hicule terrestre \u00e0 moteur, dommage li\u00e9 : r\u00e9gime sp\u00e9cial. Victime indemnis\u00e9e ; force majeure difficilement opposable. Faute inexcusable victime rare en corporel.",
-    consigne: "Conditions d'application loi Badinter.",
+    minChars: 220,
+    support:
+      "Loi Badinter (1985) : r\u00e9gime sp\u00e9cial pour les victimes d'accidents de la circulation.\n\nConditions cumulatives : accident de circulation, impliquant un v\u00e9hicule terrestre \u00e0 moteur (VTM), dommage li\u00e9 \u00e0 l'accident.\n\nAvantages victime : indemnisation facilit\u00e9e, force majeure difficilement opposable au conducteur, faute inexcusable de la victime rare en dommage corporel (volontaire ou inexcusable seulement).\n\nExemple : pi\u00e9ton renvers\u00e9 sur route publique par une voiture.",
+    consigne:
+      "Cite les trois conditions de la loi Badinter. Quels avantages pour la victime corporelle ?",
     questions: [
       "Trois conditions cumulatives ?",
       "Avantage victime ?",
@@ -115,9 +127,11 @@ export const DROIT_CHAP4_EXERCISES: DroitMissionExercise[] = [
     type: "Exercice",
     difficulty: "Moyen",
     xp: 230,
-    minChars: 190,
-    support: "Art. 1245 : responsabilit\u00e9 de plein droit du producteur. Victime prouve d\u00e9faut de s\u00e9curit\u00e9, dommage, causalit\u00e9 (pas la faute).",
-    consigne: "R\u00e9gime produit d\u00e9fectueux.",
+    minChars: 230,
+    support:
+      "Articles 1245 et s. : responsabilit\u00e9 du fait des produits d\u00e9fectueux.\n\nSituation \u2014 Trottinette \u00e9lectrique : frein d\u00e9fectueux, chute, fracture poignet. Notice sans avertissement sur la pente. Producteur identifi\u00e9 en France.\n\nVictime prouve : d\u00e9faut de s\u00e9curit\u00e9 du produit (pas conforme \u00e0 l'attente l\u00e9gitime), dommage, lien de causalit\u00e9. Pas besoin de prouver la faute du producteur (responsabilit\u00e9 de plein droit).\n\nExon\u00e9rations possibles (art. 1245-10) : non mise en circulation, d\u00e9faut post\u00e9rieur, etc.",
+    consigne:
+      "Pr\u00e9sente le r\u00e9gime art. 1245 : contre qui agir, preuves de la victime, exon\u00e9rations possibles du producteur.",
     questions: [
       "Contre qui agir ?",
       "D\u00e9faut de s\u00e9curit\u00e9 ?",
@@ -133,9 +147,11 @@ export const DROIT_CHAP4_EXERCISES: DroitMissionExercise[] = [
     type: "Exercice",
     difficulty: "Moyen",
     xp: 260,
-    minChars: 200,
-    support: "Loi 1898 : accident au temps/lieu du travail ou trajet = origine professionnelle sauf preuve contraire. Pas besoin de prouver faute employeur.",
-    consigne: "Sp\u00e9cificit\u00e9 accident du travail.",
+    minChars: 240,
+    support:
+      "Loi du 9 avril 1898 : accident du travail.\n\nCrit\u00e8res : fait accidentel, l\u00e9sion (corporelle ou psychique), survenu par le fait ou \u00e0 l'occasion du travail (ou trajet domicile-travail).\n\nPr\u00e9somption d'origine professionnelle : pas besoin de prouver la faute de l'employeur. Prestations : frais m\u00e9dicaux, indemnit\u00e9s journali\u00e8res, rente en cas de s\u00e9quelle, prise en charge par l'assurance AT/MP.\n\nExemple : chute d'un \u00e9chafaudage sur un chantier BTP.",
+    consigne:
+      "Cite les crit\u00e8res de l'accident du travail. Quel avantage pour le salari\u00e9 ? Quelles prestations ?",
     questions: [
       "Crit\u00e8res ?",
       "Avantage salari\u00e9 ?",
@@ -151,9 +167,11 @@ export const DROIT_CHAP4_EXERCISES: DroitMissionExercise[] = [
     type: "Exercice",
     difficulty: "Difficile",
     xp: 280,
-    minChars: 220,
-    support: "Obligation de r\u00e9sultat : pas atteint = responsabilit\u00e9 sans prouver faute. Obligation de moyens : faute ou moyens insuffisants \u00e0 prouver.",
-    consigne: "Applique \u00e0 m\u00e9decin (moyens) et vendeur (r\u00e9sultat).",
+    minChars: 260,
+    support:
+      "En responsabilit\u00e9, la qualification moyens/r\u00e9sultat change la preuve.\n\nM\u00e9decin (obligation de moyens en principe) : doit mettre en \u0153uvre tous les moyens conformes \u00e0 son art ; la gu\u00e9rison n'est pas garantie. La victime doit prouver une faute ou des moyens insuffisants.\n\nVendeur (obligation de r\u00e9sultat) : doit livrer le bien conforme. Si non livr\u00e9, l'inex\u00e9cution est \u00e9tablie sans prouver une faute.\n\nS\u00e9curit\u00e9 : jurisprudence tend vers une obligation de r\u00e9sultat (ex. absence de signalisation dangereuse).",
+    consigne:
+      "Distingue obligation de moyens et de r\u00e9sultat en responsabilit\u00e9. Applique au m\u00e9decin et au vendeur. Mentionne la s\u00e9curit\u00e9.",
     questions: [
       "M\u00e9decin ?",
       "Vendeur non livr\u00e9 ?",
@@ -169,9 +187,11 @@ export const DROIT_CHAP4_EXERCISES: DroitMissionExercise[] = [
     type: "Exercice",
     difficulty: "Tres difficile",
     xp: 360,
-    minChars: 260,
-    support: "R\u00e9gime classique : faute (art. 1240). \u00c9volution : responsabilit\u00e9 du risque (cr\u00e9er un risque, en assumer les cons\u00e9quences).",
-    consigne: "Compare responsabilit\u00e9 pour faute et pour risque.",
+    minChars: 300,
+    support:
+      "R\u00e9gime classique (art. 1240) : responsabilit\u00e9 pour faute \u2014 la victime prouve un comportement fautif (imprudence, n\u00e9gligence).\n\n\u00c9volution : responsabilit\u00e9 du risque \u2014 celui qui cr\u00e9e un risque anormal doit en assumer les cons\u00e9quences m\u00eame sans faute prouv\u00e9e (activit\u00e9 dangereuse, produits, fait des choses en mouvement).\n\nExemples : transport de mati\u00e8res dangereuses, produits d\u00e9fectueux (1245), loi Badinter (risque de la circulation).",
+    consigne:
+      "Compare responsabilit\u00e9 pour faute et pour risque. Donne deux exemples de r\u00e9gimes proches du risque.",
     questions: [
       "R\u00e9gime faute ?",
       "R\u00e9gime risque ?",
@@ -187,9 +207,11 @@ export const DROIT_CHAP4_EXERCISES: DroitMissionExercise[] = [
     type: "Etude de cas",
     difficulty: "Difficile",
     xp: 560,
-    minChars: 400,
-    support: "Deux voitures sur route publique : bless\u00e9 l\u00e9ger, voiture r\u00e9parable. Conducteur B non assur\u00e9. Conditions Badinter ? FGAO ?",
-    consigne: "Applique la loi Badinter et le FGAO.",
+    minChars: 500,
+    support:
+      "\u00c9tude \u2014 Collision sur route d\u00e9partementale entre deux voitures. Pi\u00e9ton bless\u00e9 l\u00e9ger (entorse), d\u00e9g\u00e2ts mat\u00e9riels 3 400 \u20ac. Conducteur B : pas d'assurance valide, permis suspendu.\n\nConditions Badinter : accident circulation, VTM, dommage li\u00e9 \u2014 v\u00e9rifier pour le pi\u00e9ton et les conducteurs.\n\nCorporel : indemnisation facilit\u00e9e ; FGAO si conducteur responsable non assur\u00e9.\n\nMat\u00e9riel : faute de la victime peut r\u00e9duire l'indemnisation (conduite imprudente).",
+    consigne:
+      "Applique la loi Badinter et le FGAO. Distingue traitement corporel et mat\u00e9riel. Qui indemnise le pi\u00e9ton ?",
     questions: [
       "Badinter applicable ?",
       "Qui indemnise corporel ?",
@@ -205,9 +227,11 @@ export const DROIT_CHAP4_EXERCISES: DroitMissionExercise[] = [
     type: "Etude de cas",
     difficulty: "Tres difficile",
     xp: 620,
-    minChars: 450,
-    support: "Trottinette \u00e9lectrique : frein d\u00e9fectueux, chute, fracture. Notice sans avertissement risque. Producteur identifi\u00e9.",
-    consigne: "Analyse le r\u00e9gime des produits d\u00e9fectueux (art. 1245).",
+    minChars: 550,
+    support:
+      "\u00c9tude \u2014 Amina ach\u00e8te une trottinette \u00e9lectrique \u00ab SwiftRoll Pro \u00bb (producteur UE). Frein avant l\u00e2che en descente mod\u00e9r\u00e9e : chute, fracture poignet, 3 semaines ITT, 2 100 \u20ac frais.\nNotice : pas d'avertissement sur les pentes > 8 %. Expert : d\u00e9faut de conception du syst\u00e8me de freinage.\n\nArt. 1245 : producteur, importateur ou vendeur \u00e0 d\u00e9faut. Preuves victime : d\u00e9faut de s\u00e9curit\u00e9, dommage, causalit\u00e9. Producteur peut invoquer art. 1245-10.",
+    consigne:
+      "Analyse compl\u00e8te art. 1245 : d\u00e9faut de s\u00e9curit\u00e9, preuves, d\u00e9fendeurs possibles, exon\u00e9rations. Dommages \u00e0 indemniser.",
     questions: [
       "R\u00e9gime applicable ?",
       "Preuves victime ?",

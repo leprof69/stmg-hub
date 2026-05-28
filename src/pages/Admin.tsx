@@ -1,5 +1,7 @@
 ﻿// @ts-nocheck
 import { useState, useEffect, useMemo } from "react";
+import AdminBacRevisionReport from "../components/admin/AdminBacRevisionReport";
+import AdminDsSdgnReport from "../components/admin/AdminDsSdgnReport";
 import AdminReportingEleves from "../components/admin/AdminReportingEleves";
 import { auth, db } from "../services/firebase";
 import { sendPasswordResetEmail } from "firebase/auth";
@@ -472,6 +474,16 @@ export default function Admin() {
       };
     });
   }, [eleves, todayKey]);
+
+  const terminaleReportingRows = useMemo(
+    () => reportingRows.filter((eleve) => eleve.classe === "terminale"),
+    [reportingRows]
+  );
+
+  const premiereReportingRows = useMemo(
+    () => reportingRows.filter((eleve) => eleve.classe === "premiere"),
+    [reportingRows],
+  );
 
   const reportingFiltres = useMemo(() => {
     return reportingRows.filter((eleve) => {
@@ -1039,6 +1051,10 @@ export default function Admin() {
                   <option value="sans_participation">Sans participation (0 pt)</option>
                 </select>
               </div>
+
+              <AdminDsSdgnReport premiereRows={premiereReportingRows} onAfterReset={chargerEleves} />
+
+              <AdminBacRevisionReport terminaleRows={terminaleReportingRows} />
 
               <AdminReportingEleves
                 rows={reportingFiltres}
