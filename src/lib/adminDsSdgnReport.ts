@@ -298,6 +298,42 @@ export function buildReportingRowsFromDsSdgnSummaries(
   );
 }
 
+/** Reinjecte lastSession complet (reponses) depuis users.dsTab pour Excel/PDF. */
+export function enrichExportRowsWithUserSessions(
+  rows: DsSdgnStudentReportRow[],
+  users: Record<string, unknown>[],
+): DsSdgnStudentReportRow[] {
+  const userById = new Map(users.map((u) => [String(u.id), u]));
+  return rows.map((row) => {
+    const user = userById.get(row.studentId);
+    if (!user) return row;
+    const fullSession = readDsTabLastSession(user as Record<string, unknown>);
+    const rootGrade = readDsTabExamGradeOn20(user as Record<string, unknown>);
+    if (!fullSession) return row;
+    return {
+      ...row,
+      session: fullSession,
+      examRootGrade: rootGrade ?? row.examRootGrade,
+      displayStatus: fullSession.status ?? row.displayStatus,
+      hasDsData: true,
+    };
+  });
+}
+
+export function buildExportReportForAdmin(
+  premiereRows: DsSdgnStudentReportRow[],
+  usersAll: Record<string, unknown>[],
+): DsSdgnClassReport {
+  const withActivity = premiereRows.filter(
+    (r) =>
+      r.hasDsData ||
+      r.displayStatus !== "not_started" ||
+      (r.examRootGrade != null && r.examRootGrade > 0),
+  );
+  const enriched = enrichExportRowsWithUserSessions(withActivity, usersAll);
+  return buildDsSdgnClassReportFromStudents(enriched);
+}
+
 /** Tous les comptes (hors admin) avec une copie DS enregistr\u00e9e \u2014 pour export complet. */
 export function buildDsSdgnClassReportFromAllUsersWithDsData(
   users: Record<string, unknown>[],

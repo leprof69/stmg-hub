@@ -1,16 +1,12 @@
 // @ts-nocheck
 import { useEffect, useMemo, useState } from "react";
 import {
-  buildDsSdgnClassReportFromAllUsersWithDsData,
-  buildDsSdgnClassReportFromStudents,
+  buildExportReportForAdmin,
   countUsersWithDsSdgnExamData,
   formatDsDisplayStatusLabel,
   formatDsGradeForReport,
 } from "../../lib/adminDsSdgnReport";
-import {
-  buildDsClassReportForExport,
-  exportDsSdgnClassReportPdf,
-} from "../../lib/exportDsSdgnReportPdf";
+import { exportDsSdgnClassReportPdf } from "../../lib/exportDsSdgnReportPdf";
 import { exportDsSdgnClassReportXlsx } from "../../lib/exportDsSdgnReportXlsx";
 import { DS_SDGN_TOPIC_LABELS, DS_SDGN_TOPIC_ORDER } from "../../lib/dsSdgnQcmTopics";
 import {
@@ -64,19 +60,7 @@ export default function AdminDsSdgnReport({
     [usersAll, dsSdgnSummaries.length],
   );
 
-  const buildFullExportReport = () => {
-    const active = premiereRows.filter(
-      (r) => r.hasDsData || r.displayStatus !== "not_started" || (r.examRootGrade ?? 0) > 0,
-    );
-    if (active.length > 0) {
-      return buildDsClassReportForExport(
-        buildDsSdgnClassReportFromStudents(active),
-        false,
-      );
-    }
-    const fromFirebase = buildDsSdgnClassReportFromAllUsersWithDsData(usersAll);
-    return buildDsClassReportForExport(fromFirebase, true);
-  };
+  const buildFullExportReport = () => buildExportReportForAdmin(premiereRows, usersAll);
 
   const handleExport = () => {
     setExporting(true);
@@ -107,10 +91,17 @@ export default function AdminDsSdgnReport({
         );
         return;
       }
-      await exportDsSdgnClassReportPdf(full);
+      const result = await exportDsSdgnClassReportPdf(full);
+      window.alert(
+        `PDF telecharge : ${result.filename}\n\n` +
+          `${result.students} eleve(s)\n` +
+          `${result.answers} reponses detaillees dans le PDF\n\n` +
+          `(Section 1 = notes /20 de chaque eleve)`,
+      );
     } catch (err) {
       console.error(err);
-      window.alert("Export PDF impossible pour le moment.");
+      const msg = err instanceof Error ? err.message : String(err);
+      window.alert(`Export PDF impossible.\n\n${msg}`);
     } finally {
       setExportingPdf(false);
     }
