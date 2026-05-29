@@ -354,6 +354,20 @@ export async function persistDsTabResult(uid: string, payload: DsTabResultPayloa
   };
 
   const { syncDsSdgnResultSummary } = await import("./dsSdgnResultsService");
+  const { writeDsSdgnNote } = await import("./dsSdgnNotesService");
+  await writeDsSdgnNote({
+    uid,
+    prenom: typeof profile?.prenom === "string" ? profile.prenom : undefined,
+    nom: typeof profile?.nom === "string" ? profile.nom : undefined,
+    email: typeof profile?.email === "string" ? profile.email : undefined,
+    classe: typeof profile?.classe === "string" ? profile.classe : undefined,
+    gradeOn20,
+    scorePoints: payload.score,
+    totalQuestions: payload.total,
+    questionsAnswered: session.questionsAnswered ?? session.answers?.length ?? 0,
+    status: session.status,
+    updatedAt: snapshot.updatedAt,
+  });
   await syncDsSdgnResultSummary(uid, payloadForSync, profile);
 
   const historyPatch: Record<string, unknown> = {
@@ -477,6 +491,20 @@ export async function persistDsTabCheckpoint(
     ? (profileSnap.data() as Record<string, unknown>)
     : undefined;
   const { syncDsSdgnCheckpointSummary } = await import("./dsSdgnResultsService");
+  const { writeDsSdgnNote } = await import("./dsSdgnNotesService");
+  await writeDsSdgnNote({
+    uid,
+    prenom: typeof profile?.prenom === "string" ? profile.prenom : undefined,
+    nom: typeof profile?.nom === "string" ? profile.nom : undefined,
+    email: typeof profile?.email === "string" ? profile.email : undefined,
+    classe: typeof profile?.classe === "string" ? profile.classe : undefined,
+    gradeOn20: gradeOn20Provisional,
+    scorePoints: input.scorePoints,
+    totalQuestions: input.totalQuestions,
+    questionsAnswered: slimAnswers.length,
+    status: "incomplete",
+    updatedAt: snapshot.updatedAt,
+  });
   await syncDsSdgnCheckpointSummary(
     uid,
     {

@@ -26,7 +26,9 @@ export default function AdminDsSdgnReport({
   premiereRows,
   usersAll = [],
   dsSdgnSummaries = [],
+  dsSdgnNotes = [],
   onSyncDsResults,
+  onSaveDsSdgnNote,
   onAfterReset,
 }) {
   const [recherche, setRecherche] = useState("");
@@ -40,6 +42,8 @@ export default function AdminDsSdgnReport({
   const [closingExam, setClosingExam] = useState(false);
   const [reopeningExam, setReopeningExam] = useState(false);
   const [examConfig, setExamConfig] = useState({ closed: false, closedAt: null });
+  const [gradeDrafts, setGradeDrafts] = useState({});
+  const [savingGradeId, setSavingGradeId] = useState(null);
 
   useEffect(() => {
     return subscribeDsSdgnExamConfig(setExamConfig);
@@ -64,10 +68,39 @@ export default function AdminDsSdgnReport({
     [usersAll, dsSdgnSummaries.length],
   );
 
-  const directGrades = useMemo(
-    () => buildDsSdgnDirectGradesList(dsSdgnSummaries, usersAll),
-    [dsSdgnSummaries, usersAll],
-  );
+  const directGrades = useMemo(() => {
+    const notesById = new Map((dsSdgnNotes || []).map((n) => [n.uid, n]));
+    const fromNotes = buildDsSdgnDirectGradesList(dsSdgnSummaries, usersAll);
+    const byId = new Map(fromNotes.map((r) => [r.studentId, r]));
+
+    for (const note of dsSdgnNotes || []) {
+      const name =
+        note.prenom ||
+        note.nom ||
+        note.email ||
+        `Eleve ${String(note.uid).slice(0, 6)}`;
+      const prev = byId.get(note.uid);
+      const grade = Math.max(Number(note.gradeOn20) || 0, prev?.gradeOn20 ?? 0);
+      byId.set(note.uid, { studentId: note.uid, studentName: name, gradeOn20: grade });
+    }
+
+    for (const u of usersAll) {
+      if (u.role === "admin") continue;
+      const id = String(u.id ?? "");
+      if (!id) continue;
+      const c = String(u.classe ?? "").toLowerCase();
+      const isPrem =
+        c.includes("premiere") || c === "1ere" || c.startsWith("1ere ");
+      if (!isPrem && !notesById.has(id) && !byId.has(id)) continue;
+      if (byId.has(id)) continue;
+      const name = u.prenom || u.nom || u.email || `Eleve ${id.slice(0, 6)}`;
+      byId.set(id, { studentId: id, studentName: name, gradeOn20: 0 });
+    }
+
+    return Array.from(byId.values()).sort((a, b) =>
+      a.studentName.localeCompare(b.studentName, "fr"),
+    );
+  }, [dsSdgnNotes, dsSdgnSummaries, usersAll]);
 
   const gradesWithNote = useMemo(
     () => directGrades.filter((g) => g.gradeOn20 > 0),
@@ -311,7 +344,7 @@ export default function AdminDsSdgnReport({
         }
       </p>
       <p style={{ margin: "0 0 8px", color: "#0369A1", fontSize: "0.78rem", lineHeight: 1.45 }}>
-        {`${dsSdgnSummaries.length} copie(s) dans dsSdgnResults \u00b7 ${dsTabDetectedTotal} detectee(s) dans users.dsTab \u00b7 ${report.withDsDataCount} ligne(s) ci-dessous.`}
+        {`${dsSdgnNotes.length} note(s) dsSdgnNotes \u00b7 ${dsSdgnSummaries.length} dsSdgnResults \u00b7 ${dsTabDetectedTotal} dsTab \u00b7 ${report.withDsDataCount} lignes detail.`}
       </p>
 
       <div
@@ -332,10 +365,10 @@ export default function AdminDsSdgnReport({
             fontSize: "1.15rem",
           }}
         >
-          {"NOTES /20 \u2014 lecture directe Firebase"}
+          {"NOTES /20 \u2014 collection dsSdgnNotes (source officielle)"}
         </p>
         <p style={{ margin: "0 0 10px", color: "#475569", fontSize: "0.8rem", lineHeight: 1.45 }}>
-          {`${gradesWithNote.length} note(s) sur ${directGrades.length} eleve(s). Si 0 : clique Recalculer (repare depuis score Firebase + champ dsSdgnPremiereLast), puis Ctrl+F5.`}
+          {`${gradesWithNote.length} note(s) sur ${directGrades.length} eleve(s). Tu peux saisir ou corriger une note a la main (colonne Enregistrer) si Firebase n'a pas le score.`}
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
           <button
@@ -361,11 +394,14 @@ export default function AdminDsSdgnReport({
             <thead>
               <tr style={{ background: "#ECFDF5", position: "sticky", top: 0 }}>
                 <th style={{ padding: "10px 12px", textAlign: "left" }}>{"\u00c9l\u00e8ve"}</th>
-                <th style={{ padding: "10px 12px", textAlign: "right", width: 100 }}>{"Note /20"}</th>
+                <th style={{ padding: "10px 12px", textAlign: "right", width: 90 }}>{"Note"}</th>
+                <th style={{ padding: "10px 12px", textAlign: "right", width: 140 }}>{"Saisie"}</th>
               </tr>
             </thead>
             <tbody>
-              {directGrades.map((g) => (
+              {directGrades.map((g) => {
+                const draft = gradeDrafts[g.studentId] ?? (g.gradeOn20 > 0 ? String(g.gradeOn20) : "");
+                return (
                 <tr key={g.studentId} style={{ borderTop: "1px solid #E2E8F0" }}>
                   <td style={{ padding: "8px 12px", fontWeight: 700 }}>{g.studentName}</td>
                   <td
@@ -374,13 +410,66 @@ export default function AdminDsSdgnReport({
                       textAlign: "right",
                       fontWeight: 900,
                       fontSize: "1rem",
-                      color: g.gradeOn20 > 0 ? "#047857" : "#94A3B8",
+                      color: g.gradeOn20 > 0 ? "#047857" : "#DC2626",
                     }}
                   >
                     {g.gradeOn20 > 0 ? String(g.gradeOn20) : "\u2014"}
                   </td>
+                  <td style={{ padding: "6px 8px", textAlign: "right" }}>
+                    <input
+                      type="text"
+                      inputMode="decimal"
+                      placeholder="/20"
+                      value={draft}
+                      onChange={(e) =>
+                        setGradeDrafts((prev) => ({ ...prev, [g.studentId]: e.target.value }))
+                      }
+                      style={{
+                        width: 52,
+                        padding: "4px 6px",
+                        marginRight: 6,
+                        borderRadius: 6,
+                        border: "1px solid #CBD5E1",
+                        fontSize: "0.85rem",
+                      }}
+                    />
+                    <button
+                      type="button"
+                      disabled={!onSaveDsSdgnNote || savingGradeId === g.studentId}
+                      onClick={async () => {
+                        const v = Number(String(draft).replace(",", "."));
+                        if (!Number.isFinite(v) || v < 0 || v > 20) {
+                          window.alert("Note entre 0 et 20.");
+                          return;
+                        }
+                        setSavingGradeId(g.studentId);
+                        try {
+                          await onSaveDsSdgnNote(g.studentId, v);
+                          onAfterReset?.();
+                        } catch (err) {
+                          const msg = err instanceof Error ? err.message : String(err);
+                          window.alert(`Erreur : ${msg}\n\nDeployer les regles Firestore (collection dsSdgnNotes).`);
+                        } finally {
+                          setSavingGradeId(null);
+                        }
+                      }}
+                      style={{
+                        padding: "4px 8px",
+                        borderRadius: 6,
+                        border: "none",
+                        background: "#059669",
+                        color: "white",
+                        fontWeight: 800,
+                        fontSize: "0.75rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {savingGradeId === g.studentId ? "..." : "OK"}
+                    </button>
+                  </td>
                 </tr>
-              ))}
+              );
+              })}
             </tbody>
           </table>
         </div>
@@ -402,11 +491,10 @@ export default function AdminDsSdgnReport({
                 return;
               }
               window.alert(
-                `Recalcul des notes OK.\n\n` +
-                  `${r.gradesFound ?? 0} note(s) /20 trouvee(s) dans Firebase\n` +
-                  `${r.total} copie(s) dans dsSdgnResults\n` +
-                  `${r.written} mise(s) a jour, ${r.skipped} inchangee(s)\n` +
-                  `${r.userDocsPatched ?? 0} profil(s) eleve corrige(s)` +
+                `Recalcul OK.\n\n` +
+                  `dsSdgnNotes : ${r.notesWithGrade ?? 0} note(s) /20 (${r.notesWritten ?? 0} doc(s))\n` +
+                  `dsSdgnResults : ${r.gradesFound ?? 0} note(s), ${r.total} copie(s)\n` +
+                  `${r.written} mise(s) a jour` +
                   (r.errors?.length
                     ? `\n\nAvertissements :\n${r.errors.slice(0, 3).join("\n")}`
                     : ""),

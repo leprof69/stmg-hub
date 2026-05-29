@@ -16,6 +16,11 @@ import {
   fetchAllDsSdgnResultSummaries,
   type DsSdgnResultSummary,
 } from "../../services/dsSdgnResultsService";
+import {
+  fetchAllDsSdgnNotes,
+  rebuildAllDsSdgnNotesFromUsers,
+  type DsSdgnNote,
+} from "../../services/dsSdgnNotesService";
 import { hasDsTabExamData } from "../../services/dsTabExamService";
 import { buildReportingRows } from "./buildReportingRows";
 import {
@@ -38,6 +43,7 @@ export function useAdminData() {
   const [eleves, setEleves] = useState([]);
   const [usersAll, setUsersAll] = useState([]);
   const [dsSdgnSummaries, setDsSdgnSummaries] = useState<DsSdgnResultSummary[]>([]);
+  const [dsSdgnNotes, setDsSdgnNotes] = useState<DsSdgnNote[]>([]);
   const [chargementEleves, setChargementEleves] = useState(false);
   const [recompenseEnCours, setRecompenseEnCours] = useState(false);
   const [messagesRecompense, setMessagesRecompense] = useState([]);
@@ -97,6 +103,17 @@ export function useAdminData() {
         }
       }
       setDsSdgnSummaries(summaries);
+
+      try {
+        const notesRebuild = await rebuildAllDsSdgnNotesFromUsers(allUsers);
+        if (notesRebuild.errors.length) {
+          console.warn("dsSdgnNotes rebuild", notesRebuild.errors);
+        }
+      } catch (notesErr) {
+        console.error("dsSdgnNotes rebuild", notesErr);
+      }
+      const notes = await fetchAllDsSdgnNotes();
+      setDsSdgnNotes(notes);
 
       const famillesMap = {};
       users.forEach(u => {
@@ -282,11 +299,36 @@ export function useAdminData() {
   );
 
   const premiereReportingRows = useMemo(() => {
+    if (dsSdgnNotes.length > 0) {
+      return buildReportingRowsFromDsSdgnSummaries(
+        dsSdgnNotes.map((n) => ({
+          uid: n.uid,
+          examId: "sdgn_premiere_qcm_v1",
+          prenom: n.prenom,
+          nom: n.nom,
+          email: n.email,
+          classe: n.classe,
+          gradeOn20: n.gradeOn20,
+          scorePoints: n.scorePoints,
+          totalQuestions: n.totalQuestions,
+          questionsAnswered: n.questionsAnswered ?? 0,
+          correctCount: 0,
+          wrongCount: 0,
+          forcedZero: false,
+          status: (n.status as "completed") || "completed",
+          completed: n.gradeOn20 > 0,
+          finishedAt: n.updatedAt,
+          answersCount: n.questionsAnswered ?? 0,
+          updatedAt: n.updatedAt,
+        })),
+        usersAll,
+      );
+    }
     if (dsSdgnSummaries.length > 0) {
       return buildReportingRowsFromDsSdgnSummaries(dsSdgnSummaries, usersAll);
     }
     return buildPremiereDsReportingRows(eleves);
-  }, [dsSdgnSummaries, usersAll, eleves]);
+  }, [dsSdgnNotes, dsSdgnSummaries, usersAll, eleves]);
 
   const reportingFiltres = useMemo(() => {
     return reportingRows.filter((eleve) => {
@@ -703,7 +745,21 @@ export function useAdminData() {
     eleves,
     usersAll,
     dsSdgnSummaries,
+    dsSdgnNotes,
+    saveDsSdgnNoteForStudent: async (uid, gradeOn20) => {
+      const { adminSaveDsSdgnNote } = await import("../../services/dsSdgnNotesService");
+      const user = usersAll.find((u) => u.id === uid);
+      await adminSaveDsSdgnNote(uid, gradeOn20, {
+        prenom: user?.prenom,
+        nom: user?.nom,
+        email: user?.email,
+        classe: user?.classe,
+      });
+      const notes = await fetchAllDsSdgnNotes();
+      setDsSdgnNotes(notes);
+    },
     syncDsSdgnResultsFromFirebase: async () => {
+      const notesRebuild = await rebuildAllDsSdgnNotesFromUsers(usersAll);
       const backfill = await backfillDsSdgnResultsFromUsers(usersAll);
       if (backfill.candidates > 0 && backfill.written === 0 && backfill.errors.length > 0) {
         const detail = backfill.errors.slice(0, 3).join("\n");
@@ -713,14 +769,18 @@ export function useAdminData() {
       }
       const summaries = await fetchAllDsSdgnResultSummaries();
       setDsSdgnSummaries(summaries);
+      const notes = await fetchAllDsSdgnNotes();
+      setDsSdgnNotes(notes);
       return {
         written: backfill.written,
         skipped: backfill.skipped,
         candidates: backfill.candidates,
         total: summaries.length,
         errors: backfill.errors,
-        gradesFound: backfill.gradesFound,
+        gradesFound: Math.max(backfill.gradesFound, notesRebuild.withGrade),
         userDocsPatched: backfill.userDocsPatched,
+        notesWritten: notesRebuild.written,
+        notesWithGrade: notesRebuild.withGrade,
       };
     },
     chargementEleves,

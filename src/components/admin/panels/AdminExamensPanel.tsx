@@ -88,7 +88,9 @@ export default function AdminExamensPanel() {
           premiereRows={a.premiereReportingRows}
           usersAll={a.usersAll}
           dsSdgnSummaries={a.dsSdgnSummaries}
+          dsSdgnNotes={a.dsSdgnNotes}
           onSyncDsResults={a.syncDsSdgnResultsFromFirebase}
+          onSaveDsSdgnNote={a.saveDsSdgnNoteForStudent}
           onAfterReset={a.chargerEleves}
         />
 
