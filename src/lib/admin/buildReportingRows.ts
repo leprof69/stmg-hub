@@ -1,4 +1,4 @@
-import { buildDsSdgnStudentRow } from "../adminDsSdgnReport";
+import { buildDsSdgnStudentRow, isPremiereClasse } from "../adminDsSdgnReport";
 import { buildStudentMissionInsights } from "../adminMissionInsights";
 import { readMissionClaims } from "../missionsProgress";
 import { CARD_BONUS_BY_ID } from "./adminConstants";
@@ -110,10 +110,9 @@ export function buildReportingRows(eleves: Record<string, unknown>[], todayKey =
       (eleve.nom as string) ||
       (eleve.email as string) ||
       `\u00c9l\u00e8ve ${String(eleve.id).slice(0, 6)}`;
-    const dsSdgnRow =
-      eleve.classe === "premiere"
-        ? buildDsSdgnStudentRow({ ...eleve, id: String(eleve.id), nomAffiche: nom })
-        : null;
+    const dsSdgnRow = isPremiereClasse(eleve.classe)
+      ? buildDsSdgnStudentRow({ ...eleve, id: String(eleve.id), nomAffiche: nom })
+      : null;
 
     return {
       ...eleve,

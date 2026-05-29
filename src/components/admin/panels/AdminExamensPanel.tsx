@@ -84,7 +84,11 @@ export default function AdminExamensPanel() {
           </div>
         </div>
 
-        <AdminDsSdgnReport premiereRows={a.premiereReportingRows} onAfterReset={a.chargerEleves} />
+        <AdminDsSdgnReport
+          premiereRows={a.premiereReportingRows}
+          usersAll={a.usersAll}
+          onAfterReset={a.chargerEleves}
+        />
 
         <AdminBacRevisionReport terminaleRows={a.terminaleReportingRows} />
       </div>

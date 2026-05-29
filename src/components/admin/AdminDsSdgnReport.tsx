@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   buildDsSdgnClassReportFromStudents,
+  countUsersWithDsSdgnExamData,
   formatDsDisplayStatusLabel,
   formatDsGradeForReport,
 } from "../../lib/adminDsSdgnReport";
@@ -17,7 +18,7 @@ import {
   resetDsSdgnTabExamForUser,
 } from "../../services/dsTabExamService";
 
-export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
+export default function AdminDsSdgnReport({ premiereRows, usersAll = [], onAfterReset }) {
   const [recherche, setRecherche] = useState("");
   const [exporting, setExporting] = useState(false);
   const [resetting, setResetting] = useState(false);
@@ -43,6 +44,11 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
   const report = useMemo(
     () => buildDsSdgnClassReportFromStudents(filteredRows),
     [filteredRows],
+  );
+
+  const dsTabDetectedTotal = useMemo(
+    () => countUsersWithDsSdgnExamData(usersAll),
+    [usersAll],
   );
 
   const handleExport = () => {
@@ -225,6 +231,9 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
         {
           "Export de toute la classe : termines, non termines et jamais commences. Note /20, acquis par notion, detail des reponses."
         }
+      </p>
+      <p style={{ margin: "0 0 8px", color: "#0369A1", fontSize: "0.78rem", lineHeight: 1.45 }}>
+        {`${dsTabDetectedTotal} copie(s) DS detectee(s) dans Firebase (tous comptes) \u00b7 ${report.withDsDataCount} affichee(s) ci-dessous. Si 0 : clique \u00ab Rafra\u00eechir \u00bb dans l\u2019admin ou verifie dsTab / sdgn_premiere_qcm_v1 dans Firebase.`}
       </p>
       <p style={{ margin: "0 0 14px", color: "#B45309", fontSize: "0.78rem", lineHeight: 1.45, fontWeight: 700 }}>
         {

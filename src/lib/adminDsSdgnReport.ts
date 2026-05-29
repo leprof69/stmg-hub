@@ -4,6 +4,7 @@ import {
   DS_SDGN_QCM_EXAM_ID,
   hasDsTabExamData,
   readDsTabExamMeta,
+  readDsTabExamGradeOn20,
   readDsTabLastSession,
   type DsSessionAnswerRecord,
   type DsSessionRecord,
@@ -30,6 +31,8 @@ export type DsSdgnStudentReportRow = {
   session: DsSessionRecord | null;
   displayStatus: DsSdgnDisplayStatus;
   hasDsData: boolean;
+  /** Note lue sur dsTab (secours si lastSession incomplete). */
+  examRootGrade?: number;
 };
 
 export type DsSdgnAnswerDetailRow = {
@@ -80,18 +83,21 @@ export function formatDsDisplayStatusLabel(status: DsSdgnDisplayStatus): string 
 
 export function formatDsGradeForReport(row: DsSdgnStudentReportRow): string {
   const sess = row.session;
+  const rootGrade = row.examRootGrade;
   if (!sess) {
+    if (rootGrade != null && rootGrade > 0) return String(rootGrade);
     return row.displayStatus === "not_started" ? "\u2014" : "\u2014";
   }
   if (sess.forcedZero || row.displayStatus === "disqualified") {
-    const prov = sess.gradeOn20Provisional ?? sess.gradeOn20;
+    const prov = sess.gradeOn20Provisional ?? rootGrade ?? sess.gradeOn20;
     return prov > 0 ? `${prov} (prov.)` : "0";
   }
   if (row.displayStatus === "incomplete") {
-    const prov = sess.gradeOn20Provisional ?? sess.gradeOn20;
+    const prov = sess.gradeOn20Provisional ?? rootGrade ?? sess.gradeOn20;
     return `${prov} (prov.)`;
   }
-  if (sess.gradeOn20 > 0) return String(sess.gradeOn20);
+  const grade = sess.gradeOn20 > 0 ? sess.gradeOn20 : (rootGrade ?? 0);
+  if (grade > 0) return String(grade);
   return row.displayStatus === "not_started" ? "\u2014" : "0";
 }
 
@@ -124,9 +130,18 @@ export function buildDsSdgnStudentRow(eleve: {
   const session = readDsTabLastSession(userRecord);
   const meta = readDsTabExamMeta(userRecord);
   const hasData = hasDsTabExamData(userRecord);
-  const displayStatus = hasData
+  const examRootGrade = readDsTabExamGradeOn20(userRecord);
+  let displayStatus: DsSdgnDisplayStatus = hasData
     ? deriveDsDisplayStatus(session, meta.attemptStarted)
     : "not_started";
+  if (
+    hasData &&
+    displayStatus === "not_started" &&
+    examRootGrade != null &&
+    examRootGrade > 0
+  ) {
+    displayStatus = "completed";
+  }
   const name =
     eleve.nomAffiche ||
     eleve.prenom ||
@@ -143,6 +158,7 @@ export function buildDsSdgnStudentRow(eleve: {
     session,
     displayStatus,
     hasDsData: hasData && displayStatus !== "not_started",
+    examRootGrade: Number.isFinite(examRootGrade) ? examRootGrade : undefined,
   };
 }
 
@@ -151,26 +167,47 @@ export function isPremiereClasse(classe: unknown): boolean {
     .toLowerCase()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
-  return c === "premiere" || c === "1ere" || c.includes("premiere");
+  return (
+    c === "premiere" ||
+    c === "1ere" ||
+    c.startsWith("1ere ") ||
+    c.includes("premiere")
+  );
 }
 
 /** Toutes les lignes Premi\u00e8re pour le rapport DS (depuis profils Firestore). */
 export function buildPremiereDsReportingRows(
   eleves: Record<string, unknown>[],
 ): DsSdgnStudentReportRow[] {
-  return eleves
-    .filter((e) => isPremiereClasse(e.classe))
-    .map((e) => {
-      const nom =
-        String(e.prenom || e.nom || e.email || "") ||
-        `\u00c9l\u00e8ve ${String(e.id).slice(0, 6)}`;
-      return buildDsSdgnStudentRow({
-        ...e,
-        id: String(e.id),
-        nomAffiche: nom,
-      } as Parameters<typeof buildDsSdgnStudentRow>[0]);
-    })
-    .sort((a, b) => a.studentName.localeCompare(b.studentName, "fr"));
+  const byId = new Map<string, DsSdgnStudentReportRow>();
+
+  for (const e of eleves) {
+    const id = String(e.id ?? "");
+    if (!id) continue;
+    const nom =
+      String(e.prenom || e.nom || e.email || "") || `\u00c9l\u00e8ve ${id.slice(0, 6)}`;
+    const row = buildDsSdgnStudentRow({
+      ...e,
+      id,
+      nomAffiche: nom,
+    } as Parameters<typeof buildDsSdgnStudentRow>[0]);
+
+    const include =
+      isPremiereClasse(e.classe) || hasDsTabExamData(e as Record<string, unknown>);
+    if (!include) continue;
+    byId.set(id, row);
+  }
+
+  return Array.from(byId.values()).sort((a, b) =>
+    a.studentName.localeCompare(b.studentName, "fr"),
+  );
+}
+
+/** Compte les profils avec dsTab SDGN detecte (diagnostic admin). */
+export function countUsersWithDsSdgnExamData(
+  users: Record<string, unknown>[],
+): number {
+  return users.filter((u) => hasDsTabExamData(u as Record<string, unknown>)).length;
 }
 
 function answerDetailFromRecord(

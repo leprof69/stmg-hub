@@ -109,12 +109,85 @@ export function buildDsSessionRecord(input: BuildDsSessionInput): DsSessionRecor
   };
 }
 
+function parseFlexibleNumber(value: unknown): number | null {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (typeof value === "string") {
+    const trimmed = value.trim().replace(",", ".");
+    if (!trimmed) return null;
+    const n = Number(trimmed);
+    return Number.isFinite(n) ? n : null;
+  }
+  return null;
+}
+
+function asNumber(value: unknown): number | null {
+  return parseFlexibleNumber(value);
+}
+
+/** Champs dsTab aplatis par erreur sur le document racine (import / ancienne ecriture). */
+function readLegacyFlatDsTabExam(
+  userData: Record<string, unknown>,
+): Record<string, unknown> | null {
+  const prefix = `dsTab.${DS_SDGN_QCM_EXAM_ID}.`;
+  const exam: Record<string, unknown> = {};
+  let found = false;
+  for (const [key, value] of Object.entries(userData)) {
+    if (!key.startsWith(prefix)) continue;
+    found = true;
+    exam[key.slice(prefix.length)] = value;
+  }
+  return found ? exam : null;
+}
+
+function pickExamTabFromDsTabContainer(
+  dsTab: Record<string, unknown>,
+): Record<string, unknown> | null {
+  const direct = dsTab[DS_SDGN_QCM_EXAM_ID];
+  if (direct && typeof direct === "object") {
+    return direct as Record<string, unknown>;
+  }
+
+  if (
+    parseFlexibleNumber(dsTab.gradeOn20) != null ||
+    parseFlexibleNumber(dsTab.score) != null ||
+    dsTab.lastSession ||
+    dsTab.attemptStarted
+  ) {
+    return dsTab;
+  }
+
+  for (const value of Object.values(dsTab)) {
+    if (!value || typeof value !== "object") continue;
+    const candidate = value as Record<string, unknown>;
+    if (
+      parseFlexibleNumber(candidate.gradeOn20) != null ||
+      parseFlexibleNumber(candidate.score) != null ||
+      candidate.lastSession ||
+      candidate.attemptStarted ||
+      candidate.examId === DS_SDGN_QCM_EXAM_ID
+    ) {
+      return candidate;
+    }
+  }
+
+  return null;
+}
+
 function readDsTabRoot(
   userData: Record<string, unknown> | null | undefined,
 ): Record<string, unknown> | null {
-  const tab = (userData?.dsTab as Record<string, unknown> | undefined)?.[DS_SDGN_QCM_EXAM_ID];
-  if (!tab || typeof tab !== "object") return null;
-  return tab as Record<string, unknown>;
+  if (!userData) return null;
+
+  const dsTab = userData.dsTab;
+  if (dsTab && typeof dsTab === "object" && !Array.isArray(dsTab)) {
+    const fromContainer = pickExamTabFromDsTabContainer(dsTab as Record<string, unknown>);
+    if (fromContainer) return fromContainer;
+  }
+
+  const legacyFlat = readLegacyFlatDsTabExam(userData);
+  if (legacyFlat) return legacyFlat;
+
+  return null;
 }
 
 export async function persistDsTabResult(uid: string, payload: DsTabResultPayload): Promise<void> {
@@ -181,11 +254,6 @@ export function readDsTabExamMeta(
     startedAt: typeof examTab.startedAt === "string" ? examTab.startedAt : undefined,
     resumeGranted: Boolean(examTab.resumeGranted),
   };
-}
-
-function asNumber(value: unknown): number | null {
-  const n = Number(value);
-  return Number.isFinite(n) ? n : null;
 }
 
 /** Reconstruit une session si lastSession manque mais grade/score sont au niveau dsTab. */
@@ -257,6 +325,15 @@ export function readDsTabExamRoot(
   userData: Record<string, unknown> | null | undefined,
 ): Record<string, unknown> | null {
   return readDsTabRoot(userData);
+}
+
+export function readDsTabExamGradeOn20(
+  userData: Record<string, unknown> | null | undefined,
+): number | undefined {
+  const tab = readDsTabRoot(userData);
+  if (!tab) return undefined;
+  const grade = parseFlexibleNumber(tab.gradeOn20);
+  return grade ?? undefined;
 }
 
 export function hasDsTabExamData(userData: Record<string, unknown> | null | undefined): boolean {
