@@ -111,7 +111,55 @@ export async function syncDsSdgnResultSummary(
   profile?: Record<string, unknown>,
 ): Promise<void> {
   const summary = summaryFromPayload(uid, payload, profile);
-  await setDoc(resultDocRef(uid), summary, { merge: true });
+  const grade = Math.max(
+    summary.gradeOn20,
+    computeDsGradeOn20(payload.score, payload.total, false),
+    payload.gradeOn20,
+  );
+  await setDoc(resultDocRef(uid), { ...summary, gradeOn20: grade }, { merge: true });
+}
+
+/** Checkpoint en cours : ecrit la note dans dsSdgnResults avant la fin du DS. */
+export async function syncDsSdgnCheckpointSummary(
+  uid: string,
+  input: {
+    session: DsTabResultPayload["session"];
+    gradeOn20: number;
+    score: number;
+    total: number;
+  },
+  profile?: Record<string, unknown>,
+): Promise<void> {
+  const session = input.session;
+  const grade = Math.max(
+    input.gradeOn20,
+    computeDsGradeOn20(input.score, input.total, false),
+  );
+  const summary: DsSdgnResultSummary = {
+    uid,
+    examId: DS_SDGN_QCM_EXAM_ID,
+    prenom: typeof profile?.prenom === "string" ? profile.prenom : undefined,
+    nom: typeof profile?.nom === "string" ? profile.nom : undefined,
+    email: typeof profile?.email === "string" ? profile.email : undefined,
+    classe: typeof profile?.classe === "string" ? profile.classe : undefined,
+    lycee: typeof profile?.lycee === "string" ? profile.lycee : undefined,
+    gradeOn20: grade,
+    scorePoints: input.score,
+    totalQuestions: input.total,
+    questionsAnswered: session.questionsAnswered ?? session.answers?.length ?? 0,
+    correctCount: session.correctCount ?? 0,
+    wrongCount: session.wrongCount ?? 0,
+    forcedZero: session.forcedZero ?? false,
+    status: session.status ?? "incomplete",
+    completed: session.completed ?? false,
+    finishedAt: session.finishedAt ?? "",
+    startedAt: session.startedAt,
+    sessionId: session.sessionId,
+    topicStats: session.topicStats,
+    answersCount: session.answers?.length ?? 0,
+    updatedAt: new Date().toISOString(),
+  };
+  await setDoc(resultDocRef(uid), toFirestoreSummary(summary), { merge: true });
 }
 
 export function summaryFromUserProfile(
@@ -243,8 +291,20 @@ export async function backfillDsSdgnResultsFromUsers(
     const uid = String(user.id ?? "");
     if (!uid) continue;
 
-    const fromUser = resolveDsGradeOn20FromUser(user);
-    let summary = summaryFromUserProfile(user);
+    let freshUser = user;
+    const fromCached = resolveDsGradeOn20FromUser(user);
+    if (fromCached <= 0) {
+      try {
+        const snap = await getDoc(userDocRef(uid));
+        if (snap.exists()) {
+          freshUser = { id: uid, ...snap.data() };
+        }
+      } catch {
+        /* ignore */
+      }
+    }
+    const fromUser = resolveDsGradeOn20FromUser(freshUser);
+    let summary = summaryFromUserProfile(freshUser);
     if (!summary && fromUser <= 0 && !hasDsTabExamData(user)) continue;
 
     candidates += 1;
@@ -268,14 +328,25 @@ export async function backfillDsSdgnResultsFromUsers(
       if (summary.gradeOn20 > 0) {
         const tab = readDsTabExamRoot(user);
         const cur = parseFlexibleNumber(tab?.gradeOn20) ?? 0;
+        const patch: Record<string, unknown> = {
+          dsSdgnPremiereLast: {
+            gradeOn20: summary.gradeOn20,
+            scorePoints: summary.scorePoints,
+            totalQuestions: summary.totalQuestions,
+            questionsAnswered: summary.questionsAnswered,
+            status: summary.status,
+            forcedZero: summary.forcedZero,
+            finishedAt: summary.finishedAt,
+            updatedAt: new Date().toISOString(),
+          },
+        };
         if (cur < summary.gradeOn20 - 0.001) {
-          await updateDoc(userDocRef(uid), {
-            [`dsTab.${DS_SDGN_QCM_EXAM_ID}.gradeOn20`]: summary.gradeOn20,
-            [`dsTab.${DS_SDGN_QCM_EXAM_ID}.score`]:
-              summary.scorePoints || tab?.score || 0,
-          });
-          userDocsPatched += 1;
+          patch[`dsTab.${DS_SDGN_QCM_EXAM_ID}.gradeOn20`] = summary.gradeOn20;
+          patch[`dsTab.${DS_SDGN_QCM_EXAM_ID}.score`] =
+            summary.scorePoints || tab?.score || 0;
         }
+        await updateDoc(userDocRef(uid), patch);
+        userDocsPatched += 1;
       }
 
       const existing = await getDoc(resultDocRef(uid));

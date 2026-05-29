@@ -335,7 +335,7 @@ export default function AdminDsSdgnReport({
           {"NOTES /20 \u2014 lecture directe Firebase"}
         </p>
         <p style={{ margin: "0 0 10px", color: "#475569", fontSize: "0.8rem", lineHeight: 1.45 }}>
-          {`${gradesWithNote.length} note(s) renseignee(s) sur ${directGrades.length} eleve(s). Si vide : bouton Synchroniser ci-dessous, puis Ctrl+F5.`}
+          {`${gradesWithNote.length} note(s) sur ${directGrades.length} eleve(s). Si 0 : clique Recalculer (repare depuis score Firebase + champ dsSdgnPremiereLast), puis Ctrl+F5.`}
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
           <button

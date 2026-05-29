@@ -143,25 +143,36 @@ function readLegacyFlatDsTabExam(
   return found ? exam : null;
 }
 
+function examTabActivityMetric(tab: Record<string, unknown>): number {
+  const grade = parseFlexibleNumber(tab.gradeOn20) ?? 0;
+  const score = parseFlexibleNumber(tab.score) ?? 0;
+  const last = tab.lastSession;
+  const prov =
+    last && typeof last === "object"
+      ? parseFlexibleNumber((last as Record<string, unknown>).gradeOn20Provisional) ?? 0
+      : 0;
+  let answered = 0;
+  if (last && typeof last === "object") {
+    const ls = last as Record<string, unknown>;
+    answered = Number(ls.questionsAnswered) || 0;
+    if (!answered && Array.isArray(ls.answers)) {
+      answered = ls.answers.length;
+    }
+  }
+  return Math.max(grade * 1000, prov * 1000, score, answered);
+}
+
 function pickExamTabFromDsTabContainer(
   dsTab: Record<string, unknown>,
 ): Record<string, unknown> | null {
+  const candidates: Record<string, unknown>[] = [];
   const direct = dsTab[DS_SDGN_QCM_EXAM_ID];
   if (direct && typeof direct === "object") {
-    return direct as Record<string, unknown>;
-  }
-
-  if (
-    parseFlexibleNumber(dsTab.gradeOn20) != null ||
-    parseFlexibleNumber(dsTab.score) != null ||
-    dsTab.lastSession ||
-    dsTab.attemptStarted
-  ) {
-    return dsTab;
+    candidates.push(direct as Record<string, unknown>);
   }
 
   for (const value of Object.values(dsTab)) {
-    if (!value || typeof value !== "object") continue;
+    if (!value || typeof value !== "object" || Array.isArray(value)) continue;
     const candidate = value as Record<string, unknown>;
     if (
       parseFlexibleNumber(candidate.gradeOn20) != null ||
@@ -170,11 +181,95 @@ function pickExamTabFromDsTabContainer(
       candidate.attemptStarted ||
       candidate.examId === DS_SDGN_QCM_EXAM_ID
     ) {
-      return candidate;
+      candidates.push(candidate);
     }
   }
 
-  return null;
+  if (
+    parseFlexibleNumber(dsTab.gradeOn20) != null ||
+    parseFlexibleNumber(dsTab.score) != null ||
+    dsTab.lastSession ||
+    dsTab.attemptStarted
+  ) {
+    candidates.push(dsTab);
+  }
+
+  if (!candidates.length) return null;
+
+  let best = candidates[0];
+  let bestMetric = examTabActivityMetric(best);
+  for (let i = 1; i < candidates.length; i += 1) {
+    const metric = examTabActivityMetric(candidates[i]);
+    if (metric > bestMetric) {
+      best = candidates[i];
+      bestMetric = metric;
+    }
+  }
+  return best;
+}
+
+/** Reponses all\u00e9g\u00e9es (sans texte de sc\u00e9nario) pour tenir dans le doc Firestore users. */
+export function slimDsSessionForFirestore(session: DsSessionRecord): DsSessionRecord {
+  return {
+    ...session,
+    answers: (session.answers ?? []).map((a) => ({
+      sourceId: a.sourceId,
+      topic: a.topic,
+      outcome: a.outcome,
+      ...(a.picked != null ? { picked: a.picked } : {}),
+    })),
+  };
+}
+
+export type DsSdgnPremiereLastSnapshot = {
+  gradeOn20: number;
+  scorePoints: number;
+  totalQuestions: number;
+  questionsAnswered: number;
+  status: DsSessionStatus;
+  forcedZero: boolean;
+  finishedAt: string;
+  updatedAt: string;
+};
+
+function readDsSdgnPremiereLastSnapshot(
+  userData: Record<string, unknown> | null | undefined,
+): DsSdgnPremiereLastSnapshot | null {
+  if (!userData) return null;
+  const snap = userData.dsSdgnPremiereLast;
+  if (!snap || typeof snap !== "object") return null;
+  const rec = snap as Record<string, unknown>;
+  const grade = parseFlexibleNumber(rec.gradeOn20);
+  if (grade == null || grade < 0) return null;
+  return {
+    gradeOn20: grade,
+    scorePoints: parseFlexibleNumber(rec.scorePoints) ?? 0,
+    totalQuestions: parseFlexibleNumber(rec.totalQuestions) ?? 0,
+    questionsAnswered: Number(rec.questionsAnswered) || 0,
+    status: (rec.status as DsSessionStatus) ?? "incomplete",
+    forcedZero: Boolean(rec.forcedZero),
+    finishedAt: typeof rec.finishedAt === "string" ? rec.finishedAt : "",
+    updatedAt: typeof rec.updatedAt === "string" ? rec.updatedAt : "",
+  };
+}
+
+function collectGradesFromSessionsMap(
+  tab: Record<string, unknown>,
+  out: number[],
+): void {
+  const sessions = tab.sessions;
+  if (!sessions || typeof sessions !== "object" || Array.isArray(sessions)) return;
+  for (const entry of Object.values(sessions as Record<string, unknown>)) {
+    if (!entry || typeof entry !== "object") continue;
+    const rec = entry as Record<string, unknown>;
+    const g = parseFlexibleNumber(rec.gradeOn20);
+    if (g != null && g > 0) out.push(g);
+    const score = parseFlexibleNumber(rec.scorePoints);
+    const total = parseFlexibleNumber(rec.totalQuestions);
+    if (score != null && total != null && total > 0) {
+      out.push(computeDsGradeOn20(score, total, false));
+    }
+  }
 }
 
 /** Parcourt tout le document utilisateur (dsTab parfois imbrique autrement). */
@@ -229,13 +324,44 @@ function readDsTabRoot(
 
 export async function persistDsTabResult(uid: string, payload: DsTabResultPayload): Promise<void> {
   const base = `dsTab.${DS_SDGN_QCM_EXAM_ID}`;
-  const session = payload.session;
+  const session = slimDsSessionForFirestore(payload.session);
+  const gradeOn20 = Math.max(
+    payload.gradeOn20,
+    computeDsGradeOn20(payload.score, payload.total, false),
+    session.gradeOn20Provisional ?? 0,
+  );
+
+  const snapshot: DsSdgnPremiereLastSnapshot = {
+    gradeOn20,
+    scorePoints: payload.score,
+    totalQuestions: payload.total,
+    questionsAnswered: session.questionsAnswered ?? session.answers?.length ?? 0,
+    status: session.status,
+    forcedZero: payload.forcedZero,
+    finishedAt: payload.finishedAt,
+    updatedAt: new Date().toISOString(),
+  };
+
+  const profileSnap = await getDoc(userDocRef(uid));
+  const profile = profileSnap.exists()
+    ? (profileSnap.data() as Record<string, unknown>)
+    : undefined;
+
+  const payloadForSync: DsTabResultPayload = {
+    ...payload,
+    gradeOn20,
+    session,
+  };
+
+  const { syncDsSdgnResultSummary } = await import("./dsSdgnResultsService");
+  await syncDsSdgnResultSummary(uid, payloadForSync, profile);
+
   const historyPatch: Record<string, unknown> = {
     [`${base}.sessions.${session.sessionId}`]: {
       sessionId: session.sessionId,
       finishedAt: session.finishedAt,
       startedAt: session.startedAt,
-      gradeOn20: session.gradeOn20,
+      gradeOn20: gradeOn20,
       scorePoints: session.scorePoints,
       totalQuestions: session.totalQuestions,
       forcedZero: session.forcedZero,
@@ -252,13 +378,14 @@ export async function persistDsTabResult(uid: string, payload: DsTabResultPayloa
   };
 
   const patch: Record<string, unknown> = {
+    dsSdgnPremiereLast: snapshot,
     [`${base}.examId`]: DS_SDGN_QCM_EXAM_ID,
     [`${base}.score`]: payload.score,
     [`${base}.total`]: payload.total,
     [`${base}.skipped`]: payload.skipped,
     [`${base}.forcedZero`]: payload.forcedZero,
     [`${base}.finishedAt`]: payload.finishedAt,
-    [`${base}.gradeOn20`]: payload.gradeOn20,
+    [`${base}.gradeOn20`]: gradeOn20,
     [`${base}.lastSessionId`]: session.sessionId,
     [`${base}.lastSession`]: session,
     ...historyPatch,
@@ -268,17 +395,22 @@ export async function persistDsTabResult(uid: string, payload: DsTabResultPayloa
     patch[`${base}.resumeGranted`] = payload.resumeGranted;
   }
 
-  await updateDoc(userDocRef(uid), patch);
-
   try {
-    const profileSnap = await getDoc(userDocRef(uid));
-    const profile = profileSnap.exists()
-      ? (profileSnap.data() as Record<string, unknown>)
-      : undefined;
-    const { syncDsSdgnResultSummary } = await import("./dsSdgnResultsService");
-    await syncDsSdgnResultSummary(uid, payload, profile);
+    await updateDoc(userDocRef(uid), patch);
   } catch (err) {
-    console.error("Sync dsSdgnResults impossible", err);
+    console.error(
+      "dsTab complet non enregistre (copie trop lourde ?) — note dans dsSdgnResults OK",
+      err,
+    );
+    await updateDoc(userDocRef(uid), {
+      dsSdgnPremiereLast: snapshot,
+      [`${base}.gradeOn20`]: gradeOn20,
+      [`${base}.score`]: payload.score,
+      [`${base}.total`]: payload.total,
+      [`${base}.finishedAt`]: payload.finishedAt,
+      [`${base}.forcedZero`]: payload.forcedZero,
+      [`${base}.lastSessionId`]: session.sessionId,
+    });
   }
 }
 
@@ -329,7 +461,35 @@ export async function persistDsTabCheckpoint(
     resumeIndex: slimAnswers.length,
   };
   const base = `dsTab.${DS_SDGN_QCM_EXAM_ID}`;
+  const snapshot: DsSdgnPremiereLastSnapshot = {
+    gradeOn20: gradeOn20Provisional,
+    scorePoints: input.scorePoints,
+    totalQuestions: input.totalQuestions,
+    questionsAnswered: slimAnswers.length,
+    status: "incomplete",
+    forcedZero: false,
+    finishedAt: "",
+    updatedAt: new Date().toISOString(),
+  };
+
+  const profileSnap = await getDoc(userDocRef(uid));
+  const profile = profileSnap.exists()
+    ? (profileSnap.data() as Record<string, unknown>)
+    : undefined;
+  const { syncDsSdgnCheckpointSummary } = await import("./dsSdgnResultsService");
+  await syncDsSdgnCheckpointSummary(
+    uid,
+    {
+      session: partial,
+      gradeOn20: gradeOn20Provisional,
+      score: input.scorePoints,
+      total: input.totalQuestions,
+    },
+    profile,
+  );
+
   await updateDoc(userDocRef(uid), {
+    dsSdgnPremiereLast: snapshot,
     [`${base}.examId`]: DS_SDGN_QCM_EXAM_ID,
     [`${base}.attemptStarted`]: true,
     [`${base}.score`]: input.scorePoints,
@@ -474,9 +634,21 @@ export function resolveDsGradeOn20FromUser(
   if (!userData) return 0;
   const grades: number[] = [];
 
+  const premiereLast = readDsSdgnPremiereLastSnapshot(userData);
+  if (premiereLast && premiereLast.gradeOn20 > 0) {
+    grades.push(premiereLast.gradeOn20);
+    const fromSnap = computeDsGradeOn20(
+      premiereLast.scorePoints,
+      premiereLast.totalQuestions,
+      false,
+    );
+    if (fromSnap > 0) grades.push(fromSnap);
+  }
+
   const tab = readDsTabRoot(userData);
   if (tab) {
     collectDsGradesFromTree(tab, 0, grades);
+    collectGradesFromSessionsMap(tab, grades);
     const score = parseFlexibleNumber(tab.score);
     const total = parseFlexibleNumber(tab.total);
     if (score != null && total != null && total > 0) {
@@ -526,6 +698,10 @@ export function readDsTabExamGradeOn20(
 }
 
 export function hasDsTabExamData(userData: Record<string, unknown> | null | undefined): boolean {
+  const premiereLast = readDsSdgnPremiereLastSnapshot(userData);
+  if (premiereLast && (premiereLast.gradeOn20 > 0 || premiereLast.questionsAnswered > 0)) {
+    return true;
+  }
   const examTab = readDsTabRoot(userData);
   if (!examTab) return false;
   if (examTab.lastSession) return true;
