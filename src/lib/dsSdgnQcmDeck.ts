@@ -130,6 +130,30 @@ const DS_QCM_BY_ID: Record<string, SdgnMissionQcm> = Object.fromEntries(
   DS_SDGN_EXAM_BANK.map((q) => [q.id, q]),
 );
 
+/**
+ * Liste des questions pour une reprise (sessions anciennes sans questionIds).
+ * Conserve l\u2019ordre des r\u00e9ponses d\u00e9j\u00e0 faites, compl\u00e8te avec le tirage standard.
+ */
+export function rebuildQuestionIdsForResume(session: {
+  answers?: { sourceId: string }[];
+  questionIds?: string[];
+  totalQuestions?: number;
+}): string[] | null {
+  const answers = session.answers ?? [];
+  if (!answers.length) return null;
+  if (session.questionIds?.length) return session.questionIds;
+
+  const answeredIds = answers.map((a) => a.sourceId);
+  const target = session.totalQuestions ?? Math.floor(DS_SDGN_PREMIERE_SESSION_SEC / DS_SDGN_PREMIERE_QUESTION_SEC);
+  if (answeredIds.length >= target) return answeredIds.slice(0, target);
+
+  const used = new Set(answeredIds);
+  const extra = buildDsSdgnPremiereDeck()
+    .map((q) => q.sourceId)
+    .filter((id) => !used.has(id));
+  return [...answeredIds, ...extra].slice(0, target);
+}
+
 /** Reconstruit le m\u00eame paquet qu\u2019au premier lancement (reprise apr\u00e8s anti-triche). */
 export function buildDsSdgnPremiereDeckFromQuestionIds(
   questionIds: string[],

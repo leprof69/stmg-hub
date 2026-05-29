@@ -26,8 +26,12 @@ export default function AdminExamensPanel() {
             {" : l\u2019\u00e9l\u00e8ve peut \u00e0 nouveau gagner des jetons (Missions, jeux). Ne modifie pas une note DS."}
           </li>
           <li>
+            <strong>{"Autoriser reprise"}</strong>
+            {" (SDGN Premi\u00e8re) : l\u2019\u00e9l\u00e8ve continue le DS (score + r\u00e9ponses conserv\u00e9s)."}
+          </li>
+          <li>
             <strong>{"Repasse QCM"}</strong>
-            {" (SDGN Premi\u00e8re) : efface la tentative QCM, l\u2019\u00e9l\u00e8ve peut refaire le DS en ligne."}
+            {" : efface tout et recommence le DS \u00e0 z\u00e9ro."}
           </li>
           <li>
             <strong>{"Reset copies DS Bac"}</strong>

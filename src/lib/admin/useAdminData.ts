@@ -253,7 +253,10 @@ export function useAdminData() {
   );
 
   const premiereReportingRows = useMemo(
-    () => reportingRows.filter((eleve) => eleve.classe === "premiere"),
+    () =>
+      reportingRows
+        .filter((eleve) => eleve.classe === "premiere" && eleve.dsSdgnRow)
+        .map((eleve) => eleve.dsSdgnRow),
     [reportingRows],
   );
 

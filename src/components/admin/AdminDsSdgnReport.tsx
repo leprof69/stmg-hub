@@ -23,7 +23,7 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
     const q = recherche.trim().toLowerCase();
     return premiereRows.filter((eleve) => {
       if (!q) return true;
-      const hay = `${eleve.nomAffiche || ""} ${eleve.email || ""}`.toLowerCase();
+      const hay = `${eleve.studentName || ""} ${eleve.email || ""}`.toLowerCase();
       return hay.includes(q);
     });
   }, [premiereRows, recherche]);
@@ -48,14 +48,15 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
   const canGrantResume = (row) => {
     const sess = row.session;
     if (!sess) return false;
-    const answered = sess.answers?.length ?? 0;
+    const answered = sess.answers?.length ?? sess.questionsAnswered ?? 0;
     const total = sess.totalQuestions ?? sess.questionIds?.length ?? 0;
-    return (
-      (row.displayStatus === "disqualified" || row.displayStatus === "incomplete") &&
-      answered > 0 &&
-      answered < total &&
-      Boolean(sess.questionIds?.length)
-    );
+    if (answered <= 0) return false;
+    if (total > 0 && answered >= total) return false;
+    const stoppable =
+      row.displayStatus === "disqualified" ||
+      row.displayStatus === "incomplete" ||
+      Boolean(sess.forcedZero);
+    return stoppable;
   };
 
   const handleGrantResume = async (row) => {

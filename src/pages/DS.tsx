@@ -23,6 +23,7 @@ import { enterDsFullscreen, exitDsFullscreen } from "../lib/dsFullscreen";
 import {
   buildDsSdgnPremiereDeck,
   buildDsSdgnPremiereDeckFromQuestionIds,
+  rebuildQuestionIdsForResume,
   type DsPlayQuestion,
   countDsSdgnPremiereByKind,
   DS_SCORE_CORRECT,
@@ -307,7 +308,8 @@ export default function DS({ profil, onExamFinished }: Props) {
 
   const resumeSdgnPremiere = () => {
     const session = readDsTabLastSession(userRecord);
-    if (!session?.questionIds?.length || !canResume) return;
+    const questionIds = session ? rebuildQuestionIdsForResume(session) : null;
+    if (!questionIds?.length || !canResume) return;
 
     clearTimers();
     forcedZeroRef.current = false;
@@ -315,10 +317,7 @@ export default function DS({ profil, onExamFinished }: Props) {
     setForcedZero(false);
     setCheatMsg("");
 
-    const deck = buildDsSdgnPremiereDeckFromQuestionIds(
-      session.questionIds,
-      session.sessionId,
-    );
+    const deck = buildDsSdgnPremiereDeckFromQuestionIds(questionIds, session.sessionId);
     if (!deck.length) return;
 
     const answers = [...(session.answers ?? [])];

@@ -5,6 +5,7 @@ import {
   computeTopicStats,
 } from "../lib/dsSdgnGrading";
 import type { DsSdgnPremiereTopic } from "../lib/dsSdgnQcmTopics";
+import { rebuildQuestionIdsForResume } from "../lib/dsSdgnQcmDeck";
 import { userDocRef } from "./userProfileService";
 
 export const DS_SDGN_QCM_EXAM_ID = "sdgn_premiere_qcm_v1";
@@ -226,9 +227,10 @@ export function canStudentResumeDsSdgnExam(
   const meta = readDsTabExamMeta(userData);
   if (!meta.resumeGranted) return false;
   const session = readDsTabLastSession(userData);
-  if (!session?.questionIds?.length) return false;
-  const answered = session.answers?.length ?? 0;
-  const total = session.totalQuestions ?? session.questionIds.length;
+  const questionIds = session ? rebuildQuestionIdsForResume(session) : null;
+  if (!questionIds?.length) return false;
+  const answered = session?.answers?.length ?? 0;
+  const total = session?.totalQuestions ?? questionIds.length;
   return answered < total;
 }
 
@@ -274,8 +276,10 @@ export async function grantDsSdgnExamResume(uid: string): Promise<GrantDsSdgnRes
   if (!session) return null;
 
   const answers = session.answers ?? [];
-  const totalQuestions = session.totalQuestions ?? session.questionIds?.length ?? 0;
-  if (!session.questionIds?.length || answers.length >= totalQuestions) return null;
+  const questionIds = rebuildQuestionIdsForResume(session);
+  if (!questionIds?.length) return null;
+  const totalQuestions = session.totalQuestions ?? questionIds.length;
+  if (answers.length >= totalQuestions) return null;
 
   const scorePoints = computeDsScoreFromAnswers(answers);
   const gradeOn20Provisional = computeDsGradeOn20(scorePoints, totalQuestions, false);
@@ -283,6 +287,8 @@ export async function grantDsSdgnExamResume(uid: string): Promise<GrantDsSdgnRes
 
   const updatedSession: DsSessionRecord = {
     ...session,
+    questionIds,
+    totalQuestions,
     scorePoints,
     forcedZero: false,
     status: "incomplete",
