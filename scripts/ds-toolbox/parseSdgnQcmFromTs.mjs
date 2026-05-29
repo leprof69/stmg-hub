@@ -57,7 +57,16 @@ function extractBlocks(content, idPrefix) {
 
 import { readFileSync } from "node:fs";
 
-export function loadDsQcmFromSources({ bankPath, extraPath, purePath }) {
+function sortDsId(a, b) {
+  const key = (id) => {
+    const s = String(id);
+    if (s.startsWith("sdgn-ds-cas-")) return 9000 + Number(s.replace("sdgn-ds-cas-", ""));
+    return Number(s.replace("sdgn-ds-", "")) || 0;
+  };
+  return key(a.id) - key(b.id);
+}
+
+export function loadDsQcmFromSources({ bankPath, extraPath, purePath, casPath }) {
   const bank = readFileSync(bankPath, "utf8");
   const fromBank = extractBlocks(bank, "sdgn-ds-");
 
@@ -77,14 +86,16 @@ export function loadDsQcmFromSources({ bankPath, extraPath, purePath }) {
     fromPure = extractBlocks(pureSlice, "sdgn-ds-");
   }
 
+  let fromCas = [];
+  if (casPath) {
+    const casFile = readFileSync(casPath, "utf8");
+    fromCas = extractBlocks(casFile, "sdgn-ds-");
+  }
+
   const byId = new Map();
-  for (const q of [...fromBank, ...fromExtra, ...fromPure]) {
+  for (const q of [...fromBank, ...fromExtra, ...fromPure, ...fromCas]) {
     byId.set(q.id, q);
   }
 
-  return [...byId.values()].sort((a, b) => {
-    const na = Number(a.id.replace(/\D/g, "")) || 0;
-    const nb = Number(b.id.replace(/\D/g, "")) || 0;
-    return na - nb;
-  });
+  return [...byId.values()].sort(sortDsId);
 }

@@ -1,7 +1,15 @@
 import { SDGN_MISSION_QCM_CURATED, type SdgnMissionQcm } from "./sdgnMissionQcmBank";
+import { SDGN_DS_CAS_ENTREPRISE } from "./sdgnDsPremiereCasEntreprise";
 import { SDGN_DS_PURE_COURS } from "./sdgnDsPremierePureCours";
 
 function finalizeDsQuestion(q: SdgnMissionQcm): SdgnMissionQcm {
+  if (q.id.startsWith("sdgn-ds-cas-")) {
+    return { ...q, difficulte: "difficile" };
+  }
+  const n = Number(q.id.replace(/^sdgn-ds-/, ""));
+  if (Number.isFinite(n) && n >= 77) {
+    return { ...q, difficulte: "difficile" };
+  }
   return {
     ...q,
     difficulte: q.difficulte === "facile" ? "difficile" : q.difficulte,
@@ -534,9 +542,10 @@ const SDGN_DS_EXTRA_RAW: SdgnMissionQcm[] = [
 
 const FROM_CURATED = SDGN_MISSION_QCM_CURATED.filter((q) => q.id.startsWith("sdgn-ds-"));
 
-/** Banque officielle du DS Premi\u00e8re (cours pur, sans collage automatique de mini-cas). */
+/** Banque officielle du DS Premi\u00e8re (mini-cas affich\u00e9s \u00e0 part, sauf \u00e9nonc\u00e9s d\u00e9j\u00e0 contextualis\u00e9s). */
 export const SDGN_DS_PREMIERE_QCM: SdgnMissionQcm[] = [
   ...FROM_CURATED.map(finalizeDsQuestion),
+  ...SDGN_DS_CAS_ENTREPRISE.map(finalizeDsQuestion),
   ...SDGN_DS_EXTRA_RAW.map(finalizeDsQuestion),
   ...SDGN_DS_PURE_COURS.map(finalizeDsQuestion),
 ];

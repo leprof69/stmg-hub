@@ -1,27 +1,34 @@
 import type { SdgnMissionQcm } from "../data/sdgn/sdgnMissionQcmBank";
+import {
+  buildDsDisplayEnonce,
+  DS_QUESTION_KIND_LABEL,
+  getDsQuestionKind,
+  type DsQuestionKind,
+} from "./integrateDsQuestion";
 import { getPrimaryDsSdgnTopic } from "./dsSdgnQcmTopics";
 import { isDsSdgnCalculationQuestion } from "./dsSdgnQuestionTiming";
 import type { GameQuizQ } from "./gameQcmPool";
 
-export type DsPresentationMode = "course";
+export type { DsQuestionKind };
 
 export type DsPlayQuestion = GameQuizQ & {
   topic: import("./dsSdgnQcmTopics").DsSdgnPremiereTopic;
-  presentationMode: DsPresentationMode;
+  questionKind: DsQuestionKind;
+  kindLabel: string;
   /** false = pas de limite de 30 s sur cette question */
   questionTimed: boolean;
 };
 
 export function wrapDsPlayQuestion(item: SdgnMissionQcm, quiz: GameQuizQ): DsPlayQuestion {
   const topic = getPrimaryDsSdgnTopic(item);
-
-  const hasCalc = isDsSdgnCalculationQuestion(item.question, item.choix);
-
+  const questionKind = getDsQuestionKind(item);
   return {
     ...quiz,
-    q: item.question,
+    q: buildDsDisplayEnonce(item),
     topic,
-    presentationMode: "course",
-    questionTimed: !hasCalc,
+    questionKind,
+    kindLabel: DS_QUESTION_KIND_LABEL[questionKind],
+    /** 30 s par question sauf si l\u2019\u00e9nonc\u00e9 comporte un calcul chiffr\u00e9. */
+    questionTimed: !isDsSdgnCalculationQuestion(item.question, item.choix),
   };
 }

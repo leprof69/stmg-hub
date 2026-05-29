@@ -17,7 +17,9 @@ export function shuffleGameQuizChoices(
 ): { choices: [string, string, string, string]; ok: 0 | 1 | 2 | 3 } {
   const order: (0 | 1 | 2 | 3)[] = [0, 1, 2, 3];
   for (let i = order.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const buf = new Uint32Array(1);
+    crypto.getRandomValues(buf);
+    const j = buf[0] % (i + 1);
     const tmp = order[i];
     order[i] = order[j];
     order[j] = tmp;

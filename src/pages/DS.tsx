@@ -18,14 +18,12 @@ import { enterDsFullscreen, exitDsFullscreen } from "../lib/dsFullscreen";
 import {
   buildDsSdgnPremiereDeck,
   type DsPlayQuestion,
-  countDsSdgnPremiereDifficile,
-  countDsSdgnPremiereDsDedicated,
+  countDsSdgnPremiereByKind,
   DS_SCORE_CORRECT,
   DS_SCORE_WRONG,
   DS_SDGN_PREMIERE_QUESTION_SEC,
   DS_SDGN_PREMIERE_SESSION_SEC,
   formatDsScore,
-  getDsSdgnPremiereDifficulte,
   getDsSdgnPremiereQuestionCount,
 } from "../lib/dsSdgnQcmDeck";
 
@@ -106,8 +104,7 @@ export default function DS({ profil, onExamFinished }: Props) {
   }, [profil, isAdmin, userRecord]);
 
   const totalInBank = getDsSdgnPremiereQuestionCount();
-  const dsDedicatedCount = countDsSdgnPremiereDsDedicated();
-  const difficileCount = countDsSdgnPremiereDifficile();
+  const kindCounts = countDsSdgnPremiereByKind();
   const targetFull = Math.floor(DS_SDGN_PREMIERE_SESSION_SEC / DS_SDGN_PREMIERE_QUESTION_SEC);
 
   const current = questions[index] ?? null;
@@ -224,6 +221,7 @@ export default function DS({ profil, onExamFinished }: Props) {
         topic: q.topic,
         outcome: outcome === "correct" ? 1 : 0,
         scenarioText: q.q,
+        scenarioTitle: q.kindLabel,
         ...(picked !== null ? { picked: picked as 0 | 1 | 2 | 3 } : {}),
       });
     },
@@ -377,19 +375,26 @@ export default function DS({ profil, onExamFinished }: Props) {
     if (phase !== "play" || forcedZero) return undefined;
 
     const q = questionsRef.current[index];
-    const timed = q?.questionTimed ?? true;
+    const timed = q?.questionTimed !== false;
     setQTimeLeft(DS_SDGN_PREMIERE_QUESTION_SEC);
 
     if (timed) {
       qTimerRef.current = setInterval(() => {
         setQTimeLeft((t) => {
           if (t <= 1) {
+            if (qTimerRef.current) {
+              clearInterval(qTimerRef.current);
+              qTimerRef.current = null;
+            }
             onQuestionTimeout();
             return 0;
           }
           return t - 1;
         });
       }, 1000);
+    } else if (qTimerRef.current) {
+      clearInterval(qTimerRef.current);
+      qTimerRef.current = null;
     }
 
     sessionTimerRef.current = setInterval(() => {
@@ -420,9 +425,9 @@ export default function DS({ profil, onExamFinished }: Props) {
     return `${m}:${s.toString().padStart(2, "0")}`;
   }, [sessionLeft]);
 
-  const questionTimed = current?.questionTimed ?? true;
+  const questionTimed = current?.questionTimed !== false;
   const qPct = (qTimeLeft / DS_SDGN_PREMIERE_QUESTION_SEC) * 100;
-  const diffLabel = current ? getDsSdgnPremiereDifficulte(current.sourceId) : undefined;
+  const metaKind = current?.kindLabel;
 
   const shellClass = immersiveActive
     ? "fixed inset-0 z-[10000] overflow-y-auto bg-slate-950 text-white"
@@ -506,12 +511,20 @@ export default function DS({ profil, onExamFinished }: Props) {
             <h2 className="text-xl font-bold text-sky-300 mb-2">{"SDGN \u2014 1\u00e8re"}</h2>
             <ul className="text-slate-300 text-sm space-y-1 mb-4 list-disc pl-5">
               <li>{`Dur\u00e9e session : ${DS_SDGN_PREMIERE_SESSION_SEC / 60} minutes`}</li>
-              <li>{`${DS_SDGN_PREMIERE_QUESTION_SEC} s par question de cours (calculs : sans limite)`}</li>
-              <li>{`Banque DS : ${totalInBank} questions (${dsDedicatedCount} cas chiffr\u00e9s, ${difficileCount} pi\u00e8ges)`}</li>
+              <li>
+                {`${DS_SDGN_PREMIERE_QUESTION_SEC} s par question (sauf calcul chiffr\u00e9) \u00b7 ordre tir\u00e9 au hasard \u00e0 chaque lancement`}
+              </li>
+              <li>
+                {`Banque DS : ${totalInBank} questions difficiles (${kindCounts.cas} cas, ${kindCounts.calcul} calculs, ${kindCounts.cours} cours)`}
+              </li>
               <li>{`Jusqu\u2019\u00e0 ${targetFull} questions par session`}</li>
               <li>{"Ordre al\u00e9atoire \u00e0 chaque lancement"}</li>
               <li>{`Bar\u00e8me : +${DS_SCORE_CORRECT} pt si juste, ${DS_SCORE_WRONG} pt si faux ou temps \u00e9coul\u00e9`}</li>
-              <li>{"Chaque \u00e9nonc\u00e9 = mini cas + question int\u00e9gr\u00e9s (coh\u00e9rents)"}</li>
+              <li>
+                {
+                  "3 types d\u2019\u00e9nonc\u00e9s : cas entreprise (texte unique), calcul simple, cours pur \u2014 pas de blocs s\u00e9par\u00e9s."
+                }
+              </li>
               <li className="text-amber-200 font-semibold">
                 {"Une seule tentative \u00b7 plein \u00e9cran navigateur (tout l\u2019\u00e9cran) jusqu\u2019\u00e0 la fin."}
               </li>
@@ -624,16 +637,16 @@ export default function DS({ profil, onExamFinished }: Props) {
             />
           </div>
           <p className="text-xs text-slate-500 mb-6">
-            {`${qTimeLeft} s \u00b7 Ch. ${current.chapter} ${chLabel ?? ""}${diffLabel ? ` \u00b7 ${diffLabel}` : ""}`}
+            {`${qTimeLeft} s \u00b7 ${metaKind ?? ""} \u00b7 Ch. ${current.chapter} ${chLabel ?? ""}`}
           </p>
         </>
       ) : (
         <p className="text-xs text-emerald-400/90 mb-6">
-          {`Calcul \u2014 pas de limite par question \u00b7 Ch. ${current.chapter} ${chLabel ?? ""}${diffLabel ? ` \u00b7 ${diffLabel}` : ""}`}
+          {`${metaKind ?? "Calcul"} \u2014 pas de limite par question \u00b7 Ch. ${current.chapter} ${chLabel ?? ""}`}
         </p>
       )}
 
-      <section className="rounded-xl border border-slate-700 bg-slate-900/60 px-4 py-4 mb-6">
+      <section className="rounded-xl border border-slate-700 bg-slate-900/60 px-4 py-5 mb-6">
         <p className="text-slate-100 text-base leading-relaxed whitespace-pre-line">{current.q}</p>
       </section>
 
