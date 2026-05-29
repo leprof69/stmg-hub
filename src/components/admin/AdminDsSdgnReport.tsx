@@ -297,13 +297,26 @@ export default function AdminDsSdgnReport({
             setSyncingResults(true);
             try {
               const r = await onSyncDsResults();
+              if (r.total === 0 && r.candidates === 0) {
+                window.alert(
+                  "Aucune copie DS trouvee dans users.dsTab.\n\nVerifie dans Firebase Console : users / un eleve / dsTab / sdgn_premiere_qcm_v1 / gradeOn20",
+                );
+                return;
+              }
               window.alert(
-                `Synchronisation OK : ${r.total} copie(s) dans dsSdgnResults (${r.written} mise(s) a jour depuis users).`,
+                `Synchronisation OK.\n` +
+                  `${r.total} copie(s) dans dsSdgnResults\n` +
+                  `${r.candidates} detectee(s) dans users.dsTab\n` +
+                  `${r.written} ecrite(s), ${r.skipped} deja a jour` +
+                  (r.errors?.length
+                    ? `\n\nAvertissements :\n${r.errors.slice(0, 3).join("\n")}`
+                    : ""),
               );
               onAfterReset?.();
-            } catch {
+            } catch (err) {
+              const msg = err instanceof Error ? err.message : String(err);
               window.alert(
-                "Echec sync. Deploie les regles Firestore (dsSdgnResults) puis reessaie.",
+                `Echec sync.\n\n${msg}\n\nSi "permission-denied" : reconnecte-toi en compte admin, ou redeploie les regles Firestore.`,
               );
             } finally {
               setSyncingResults(false);

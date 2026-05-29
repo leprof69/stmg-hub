@@ -87,7 +87,10 @@ export function useAdminData() {
       ).length;
       if (summaries.length < withDsTab) {
         try {
-          await backfillDsSdgnResultsFromUsers(allUsers);
+          const backfill = await backfillDsSdgnResultsFromUsers(allUsers);
+          if (backfill.errors.length) {
+            console.warn("Backfill dsSdgnResults partial", backfill.errors);
+          }
           summaries = await fetchAllDsSdgnResultSummaries();
         } catch (backfillErr) {
           console.error("Backfill dsSdgnResults", backfillErr);
@@ -701,15 +704,22 @@ export function useAdminData() {
     usersAll,
     dsSdgnSummaries,
     syncDsSdgnResultsFromFirebase: async () => {
-      try {
-        const n = await backfillDsSdgnResultsFromUsers(usersAll);
-        const summaries = await fetchAllDsSdgnResultSummaries();
-        setDsSdgnSummaries(summaries);
-        return { written: n, total: summaries.length };
-      } catch (err) {
-        console.error(err);
-        throw err;
+      const backfill = await backfillDsSdgnResultsFromUsers(usersAll);
+      if (backfill.candidates > 0 && backfill.written === 0 && backfill.errors.length > 0) {
+        const detail = backfill.errors.slice(0, 3).join("\n");
+        throw new Error(
+          `Ecriture impossible (${backfill.errors.length} erreur(s)).\n${detail}`,
+        );
       }
+      const summaries = await fetchAllDsSdgnResultSummaries();
+      setDsSdgnSummaries(summaries);
+      return {
+        written: backfill.written,
+        skipped: backfill.skipped,
+        candidates: backfill.candidates,
+        total: summaries.length,
+        errors: backfill.errors,
+      };
     },
     chargementEleves,
     erreurEleves,

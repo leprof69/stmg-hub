@@ -42,6 +42,32 @@ function resultDocRef(uid: string) {
   return doc(db, DS_SDGN_RESULTS_COLLECTION, uid);
 }
 
+/** Firestore refuse les champs undefined (erreur silencieuse cote client). */
+function stripUndefinedDeep(value: unknown): unknown {
+  if (value === undefined) return undefined;
+  if (value === null) return null;
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => stripUndefinedDeep(item))
+      .filter((item) => item !== undefined);
+  }
+  if (typeof value !== "object") return value;
+  const out: Record<string, unknown> = {};
+  for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
+    const cleaned = stripUndefinedDeep(val);
+    if (cleaned !== undefined) out[key] = cleaned;
+  }
+  return out;
+}
+
+function toFirestoreSummary(summary: DsSdgnResultSummary): Record<string, unknown> {
+  return stripUndefinedDeep(summary) as Record<string, unknown>;
+}
+
+async function writeSummaryDoc(summary: DsSdgnResultSummary): Promise<void> {
+  await setDoc(resultDocRef(summary.uid), toFirestoreSummary(summary), { merge: true });
+}
+
 export function summaryFromPayload(
   uid: string,
   payload: DsTabResultPayload,
@@ -135,25 +161,50 @@ export async function fetchAllDsSdgnResultSummaries(): Promise<DsSdgnResultSumma
     .filter((s) => s.examId === DS_SDGN_QCM_EXAM_ID || !s.examId);
 }
 
+export type BackfillDsSdgnResultsReport = {
+  written: number;
+  skipped: number;
+  candidates: number;
+  errors: string[];
+};
+
 /** Recopie users.dsTab -> dsSdgnResults pour les copies deja en base. */
 export async function backfillDsSdgnResultsFromUsers(
   users: Record<string, unknown>[],
-): Promise<number> {
+): Promise<BackfillDsSdgnResultsReport> {
   let written = 0;
+  let skipped = 0;
+  let candidates = 0;
+  const errors: string[] = [];
+
   for (const user of users) {
     if (user.role === "admin") continue;
     const summary = summaryFromUserProfile(user);
     if (!summary) continue;
+    candidates += 1;
     const uid = summary.uid;
-    const existing = await getDoc(resultDocRef(uid));
-    if (existing.exists()) {
-      const prev = existing.data() as DsSdgnResultSummary;
-      if (prev.gradeOn20 === summary.gradeOn20 && prev.answersCount === summary.answersCount) {
-        continue;
+    try {
+      const existing = await getDoc(resultDocRef(uid));
+      if (existing.exists()) {
+        const prev = existing.data() as DsSdgnResultSummary;
+        if (
+          prev.gradeOn20 === summary.gradeOn20 &&
+          prev.answersCount === summary.answersCount
+        ) {
+          skipped += 1;
+          continue;
+        }
       }
+      await writeSummaryDoc(summary);
+      written += 1;
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      const name =
+        summary.prenom || summary.nom || summary.email || uid.slice(0, 6);
+      errors.push(`${name}: ${msg}`);
+      if (errors.length >= 5) break;
     }
-    await setDoc(resultDocRef(uid), summary, { merge: true });
-    written += 1;
   }
-  return written;
+
+  return { written, skipped, candidates, errors };
 }
