@@ -249,7 +249,6 @@ export default function DS({ profil, onExamFinished }: Props) {
       setIndex(next);
       setAnswered(false);
       setPicked(null);
-      setQTimeLeft(DS_SDGN_PREMIERE_QUESTION_SEC);
     },
     [finishExam, index, questions.length, recordCurrentAnswer, sessionLeft],
   );
@@ -375,16 +374,24 @@ export default function DS({ profil, onExamFinished }: Props) {
   }, [persistSession, isAdmin]);
 
   useEffect(() => {
-    if (phase !== "play" || forcedZero) return;
-    qTimerRef.current = setInterval(() => {
-      setQTimeLeft((t) => {
-        if (t <= 1) {
-          onQuestionTimeout();
-          return 0;
-        }
-        return t - 1;
-      });
-    }, 1000);
+    if (phase !== "play" || forcedZero) return undefined;
+
+    const q = questionsRef.current[index];
+    const timed = q?.questionTimed ?? true;
+    setQTimeLeft(DS_SDGN_PREMIERE_QUESTION_SEC);
+
+    if (timed) {
+      qTimerRef.current = setInterval(() => {
+        setQTimeLeft((t) => {
+          if (t <= 1) {
+            onQuestionTimeout();
+            return 0;
+          }
+          return t - 1;
+        });
+      }, 1000);
+    }
+
     sessionTimerRef.current = setInterval(() => {
       setSessionLeft((t) => {
         if (t <= 1) {
@@ -394,8 +401,18 @@ export default function DS({ profil, onExamFinished }: Props) {
         return t - 1;
       });
     }, 1000);
-    return clearTimers;
-  }, [phase, index, forcedZero, clearTimers, finishExam, onQuestionTimeout]);
+
+    return () => {
+      if (qTimerRef.current) {
+        clearInterval(qTimerRef.current);
+        qTimerRef.current = null;
+      }
+      if (sessionTimerRef.current) {
+        clearInterval(sessionTimerRef.current);
+        sessionTimerRef.current = null;
+      }
+    };
+  }, [phase, index, forcedZero, finishExam, onQuestionTimeout]);
 
   const sessionMmSs = useMemo(() => {
     const m = Math.floor(sessionLeft / 60);
@@ -403,6 +420,7 @@ export default function DS({ profil, onExamFinished }: Props) {
     return `${m}:${s.toString().padStart(2, "0")}`;
   }, [sessionLeft]);
 
+  const questionTimed = current?.questionTimed ?? true;
   const qPct = (qTimeLeft / DS_SDGN_PREMIERE_QUESTION_SEC) * 100;
   const diffLabel = current ? getDsSdgnPremiereDifficulte(current.sourceId) : undefined;
 
@@ -488,7 +506,7 @@ export default function DS({ profil, onExamFinished }: Props) {
             <h2 className="text-xl font-bold text-sky-300 mb-2">{"SDGN \u2014 1\u00e8re"}</h2>
             <ul className="text-slate-300 text-sm space-y-1 mb-4 list-disc pl-5">
               <li>{`Dur\u00e9e session : ${DS_SDGN_PREMIERE_SESSION_SEC / 60} minutes`}</li>
-              <li>{`${DS_SDGN_PREMIERE_QUESTION_SEC} secondes par question`}</li>
+              <li>{`${DS_SDGN_PREMIERE_QUESTION_SEC} s par question de cours (calculs : sans limite)`}</li>
               <li>{`Banque DS : ${totalInBank} questions (${dsDedicatedCount} cas chiffr\u00e9s, ${difficileCount} pi\u00e8ges)`}</li>
               <li>{`Jusqu\u2019\u00e0 ${targetFull} questions par session`}</li>
               <li>{"Ordre al\u00e9atoire \u00e0 chaque lancement"}</li>
@@ -597,15 +615,23 @@ export default function DS({ profil, onExamFinished }: Props) {
         <span>{`Question ${index + 1} / ${questions.length}`}</span>
         <span>{`Session ${sessionMmSs}`}</span>
       </div>
-      <div className="h-2 rounded-full bg-slate-800 mb-1 overflow-hidden">
-        <div
-          className={`h-full transition-all duration-300 ${qTimeLeft <= 8 ? "bg-red-500 ds-timer-urgent" : "bg-sky-500"}`}
-          style={{ width: `${qPct}%` }}
-        />
-      </div>
-      <p className="text-xs text-slate-500 mb-6">
-        {`${qTimeLeft} s \u00b7 Ch. ${current.chapter} ${chLabel ?? ""}${diffLabel ? ` \u00b7 ${diffLabel}` : ""}`}
-      </p>
+      {questionTimed ? (
+        <>
+          <div className="h-2 rounded-full bg-slate-800 mb-1 overflow-hidden">
+            <div
+              className={`h-full transition-all duration-300 ${qTimeLeft <= 8 ? "bg-red-500 ds-timer-urgent" : "bg-sky-500"}`}
+              style={{ width: `${qPct}%` }}
+            />
+          </div>
+          <p className="text-xs text-slate-500 mb-6">
+            {`${qTimeLeft} s \u00b7 Ch. ${current.chapter} ${chLabel ?? ""}${diffLabel ? ` \u00b7 ${diffLabel}` : ""}`}
+          </p>
+        </>
+      ) : (
+        <p className="text-xs text-emerald-400/90 mb-6">
+          {`Calcul \u2014 pas de limite par question \u00b7 Ch. ${current.chapter} ${chLabel ?? ""}${diffLabel ? ` \u00b7 ${diffLabel}` : ""}`}
+        </p>
+      )}
 
       <section className="rounded-xl border border-slate-700 bg-slate-900/60 px-4 py-4 mb-6">
         <p className="text-slate-100 text-base leading-relaxed whitespace-pre-line">{current.q}</p>
