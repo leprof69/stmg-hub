@@ -83,39 +83,69 @@ export function formatDsDisplayStatusLabel(status: DsSdgnDisplayStatus): string 
   }
 }
 
+/** Note affich\u00e9e : toujours le chiffre Firebase si disponible. */
 export function formatDsGradeForReport(row: DsSdgnStudentReportRow): string {
-  const sess = row.session;
-  const rootGrade = row.examRootGrade;
-  if (!sess) {
-    if (rootGrade != null && rootGrade > 0) return String(rootGrade);
-    return row.displayStatus === "not_started" ? "\u2014" : "\u2014";
+  const grade =
+    row.examRootGrade ??
+    row.session?.gradeOn20 ??
+    row.session?.gradeOn20Provisional ??
+    0;
+
+  if (row.displayStatus === "not_started" && grade <= 0) return "\u2014";
+  if (grade <= 0) return "0";
+  if (row.displayStatus === "completed") return String(grade);
+  if (row.displayStatus === "disqualified" || row.displayStatus === "incomplete") {
+    return `${grade} (prov.)`;
   }
-  if (sess.forcedZero || row.displayStatus === "disqualified") {
-    const prov = sess.gradeOn20Provisional ?? rootGrade ?? sess.gradeOn20;
-    return prov > 0 ? `${prov} (prov.)` : "0";
-  }
-  if (row.displayStatus === "incomplete") {
-    const prov = sess.gradeOn20Provisional ?? rootGrade ?? sess.gradeOn20;
-    return `${prov} (prov.)`;
-  }
-  const grade = sess.gradeOn20 > 0 ? sess.gradeOn20 : (rootGrade ?? 0);
-  if (grade > 0) return String(grade);
-  return row.displayStatus === "not_started" ? "\u2014" : "0";
+  return String(grade);
 }
 
+/**
+ * Statut affich\u00e9 : se base sur la note et la progression, pas seulement lastSession.status
+ * (souvent "incomplete" apr\u00e8s cl\u00f4ture admin alors que gradeOn20 est d\u00e9j\u00e0 enregistr\u00e9).
+ */
+export function resolveDsSdgnDisplayStatus(
+  session: DsSessionRecord | null,
+  examRootGrade: number | undefined,
+  attemptStarted = false,
+): DsSdgnDisplayStatus {
+  const grade =
+    examRootGrade ??
+    session?.gradeOn20 ??
+    session?.gradeOn20Provisional ??
+    0;
+  const answered = session?.questionsAnswered ?? session?.answers?.length ?? 0;
+  const total = session?.totalQuestions ?? 0;
+  const forced = Boolean(session?.forcedZero);
+
+  if (!session && grade <= 0 && !attemptStarted) return "not_started";
+
+  if (forced && grade <= 0) return "disqualified";
+
+  const finishedAll = total > 0 && answered >= total;
+  const sessionCompleted =
+    session?.completed === true ||
+    (session?.status === "completed" && !forced);
+
+  if (sessionCompleted && grade > 0) return "completed";
+  if (finishedAll && grade > 0) return "completed";
+  if (grade > 0 && !forced && session?.finishedAt && answered > 0) {
+    if (total <= 0 || answered >= total) return "completed";
+  }
+
+  if (forced && grade > 0) return "disqualified";
+  if (answered > 0 || grade > 0) return "incomplete";
+  if (attemptStarted) return "incomplete";
+  return "not_started";
+}
+
+/** @deprecated Utiliser resolveDsSdgnDisplayStatus */
 export function deriveDsDisplayStatus(
   session: DsSessionRecord | null,
   attemptStarted: boolean,
 ): DsSdgnDisplayStatus {
-  if (session?.status) return session.status;
-  if (session) {
-    if (session.forcedZero) return "disqualified";
-    const answered = session.questionsAnswered ?? session.answers?.length ?? 0;
-    if (answered > 0 && answered < (session.totalQuestions ?? 0)) return "incomplete";
-    if (answered > 0) return "completed";
-  }
-  if (attemptStarted) return "incomplete";
-  return "not_started";
+  const grade = session?.gradeOn20 ?? session?.gradeOn20Provisional;
+  return resolveDsSdgnDisplayStatus(session, grade, attemptStarted);
 }
 
 export function buildDsSdgnStudentRow(eleve: {
@@ -133,17 +163,9 @@ export function buildDsSdgnStudentRow(eleve: {
   const meta = readDsTabExamMeta(userRecord);
   const hasData = hasDsTabExamData(userRecord);
   const examRootGrade = readDsTabExamGradeOn20(userRecord);
-  let displayStatus: DsSdgnDisplayStatus = hasData
-    ? deriveDsDisplayStatus(session, meta.attemptStarted)
+  const displayStatus: DsSdgnDisplayStatus = hasData
+    ? resolveDsSdgnDisplayStatus(session, examRootGrade, meta.attemptStarted)
     : "not_started";
-  if (
-    hasData &&
-    displayStatus === "not_started" &&
-    examRootGrade != null &&
-    examRootGrade > 0
-  ) {
-    displayStatus = "completed";
-  }
   const name =
     eleve.nomAffiche ||
     eleve.prenom ||
@@ -247,6 +269,11 @@ function buildDsSdgnStudentRowFromSummary(
     (user?.nom as string) ||
     `Eleve ${summary.uid.slice(0, 6)}`;
 
+  const examRootGrade =
+    summary.gradeOn20 ??
+    (user ? readDsTabExamGradeOn20(user as Record<string, unknown>) : undefined) ??
+    session?.gradeOn20;
+
   return {
     studentId: summary.uid,
     studentName: name,
@@ -254,9 +281,9 @@ function buildDsSdgnStudentRowFromSummary(
     lycee: summary.lycee || (user?.lycee as string | undefined),
     email: summary.email || (user?.email as string | undefined),
     session,
-    displayStatus: summary.status,
+    displayStatus: resolveDsSdgnDisplayStatus(session, examRootGrade, true),
     hasDsData: true,
-    examRootGrade: summary.gradeOn20,
+    examRootGrade,
   };
 }
 

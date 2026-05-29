@@ -125,8 +125,25 @@ export function summaryFromUserProfile(
 
   if (!session && grade <= 0) return null;
 
-  const status: DsSessionStatus =
-    session?.status ?? (grade > 0 ? "completed" : "incomplete");
+  const answered = session?.questionsAnswered ?? session?.answers?.length ?? 0;
+  const total = session?.totalQuestions ?? 0;
+  const forced = Boolean(session?.forcedZero);
+  let status: DsSessionStatus = session?.status ?? "incomplete";
+  let completed = session?.completed ?? false;
+
+  if (forced && grade <= 0) {
+    status = "disqualified";
+    completed = false;
+  } else if (grade > 0 && total > 0 && answered >= total) {
+    status = "completed";
+    completed = true;
+  } else if (grade > 0 && session?.status === "completed" && !forced) {
+    status = "completed";
+    completed = true;
+  } else if (answered > 0 || grade > 0) {
+    status = "incomplete";
+    completed = false;
+  }
 
   return {
     uid,
@@ -144,7 +161,7 @@ export function summaryFromUserProfile(
     wrongCount: session?.wrongCount ?? 0,
     forcedZero: session?.forcedZero ?? false,
     status,
-    completed: session?.completed ?? status === "completed",
+    completed,
     finishedAt: session?.finishedAt ?? "",
     startedAt: session?.startedAt,
     sessionId: session?.sessionId,
