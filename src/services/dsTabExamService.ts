@@ -327,10 +327,36 @@ export function canStudentResumeDsSdgnExam(
   return answered < total;
 }
 
+/** Session non termin\u00e9e (en cours, reprise, ou anti-triche interrompu). */
+export function isDsSdgnSessionInProgress(
+  userData: Record<string, unknown> | null | undefined,
+): boolean {
+  if (canStudentResumeDsSdgnExam(userData)) return true;
+
+  const session = readDsTabLastSession(userData);
+  const meta = readDsTabExamMeta(userData);
+
+  if (session?.status === "completed" && session.completed && !session.forcedZero) {
+    return false;
+  }
+
+  if (session) {
+    const answered = session.answers?.length ?? session.questionsAnswered ?? 0;
+    const total = session.totalQuestions ?? 0;
+    if (session.status === "incomplete" || session.status === "disqualified") return true;
+    if (total > 0 && answered > 0 && answered < total) return true;
+    if (session.forcedZero && answered > 0) return true;
+  }
+
+  return meta.attemptStarted && session !== null;
+}
+
 /** Une tentative termin\u00e9e bloque une nouvelle session ; reprise autoris\u00e9e = exception. */
 export function isDsSdgnExamLocked(
   userData: Record<string, unknown> | null | undefined,
+  options?: { globallyClosed?: boolean },
 ): boolean {
+  if (options?.globallyClosed) return true;
   if (canStudentResumeDsSdgnExam(userData)) return false;
 
   const session = readDsTabLastSession(userData);
@@ -341,6 +367,79 @@ export function isDsSdgnExamLocked(
   const meta = readDsTabExamMeta(userData);
   if (meta.attemptStarted) return true;
   return session !== null;
+}
+
+export type ForceFinalizeDsSdgnOutcome = "skipped" | "finalized";
+
+/**
+ * Cl\u00f4ture c\u00f4t\u00e9 serveur : enregistre la note sur les r\u00e9ponses d\u00e9j\u00e0 sauv\u00e9es
+ * (l\u2019\u00e9l\u00e8ve encore en train de jouer est finalis\u00e9 par son client via examConfig).
+ */
+export async function forceFinalizeDsSdgnExamForUser(
+  uid: string,
+): Promise<ForceFinalizeDsSdgnOutcome> {
+  const snap = await getDoc(userDocRef(uid));
+  if (!snap.exists()) return "skipped";
+
+  const userData = snap.data() as Record<string, unknown>;
+  const session = readDsTabLastSession(userData);
+  const meta = readDsTabExamMeta(userData);
+
+  if (session?.status === "completed" && session.completed && !session.forcedZero) {
+    return "skipped";
+  }
+  if (!session && !meta.attemptStarted) return "skipped";
+  if (!isDsSdgnSessionInProgress(userData)) return "skipped";
+
+  const answers = [...(session?.answers ?? [])];
+  const questionIds = session ? rebuildQuestionIdsForResume(session) : null;
+  const totalQuestions =
+    session?.totalQuestions ?? questionIds?.length ?? (answers.length > 0 ? answers.length : 0);
+  if (!answers.length && !meta.attemptStarted) return "skipped";
+
+  const scorePoints = computeDsScoreFromAnswers(answers);
+  const gradeOn20 = computeDsGradeOn20(
+    scorePoints,
+    Math.max(totalQuestions, answers.length, 1),
+    false,
+  );
+  const finishedAt = new Date().toISOString();
+  const sessionId = session?.sessionId ?? `admin-close-${Date.now()}`;
+
+  const updatedSession = buildDsSessionRecord({
+    sessionId,
+    startedAt: session?.startedAt ?? finishedAt,
+    finishedAt,
+    scorePoints,
+    totalQuestions: Math.max(totalQuestions, answers.length),
+    questionsAnswered: answers.length,
+    correctCount: answers.filter((a) => a.outcome === 1).length,
+    wrongCount: answers.filter((a) => a.outcome === 0).length,
+    skippedCount: session?.skippedCount ?? 0,
+    forcedZero: false,
+    gradeOn20,
+    status: "completed",
+    questionIds: session?.questionIds?.length
+      ? session.questionIds
+      : (questionIds ?? []),
+    answers,
+    topicStats: computeTopicStats(answers),
+    sessionLeftSec: 0,
+    resumeIndex: answers.length,
+  });
+
+  await persistDsTabResult(uid, {
+    score: scorePoints,
+    total: updatedSession.totalQuestions,
+    skipped: updatedSession.skippedCount,
+    forcedZero: false,
+    finishedAt,
+    gradeOn20,
+    session: updatedSession,
+    resumeGranted: false,
+  });
+
+  return "finalized";
 }
 
 export async function resetDsSdgnTabExamForUser(uid: string): Promise<void> {

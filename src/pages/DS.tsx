@@ -18,6 +18,10 @@ import {
   type DsSessionAnswerRecord,
   type DsSessionStatus,
 } from "../services/dsTabExamService";
+import {
+  subscribeDsSdgnExamConfig,
+  type DsSdgnExamConfig,
+} from "../services/dsSdgnExamConfigService";
 import { SDGN_CHAPTER_LABELS } from "../data/sdgn/registry";
 import { enterDsFullscreen, exitDsFullscreen } from "../lib/dsFullscreen";
 import {
@@ -83,6 +87,7 @@ export default function DS({ profil, onExamFinished }: Props) {
   const [forcedZero, setForcedZero] = useState(false);
   const [cheatMsg, setCheatMsg] = useState("");
   const [adminResetting, setAdminResetting] = useState(false);
+  const [examConfig, setExamConfig] = useState<DsSdgnExamConfig>({ closed: false });
 
   const qTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const sessionTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -107,17 +112,39 @@ export default function DS({ profil, onExamFinished }: Props) {
   const prenom = profil?.prenom || "toi";
   const isAdmin = profil?.role === "admin";
   const userRecord = profil as Record<string, unknown>;
+  const examGloballyClosed = examConfig.closed && !isAdmin;
   const [attemptLocked, setAttemptLocked] = useState(
-    () => !isAdmin && isDsSdgnExamLocked(userRecord),
+    () => !isAdmin && isDsSdgnExamLocked(userRecord, { globallyClosed: examConfig.closed }),
   );
-  const canResume = !isAdmin && canStudentResumeDsSdgnExam(userRecord);
+  const canResume =
+    !isAdmin && !examGloballyClosed && canStudentResumeDsSdgnExam(userRecord);
   const examLocked =
-    !isAdmin && !canResume && (attemptLocked || isDsSdgnExamLocked(userRecord));
+    !isAdmin &&
+    !canResume &&
+    (examGloballyClosed ||
+      attemptLocked ||
+      isDsSdgnExamLocked(userRecord, { globallyClosed: examConfig.closed }));
   const lastSession = readDsTabLastSession(userRecord);
 
   useEffect(() => {
-    if (!isAdmin && isDsSdgnExamLocked(userRecord)) setAttemptLocked(true);
-  }, [profil, isAdmin, userRecord]);
+    return subscribeDsSdgnExamConfig(setExamConfig);
+  }, []);
+
+  useEffect(() => {
+    if (!isAdmin && isDsSdgnExamLocked(userRecord, { globallyClosed: examConfig.closed })) {
+      setAttemptLocked(true);
+    }
+  }, [profil, isAdmin, userRecord, examConfig.closed]);
+
+  useEffect(() => {
+    if (!examGloballyClosed || isAdmin) return;
+    if (phaseRef.current !== "play") return;
+    if (finishedRef.current || finishingExamRef.current) return;
+    setCheatMsg(
+      "Le professeur a cl\u00f4tur\u00e9 le DS. Tes r\u00e9ponses d\u00e9j\u00e0 enregistr\u00e9es sont prises en compte.",
+    );
+    finishExamRef.current(false);
+  }, [examGloballyClosed, isAdmin]);
 
   const totalInBank = getDsSdgnPremiereQuestionCount();
   const kindCounts = countDsSdgnPremiereByKind();
@@ -362,6 +389,7 @@ export default function DS({ profil, onExamFinished }: Props) {
   };
 
   const startSdgnPremiere = () => {
+    if (examGloballyClosed) return;
     if (examLocked && !canResume) return;
     setAttemptLocked(true);
     clearTimers();
@@ -599,7 +627,16 @@ export default function DS({ profil, onExamFinished }: Props) {
           </p>
         </section>
 
-        {canResume && resumeProgress ? (
+        {examGloballyClosed && !examLocked && !canResume ? (
+          <section className="rounded-2xl border border-slate-600/60 bg-slate-900/50 p-6 mb-6">
+            <h2 className="text-xl font-bold text-slate-300 mb-2">{"DS cl\u00f4tur\u00e9"}</h2>
+            <p className="text-slate-400 text-sm">
+              {
+                "Le professeur a ferm\u00e9 le QCM pour toute la classe. Tu n\u2019avais pas encore commenc\u00e9."
+              }
+            </p>
+          </section>
+        ) : canResume && resumeProgress ? (
           <section className="rounded-2xl border border-emerald-600/60 bg-emerald-950/30 p-6 mb-6">
             <h2 className="text-xl font-bold text-emerald-300 mb-2">{"Reprendre ton DS"}</h2>
             <p className="text-slate-300 text-sm mb-3">
@@ -618,7 +655,9 @@ export default function DS({ profil, onExamFinished }: Props) {
           </section>
         ) : examLocked ? (
           <section className="rounded-2xl border border-amber-700/60 bg-amber-950/30 p-6 mb-6">
-            <h2 className="text-xl font-bold text-amber-300 mb-2">{"DS d\u00e9j\u00e0 pass\u00e9"}</h2>
+            <h2 className="text-xl font-bold text-amber-300 mb-2">
+              {examGloballyClosed ? "DS cl\u00f4tur\u00e9 par le prof" : "DS d\u00e9j\u00e0 pass\u00e9"}
+            </h2>
             <p className="text-slate-300 text-sm mb-3">
               {
                 "Tu ne peux pas relancer ce QCM. Si tu as \u00e9t\u00e9 coup\u00e9 par erreur, demande \u00e0 ton prof \u00ab Autoriser reprise \u00bb dans l\u2019admin."

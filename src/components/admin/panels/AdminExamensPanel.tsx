@@ -30,6 +30,10 @@ export default function AdminExamensPanel() {
             {" (SDGN Premi\u00e8re) : l\u2019\u00e9l\u00e8ve continue le DS (score + r\u00e9ponses conserv\u00e9s)."}
           </li>
           <li>
+            <strong>{"Cl\u00f4turer le DS"}</strong>
+            {" : coupe tout le monde en cours et ferme le QCM pour la classe (notes d\u00e9j\u00e0 finies conserv\u00e9es)."}
+          </li>
+          <li>
             <strong>{"Repasse QCM"}</strong>
             {" : efface tout et recommence le DS \u00e0 z\u00e9ro."}
           </li>

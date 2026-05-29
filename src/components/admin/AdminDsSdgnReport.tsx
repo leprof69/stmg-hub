@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   buildDsSdgnClassReportFromStudents,
   formatDsDisplayStatusLabel,
@@ -7,6 +7,11 @@ import {
 } from "../../lib/adminDsSdgnReport";
 import { exportDsSdgnClassReportXlsx } from "../../lib/exportDsSdgnReportXlsx";
 import { DS_SDGN_TOPIC_LABELS, DS_SDGN_TOPIC_ORDER } from "../../lib/dsSdgnQcmTopics";
+import {
+  closeDsSdgnPremiereExamForAll,
+  reopenDsSdgnPremiereExam,
+  subscribeDsSdgnExamConfig,
+} from "../../services/dsSdgnExamConfigService";
 import {
   grantDsSdgnExamResume,
   resetDsSdgnTabExamForUser,
@@ -18,6 +23,13 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
   const [resetting, setResetting] = useState(false);
   const [resettingId, setResettingId] = useState(null);
   const [restoringId, setRestoringId] = useState(null);
+  const [closingExam, setClosingExam] = useState(false);
+  const [reopeningExam, setReopeningExam] = useState(false);
+  const [examConfig, setExamConfig] = useState({ closed: false, closedAt: null });
+
+  useEffect(() => {
+    return subscribeDsSdgnExamConfig(setExamConfig);
+  }, []);
 
   const filteredRows = useMemo(() => {
     const q = recherche.trim().toLowerCase();
@@ -117,6 +129,57 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
     }
   };
 
+  const inProgressCount = useMemo(
+    () =>
+      premiereRows.filter(
+        (row) => row.displayStatus === "incomplete" || row.displayStatus === "disqualified",
+      ).length,
+    [premiereRows],
+  );
+
+  const handleCloseExamForAll = async () => {
+    const ids = premiereRows.map((r) => r.studentId);
+    const msg =
+      `Cl\u00f4turer le DS SDGN pour toute la Premi\u00e8re ?\n\n` +
+      `\u2022 ${inProgressCount} session(s) en cours seront coup\u00e9es (note sur les r\u00e9ponses d\u00e9j\u00e0 faites)\n` +
+      `\u2022 Personne ne pourra lancer ou reprendre le QCM\n` +
+      `\u2022 Les notes d\u00e9j\u00e0 termin\u00e9es (ex. 14,9) sont conserv\u00e9es`;
+    if (!window.confirm(msg)) return;
+    setClosingExam(true);
+    try {
+      const result = await closeDsSdgnPremiereExamForAll(ids);
+      window.alert(
+        `DS cl\u00f4tur\u00e9.\n${result.finalized} session(s) finalis\u00e9e(s).\n${result.skipped} compte(s) sans changement (d\u00e9j\u00e0 termin\u00e9 ou jamais commenc\u00e9).`,
+      );
+      onAfterReset?.();
+    } catch (err) {
+      console.error(err);
+      window.alert("Impossible de cl\u00f4turer le DS (droits Firestore ou connexion).");
+    } finally {
+      setClosingExam(false);
+    }
+  };
+
+  const handleReopenExam = async () => {
+    if (
+      !window.confirm(
+        "Rouvrir le DS pour la classe ?\n\nLes \u00e9l\u00e8ves qui ont d\u00e9j\u00e0 une note ne pourront toujours pas recommencer sans \u00ab Repasse QCM \u00bb.",
+      )
+    ) {
+      return;
+    }
+    setReopeningExam(true);
+    try {
+      await reopenDsSdgnPremiereExam();
+      window.alert("DS rouvert : les \u00e9l\u00e8ves sans note peuvent lancer le QCM.");
+    } catch (err) {
+      console.error(err);
+      window.alert("Impossible de rouvrir le DS.");
+    } finally {
+      setReopeningExam(false);
+    }
+  };
+
   const handleResetAttempts = async () => {
     const targets = filteredRows.filter((row) => row.displayStatus !== "not_started");
     if (!targets.length) {
@@ -168,6 +231,68 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
           "Anti-triche accidentel : \u00ab Autoriser reprise \u00bb laisse l\u2019\u00e9l\u00e8ve continuer le DS (score + r\u00e9ponses conserv\u00e9s). \u00ab Repasse QCM \u00bb efface tout."
         }
       </p>
+
+      <div
+        style={{
+          marginBottom: 14,
+          padding: "12px 14px",
+          borderRadius: 12,
+          border: examConfig.closed ? "1px solid #FCA5A5" : "1px solid #86EFAC",
+          background: examConfig.closed ? "#FEF2F2" : "#F0FDF4",
+        }}
+      >
+        <p style={{ margin: "0 0 8px", fontWeight: 800, color: examConfig.closed ? "#B91C1C" : "#047857", fontSize: "0.88rem" }}>
+          {examConfig.closed ? "DS ferm\u00e9 pour la classe" : "DS ouvert (lancement QCM autoris\u00e9)"}
+        </p>
+        {examConfig.closed && examConfig.closedAt && (
+          <p style={{ margin: "0 0 10px", fontSize: "0.78rem", color: "#7F1D1D" }}>
+            {`Cl\u00f4tur\u00e9 le ${new Date(examConfig.closedAt).toLocaleString("fr-FR")}`}
+          </p>
+        )}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+          <button
+            type="button"
+            disabled={closingExam || examConfig.closed}
+            onClick={() => void handleCloseExamForAll()}
+            style={{
+              padding: "9px 16px",
+              borderRadius: 10,
+              border: "none",
+              background: examConfig.closed ? "#94A3B8" : "#DC2626",
+              color: "white",
+              fontWeight: 800,
+              fontSize: "0.85rem",
+              cursor: examConfig.closed ? "not-allowed" : "pointer",
+            }}
+          >
+            {closingExam ? "Cl\u00f4ture..." : "Cl\u00f4turer le DS (toute Premi\u00e8re)"}
+          </button>
+          {examConfig.closed && (
+            <button
+              type="button"
+              disabled={reopeningExam}
+              onClick={() => void handleReopenExam()}
+              style={{
+                padding: "9px 16px",
+                borderRadius: 10,
+                border: "1px solid #059669",
+                background: "white",
+                color: "#047857",
+                fontWeight: 800,
+                fontSize: "0.85rem",
+                cursor: reopeningExam ? "wait" : "pointer",
+              }}
+            >
+              {reopeningExam ? "..." : "Rouvrir le DS"}
+            </button>
+          )}
+        </div>
+        <p style={{ margin: "10px 0 0", fontSize: "0.75rem", color: "#64748B", lineHeight: 1.45 }}>
+          {
+            "Coupe imm\u00e9diatement les \u00e9l\u00e8ves en plein QCM (leur navigateur enregistre la copie) et bloque tout nouveau lancement."
+          }
+        </p>
+      </div>
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "center", marginBottom: 14 }}>
         <input
