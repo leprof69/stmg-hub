@@ -173,6 +173,39 @@ function pickExamTabFromDsTabContainer(
   return null;
 }
 
+/** Parcourt tout le document utilisateur (dsTab parfois imbrique autrement). */
+function deepFindExamTabInTree(
+  value: unknown,
+  depth = 0,
+): Record<string, unknown> | null {
+  if (!value || typeof value !== "object" || depth > 12) return null;
+
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      const found = deepFindExamTabInTree(item, depth + 1);
+      if (found) return found;
+    }
+    return null;
+  }
+
+  const rec = value as Record<string, unknown>;
+  const grade = parseFlexibleNumber(rec.gradeOn20);
+  const hasExamMarker =
+    rec.examId === DS_SDGN_QCM_EXAM_ID ||
+    rec.lastSession != null ||
+    rec.attemptStarted === true ||
+    parseFlexibleNumber(rec.score) != null;
+
+  if (grade != null && hasExamMarker) return rec;
+  if (rec.examId === DS_SDGN_QCM_EXAM_ID) return rec;
+
+  for (const child of Object.values(rec)) {
+    const found = deepFindExamTabInTree(child, depth + 1);
+    if (found) return found;
+  }
+  return null;
+}
+
 function readDsTabRoot(
   userData: Record<string, unknown> | null | undefined,
 ): Record<string, unknown> | null {
@@ -187,7 +220,7 @@ function readDsTabRoot(
   const legacyFlat = readLegacyFlatDsTabExam(userData);
   if (legacyFlat) return legacyFlat;
 
-  return null;
+  return deepFindExamTabInTree(userData);
 }
 
 export async function persistDsTabResult(uid: string, payload: DsTabResultPayload): Promise<void> {
@@ -232,6 +265,17 @@ export async function persistDsTabResult(uid: string, payload: DsTabResultPayloa
   }
 
   await updateDoc(userDocRef(uid), patch);
+
+  try {
+    const profileSnap = await getDoc(userDocRef(uid));
+    const profile = profileSnap.exists()
+      ? (profileSnap.data() as Record<string, unknown>)
+      : undefined;
+    const { syncDsSdgnResultSummary } = await import("./dsSdgnResultsService");
+    await syncDsSdgnResultSummary(uid, payload, profile);
+  } catch (err) {
+    console.error("Sync dsSdgnResults impossible", err);
+  }
 }
 
 export async function markDsAttemptStarted(uid: string, sessionId: string): Promise<void> {
@@ -505,7 +549,7 @@ export async function forceFinalizeDsSdgnExamForUser(
     resumeIndex: answers.length,
   });
 
-  await persistDsTabResult(uid, {
+  const payload: DsTabResultPayload = {
     score: scorePoints,
     total: updatedSession.totalQuestions,
     skipped: updatedSession.skippedCount,
@@ -514,7 +558,8 @@ export async function forceFinalizeDsSdgnExamForUser(
     gradeOn20,
     session: updatedSession,
     resumeGranted: false,
-  });
+  };
+  await persistDsTabResult(uid, payload);
 
   return "finalized";
 }
@@ -523,6 +568,14 @@ export async function resetDsSdgnTabExamForUser(uid: string): Promise<void> {
   await updateDoc(userDocRef(uid), {
     [`dsTab.${DS_SDGN_QCM_EXAM_ID}`]: deleteField(),
   });
+  try {
+    const { deleteDoc, doc } = await import("firebase/firestore");
+    const { db } = await import("./firebase");
+    const { DS_SDGN_RESULTS_COLLECTION } = await import("./dsSdgnResultsService");
+    await deleteDoc(doc(db, DS_SDGN_RESULTS_COLLECTION, uid));
+  } catch {
+    /* ignore */
+  }
 }
 
 export type GrantDsSdgnResumeResult = {

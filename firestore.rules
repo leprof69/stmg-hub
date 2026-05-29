@@ -76,6 +76,13 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    /** Copie DS lisible par l'admin (miroir de users.dsTab a chaque fin de session). */
+    match /dsSdgnResults/{uid} {
+      allow read: if isAdmin() || isOwner(uid);
+      allow create, update: if isOwner(uid) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
     match /badges/{docId} {
       allow read: if isSignedIn();
       allow write: if isAdmin();

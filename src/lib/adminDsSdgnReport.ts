@@ -1,5 +1,7 @@
 import { SDGN_CHAPTER_LABELS } from "../data/sdgn/registry";
 import { SDGN_MISSION_QCM_CURATED, type SdgnMissionQcm } from "../data/sdgn/sdgnMissionQcmBank";
+import { buildEmptyTopicStats } from "./dsSdgnGrading";
+import type { DsSdgnResultSummary } from "../services/dsSdgnResultsService";
 import {
   DS_SDGN_QCM_EXAM_ID,
   hasDsTabExamData,
@@ -157,7 +159,7 @@ export function buildDsSdgnStudentRow(eleve: {
     email: eleve.email,
     session,
     displayStatus,
-    hasDsData: hasData && displayStatus !== "not_started",
+    hasDsData: hasData,
     examRootGrade: Number.isFinite(examRootGrade) ? examRootGrade : undefined,
   };
 }
@@ -208,6 +210,92 @@ export function countUsersWithDsSdgnExamData(
   users: Record<string, unknown>[],
 ): number {
   return users.filter((u) => hasDsTabExamData(u as Record<string, unknown>)).length;
+}
+
+function buildDsSdgnStudentRowFromSummary(
+  summary: DsSdgnResultSummary,
+  user?: Record<string, unknown>,
+): DsSdgnStudentReportRow {
+  const sessionFromUser = user ? readDsTabLastSession(user as Record<string, unknown>) : null;
+  const session: DsSessionRecord | null =
+    sessionFromUser ??
+    ({
+      sessionId: summary.sessionId ?? summary.uid,
+      examId: DS_SDGN_QCM_EXAM_ID,
+      startedAt: summary.startedAt ?? summary.finishedAt,
+      finishedAt: summary.finishedAt,
+      scorePoints: summary.scorePoints,
+      totalQuestions: summary.totalQuestions,
+      questionsAnswered: summary.questionsAnswered,
+      correctCount: summary.correctCount,
+      wrongCount: summary.wrongCount,
+      skippedCount: 0,
+      forcedZero: summary.forcedZero,
+      gradeOn20: summary.gradeOn20,
+      status: summary.status,
+      completed: summary.completed,
+      questionIds: [],
+      answers: [],
+      topicStats: summary.topicStats ?? buildEmptyTopicStats(),
+    } as DsSessionRecord);
+
+  const name =
+    summary.prenom ||
+    summary.nom ||
+    summary.email ||
+    (user?.prenom as string) ||
+    (user?.nom as string) ||
+    `Eleve ${summary.uid.slice(0, 6)}`;
+
+  return {
+    studentId: summary.uid,
+    studentName: name,
+    classe: summary.classe || String(user?.classe ?? ""),
+    lycee: summary.lycee || (user?.lycee as string | undefined),
+    email: summary.email || (user?.email as string | undefined),
+    session,
+    displayStatus: summary.status,
+    hasDsData: true,
+    examRootGrade: summary.gradeOn20,
+  };
+}
+
+/**
+ * Source fiable pour l'admin : collection dsSdgnResults (remplie a chaque fin de DS).
+ */
+export function buildReportingRowsFromDsSdgnSummaries(
+  summaries: DsSdgnResultSummary[],
+  users: Record<string, unknown>[],
+): DsSdgnStudentReportRow[] {
+  const userById = new Map(users.map((u) => [String(u.id), u]));
+  const byId = new Map<string, DsSdgnStudentReportRow>();
+
+  for (const summary of summaries) {
+    if (summary.examId && summary.examId !== DS_SDGN_QCM_EXAM_ID) continue;
+    const user = userById.get(summary.uid);
+    byId.set(summary.uid, buildDsSdgnStudentRowFromSummary(summary, user));
+  }
+
+  for (const user of users) {
+    if (user.role === "admin") continue;
+    const id = String(user.id ?? "");
+    if (!id || byId.has(id)) continue;
+    if (!isPremiereClasse(user.classe)) continue;
+    const nom =
+      String(user.prenom || user.nom || user.email || "") || `\u00c9l\u00e8ve ${id.slice(0, 6)}`;
+    byId.set(
+      id,
+      buildDsSdgnStudentRow({
+        ...user,
+        id,
+        nomAffiche: nom,
+      } as Parameters<typeof buildDsSdgnStudentRow>[0]),
+    );
+  }
+
+  return Array.from(byId.values()).sort((a, b) =>
+    a.studentName.localeCompare(b.studentName, "fr"),
+  );
 }
 
 /** Tous les comptes (hors admin) avec une copie DS enregistr\u00e9e \u2014 pour export complet. */

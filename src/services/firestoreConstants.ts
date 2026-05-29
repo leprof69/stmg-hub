@@ -6,4 +6,6 @@ export const FS = {
   badges: "badges",
   duelRuns: "duelRuns",
   duelAttempts: "duelAttempts",
+  dsSdgnResults: "dsSdgnResults",
+  examConfig: "examConfig",
 } as const;

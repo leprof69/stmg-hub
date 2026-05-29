@@ -87,6 +87,8 @@ export default function AdminExamensPanel() {
         <AdminDsSdgnReport
           premiereRows={a.premiereReportingRows}
           usersAll={a.usersAll}
+          dsSdgnSummaries={a.dsSdgnSummaries}
+          onSyncDsResults={a.syncDsSdgnResultsFromFirebase}
           onAfterReset={a.chargerEleves}
         />
 

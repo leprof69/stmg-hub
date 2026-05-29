@@ -23,10 +23,17 @@ import {
   resetDsSdgnTabExamForUser,
 } from "../../services/dsTabExamService";
 
-export default function AdminDsSdgnReport({ premiereRows, usersAll = [], onAfterReset }) {
+export default function AdminDsSdgnReport({
+  premiereRows,
+  usersAll = [],
+  dsSdgnSummaries = [],
+  onSyncDsResults,
+  onAfterReset,
+}) {
   const [recherche, setRecherche] = useState("");
   const [exporting, setExporting] = useState(false);
   const [exportingPdf, setExportingPdf] = useState(false);
+  const [syncingResults, setSyncingResults] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [resettingId, setResettingId] = useState(null);
   const [restoringId, setRestoringId] = useState(null);
@@ -53,16 +60,22 @@ export default function AdminDsSdgnReport({ premiereRows, usersAll = [], onAfter
   );
 
   const dsTabDetectedTotal = useMemo(
-    () => countUsersWithDsSdgnExamData(usersAll),
-    [usersAll],
+    () => Math.max(countUsersWithDsSdgnExamData(usersAll), dsSdgnSummaries.length),
+    [usersAll, dsSdgnSummaries.length],
   );
 
   const buildFullExportReport = () => {
-    const fromFirebase = buildDsSdgnClassReportFromAllUsersWithDsData(usersAll);
-    if (fromFirebase.students.length > 0) {
-      return buildDsClassReportForExport(fromFirebase, true);
+    const active = premiereRows.filter(
+      (r) => r.hasDsData || r.displayStatus !== "not_started" || (r.examRootGrade ?? 0) > 0,
+    );
+    if (active.length > 0) {
+      return buildDsClassReportForExport(
+        buildDsSdgnClassReportFromStudents(active),
+        false,
+      );
     }
-    return buildDsClassReportForExport(report, true);
+    const fromFirebase = buildDsSdgnClassReportFromAllUsersWithDsData(usersAll);
+    return buildDsClassReportForExport(fromFirebase, true);
   };
 
   const handleExport = () => {
@@ -273,8 +286,43 @@ export default function AdminDsSdgnReport({ premiereRows, usersAll = [], onAfter
         }
       </p>
       <p style={{ margin: "0 0 8px", color: "#0369A1", fontSize: "0.78rem", lineHeight: 1.45 }}>
-        {`${dsTabDetectedTotal} copie(s) DS detectee(s) dans Firebase (tous comptes) \u00b7 ${report.withDsDataCount} affichee(s) ci-dessous. Si 0 : clique \u00ab Rafra\u00eechir \u00bb dans l\u2019admin ou verifie dsTab / sdgn_premiere_qcm_v1 dans Firebase.`}
+        {`${dsSdgnSummaries.length} copie(s) dans dsSdgnResults \u00b7 ${dsTabDetectedTotal} detectee(s) dans users.dsTab \u00b7 ${report.withDsDataCount} ligne(s) ci-dessous.`}
       </p>
+      <div style={{ marginBottom: 12 }}>
+        <button
+          type="button"
+          disabled={syncingResults}
+          onClick={async () => {
+            if (!onSyncDsResults) return;
+            setSyncingResults(true);
+            try {
+              const r = await onSyncDsResults();
+              window.alert(
+                `Synchronisation OK : ${r.total} copie(s) dans dsSdgnResults (${r.written} mise(s) a jour depuis users).`,
+              );
+              onAfterReset?.();
+            } catch {
+              window.alert(
+                "Echec sync. Deploie les regles Firestore (dsSdgnResults) puis reessaie.",
+              );
+            } finally {
+              setSyncingResults(false);
+            }
+          }}
+          style={{
+            padding: "8px 14px",
+            borderRadius: 10,
+            border: "1px solid #0284C7",
+            background: "white",
+            color: "#0369A1",
+            fontWeight: 800,
+            fontSize: "0.82rem",
+            cursor: syncingResults ? "wait" : "pointer",
+          }}
+        >
+          {syncingResults ? "Sync..." : "Synchroniser copies DS depuis Firebase"}
+        </button>
+      </div>
       <p style={{ margin: "0 0 14px", color: "#B45309", fontSize: "0.78rem", lineHeight: 1.45, fontWeight: 700 }}>
         {
           "Anti-triche accidentel : \u00ab Autoriser reprise \u00bb laisse l\u2019\u00e9l\u00e8ve continuer le DS (score + r\u00e9ponses conserv\u00e9s). \u00ab Repasse QCM \u00bb efface tout."

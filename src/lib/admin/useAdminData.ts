@@ -6,7 +6,17 @@ import { doc, setDoc, collection, getDocs, deleteDoc, updateDoc, deleteField } f
 import * as XLSX from "xlsx";
 import { formatJetons, formatJetonsDelta } from "../jetons";
 import { getPrestigeTotal } from "../../services/userProfileService";
-import { buildPremiereDsReportingRows, formatDsDisplayStatusLabel } from "../adminDsSdgnReport";
+import {
+  buildPremiereDsReportingRows,
+  buildReportingRowsFromDsSdgnSummaries,
+  formatDsDisplayStatusLabel,
+} from "../adminDsSdgnReport";
+import {
+  backfillDsSdgnResultsFromUsers,
+  fetchAllDsSdgnResultSummaries,
+  type DsSdgnResultSummary,
+} from "../../services/dsSdgnResultsService";
+import { hasDsTabExamData } from "../../services/dsTabExamService";
 import { buildReportingRows } from "./buildReportingRows";
 import {
   ADMIN_COLORS,
@@ -27,6 +37,7 @@ export function useAdminData() {
   const [importMissions, setImportMissions] = useState({ loading: false, succes: 0, erreurs: 0, message: "" });
   const [eleves, setEleves] = useState([]);
   const [usersAll, setUsersAll] = useState([]);
+  const [dsSdgnSummaries, setDsSdgnSummaries] = useState<DsSdgnResultSummary[]>([]);
   const [chargementEleves, setChargementEleves] = useState(false);
   const [recompenseEnCours, setRecompenseEnCours] = useState(false);
   const [messagesRecompense, setMessagesRecompense] = useState([]);
@@ -69,6 +80,21 @@ export function useAdminData() {
         .filter(u => u.role !== "admin")
         .sort((a, b) => getPrestigeTotal(b) - getPrestigeTotal(a));
       setEleves(users);
+
+      let summaries = await fetchAllDsSdgnResultSummaries();
+      const withDsTab = users.filter(
+        (u) => u.role !== "admin" && hasDsTabExamData(u as Record<string, unknown>),
+      ).length;
+      if (summaries.length < withDsTab) {
+        try {
+          await backfillDsSdgnResultsFromUsers(allUsers);
+          summaries = await fetchAllDsSdgnResultSummaries();
+        } catch (backfillErr) {
+          console.error("Backfill dsSdgnResults", backfillErr);
+        }
+      }
+      setDsSdgnSummaries(summaries);
+
       const famillesMap = {};
       users.forEach(u => {
         if (!u.famille) return;
@@ -252,10 +278,12 @@ export function useAdminData() {
     [reportingRows]
   );
 
-  const premiereReportingRows = useMemo(
-    () => buildPremiereDsReportingRows(eleves),
-    [eleves],
-  );
+  const premiereReportingRows = useMemo(() => {
+    if (dsSdgnSummaries.length > 0) {
+      return buildReportingRowsFromDsSdgnSummaries(dsSdgnSummaries, usersAll);
+    }
+    return buildPremiereDsReportingRows(eleves);
+  }, [dsSdgnSummaries, usersAll, eleves]);
 
   const reportingFiltres = useMemo(() => {
     return reportingRows.filter((eleve) => {
@@ -671,6 +699,18 @@ export function useAdminData() {
     importMissions,
     eleves,
     usersAll,
+    dsSdgnSummaries,
+    syncDsSdgnResultsFromFirebase: async () => {
+      try {
+        const n = await backfillDsSdgnResultsFromUsers(usersAll);
+        const summaries = await fetchAllDsSdgnResultSummaries();
+        setDsSdgnSummaries(summaries);
+        return { written: n, total: summaries.length };
+      } catch (err) {
+        console.error(err);
+        throw err;
+      }
+    },
     chargementEleves,
     erreurEleves,
     recompenseEnCours,
