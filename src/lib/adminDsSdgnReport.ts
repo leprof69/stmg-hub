@@ -81,7 +81,10 @@ export function formatDsGradeForReport(row: DsSdgnStudentReportRow): string {
   const sess = row.session;
   if (row.displayStatus === "not_started") return "\u2014";
   if (!sess) return "\u2014";
-  if (sess.forcedZero || row.displayStatus === "disqualified") return "0";
+  if (sess.forcedZero || row.displayStatus === "disqualified") {
+    const prov = sess.gradeOn20Provisional;
+    return prov != null ? `${prov} (prov.)` : "0";
+  }
   if (row.displayStatus === "incomplete") {
     const prov = sess.gradeOn20Provisional ?? sess.gradeOn20;
     return `${prov} (prov.)`;

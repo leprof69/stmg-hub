@@ -6,7 +6,6 @@ import {
   type DsQuestionKind,
 } from "./integrateDsQuestion";
 import { getPrimaryDsSdgnTopic } from "./dsSdgnQcmTopics";
-import { isDsSdgnCalculationQuestion } from "./dsSdgnQuestionTiming";
 import type { GameQuizQ } from "./gameQcmPool";
 
 export type { DsQuestionKind };
@@ -28,7 +27,7 @@ export function wrapDsPlayQuestion(item: SdgnMissionQcm, quiz: GameQuizQ): DsPla
     topic,
     questionKind,
     kindLabel: DS_QUESTION_KIND_LABEL[questionKind],
-    /** 30 s par question sauf si l\u2019\u00e9nonc\u00e9 comporte un calcul chiffr\u00e9. */
-    questionTimed: !isDsSdgnCalculationQuestion(item.question, item.choix),
+    /** 30 s par question sauf type Calcul. */
+    questionTimed: questionKind !== "calcul",
   };
 }

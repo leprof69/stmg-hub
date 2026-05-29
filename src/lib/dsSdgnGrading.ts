@@ -63,3 +63,11 @@ export function outcomeFromAnswer(
 export function pointsFromOutcome(outcome: DsAnswerOutcomeCode): number {
   return outcome === 1 ? DS_SCORE_CORRECT : DS_SCORE_WRONG;
 }
+
+/** Recalcule les points DS \u00e0 partir des r\u00e9ponses d\u00e9j\u00e0 enregistr\u00e9es. */
+export function computeDsScoreFromAnswers(
+  answers: readonly { outcome: DsAnswerOutcomeCode }[],
+): number {
+  const raw = answers.reduce((sum, a) => sum + pointsFromOutcome(a.outcome), 0);
+  return Math.round(raw * 10) / 10;
+}

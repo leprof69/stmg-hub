@@ -1,9 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { auth } from "../services/firebase";
 import { useDsImmersive } from "../contexts/DsImmersiveContext";
-import { computeDsGradeOn20, computeTopicStats } from "../lib/dsSdgnGrading";
+import {
+  computeDsGradeOn20,
+  computeDsScoreFromAnswers,
+  computeTopicStats,
+} from "../lib/dsSdgnGrading";
 import {
   buildDsSessionRecord,
+  canStudentResumeDsSdgnExam,
   DS_SDGN_QCM_EXAM_ID,
   isDsSdgnExamLocked,
   markDsAttemptStarted,
@@ -17,6 +22,7 @@ import { SDGN_CHAPTER_LABELS } from "../data/sdgn/registry";
 import { enterDsFullscreen, exitDsFullscreen } from "../lib/dsFullscreen";
 import {
   buildDsSdgnPremiereDeck,
+  buildDsSdgnPremiereDeckFromQuestionIds,
   type DsPlayQuestion,
   countDsSdgnPremiereByKind,
   DS_SCORE_CORRECT,
@@ -88,6 +94,12 @@ export default function DS({ profil, onExamFinished }: Props) {
   const startedAtRef = useRef("");
   const answersRef = useRef<DsSessionAnswerRecord[]>([]);
   const adminExitPlayRef = useRef(false);
+  const indexRef = useRef(0);
+  const answeredRef = useRef(false);
+  const sessionLeftRef = useRef(DS_SDGN_PREMIERE_SESSION_SEC);
+  const goNextRef = useRef<(outcome: AnswerOutcome, picked: number | null) => void>(() => {});
+  const finishExamRef = useRef<(disqualified?: boolean) => void>(() => {});
+  const onQuestionTimeoutRef = useRef<() => void>(() => {});
 
   const prenom = profil?.prenom || "toi";
   const isAdmin = profil?.role === "admin";
@@ -95,8 +107,9 @@ export default function DS({ profil, onExamFinished }: Props) {
   const [attemptLocked, setAttemptLocked] = useState(
     () => !isAdmin && isDsSdgnExamLocked(userRecord),
   );
+  const canResume = !isAdmin && canStudentResumeDsSdgnExam(userRecord);
   const examLocked =
-    !isAdmin && (attemptLocked || isDsSdgnExamLocked(userRecord));
+    !isAdmin && !canResume && (attemptLocked || isDsSdgnExamLocked(userRecord));
   const lastSession = readDsTabLastSession(userRecord);
 
   useEffect(() => {
@@ -112,6 +125,9 @@ export default function DS({ profil, onExamFinished }: Props) {
   phaseRef.current = phase;
   scoreRef.current = score;
   questionsRef.current = questions;
+  indexRef.current = index;
+  answeredRef.current = answered;
+  sessionLeftRef.current = sessionLeft;
 
   const immersiveActive = phase === "play" || phase === "end";
 
@@ -147,9 +163,13 @@ export default function DS({ profil, onExamFinished }: Props) {
       const finishedAt = new Date().toISOString();
       const total = questionsRef.current.length;
       const disqualified = status === "disqualified";
-      const scorePoints = disqualified ? 0 : finalScore;
-      const gradeOn20 = computeDsGradeOn20(scorePoints, total, disqualified);
       const answers = [...answersRef.current];
+      const scorePoints = disqualified
+        ? computeDsScoreFromAnswers(answers)
+        : finalScore;
+      const gradeOn20 = disqualified
+        ? 0
+        : computeDsGradeOn20(scorePoints, total, false);
       const session = buildDsSessionRecord({
         sessionId: sessionIdRef.current,
         startedAt: startedAtRef.current,
@@ -166,15 +186,20 @@ export default function DS({ profil, onExamFinished }: Props) {
         questionIds: questionsRef.current.map((q) => q.sourceId),
         answers,
         topicStats: computeTopicStats(answers),
+        sessionLeftSec: sessionLeftRef.current,
+        resumeIndex: answers.length,
       });
       void persistDsTabResult(uid, {
-        score: scorePoints,
+        score: disqualified ? scorePoints : scorePoints,
         total,
         skipped: 0,
         forcedZero: disqualified,
         finishedAt,
-        gradeOn20,
+        gradeOn20: disqualified
+          ? (session.gradeOn20Provisional ?? 0)
+          : gradeOn20,
         session,
+        resumeGranted: status === "completed" ? false : undefined,
       })
         .then(() => onExamFinished?.())
         .catch((err) => console.error("Sauvegarde resultat DS impossible", err));
@@ -186,12 +211,18 @@ export default function DS({ profil, onExamFinished }: Props) {
     (disqualified = forcedZeroRef.current) => {
       clearTimers();
       void exitDsFullscreen();
-      if (disqualified) setScore(0);
-      persistSession(disqualified ? 0 : scoreRef.current, disqualified ? "disqualified" : "completed");
+      if (disqualified) {
+        const pts = computeDsScoreFromAnswers(answersRef.current);
+        setScore(pts);
+        scoreRef.current = pts;
+      }
+      persistSession(scoreRef.current, disqualified ? "disqualified" : "completed");
       setPhase("end");
     },
     [clearTimers, persistSession],
   );
+
+  finishExamRef.current = finishExam;
 
   const disqualify = useCallback(
     (reason: "visibility" | "navigate" | "fullscreen") => {
@@ -201,10 +232,10 @@ export default function DS({ profil, onExamFinished }: Props) {
       setScore(0);
       const msg =
         reason === "fullscreen"
-          ? "Anti-triche : sortie du plein \u00e9cran (touche \u00c9chap). Note forc\u00e9e \u00e0 0."
+          ? "Session interrompue (plein \u00e9cran). Tes r\u00e9ponses sont enregistr\u00e9es : demande \u00e0 ton prof de te laisser reprendre le DS."
           : reason === "navigate"
-            ? "Anti-triche : tu as quitt\u00e9 la page DS. Note forc\u00e9e \u00e0 0."
-            : "Anti-triche : changement d\u2019onglet ou de fen\u00eatre d\u00e9tect\u00e9. Note forc\u00e9e \u00e0 0.";
+            ? "Session interrompue (page quitt\u00e9e). Tes r\u00e9ponses sont enregistr\u00e9es : demande \u00e0 ton prof de te laisser reprendre le DS."
+            : "Session interrompue (changement d\u2019onglet). Tes r\u00e9ponses sont enregistr\u00e9es : demande \u00e0 ton prof de te laisser reprendre le DS.";
       setCheatMsg(msg);
       clearTimers();
       finishExam(true);
@@ -214,7 +245,7 @@ export default function DS({ profil, onExamFinished }: Props) {
 
   const recordCurrentAnswer = useCallback(
     (outcome: AnswerOutcome, picked: number | null) => {
-      const q = questionsRef.current[index];
+      const q = questionsRef.current[indexRef.current];
       if (!q) return;
       answersRef.current.push({
         sourceId: q.sourceId,
@@ -225,7 +256,7 @@ export default function DS({ profil, onExamFinished }: Props) {
         ...(picked !== null ? { picked: picked as 0 | 1 | 2 | 3 } : {}),
       });
     },
-    [index],
+    [],
   );
 
   const goNext = useCallback(
@@ -239,17 +270,19 @@ export default function DS({ profil, onExamFinished }: Props) {
         setWrongCount((c) => c + 1);
       }
       setScore(scoreRef.current);
-      const next = index + 1;
-      if (next >= questions.length || sessionLeft <= 0) {
-        finishExam(false);
+      const next = indexRef.current + 1;
+      if (next >= questionsRef.current.length || sessionLeftRef.current <= 0) {
+        finishExamRef.current(false);
         return;
       }
       setIndex(next);
       setAnswered(false);
       setPicked(null);
     },
-    [finishExam, index, questions.length, recordCurrentAnswer, sessionLeft],
+    [recordCurrentAnswer],
   );
+
+  goNextRef.current = goNext;
 
   const resolveAnswer = useCallback(
     (choiceIdx: number) => {
@@ -263,13 +296,55 @@ export default function DS({ profil, onExamFinished }: Props) {
   );
 
   const onQuestionTimeout = useCallback(() => {
-    if (answered || !current || forcedZeroRef.current) return;
+    if (answeredRef.current || forcedZeroRef.current) return;
+    const q = questionsRef.current[indexRef.current];
+    if (!q) return;
     setAnswered(true);
-    window.setTimeout(() => goNext("wrong", null), 400);
-  }, [answered, current, goNext]);
+    window.setTimeout(() => goNextRef.current("wrong", null), 400);
+  }, []);
+
+  onQuestionTimeoutRef.current = onQuestionTimeout;
+
+  const resumeSdgnPremiere = () => {
+    const session = readDsTabLastSession(userRecord);
+    if (!session?.questionIds?.length || !canResume) return;
+
+    clearTimers();
+    forcedZeroRef.current = false;
+    finishedRef.current = false;
+    setForcedZero(false);
+    setCheatMsg("");
+
+    const deck = buildDsSdgnPremiereDeckFromQuestionIds(
+      session.questionIds,
+      session.sessionId,
+    );
+    if (!deck.length) return;
+
+    const answers = [...(session.answers ?? [])];
+    const idx = Math.min(answers.length, deck.length);
+    const score = computeDsScoreFromAnswers(answers);
+    const wrong = answers.filter((a) => a.outcome === 0).length;
+    const left = session.sessionLeftSec ?? DS_SDGN_PREMIERE_SESSION_SEC;
+
+    sessionIdRef.current = session.sessionId;
+    startedAtRef.current = session.startedAt;
+    answersRef.current = answers;
+    setQuestions(deck);
+    setIndex(idx);
+    scoreRef.current = score;
+    setScore(score);
+    setWrongCount(wrong);
+    setAnswered(false);
+    setPicked(null);
+    setQTimeLeft(DS_SDGN_PREMIERE_QUESTION_SEC);
+    setSessionLeft(left);
+    sessionLeftRef.current = left;
+    setPhase("play");
+  };
 
   const startSdgnPremiere = () => {
-    if (examLocked) return;
+    if (examLocked && !canResume) return;
     setAttemptLocked(true);
     clearTimers();
     forcedZeroRef.current = false;
@@ -371,6 +446,29 @@ export default function DS({ profil, onExamFinished }: Props) {
     };
   }, [persistSession, isAdmin]);
 
+  /** Chrono session 50 min (ind\u00e9pendant du changement de question). */
+  useEffect(() => {
+    if (phase !== "play" || forcedZero) return undefined;
+
+    sessionTimerRef.current = setInterval(() => {
+      setSessionLeft((t) => {
+        if (t <= 1) {
+          finishExamRef.current(false);
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
+
+    return () => {
+      if (sessionTimerRef.current) {
+        clearInterval(sessionTimerRef.current);
+        sessionTimerRef.current = null;
+      }
+    };
+  }, [phase, forcedZero]);
+
+  /** Chrono 30 s par question (cas / cours sans calcul). */
   useEffect(() => {
     if (phase !== "play" || forcedZero) return undefined;
 
@@ -386,7 +484,7 @@ export default function DS({ profil, onExamFinished }: Props) {
               clearInterval(qTimerRef.current);
               qTimerRef.current = null;
             }
-            onQuestionTimeout();
+            onQuestionTimeoutRef.current();
             return 0;
           }
           return t - 1;
@@ -397,27 +495,13 @@ export default function DS({ profil, onExamFinished }: Props) {
       qTimerRef.current = null;
     }
 
-    sessionTimerRef.current = setInterval(() => {
-      setSessionLeft((t) => {
-        if (t <= 1) {
-          finishExam(false);
-          return 0;
-        }
-        return t - 1;
-      });
-    }, 1000);
-
     return () => {
       if (qTimerRef.current) {
         clearInterval(qTimerRef.current);
         qTimerRef.current = null;
       }
-      if (sessionTimerRef.current) {
-        clearInterval(sessionTimerRef.current);
-        sessionTimerRef.current = null;
-      }
     };
-  }, [phase, index, forcedZero, finishExam, onQuestionTimeout]);
+  }, [phase, index, forcedZero, current?.sourceId, current?.questionTimed]);
 
   const sessionMmSs = useMemo(() => {
     const m = Math.floor(sessionLeft / 60);
@@ -437,8 +521,20 @@ export default function DS({ profil, onExamFinished }: Props) {
     lastSession && !lastSession.forcedZero
       ? `${lastSession.gradeOn20} / 20`
       : lastSession?.forcedZero
-        ? "0 / 20"
+        ? lastSession.gradeOn20Provisional != null
+          ? `${lastSession.gradeOn20Provisional} / 20 (prov.)`
+          : "0 / 20"
         : null;
+
+  const resumeProgress =
+    canResume && lastSession
+      ? {
+          answered: lastSession.answers?.length ?? 0,
+          total: lastSession.totalQuestions ?? lastSession.questionIds?.length ?? 0,
+          score: formatDsScore(lastSession.scorePoints ?? 0),
+          minutesLeft: Math.ceil((lastSession.sessionLeftSec ?? DS_SDGN_PREMIERE_SESSION_SEC) / 60),
+        }
+      : null;
 
   if (!gateUnlocked) {
     return (
@@ -489,20 +585,37 @@ export default function DS({ profil, onExamFinished }: Props) {
           </p>
         </section>
 
-        {examLocked ? (
+        {canResume && resumeProgress ? (
+          <section className="rounded-2xl border border-emerald-600/60 bg-emerald-950/30 p-6 mb-6">
+            <h2 className="text-xl font-bold text-emerald-300 mb-2">{"Reprendre ton DS"}</h2>
+            <p className="text-slate-300 text-sm mb-3">
+              {`Tu as d\u00e9j\u00e0 r\u00e9pondu \u00e0 ${resumeProgress.answered} / ${resumeProgress.total} questions. Score actuel : ${resumeProgress.score} pt. Temps restant : environ ${resumeProgress.minutesLeft} min.`}
+            </p>
+            <p className="text-slate-400 text-xs mb-4">
+              {"M\u00eames questions dans le m\u00eame ordre \u00b7 tes r\u00e9ponses pr\u00e9c\u00e9dentes sont conserv\u00e9es."}
+            </p>
+            <button
+              type="button"
+              onClick={resumeSdgnPremiere}
+              className="rounded-xl bg-emerald-600 hover:bg-emerald-500 px-6 py-3 font-bold text-white"
+            >
+              {"Continuer le DS"}
+            </button>
+          </section>
+        ) : examLocked ? (
           <section className="rounded-2xl border border-amber-700/60 bg-amber-950/30 p-6 mb-6">
             <h2 className="text-xl font-bold text-amber-300 mb-2">{"DS d\u00e9j\u00e0 pass\u00e9"}</h2>
             <p className="text-slate-300 text-sm mb-3">
               {
-                "Tu ne peux pas relancer ce QCM. Si tu dois le repasser, demande \u00e0 ton professeur (reset depuis l\u2019espace admin)."
+                "Tu ne peux pas relancer ce QCM. Si tu as \u00e9t\u00e9 coup\u00e9 par erreur, demande \u00e0 ton prof \u00ab Autoriser reprise \u00bb dans l\u2019admin."
               }
             </p>
             {lockedGrade && (
               <p className="text-2xl font-black text-sky-400">{`Ta note : ${lockedGrade}`}</p>
             )}
-            {lastSession?.forcedZero && (
+            {lastSession?.forcedZero && !canResume && (
               <p className="text-red-400 text-sm mt-2 font-bold">
-                {"Session disqualifi\u00e9e (anti-triche)."}
+                {"Session interrompue (anti-triche). Le prof peut autoriser la reprise."}
               </p>
             )}
           </section>
@@ -566,20 +679,28 @@ export default function DS({ profil, onExamFinished }: Props) {
 
   if (phase === "end") {
     const total = questions.length;
-    const displayScore = forcedZero ? 0 : score;
+    const displayScore = score;
     const scoreLabel = formatDsScore(displayScore);
-    const gradeOn20 = computeDsGradeOn20(displayScore, total, forcedZero);
+    const gradeOn20 = computeDsGradeOn20(displayScore, total, false);
+    const provGrade = forcedZero ? gradeOn20 : gradeOn20;
     const correctCount = answersRef.current.filter((a) => a.outcome === 1).length;
 
     return (
       <div className={`${shellClass} px-4 py-10 max-w-2xl mx-auto text-center`}>
         <h2 className="text-2xl font-black mb-4">{"Fin du DS QCM"}</h2>
         {forcedZero && (
-          <p className="text-red-400 font-bold mb-4 px-4">{cheatMsg || "DS disqualifi\u00e9 : note 0."}</p>
+          <p className="text-amber-300 font-bold mb-4 px-4 text-sm leading-relaxed">
+            {cheatMsg || "Session interrompue. Demande \u00e0 ton prof de t\u2019autoriser \u00e0 reprendre."}
+          </p>
         )}
         <p className="text-slate-300 mb-6">{`${prenom}, voici ton r\u00e9sultat.`}</p>
-        <p className={`text-5xl font-black mb-1 ${forcedZero ? "text-red-500" : "text-sky-400"}`}>
-          {forcedZero ? "0 / 20" : `${gradeOn20} / 20`}
+        {forcedZero && (
+          <p className="text-slate-400 text-sm mb-2">
+            {`Score provisoire enregistr\u00e9 : ${scoreLabel} pt (${provGrade} / 20 sur les questions d\u00e9j\u00e0 faites).`}
+          </p>
+        )}
+        <p className={`text-5xl font-black mb-1 ${forcedZero ? "text-amber-500" : "text-sky-400"}`}>
+          {forcedZero ? `${provGrade} / 20 (prov.)` : `${gradeOn20} / 20`}
         </p>
         {!forcedZero && (
           <>

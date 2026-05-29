@@ -126,6 +126,24 @@ export function buildDsSdgnPremiereDeck(): DsPlayQuestion[] {
   return shuffleInPlace([...playDeck]);
 }
 
+const DS_QCM_BY_ID: Record<string, SdgnMissionQcm> = Object.fromEntries(
+  DS_SDGN_EXAM_BANK.map((q) => [q.id, q]),
+);
+
+/** Reconstruit le m\u00eame paquet qu\u2019au premier lancement (reprise apr\u00e8s anti-triche). */
+export function buildDsSdgnPremiereDeckFromQuestionIds(
+  questionIds: string[],
+  sessionId: string,
+): DsPlayQuestion[] {
+  const deck: DsPlayQuestion[] = [];
+  for (const id of questionIds) {
+    const item = DS_QCM_BY_ID[id];
+    if (!item) continue;
+    deck.push(wrapDsPlayQuestion(item, sdgnQcmToGameQuiz(item, sessionId)));
+  }
+  return deck;
+}
+
 export function formatDsScore(points: number): string {
   const rounded = Math.round(points * 10) / 10;
   return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);

@@ -7,13 +7,17 @@ import {
 } from "../../lib/adminDsSdgnReport";
 import { exportDsSdgnClassReportXlsx } from "../../lib/exportDsSdgnReportXlsx";
 import { DS_SDGN_TOPIC_LABELS, DS_SDGN_TOPIC_ORDER } from "../../lib/dsSdgnQcmTopics";
-import { resetDsSdgnTabExamForUser } from "../../services/dsTabExamService";
+import {
+  grantDsSdgnExamResume,
+  resetDsSdgnTabExamForUser,
+} from "../../services/dsTabExamService";
 
 export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
   const [recherche, setRecherche] = useState("");
   const [exporting, setExporting] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [resettingId, setResettingId] = useState(null);
+  const [restoringId, setRestoringId] = useState(null);
 
   const filteredRows = useMemo(() => {
     const q = recherche.trim().toLowerCase();
@@ -38,6 +42,56 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
       window.alert("Export Excel impossible pour le moment.");
     } finally {
       setExporting(false);
+    }
+  };
+
+  const canGrantResume = (row) => {
+    const sess = row.session;
+    if (!sess) return false;
+    const answered = sess.answers?.length ?? 0;
+    const total = sess.totalQuestions ?? sess.questionIds?.length ?? 0;
+    return (
+      (row.displayStatus === "disqualified" || row.displayStatus === "incomplete") &&
+      answered > 0 &&
+      answered < total &&
+      Boolean(sess.questionIds?.length)
+    );
+  };
+
+  const handleGrantResume = async (row) => {
+    const sess = row.session;
+    const answers = sess?.answers ?? [];
+    const total = sess?.totalQuestions ?? answers.length;
+    const label = row.studentName || row.studentId;
+    if (!canGrantResume(row)) {
+      window.alert(
+        "Reprise impossible : pas assez de donn\u00e9es (r\u00e9ponses ou liste de questions manquante). Utilise \u00ab Repasse QCM \u00bb pour tout recommencer.",
+      );
+      return;
+    }
+    if (
+      !window.confirm(
+        `Autoriser ${label} \u00e0 reprendre son DS ?\n\n${answers.length}/${total} questions d\u00e9j\u00e0 faites \u2014 score et historique conserv\u00e9s.\nL\u2019\u00e9l\u00e8ve clique \u00ab Continuer le DS \u00bb sur la page DS.`,
+      )
+    ) {
+      return;
+    }
+    setRestoringId(row.studentId);
+    try {
+      const result = await grantDsSdgnExamResume(row.studentId);
+      if (!result) {
+        window.alert("Reprise impossible (session introuvable ou DS d\u00e9j\u00e0 termin\u00e9).");
+        return;
+      }
+      window.alert(
+        `Reprise autoris\u00e9e pour ${label}. Il peut continuer \u00e0 la question ${result.questionsAnswered + 1}/${result.totalQuestions} (${result.gradeOn20Provisional}/20 prov.).`,
+      );
+      onAfterReset?.();
+    } catch (err) {
+      console.error(err);
+      window.alert("Erreur lors de l\u2019autorisation de reprise.");
+    } finally {
+      setRestoringId(null);
     }
   };
 
@@ -110,7 +164,7 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
       </p>
       <p style={{ margin: "0 0 14px", color: "#B45309", fontSize: "0.78rem", lineHeight: 1.45, fontWeight: 700 }}>
         {
-          "Alerte onglet / jetons bloqu\u00e9s : bouton \u00ab R\u00e9tablir jetons \u00bb dans le reporting \u00e9l\u00e8ves (ne supprime pas la note DS). Repasse QCM ci-dessous = cas exceptionnel uniquement."
+          "Anti-triche accidentel : \u00ab Autoriser reprise \u00bb laisse l\u2019\u00e9l\u00e8ve continuer le DS (score + r\u00e9ponses conserv\u00e9s). \u00ab Repasse QCM \u00bb efface tout."
         }
       </p>
 
@@ -243,26 +297,47 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
                       {row.displayStatus === "not_started" ? (
                         <span style={{ color: "#94A3B8" }}>{"\u2014"}</span>
                       ) : (
-                        <button
-                          type="button"
-                          disabled={Boolean(resettingId) || resetting}
-                          onClick={() => handleResetOneStudent(row)}
-                          style={{
-                            padding: "5px 10px",
-                            borderRadius: 8,
-                            border:
-                              row.displayStatus === "disqualified"
-                                ? "1px solid #F87171"
-                                : "1px solid #F59E0B",
-                            background: "white",
-                            color: row.displayStatus === "disqualified" ? "#B91C1C" : "#B45309",
-                            fontWeight: 800,
-                            fontSize: "0.72rem",
-                            cursor: resettingId || resetting ? "wait" : "pointer",
-                          }}
-                        >
-                          {resettingId === row.studentId ? "..." : "Repasse QCM"}
-                        </button>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                          {canGrantResume(row) && (
+                            <button
+                              type="button"
+                              disabled={Boolean(restoringId) || Boolean(resettingId) || resetting}
+                              onClick={() => handleGrantResume(row)}
+                              style={{
+                                padding: "5px 10px",
+                                borderRadius: 8,
+                                border: "1px solid #059669",
+                                background: "#ECFDF5",
+                                color: "#047857",
+                                fontWeight: 800,
+                                fontSize: "0.72rem",
+                                cursor: restoringId || resettingId || resetting ? "wait" : "pointer",
+                              }}
+                            >
+                              {restoringId === row.studentId ? "..." : "Autoriser reprise"}
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            disabled={Boolean(resettingId) || Boolean(restoringId) || resetting}
+                            onClick={() => handleResetOneStudent(row)}
+                            style={{
+                              padding: "5px 10px",
+                              borderRadius: 8,
+                              border:
+                                row.displayStatus === "disqualified"
+                                  ? "1px solid #F87171"
+                                  : "1px solid #F59E0B",
+                              background: "white",
+                              color: row.displayStatus === "disqualified" ? "#B91C1C" : "#B45309",
+                              fontWeight: 800,
+                              fontSize: "0.72rem",
+                              cursor: resettingId || restoringId || resetting ? "wait" : "pointer",
+                            }}
+                          >
+                            {resettingId === row.studentId ? "..." : "Repasse QCM"}
+                          </button>
+                        </div>
                       )}
                     </td>
                   </tr>
