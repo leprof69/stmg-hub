@@ -13,6 +13,7 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
   const [recherche, setRecherche] = useState("");
   const [exporting, setExporting] = useState(false);
   const [resetting, setResetting] = useState(false);
+  const [resettingId, setResettingId] = useState(null);
 
   const filteredRows = useMemo(() => {
     const q = recherche.trim().toLowerCase();
@@ -37,6 +38,25 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
       window.alert("Export Excel impossible pour le moment.");
     } finally {
       setExporting(false);
+    }
+  };
+
+  const handleResetOneStudent = async (row) => {
+    const label = row.studentName || row.studentId;
+    const hint =
+      row.displayStatus === "disqualified"
+        ? " (anti-triche / note 0 \u2014 l\u00e9l\u00e8ve pourra repasser)"
+        : "";
+    if (!window.confirm(`R\u00e9initialiser le DS SDGN pour ${label} ?${hint}`)) return;
+    setResettingId(row.studentId);
+    try {
+      await resetDsSdgnTabExamForUser(row.studentId);
+      onAfterReset?.();
+    } catch (err) {
+      console.error(err);
+      window.alert("Erreur lors de la r\u00e9initialisation.");
+    } finally {
+      setResettingId(null);
     }
   };
 
@@ -158,6 +178,7 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
                     {DS_SDGN_TOPIC_LABELS[topic]}
                   </th>
                 ))}
+                <th style={{ padding: "8px 10px" }}>{"Actions"}</th>
               </tr>
             </thead>
             <tbody>
@@ -211,6 +232,36 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
                         </td>
                       );
                     })}
+                    <td style={{ padding: "8px 10px", whiteSpace: "nowrap" }}>
+                      {row.displayStatus === "not_started" ? (
+                        <span style={{ color: "#94A3B8" }}>{"\u2014"}</span>
+                      ) : (
+                        <button
+                          type="button"
+                          disabled={Boolean(resettingId) || resetting}
+                          onClick={() => handleResetOneStudent(row)}
+                          style={{
+                            padding: "5px 10px",
+                            borderRadius: 8,
+                            border:
+                              row.displayStatus === "disqualified"
+                                ? "1px solid #F87171"
+                                : "1px solid #F59E0B",
+                            background: "white",
+                            color: row.displayStatus === "disqualified" ? "#B91C1C" : "#B45309",
+                            fontWeight: 800,
+                            fontSize: "0.72rem",
+                            cursor: resettingId || resetting ? "wait" : "pointer",
+                          }}
+                        >
+                          {resettingId === row.studentId
+                            ? "..."
+                            : row.displayStatus === "disqualified"
+                              ? "D\u00e9bloquer anti-triche"
+                              : "Reset DS"}
+                        </button>
+                      )}
+                    </td>
                   </tr>
                 );
               })}

@@ -34,6 +34,8 @@ export default function AdminReportingEleves({
   onRetirerJetons,
   onResetMdp,
   onRetablirJetons,
+  onResetDsSdgn,
+  formatDsDisplayStatusLabel,
   formatDateFr,
   formatDuration,
 }) {
@@ -257,6 +259,19 @@ export default function AdminReportingEleves({
                             />
                             <MetricBox label="Note participation" value={`${note20} / 20`} accent="#D97706" />
                             <MetricBox label={"Derni\u00e8re activit\u00e9"} value={formatDateFr(eleve.lastActivity)} accent="#0369A1" />
+                            {eleve.dsSdgnRow ? (
+                              <MetricBox
+                                label="DS SDGN Premi\u00e8re"
+                                value={formatDsDisplayStatusLabel(eleve.dsSdgnRow.displayStatus)}
+                                accent={
+                                  eleve.dsSdgnRow.displayStatus === "disqualified"
+                                    ? "#DC2626"
+                                    : eleve.dsSdgnRow.displayStatus === "completed"
+                                      ? "#059669"
+                                      : "#D97706"
+                                }
+                              />
+                            ) : null}
                           </div>
 
                           <p style={{ margin: "0 0 6px", fontSize: "0.75rem", color: "#64748B", fontWeight: 700 }}>
@@ -429,6 +444,19 @@ export default function AdminReportingEleves({
                                 label={"R\u00e9tablir jetons"}
                                 color="#047857"
                                 onClick={() => onRetablirJetons(eleve)}
+                              />
+                            ) : null}
+                            {eleve.dsSdgnRow?.hasDsData && onResetDsSdgn ? (
+                              <ActionBtn
+                                label={
+                                  eleve.dsSdgnRow.displayStatus === "disqualified"
+                                    ? "D\u00e9bloquer DS anti-triche"
+                                    : "Reset DS SDGN"
+                                }
+                                color={
+                                  eleve.dsSdgnRow.displayStatus === "disqualified" ? "#B91C1C" : "#B45309"
+                                }
+                                onClick={() => onResetDsSdgn(eleve)}
                               />
                             ) : null}
                             <span style={{ fontSize: "0.72rem", color: "#94A3B8", marginLeft: "auto" }}>

@@ -13,6 +13,8 @@ import { formatJetons, formatJetonsDelta } from "../lib/jetons";
 import { getPrestigeTotal } from "../services/userProfileService";
 import { buildStudentMissionInsights } from "../lib/adminMissionInsights";
 import { readMissionClaims } from "../lib/missionsProgress";
+import { buildDsSdgnStudentRow, formatDsDisplayStatusLabel } from "../lib/adminDsSdgnReport";
+import { resetDsSdgnTabExamForUser } from "../services/dsTabExamService";
 
 const COLORS = {
   S: "#3B82F6", T: "#7C3AED", M: "#F97316",
@@ -437,6 +439,8 @@ export default function Admin() {
       if (!actionsToday.length) actionsToday.push("Aucune action détectée");
 
       const nom = eleve.prenom || eleve.nom || eleve.email || `Élève ${eleve.id.slice(0, 6)}`;
+      const dsSdgnRow =
+        eleve.classe === "premiere" ? buildDsSdgnStudentRow({ ...eleve, nomAffiche: nom }) : null;
       const sessionTotalSec = Number(eleve.sessionTimeTotalSec) || 0;
       const sessionTodaySec = Number(eleve.sessionTimeToday?.[todayKey]) || 0;
       const sessionCount = Number(eleve.sessionCount) || 0;
@@ -471,6 +475,7 @@ export default function Admin() {
         sessionTodaySec,
         sessionCount,
         lastSessionDurationSec,
+        dsSdgnRow,
       };
     });
   }, [eleves, todayKey]);
@@ -737,16 +742,25 @@ export default function Admin() {
       alert("Aucun élève ciblé avec les filtres actuels.");
       return;
     }
-    if (!window.confirm(`Réinitialiser le DS (blocages + copies) pour ${targets.length} élève(s) ?`)) return;
+    if (
+      !window.confirm(
+        `Réinitialiser les DS pour ${targets.length} élève(s) ?\n- Copies Objectif Bac (ancien DS)\n- QCM SDGN Première (dsTab, anti-triche inclus)`,
+      )
+    ) {
+      return;
+    }
 
     setResetDsLoading(true);
     try {
       await Promise.all(
-        targets.map((user) =>
-          updateDoc(doc(db, "users", user.id), {
+        targets.map(async (user) => {
+          await updateDoc(doc(db, "users", user.id), {
             [`objectifBacDs.${DS_EXAM_ID}`]: deleteField(),
-          })
-        )
+          });
+          if (user.classe === "premiere") {
+            await resetDsSdgnTabExamForUser(user.id);
+          }
+        }),
       );
       await chargerEleves();
       alert(`DS réinitialisé pour ${targets.length} élève(s).`);
@@ -990,7 +1004,7 @@ export default function Admin() {
                     📄 Exporter toutes les copies DS (PDF)
                   </Btn>
                   <Btn onClick={resetDsLocksForFilteredStudents} color={COLORS.H} small disabled={resetDsLoading}>
-                    {resetDsLoading ? "⏳ Reset DS..." : "♻️ Reset DS (élèves filtrés)"}
+                    {resetDsLoading ? "⏳ Reset DS..." : "♻️ Reset DS filtrés (Bac + QCM SDGN)"}
                   </Btn>
                 </div>
               </div>
@@ -1081,6 +1095,28 @@ export default function Admin() {
                 }}
                 onResetMdp={(eleve) => void envoyerLienResetMdp(eleve)}
                 onRetablirJetons={(eleve) => void retablirJetonsAntiTriche(eleve.id, eleve.nomAffiche)}
+                onResetDsSdgn={async (eleve) => {
+                  if (!eleve.dsSdgnRow?.hasDsData) return;
+                  const hint =
+                    eleve.dsSdgnRow.displayStatus === "disqualified"
+                      ? " (anti-triche)"
+                      : "";
+                  if (
+                    !window.confirm(
+                      `Réinitialiser le QCM SDGN pour ${eleve.nomAffiche} ?${hint} L'élève pourra repasser le DS.`,
+                    )
+                  ) {
+                    return;
+                  }
+                  try {
+                    await resetDsSdgnTabExamForUser(eleve.id);
+                    await chargerEleves();
+                  } catch (err) {
+                    console.error(err);
+                    alert("Erreur reset DS SDGN.");
+                  }
+                }}
+                formatDsDisplayStatusLabel={formatDsDisplayStatusLabel}
                 formatDateFr={formatDateFr}
                 formatDuration={formatDuration}
               />
