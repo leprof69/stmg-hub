@@ -210,6 +210,29 @@ export function countUsersWithDsSdgnExamData(
   return users.filter((u) => hasDsTabExamData(u as Record<string, unknown>)).length;
 }
 
+/** Tous les comptes (hors admin) avec une copie DS enregistr\u00e9e \u2014 pour export complet. */
+export function buildDsSdgnClassReportFromAllUsersWithDsData(
+  users: Record<string, unknown>[],
+): DsSdgnClassReport {
+  const rows: DsSdgnStudentReportRow[] = [];
+  for (const u of users) {
+    if (u.role === "admin") continue;
+    const id = String(u.id ?? "");
+    if (!id) continue;
+    if (!hasDsTabExamData(u as Record<string, unknown>)) continue;
+    const nom =
+      String(u.prenom || u.nom || u.email || "") || `\u00c9l\u00e8ve ${id.slice(0, 6)}`;
+    rows.push(
+      buildDsSdgnStudentRow({
+        ...u,
+        id,
+        nomAffiche: nom,
+      } as Parameters<typeof buildDsSdgnStudentRow>[0]),
+    );
+  }
+  return buildDsSdgnClassReportFromStudents(rows);
+}
+
 function answerDetailFromRecord(
   student: DsSdgnStudentReportRow,
   session: DsSessionRecord,

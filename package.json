@@ -19,7 +19,8 @@
     "validate:qcm": "node scripts/validate-qcm-bank.mjs",
     "accent:duel-qcm": "node scripts/apply-duel-accents.mjs",
     "generate:boite-outils-bac": "node scripts/extract-management-notions.mjs && node scripts/generate-boite-outils-bac.mjs",
-    "generate:ds-qcm-pdf": "node scripts/generate-ds-qcm-pdf.mjs"
+    "generate:ds-qcm-pdf": "node scripts/generate-ds-qcm-pdf.mjs",
+    "export:ds-report-pdf": "node scripts/export-ds-sdgn-class-report-pdf.mjs"
   },
   "dependencies": {
     "@iconify/react": "^6.0.2",

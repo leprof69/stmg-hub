@@ -1,11 +1,16 @@
 // @ts-nocheck
 import { useEffect, useMemo, useState } from "react";
 import {
+  buildDsSdgnClassReportFromAllUsersWithDsData,
   buildDsSdgnClassReportFromStudents,
   countUsersWithDsSdgnExamData,
   formatDsDisplayStatusLabel,
   formatDsGradeForReport,
 } from "../../lib/adminDsSdgnReport";
+import {
+  buildDsClassReportForExport,
+  exportDsSdgnClassReportPdf,
+} from "../../lib/exportDsSdgnReportPdf";
 import { exportDsSdgnClassReportXlsx } from "../../lib/exportDsSdgnReportXlsx";
 import { DS_SDGN_TOPIC_LABELS, DS_SDGN_TOPIC_ORDER } from "../../lib/dsSdgnQcmTopics";
 import {
@@ -21,6 +26,7 @@ import {
 export default function AdminDsSdgnReport({ premiereRows, usersAll = [], onAfterReset }) {
   const [recherche, setRecherche] = useState("");
   const [exporting, setExporting] = useState(false);
+  const [exportingPdf, setExportingPdf] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [resettingId, setResettingId] = useState(null);
   const [restoringId, setRestoringId] = useState(null);
@@ -51,15 +57,49 @@ export default function AdminDsSdgnReport({ premiereRows, usersAll = [], onAfter
     [usersAll],
   );
 
+  const buildFullExportReport = () => {
+    const fromFirebase = buildDsSdgnClassReportFromAllUsersWithDsData(usersAll);
+    if (fromFirebase.students.length > 0) {
+      return buildDsClassReportForExport(fromFirebase, true);
+    }
+    return buildDsClassReportForExport(report, true);
+  };
+
   const handleExport = () => {
     setExporting(true);
     try {
-      exportDsSdgnClassReportXlsx(report);
+      const full = buildFullExportReport();
+      if (!full.students.length) {
+        window.alert(
+          "Aucune copie DS d\u00e9tect\u00e9e dans Firebase. Rafra\u00eechis la liste \u00e9l\u00e8ves puis r\u00e9essaie.",
+        );
+        return;
+      }
+      exportDsSdgnClassReportXlsx(full);
     } catch (err) {
       console.error(err);
       window.alert("Export Excel impossible pour le moment.");
     } finally {
       setExporting(false);
+    }
+  };
+
+  const handleExportPdf = async () => {
+    setExportingPdf(true);
+    try {
+      const full = buildFullExportReport();
+      if (!full.students.length) {
+        window.alert(
+          "Aucune copie DS d\u00e9tect\u00e9e dans Firebase. Rafra\u00eechis la liste \u00e9l\u00e8ves puis r\u00e9essaie.",
+        );
+        return;
+      }
+      await exportDsSdgnClassReportPdf(full);
+    } catch (err) {
+      console.error(err);
+      window.alert("Export PDF impossible pour le moment.");
+    } finally {
+      setExportingPdf(false);
     }
   };
 
@@ -322,20 +362,37 @@ export default function AdminDsSdgnReport({ premiereRows, usersAll = [], onAfter
         </span>
         <button
           type="button"
-          disabled={exporting || !report.students.length}
+          disabled={exporting || exportingPdf || dsTabDetectedTotal === 0}
           onClick={handleExport}
           style={{
             padding: "9px 16px",
             borderRadius: 10,
             border: "none",
-            background: report.students.length ? "#059669" : "#94A3B8",
+            background: dsTabDetectedTotal > 0 ? "#059669" : "#94A3B8",
             color: "white",
             fontWeight: 800,
             fontSize: "0.85rem",
-            cursor: report.students.length ? "pointer" : "not-allowed",
+            cursor: dsTabDetectedTotal > 0 ? "pointer" : "not-allowed",
           }}
         >
-          {exporting ? "Export..." : "Exporter Excel (toute la classe)"}
+          {exporting ? "Export..." : "Exporter Excel (copies DS)"}
+        </button>
+        <button
+          type="button"
+          disabled={exporting || exportingPdf || dsTabDetectedTotal === 0}
+          onClick={() => void handleExportPdf()}
+          style={{
+            padding: "9px 16px",
+            borderRadius: 10,
+            border: "none",
+            background: dsTabDetectedTotal > 0 ? "#0F766E" : "#94A3B8",
+            color: "white",
+            fontWeight: 800,
+            fontSize: "0.85rem",
+            cursor: dsTabDetectedTotal > 0 ? "pointer" : "not-allowed",
+          }}
+        >
+          {exportingPdf ? "PDF..." : "Exporter PDF (rapport complet)"}
         </button>
         <button
           type="button"
