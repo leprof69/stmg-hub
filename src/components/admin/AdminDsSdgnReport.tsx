@@ -184,7 +184,7 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
           }}
         />
         <span style={{ fontSize: "0.78rem", color: "#64748B" }}>
-          {`${report.completedCount} termine(s) \u00b7 ${report.incompleteCount} non termine(s) / 0 \u00b7 ${report.students.filter((s) => s.displayStatus === "not_started").length} jamais commenc\u00e9(s)`}
+          {`${report.withDsDataCount} avec DS enregistr\u00e9 \u00b7 ${report.completedCount} termin\u00e9(s) \u00b7 ${report.incompleteCount} en cours / interrompu \u00b7 ${report.students.filter((s) => s.displayStatus === "not_started").length} jamais commenc\u00e9(s)`}
         </span>
         <button
           type="button"

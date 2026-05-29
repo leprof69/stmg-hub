@@ -2,6 +2,7 @@ import { SDGN_CHAPTER_LABELS } from "../data/sdgn/registry";
 import { SDGN_MISSION_QCM_CURATED, type SdgnMissionQcm } from "../data/sdgn/sdgnMissionQcmBank";
 import {
   DS_SDGN_QCM_EXAM_ID,
+  hasDsTabExamData,
   readDsTabExamMeta,
   readDsTabLastSession,
   type DsSessionAnswerRecord,
@@ -79,17 +80,19 @@ export function formatDsDisplayStatusLabel(status: DsSdgnDisplayStatus): string 
 
 export function formatDsGradeForReport(row: DsSdgnStudentReportRow): string {
   const sess = row.session;
-  if (row.displayStatus === "not_started") return "\u2014";
-  if (!sess) return "\u2014";
+  if (!sess) {
+    return row.displayStatus === "not_started" ? "\u2014" : "\u2014";
+  }
   if (sess.forcedZero || row.displayStatus === "disqualified") {
-    const prov = sess.gradeOn20Provisional;
-    return prov != null ? `${prov} (prov.)` : "0";
+    const prov = sess.gradeOn20Provisional ?? sess.gradeOn20;
+    return prov > 0 ? `${prov} (prov.)` : "0";
   }
   if (row.displayStatus === "incomplete") {
     const prov = sess.gradeOn20Provisional ?? sess.gradeOn20;
     return `${prov} (prov.)`;
   }
-  return String(sess.gradeOn20);
+  if (sess.gradeOn20 > 0) return String(sess.gradeOn20);
+  return row.displayStatus === "not_started" ? "\u2014" : "0";
 }
 
 export function deriveDsDisplayStatus(
@@ -120,7 +123,10 @@ export function buildDsSdgnStudentRow(eleve: {
   const userRecord = eleve as Record<string, unknown>;
   const session = readDsTabLastSession(userRecord);
   const meta = readDsTabExamMeta(userRecord);
-  const displayStatus = deriveDsDisplayStatus(session, meta.attemptStarted);
+  const hasData = hasDsTabExamData(userRecord);
+  const displayStatus = hasData
+    ? deriveDsDisplayStatus(session, meta.attemptStarted)
+    : "not_started";
   const name =
     eleve.nomAffiche ||
     eleve.prenom ||
@@ -136,8 +142,35 @@ export function buildDsSdgnStudentRow(eleve: {
     email: eleve.email,
     session,
     displayStatus,
-    hasDsData: displayStatus !== "not_started",
+    hasDsData: hasData && displayStatus !== "not_started",
   };
+}
+
+export function isPremiereClasse(classe: unknown): boolean {
+  const c = String(classe ?? "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+  return c === "premiere" || c === "1ere" || c.includes("premiere");
+}
+
+/** Toutes les lignes Premi\u00e8re pour le rapport DS (depuis profils Firestore). */
+export function buildPremiereDsReportingRows(
+  eleves: Record<string, unknown>[],
+): DsSdgnStudentReportRow[] {
+  return eleves
+    .filter((e) => isPremiereClasse(e.classe))
+    .map((e) => {
+      const nom =
+        String(e.prenom || e.nom || e.email || "") ||
+        `\u00c9l\u00e8ve ${String(e.id).slice(0, 6)}`;
+      return buildDsSdgnStudentRow({
+        ...e,
+        id: String(e.id),
+        nomAffiche: nom,
+      } as Parameters<typeof buildDsSdgnStudentRow>[0]);
+    })
+    .sort((a, b) => a.studentName.localeCompare(b.studentName, "fr"));
 }
 
 function answerDetailFromRecord(

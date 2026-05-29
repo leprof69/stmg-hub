@@ -1,5 +1,6 @@
 import { deleteField, getDoc, updateDoc } from "firebase/firestore";
 import {
+  buildEmptyTopicStats,
   computeDsGradeOn20,
   computeDsScoreFromAnswers,
   computeTopicStats,
@@ -182,14 +183,106 @@ export function readDsTabExamMeta(
   };
 }
 
+function asNumber(value: unknown): number | null {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+}
+
+/** Reconstruit une session si lastSession manque mais grade/score sont au niveau dsTab. */
+function synthesizeSessionFromExamTab(examTab: Record<string, unknown>): DsSessionRecord | null {
+  const gradeOn20 = asNumber(examTab.gradeOn20);
+  const scorePoints = asNumber(examTab.score);
+  if (gradeOn20 == null && scorePoints == null && !examTab.attemptStarted) return null;
+
+  const forcedZero = Boolean(examTab.forcedZero);
+  const totalQuestions = asNumber(examTab.total) ?? 0;
+  const finishedAt = typeof examTab.finishedAt === "string" ? examTab.finishedAt : "";
+  const startedAt = typeof examTab.startedAt === "string" ? examTab.startedAt : finishedAt;
+
+  return {
+    sessionId: String(examTab.lastSessionId ?? examTab.currentSessionId ?? "legacy"),
+    examId: DS_SDGN_QCM_EXAM_ID,
+    startedAt,
+    finishedAt,
+    scorePoints: scorePoints ?? 0,
+    totalQuestions,
+    questionsAnswered: 0,
+    correctCount: 0,
+    wrongCount: 0,
+    skippedCount: asNumber(examTab.skipped) ?? 0,
+    forcedZero,
+    gradeOn20: forcedZero ? 0 : (gradeOn20 ?? 0),
+    gradeOn20Provisional:
+      forcedZero && gradeOn20 != null ? gradeOn20 : undefined,
+    status: forcedZero ? "disqualified" : "completed",
+    completed: !forcedZero,
+    questionIds: [],
+    answers: [],
+    topicStats: buildEmptyTopicStats(),
+  };
+}
+
+/** Corrige lastSession si le champ racine dsTab a la vraie note (bug anti-triche pass\u00e9). */
+function reconcileSessionWithExamTabRoot(
+  session: DsSessionRecord,
+  examTab: Record<string, unknown>,
+): DsSessionRecord {
+  const rootGrade = asNumber(examTab.gradeOn20);
+  const rootScore = asNumber(examTab.score);
+  const rootForced = Boolean(examTab.forcedZero);
+
+  if (!rootForced && rootGrade != null && rootGrade > 0 && (session.forcedZero || session.gradeOn20 === 0)) {
+    const answered = session.questionsAnswered ?? session.answers?.length ?? 0;
+    const total = session.totalQuestions ?? asNumber(examTab.total) ?? 0;
+    const incomplete = total > 0 && answered > 0 && answered < total;
+    return {
+      ...session,
+      forcedZero: false,
+      gradeOn20: rootGrade,
+      scorePoints: rootScore ?? session.scorePoints,
+      status: incomplete ? "incomplete" : "completed",
+      completed: !incomplete,
+      gradeOn20Provisional: incomplete ? rootGrade : undefined,
+    };
+  }
+
+  if (!rootForced && rootGrade != null && rootGrade > 0 && session.gradeOn20 !== rootGrade) {
+    return { ...session, gradeOn20: rootGrade, scorePoints: rootScore ?? session.scorePoints };
+  }
+
+  return session;
+}
+
+export function readDsTabExamRoot(
+  userData: Record<string, unknown> | null | undefined,
+): Record<string, unknown> | null {
+  return readDsTabRoot(userData);
+}
+
+export function hasDsTabExamData(userData: Record<string, unknown> | null | undefined): boolean {
+  const examTab = readDsTabRoot(userData);
+  if (!examTab) return false;
+  if (examTab.lastSession) return true;
+  if (asNumber(examTab.gradeOn20) != null) return true;
+  if (asNumber(examTab.score) != null) return true;
+  return Boolean(examTab.attemptStarted);
+}
+
 export function readDsTabLastSession(
   userData: Record<string, unknown> | null | undefined,
 ): DsSessionRecord | null {
   const examTab = readDsTabRoot(userData);
   if (!examTab) return null;
+
   const last = examTab.lastSession;
-  if (!last || typeof last !== "object") return null;
-  return normalizeDsSessionRecord(last as DsSessionRecord);
+  if (last && typeof last === "object") {
+    return reconcileSessionWithExamTabRoot(
+      normalizeDsSessionRecord(last as DsSessionRecord),
+      examTab,
+    );
+  }
+
+  return synthesizeSessionFromExamTab(examTab);
 }
 
 function normalizeDsSessionRecord(session: DsSessionRecord): DsSessionRecord {

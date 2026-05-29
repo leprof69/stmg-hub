@@ -6,7 +6,7 @@ import { doc, setDoc, collection, getDocs, deleteDoc, updateDoc, deleteField } f
 import * as XLSX from "xlsx";
 import { formatJetons, formatJetonsDelta } from "../jetons";
 import { getPrestigeTotal } from "../../services/userProfileService";
-import { formatDsDisplayStatusLabel } from "../adminDsSdgnReport";
+import { buildPremiereDsReportingRows, formatDsDisplayStatusLabel } from "../adminDsSdgnReport";
 import { buildReportingRows } from "./buildReportingRows";
 import {
   ADMIN_COLORS,
@@ -253,11 +253,8 @@ export function useAdminData() {
   );
 
   const premiereReportingRows = useMemo(
-    () =>
-      reportingRows
-        .filter((eleve) => eleve.classe === "premiere" && eleve.dsSdgnRow)
-        .map((eleve) => eleve.dsSdgnRow),
-    [reportingRows],
+    () => buildPremiereDsReportingRows(eleves),
+    [eleves],
   );
 
   const reportingFiltres = useMemo(() => {
