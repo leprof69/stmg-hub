@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useMemo, useState } from "react";
 import {
-  buildDsSdgnClassReport,
+  buildDsSdgnClassReportFromStudents,
   formatDsDisplayStatusLabel,
   formatDsGradeForReport,
 } from "../../lib/adminDsSdgnReport";
@@ -29,7 +29,7 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
   }, [premiereRows, recherche]);
 
   const report = useMemo(
-    () => buildDsSdgnClassReport(filteredRows),
+    () => buildDsSdgnClassReportFromStudents(filteredRows),
     [filteredRows],
   );
 

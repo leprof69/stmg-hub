@@ -179,6 +179,32 @@ function answerDetailFromRecord(
   };
 }
 
+function buildReportPayload(students: DsSdgnStudentReportRow[]): DsSdgnClassReport {
+  const sorted = [...students].sort((a, b) =>
+    a.studentName.localeCompare(b.studentName, "fr"),
+  );
+  const answerDetails: DsSdgnAnswerDetailRow[] = [];
+  for (const student of sorted) {
+    if (!student.session?.answers?.length) continue;
+    student.session.answers.forEach((answer, idx) => {
+      answerDetails.push(answerDetailFromRecord(student, student.session!, answer, idx));
+    });
+  }
+  return {
+    examId: DS_SDGN_QCM_EXAM_ID,
+    examLabel: "DS SDGN Premi\u00e8re \u2014 QCM chronom\u00e9tr\u00e9",
+    generatedAt: new Date().toISOString(),
+    students: sorted,
+    answerDetails,
+    withDsDataCount: sorted.filter((s) => s.hasDsData).length,
+    completedCount: sorted.filter((s) => s.displayStatus === "completed").length,
+    incompleteCount: sorted.filter(
+      (s) => s.displayStatus === "incomplete" || s.displayStatus === "disqualified",
+    ).length,
+  };
+}
+
+/** Depuis les profils Firestore (avec dsTab). */
 export function buildDsSdgnClassReport(
   eleves: {
     id: string;
@@ -191,30 +217,14 @@ export function buildDsSdgnClassReport(
     dsTab?: Record<string, unknown>;
   }[],
 ): DsSdgnClassReport {
-  const students = eleves
-    .map((e) => buildDsSdgnStudentRow(e))
-    .sort((a, b) => a.studentName.localeCompare(b.studentName, "fr"));
+  return buildReportPayload(eleves.map((e) => buildDsSdgnStudentRow(e)));
+}
 
-  const answerDetails: DsSdgnAnswerDetailRow[] = [];
-  for (const student of students) {
-    if (!student.session?.answers?.length) continue;
-    student.session.answers.forEach((answer, idx) => {
-      answerDetails.push(answerDetailFromRecord(student, student.session!, answer, idx));
-    });
-  }
-
-  return {
-    examId: DS_SDGN_QCM_EXAM_ID,
-    examLabel: "DS SDGN Premi\u00e8re \u2014 QCM chronom\u00e9tr\u00e9",
-    generatedAt: new Date().toISOString(),
-    students,
-    answerDetails,
-    withDsDataCount: students.filter((s) => s.hasDsData).length,
-    completedCount: students.filter((s) => s.displayStatus === "completed").length,
-    incompleteCount: students.filter(
-      (s) => s.displayStatus === "incomplete" || s.displayStatus === "disqualified",
-    ).length,
-  };
+/** Depuis les lignes dsSdgnRow d\u00e9j\u00e0 construites (admin reporting). */
+export function buildDsSdgnClassReportFromStudents(
+  students: DsSdgnStudentReportRow[],
+): DsSdgnClassReport {
+  return buildReportPayload(students);
 }
 
 export function formatDsTopicAcquisLabel(acquis: boolean, total: number): string {

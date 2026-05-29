@@ -95,6 +95,8 @@ export default function DS({ profil, onExamFinished }: Props) {
   const startedAtRef = useRef("");
   const answersRef = useRef<DsSessionAnswerRecord[]>([]);
   const adminExitPlayRef = useRef(false);
+  const finishingExamRef = useRef(false);
+  const lastResultRef = useRef<{ gradeOn20: number; score: number } | null>(null);
   const indexRef = useRef(0);
   const answeredRef = useRef(false);
   const sessionLeftRef = useRef(DS_SDGN_PREMIERE_SESSION_SEC);
@@ -190,15 +192,18 @@ export default function DS({ profil, onExamFinished }: Props) {
         sessionLeftSec: sessionLeftRef.current,
         resumeIndex: answers.length,
       });
+      const savedGrade = disqualified
+        ? (session.gradeOn20Provisional ?? 0)
+        : gradeOn20;
+      lastResultRef.current = { gradeOn20: savedGrade, score: scorePoints };
+
       void persistDsTabResult(uid, {
-        score: disqualified ? scorePoints : scorePoints,
+        score: scorePoints,
         total,
         skipped: 0,
         forcedZero: disqualified,
         finishedAt,
-        gradeOn20: disqualified
-          ? (session.gradeOn20Provisional ?? 0)
-          : gradeOn20,
+        gradeOn20: savedGrade,
         session,
         resumeGranted: status === "completed" ? false : undefined,
       })
@@ -210,15 +215,20 @@ export default function DS({ profil, onExamFinished }: Props) {
 
   const finishExam = useCallback(
     (disqualified = forcedZeroRef.current) => {
+      if (finishedRef.current) return;
+      finishingExamRef.current = true;
       clearTimers();
-      void exitDsFullscreen();
       if (disqualified) {
         const pts = computeDsScoreFromAnswers(answersRef.current);
         setScore(pts);
         scoreRef.current = pts;
       }
       persistSession(scoreRef.current, disqualified ? "disqualified" : "completed");
+      void exitDsFullscreen();
       setPhase("end");
+      window.setTimeout(() => {
+        finishingExamRef.current = false;
+      }, 800);
     },
     [clearTimers, persistSession],
   );
@@ -227,10 +237,19 @@ export default function DS({ profil, onExamFinished }: Props) {
 
   const disqualify = useCallback(
     (reason: "visibility" | "navigate" | "fullscreen") => {
-      if (forcedZeroRef.current || phaseRef.current !== "play") return;
+      if (
+        forcedZeroRef.current ||
+        finishingExamRef.current ||
+        finishedRef.current ||
+        phaseRef.current !== "play"
+      ) {
+        return;
+      }
       forcedZeroRef.current = true;
       setForcedZero(true);
-      setScore(0);
+      const pts = computeDsScoreFromAnswers(answersRef.current);
+      setScore(pts);
+      scoreRef.current = pts;
       const msg =
         reason === "fullscreen"
           ? "Session interrompue (plein \u00e9cran). Tes r\u00e9ponses sont enregistr\u00e9es : demande \u00e0 ton prof de te laisser reprendre le DS."
@@ -422,6 +441,7 @@ export default function DS({ profil, onExamFinished }: Props) {
     };
     const onBlur = () => disqualify("visibility");
     const onFsChange = () => {
+      if (phaseRef.current !== "play" || finishingExamRef.current || finishedRef.current) return;
       if (!document.fullscreenElement) disqualify("fullscreen");
     };
 
@@ -435,15 +455,6 @@ export default function DS({ profil, onExamFinished }: Props) {
     };
   }, [phase, forcedZero, isAdmin, disqualify]);
 
-  useEffect(() => {
-    return () => {
-      if (isAdmin || adminExitPlayRef.current) return;
-      if (phaseRef.current !== "play" || forcedZeroRef.current || finishedRef.current) return;
-      const uid = auth.currentUser?.uid;
-      if (!uid) return;
-      persistSession(scoreRef.current, "incomplete");
-    };
-  }, [persistSession, isAdmin]);
 
   /** Chrono session 50 min (ind\u00e9pendant du changement de question). */
   useEffect(() => {
@@ -516,14 +527,18 @@ export default function DS({ profil, onExamFinished }: Props) {
     ? "fixed inset-0 z-[10000] overflow-y-auto bg-slate-950 text-white"
     : "min-h-screen bg-slate-950 text-white";
 
-  const lockedGrade =
-    lastSession && !lastSession.forcedZero
-      ? `${lastSession.gradeOn20} / 20`
-      : lastSession?.forcedZero
-        ? lastSession.gradeOn20Provisional != null
-          ? `${lastSession.gradeOn20Provisional} / 20 (prov.)`
-          : "0 / 20"
-        : null;
+  const lockedGrade = (() => {
+    if (lastResultRef.current) {
+      return `${lastResultRef.current.gradeOn20} / 20`;
+    }
+    if (lastSession && !lastSession.forcedZero) {
+      return `${lastSession.gradeOn20} / 20`;
+    }
+    if (lastSession?.forcedZero && lastSession.gradeOn20Provisional != null) {
+      return `${lastSession.gradeOn20Provisional} / 20 (prov.)`;
+    }
+    return null;
+  })();
 
   const resumeProgress =
     canResume && lastSession
@@ -716,7 +731,10 @@ export default function DS({ profil, onExamFinished }: Props) {
         </p>
         <button
           type="button"
-          onClick={() => setPhase("hub")}
+          onClick={() => {
+            onExamFinished?.();
+            setPhase("hub");
+          }}
           className="rounded-xl bg-slate-700 hover:bg-slate-600 px-6 py-3 font-bold"
         >
           {"Retour au hub DS"}
