@@ -2,11 +2,13 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   buildDsSdgnClassReportFromStudents,
+  buildDsSdgnDirectGradesList,
   buildExportReportForAdmin,
   countUsersWithDsSdgnExamData,
   formatDsDisplayStatusLabel,
   formatDsGradeForReport,
 } from "../../lib/adminDsSdgnReport";
+import { exportDsSdgnGradesOnlyPdf } from "../../lib/exportDsSdgnGradesOnlyPdf";
 import { exportDsSdgnClassReportPdf } from "../../lib/exportDsSdgnReportPdf";
 import { exportDsSdgnClassReportXlsx } from "../../lib/exportDsSdgnReportXlsx";
 import { DS_SDGN_TOPIC_LABELS, DS_SDGN_TOPIC_ORDER } from "../../lib/dsSdgnQcmTopics";
@@ -30,6 +32,7 @@ export default function AdminDsSdgnReport({
   const [recherche, setRecherche] = useState("");
   const [exporting, setExporting] = useState(false);
   const [exportingPdf, setExportingPdf] = useState(false);
+  const [exportingGradesPdf, setExportingGradesPdf] = useState(false);
   const [syncingResults, setSyncingResults] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [resettingId, setResettingId] = useState(null);
@@ -61,6 +64,16 @@ export default function AdminDsSdgnReport({
     [usersAll, dsSdgnSummaries.length],
   );
 
+  const directGrades = useMemo(
+    () => buildDsSdgnDirectGradesList(dsSdgnSummaries, usersAll),
+    [dsSdgnSummaries, usersAll],
+  );
+
+  const gradesWithNote = useMemo(
+    () => directGrades.filter((g) => g.gradeOn20 > 0),
+    [directGrades],
+  );
+
   const buildFullExportReport = () => buildExportReportForAdmin(premiereRows, usersAll);
 
   const handleExport = () => {
@@ -79,6 +92,26 @@ export default function AdminDsSdgnReport({
       window.alert("Export Excel impossible pour le moment.");
     } finally {
       setExporting(false);
+    }
+  };
+
+  const handleExportGradesPdf = async () => {
+    setExportingGradesPdf(true);
+    try {
+      if (!directGrades.length) {
+        window.alert("Aucune copie DS. Clique sur Synchroniser copies DS puis reessaie.");
+        return;
+      }
+      const result = await exportDsSdgnGradesOnlyPdf(directGrades);
+      window.alert(
+        `PDF notes telecharge : ${result.filename}\n\n${result.withGrade} note(s) /20 sur ${result.students} eleve(s)`,
+      );
+    } catch (err) {
+      console.error(err);
+      const msg = err instanceof Error ? err.message : String(err);
+      window.alert(`Export PDF notes impossible.\n\n${msg}`);
+    } finally {
+      setExportingGradesPdf(false);
     }
   };
 
@@ -280,6 +313,79 @@ export default function AdminDsSdgnReport({
       <p style={{ margin: "0 0 8px", color: "#0369A1", fontSize: "0.78rem", lineHeight: 1.45 }}>
         {`${dsSdgnSummaries.length} copie(s) dans dsSdgnResults \u00b7 ${dsTabDetectedTotal} detectee(s) dans users.dsTab \u00b7 ${report.withDsDataCount} ligne(s) ci-dessous.`}
       </p>
+
+      <div
+        style={{
+          marginBottom: 16,
+          padding: "14px 16px",
+          borderRadius: 14,
+          border: "3px solid #059669",
+          background: "#FFFFFF",
+          boxShadow: "0 4px 14px rgba(5,150,105,0.15)",
+        }}
+      >
+        <p
+          style={{
+            margin: "0 0 6px",
+            fontFamily: "'Fredoka One', cursive",
+            color: "#047857",
+            fontSize: "1.15rem",
+          }}
+        >
+          {"NOTES /20 \u2014 lecture directe Firebase"}
+        </p>
+        <p style={{ margin: "0 0 10px", color: "#475569", fontSize: "0.8rem", lineHeight: 1.45 }}>
+          {`${gradesWithNote.length} note(s) renseignee(s) sur ${directGrades.length} eleve(s). Si vide : bouton Synchroniser ci-dessous, puis Ctrl+F5.`}
+        </p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
+          <button
+            type="button"
+            disabled={exportingGradesPdf || directGrades.length === 0}
+            onClick={() => void handleExportGradesPdf()}
+            style={{
+              padding: "10px 18px",
+              borderRadius: 10,
+              border: "none",
+              background: directGrades.length > 0 ? "#059669" : "#94A3B8",
+              color: "white",
+              fontWeight: 900,
+              fontSize: "0.9rem",
+              cursor: directGrades.length > 0 ? "pointer" : "not-allowed",
+            }}
+          >
+            {exportingGradesPdf ? "PDF..." : "Telecharger PDF (notes uniquement)"}
+          </button>
+        </div>
+        <div style={{ maxHeight: 280, overflowY: "auto", borderRadius: 10, border: "1px solid #D1FAE5" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.88rem" }}>
+            <thead>
+              <tr style={{ background: "#ECFDF5", position: "sticky", top: 0 }}>
+                <th style={{ padding: "10px 12px", textAlign: "left" }}>{"\u00c9l\u00e8ve"}</th>
+                <th style={{ padding: "10px 12px", textAlign: "right", width: 100 }}>{"Note /20"}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {directGrades.map((g) => (
+                <tr key={g.studentId} style={{ borderTop: "1px solid #E2E8F0" }}>
+                  <td style={{ padding: "8px 12px", fontWeight: 700 }}>{g.studentName}</td>
+                  <td
+                    style={{
+                      padding: "8px 12px",
+                      textAlign: "right",
+                      fontWeight: 900,
+                      fontSize: "1rem",
+                      color: g.gradeOn20 > 0 ? "#047857" : "#94A3B8",
+                    }}
+                  >
+                    {g.gradeOn20 > 0 ? String(g.gradeOn20) : "\u2014"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <div style={{ marginBottom: 12 }}>
         <button
           type="button"
@@ -296,10 +402,11 @@ export default function AdminDsSdgnReport({
                 return;
               }
               window.alert(
-                `Synchronisation OK.\n` +
+                `Recalcul des notes OK.\n\n` +
+                  `${r.gradesFound ?? 0} note(s) /20 trouvee(s) dans Firebase\n` +
                   `${r.total} copie(s) dans dsSdgnResults\n` +
-                  `${r.candidates} detectee(s) dans users.dsTab\n` +
-                  `${r.written} ecrite(s), ${r.skipped} deja a jour` +
+                  `${r.written} mise(s) a jour, ${r.skipped} inchangee(s)\n` +
+                  `${r.userDocsPatched ?? 0} profil(s) eleve corrige(s)` +
                   (r.errors?.length
                     ? `\n\nAvertissements :\n${r.errors.slice(0, 3).join("\n")}`
                     : ""),
@@ -325,7 +432,7 @@ export default function AdminDsSdgnReport({
             cursor: syncingResults ? "wait" : "pointer",
           }}
         >
-          {syncingResults ? "Sync..." : "Synchroniser copies DS depuis Firebase"}
+          {syncingResults ? "Calcul..." : "Recalculer et enregistrer les notes"}
         </button>
       </div>
       <p style={{ margin: "0 0 14px", color: "#B45309", fontSize: "0.78rem", lineHeight: 1.45, fontWeight: 700 }}>

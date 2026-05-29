@@ -1,14 +1,18 @@
-import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
+import { DS_SCORE_CORRECT, DS_SCORE_WRONG } from "../lib/dsSdgnQcmDeck";
+import { computeDsGradeOn20 } from "../lib/dsSdgnGrading";
 import {
   DS_SDGN_QCM_EXAM_ID,
   hasDsTabExamData,
-  readDsTabExamGradeOn20,
+  readDsTabExamRoot,
+  resolveDsGradeOn20FromUser,
   readDsTabLastSession,
   type DsSessionRecord,
   type DsSessionStatus,
   type DsTabResultPayload,
 } from "./dsTabExamService";
+import { userDocRef } from "./userProfileService";
 
 export const DS_SDGN_RESULTS_COLLECTION = "dsSdgnResults";
 
@@ -117,11 +121,7 @@ export function summaryFromUserProfile(
   if (!uid || !hasDsTabExamData(user)) return null;
 
   const session = readDsTabLastSession(user);
-  const grade =
-    readDsTabExamGradeOn20(user) ??
-    session?.gradeOn20 ??
-    session?.gradeOn20Provisional ??
-    0;
+  const grade = resolveDsGradeOn20FromUser(user);
 
   if (!session && grade <= 0) return null;
 
@@ -145,7 +145,7 @@ export function summaryFromUserProfile(
     completed = false;
   }
 
-  return {
+  const summary: DsSdgnResultSummary = {
     uid,
     examId: DS_SDGN_QCM_EXAM_ID,
     prenom: typeof user.prenom === "string" ? user.prenom : undefined,
@@ -169,6 +169,8 @@ export function summaryFromUserProfile(
     answersCount: session?.answers?.length ?? 0,
     updatedAt: new Date().toISOString(),
   };
+  summary.gradeOn20 = Math.max(grade, resolveGradeFromDsSdgnSummary(summary));
+  return summary;
 }
 
 export async function fetchAllDsSdgnResultSummaries(): Promise<DsSdgnResultSummary[]> {
@@ -183,7 +185,47 @@ export type BackfillDsSdgnResultsReport = {
   skipped: number;
   candidates: number;
   errors: string[];
+  gradesFound: number;
+  userDocsPatched: number;
 };
+
+/** Note depuis dsSdgnResults (grade stocke, score ou bonnes/mauvaises reponses). */
+export function resolveGradeFromDsSdgnSummary(summary: DsSdgnResultSummary): number {
+  const stored = Number(summary.gradeOn20) || 0;
+  const total = Number(summary.totalQuestions) || 0;
+  if (total <= 0) return stored;
+
+  const candidates = [stored];
+  const score = Number(summary.scorePoints);
+  if (Number.isFinite(score)) {
+    candidates.push(computeDsGradeOn20(score, total, false));
+  }
+
+  const correct = Number(summary.correctCount) || 0;
+  const wrong = Number(summary.wrongCount) || 0;
+  if (correct > 0 || wrong > 0) {
+    const fromCounts = correct * DS_SCORE_CORRECT + wrong * DS_SCORE_WRONG;
+    candidates.push(computeDsGradeOn20(fromCounts, total, false));
+  }
+
+  const answered = Number(summary.questionsAnswered) || Number(summary.answersCount) || 0;
+  if (answered > 0 && candidates.every((g) => g <= 0)) {
+    candidates.push(computeDsGradeOn20(0, total, false));
+  }
+
+  return Math.max(0, ...candidates);
+}
+
+function parseFlexibleNumber(value: unknown): number | null {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (typeof value === "string") {
+    const trimmed = value.trim().replace(",", ".");
+    if (!trimmed) return null;
+    const n = Number(trimmed);
+    return Number.isFinite(n) ? n : null;
+  }
+  return null;
+}
 
 /** Recopie users.dsTab -> dsSdgnResults pour les copies deja en base. */
 export async function backfillDsSdgnResultsFromUsers(
@@ -192,22 +234,65 @@ export async function backfillDsSdgnResultsFromUsers(
   let written = 0;
   let skipped = 0;
   let candidates = 0;
+  let gradesFound = 0;
+  let userDocsPatched = 0;
   const errors: string[] = [];
 
   for (const user of users) {
     if (user.role === "admin") continue;
-    const summary = summaryFromUserProfile(user);
-    if (!summary) continue;
+    const uid = String(user.id ?? "");
+    if (!uid) continue;
+
+    const fromUser = resolveDsGradeOn20FromUser(user);
+    let summary = summaryFromUserProfile(user);
+    if (!summary && fromUser <= 0 && !hasDsTabExamData(user)) continue;
+
     candidates += 1;
-    const uid = summary.uid;
+
+    if (summary) {
+      const mergedGrade = Math.max(
+        fromUser,
+        summary.gradeOn20 ?? 0,
+        resolveGradeFromDsSdgnSummary(summary),
+      );
+      summary = { ...summary, gradeOn20: mergedGrade };
+      if (mergedGrade > 0) gradesFound += 0; // already counted
+    } else if (fromUser > 0) {
+      summary = summaryFromUserProfile({ ...user, id: uid });
+      if (summary) summary = { ...summary, gradeOn20: fromUser };
+    }
+
+    if (!summary) continue;
+
     try {
+      if (summary.gradeOn20 > 0) {
+        const tab = readDsTabExamRoot(user);
+        const cur = parseFlexibleNumber(tab?.gradeOn20) ?? 0;
+        if (cur < summary.gradeOn20 - 0.001) {
+          await updateDoc(userDocRef(uid), {
+            [`dsTab.${DS_SDGN_QCM_EXAM_ID}.gradeOn20`]: summary.gradeOn20,
+            [`dsTab.${DS_SDGN_QCM_EXAM_ID}.score`]:
+              summary.scorePoints || tab?.score || 0,
+          });
+          userDocsPatched += 1;
+        }
+      }
+
       const existing = await getDoc(resultDocRef(uid));
       if (existing.exists()) {
         const prev = existing.data() as DsSdgnResultSummary;
-        if (
-          prev.gradeOn20 === summary.gradeOn20 &&
-          prev.answersCount === summary.answersCount
-        ) {
+        const prevGrade = Number(prev.gradeOn20) || 0;
+        const newGrade = Number(summary.gradeOn20) || 0;
+        const gradeImproved = newGrade > prevGrade + 0.001;
+        const unchanged =
+          !gradeImproved &&
+          Math.abs(prevGrade - newGrade) < 0.001 &&
+          prev.answersCount === summary.answersCount;
+        if (unchanged && newGrade <= 0) {
+          skipped += 1;
+          continue;
+        }
+        if (unchanged && newGrade > 0) {
           skipped += 1;
           continue;
         }
@@ -223,5 +308,16 @@ export async function backfillDsSdgnResultsFromUsers(
     }
   }
 
-  return { written, skipped, candidates, errors };
+  const uniqueGrades = users.filter(
+    (u) => u.role !== "admin" && resolveDsGradeOn20FromUser(u as Record<string, unknown>) > 0,
+  ).length;
+
+  return {
+    written,
+    skipped,
+    candidates,
+    errors,
+    gradesFound: uniqueGrades,
+    userDocsPatched,
+  };
 }

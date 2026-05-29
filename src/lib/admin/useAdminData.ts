@@ -719,6 +719,8 @@ export function useAdminData() {
         candidates: backfill.candidates,
         total: summaries.length,
         errors: backfill.errors,
+        gradesFound: backfill.gradesFound,
+        userDocsPatched: backfill.userDocsPatched,
       };
     },
     chargementEleves,

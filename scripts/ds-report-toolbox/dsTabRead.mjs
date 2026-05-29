@@ -73,6 +73,40 @@ export function hasDsTabExamData(userData) {
   return Boolean(examTab.attemptStarted);
 }
 
+function computeGrade(score, total) {
+  if (!total || total <= 0) return 0;
+  const maxPts = total * 4;
+  if (maxPts <= 0) return 0;
+  return Math.round(Math.max(0, Math.min(20, (score / maxPts) * 20)) * 10) / 10;
+}
+
+export function resolveDsGradeOn20FromUser(userData) {
+  const grades = [];
+  const tab = readDsTabRoot(userData);
+  if (tab) {
+    const walk = (obj, depth) => {
+      if (!obj || typeof obj !== "object" || depth > 24) return;
+      if (Array.isArray(obj)) return obj.forEach((v) => walk(v, depth + 1));
+      for (const key of ["gradeOn20", "gradeOn20Provisional"]) {
+        const n = parseFlexibleNumber(obj[key]);
+        if (n != null && n > 0) grades.push(n);
+      }
+      Object.values(obj).forEach((v) => walk(v, depth + 1));
+    };
+    walk(tab, 0);
+    const score = parseFlexibleNumber(tab.score);
+    const total = parseFlexibleNumber(tab.total);
+    if (score != null && total != null && total > 0) grades.push(computeGrade(score, total));
+  }
+  const session = readDsTabLastSession(userData);
+  if (session) {
+    const total = session.totalQuestions || session.answers?.length || 0;
+    const score = session.scorePoints ?? 0;
+    if (total > 0) grades.push(computeGrade(score, total));
+  }
+  return grades.length ? Math.max(...grades) : 0;
+}
+
 export function readDsTabLastSession(userData) {
   const examTab = readDsTabRoot(userData);
   if (!examTab) return null;
@@ -98,7 +132,7 @@ export function readDsTabLastSession(userData) {
 export function buildStudentRow(user) {
   const session = readDsTabLastSession(user);
   const examTab = readDsTabRoot(user);
-  const examRootGrade = parseFlexibleNumber(examTab?.gradeOn20);
+  const examRootGrade = resolveDsGradeOn20FromUser(user) || parseFlexibleNumber(examTab?.gradeOn20);
   const attemptStarted = Boolean(examTab?.attemptStarted);
   let displayStatus = "not_started";
   if (session?.status) displayStatus = session.status;

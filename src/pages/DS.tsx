@@ -12,6 +12,7 @@ import {
   DS_SDGN_QCM_EXAM_ID,
   isDsSdgnExamLocked,
   markDsAttemptStarted,
+  persistDsTabCheckpoint,
   persistDsTabResult,
   readDsTabLastSession,
   resetDsSdgnTabExamForUser,
@@ -317,6 +318,24 @@ export default function DS({ profil, onExamFinished }: Props) {
         setWrongCount((c) => c + 1);
       }
       setScore(scoreRef.current);
+      const uid = auth.currentUser?.uid;
+      const answeredCount = answersRef.current.length;
+      if (
+        uid &&
+        answeredCount > 0 &&
+        answeredCount % 5 === 0 &&
+        phaseRef.current === "play"
+      ) {
+        void persistDsTabCheckpoint(uid, {
+          sessionId: sessionIdRef.current,
+          startedAt: startedAtRef.current,
+          scorePoints: scoreRef.current,
+          totalQuestions: questionsRef.current.length,
+          answers: [...answersRef.current],
+          questionIds: questionsRef.current.map((q) => q.sourceId),
+          sessionLeftSec: sessionLeftRef.current,
+        }).catch((err) => console.warn("Checkpoint DS", err));
+      }
       const next = indexRef.current + 1;
       if (next >= questionsRef.current.length || sessionLeftRef.current <= 0) {
         finishExamRef.current(false);

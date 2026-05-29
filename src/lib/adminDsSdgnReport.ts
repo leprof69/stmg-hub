@@ -1,12 +1,16 @@
 import { SDGN_CHAPTER_LABELS } from "../data/sdgn/registry";
 import { SDGN_MISSION_QCM_CURATED, type SdgnMissionQcm } from "../data/sdgn/sdgnMissionQcmBank";
 import { buildEmptyTopicStats } from "./dsSdgnGrading";
-import type { DsSdgnResultSummary } from "../services/dsSdgnResultsService";
+import {
+  resolveGradeFromDsSdgnSummary,
+  type DsSdgnResultSummary,
+} from "../services/dsSdgnResultsService";
 import {
   DS_SDGN_QCM_EXAM_ID,
   hasDsTabExamData,
   readDsTabExamMeta,
   readDsTabExamGradeOn20,
+  resolveDsGradeOn20FromUser,
   readDsTabLastSession,
   type DsSessionAnswerRecord,
   type DsSessionRecord,
@@ -83,13 +87,18 @@ export function formatDsDisplayStatusLabel(status: DsSdgnDisplayStatus): string 
   }
 }
 
+/** Note /20 la plus fiable pour l'affichage admin (racine + session + provisional). */
+export function resolveReportGradeOn20(row: DsSdgnStudentReportRow): number {
+  return Math.max(
+    row.examRootGrade ?? 0,
+    row.session?.gradeOn20Provisional ?? 0,
+    row.session?.gradeOn20 ?? 0,
+  );
+}
+
 /** Note affich\u00e9e : toujours le chiffre Firebase si disponible. */
 export function formatDsGradeForReport(row: DsSdgnStudentReportRow): string {
-  const grade =
-    row.examRootGrade ??
-    row.session?.gradeOn20 ??
-    row.session?.gradeOn20Provisional ??
-    0;
+  const grade = resolveReportGradeOn20(row);
 
   if (row.displayStatus === "not_started" && grade <= 0) return "\u2014";
   if (grade <= 0) return "0";
@@ -162,7 +171,8 @@ export function buildDsSdgnStudentRow(eleve: {
   const session = readDsTabLastSession(userRecord);
   const meta = readDsTabExamMeta(userRecord);
   const hasData = hasDsTabExamData(userRecord);
-  const examRootGrade = readDsTabExamGradeOn20(userRecord);
+  const resolvedGrade = resolveDsGradeOn20FromUser(userRecord);
+  const examRootGrade = resolvedGrade > 0 ? resolvedGrade : readDsTabExamGradeOn20(userRecord);
   const displayStatus: DsSdgnDisplayStatus = hasData
     ? resolveDsSdgnDisplayStatus(session, examRootGrade, meta.attemptStarted)
     : "not_started";
@@ -269,10 +279,10 @@ function buildDsSdgnStudentRowFromSummary(
     (user?.nom as string) ||
     `Eleve ${summary.uid.slice(0, 6)}`;
 
-  const examRootGrade =
-    summary.gradeOn20 ??
-    (user ? readDsTabExamGradeOn20(user as Record<string, unknown>) : undefined) ??
-    session?.gradeOn20;
+  const fromUser = user ? resolveDsGradeOn20FromUser(user as Record<string, unknown>) : 0;
+  const fromSummary = resolveGradeFromDsSdgnSummary(summary);
+  const bestGrade = Math.max(summary.gradeOn20 ?? 0, fromUser, fromSummary);
+  const examRootGrade = bestGrade > 0 ? bestGrade : undefined;
 
   return {
     studentId: summary.uid,
@@ -285,6 +295,55 @@ function buildDsSdgnStudentRowFromSummary(
     hasDsData: true,
     examRootGrade,
   };
+}
+
+export type DsSdgnDirectGradeRow = {
+  studentId: string;
+  studentName: string;
+  gradeOn20: number;
+};
+
+/** Liste simple Nom | Note pour le panneau admin (priorit\u00e9 users.dsTab). */
+export function buildDsSdgnDirectGradesList(
+  summaries: DsSdgnResultSummary[],
+  users: Record<string, unknown>[],
+): DsSdgnDirectGradeRow[] {
+  const userById = new Map(users.map((u) => [String(u.id), u]));
+  const byId = new Map<string, DsSdgnDirectGradeRow>();
+
+  for (const summary of summaries) {
+    if (summary.examId && summary.examId !== DS_SDGN_QCM_EXAM_ID) continue;
+    const user = userById.get(summary.uid);
+    const fromUser = user ? resolveDsGradeOn20FromUser(user as Record<string, unknown>) : 0;
+    const fromSummary = resolveGradeFromDsSdgnSummary(summary);
+    const grade = Math.max(summary.gradeOn20 ?? 0, fromUser, fromSummary);
+    const name =
+      summary.prenom ||
+      summary.nom ||
+      summary.email ||
+      (user?.prenom as string) ||
+      (user?.nom as string) ||
+      `Eleve ${summary.uid.slice(0, 6)}`;
+    byId.set(summary.uid, { studentId: summary.uid, studentName: name, gradeOn20: grade });
+  }
+
+  for (const user of users) {
+    if (user.role === "admin") continue;
+    const id = String(user.id ?? "");
+    if (!id || byId.has(id)) continue;
+    if (!isPremiereClasse(user.classe) && !hasDsTabExamData(user as Record<string, unknown>)) {
+      continue;
+    }
+    const grade = resolveDsGradeOn20FromUser(user as Record<string, unknown>);
+    if (grade <= 0 && !hasDsTabExamData(user as Record<string, unknown>)) continue;
+    const name =
+      String(user.prenom || user.nom || user.email || "") || `Eleve ${id.slice(0, 6)}`;
+    byId.set(id, { studentId: id, studentName: name, gradeOn20: grade });
+  }
+
+  return Array.from(byId.values()).sort((a, b) =>
+    a.studentName.localeCompare(b.studentName, "fr"),
+  );
 }
 
 /**
@@ -335,13 +394,28 @@ export function enrichExportRowsWithUserSessions(
     const user = userById.get(row.studentId);
     if (!user) return row;
     const fullSession = readDsTabLastSession(user as Record<string, unknown>);
-    const rootGrade = readDsTabExamGradeOn20(user as Record<string, unknown>);
-    if (!fullSession) return row;
+    const rootGrade = resolveDsGradeOn20FromUser(user as Record<string, unknown>);
+    if (!fullSession) {
+      if (rootGrade > 0) {
+        return {
+          ...row,
+          examRootGrade: rootGrade,
+          displayStatus: resolveDsSdgnDisplayStatus(row.session, rootGrade, true),
+        };
+      }
+      return row;
+    }
+    const examRootGrade =
+      Math.max(rootGrade, row.examRootGrade ?? 0, resolveReportGradeOn20(row)) || undefined;
     return {
       ...row,
       session: fullSession,
-      examRootGrade: rootGrade ?? row.examRootGrade,
-      displayStatus: fullSession.status ?? row.displayStatus,
+      examRootGrade: examRootGrade && examRootGrade > 0 ? examRootGrade : row.examRootGrade,
+      displayStatus: resolveDsSdgnDisplayStatus(
+        fullSession,
+        examRootGrade ?? rootGrade,
+        true,
+      ),
       hasDsData: true,
     };
   });

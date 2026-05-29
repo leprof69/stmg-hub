@@ -6,7 +6,11 @@ import {
   computeTopicStats,
 } from "../lib/dsSdgnGrading";
 import type { DsSdgnPremiereTopic } from "../lib/dsSdgnQcmTopics";
-import { rebuildQuestionIdsForResume } from "../lib/dsSdgnQcmDeck";
+import {
+  DS_SCORE_CORRECT,
+  DS_SCORE_WRONG,
+  rebuildQuestionIdsForResume,
+} from "../lib/dsSdgnQcmDeck";
 import { userDocRef } from "./userProfileService";
 
 export const DS_SDGN_QCM_EXAM_ID = "sdgn_premiere_qcm_v1";
@@ -278,6 +282,64 @@ export async function persistDsTabResult(uid: string, payload: DsTabResultPayloa
   }
 }
 
+/** Sauvegarde intermediaire (reponses + score) pour ne pas perdre la copie en cours. */
+export async function persistDsTabCheckpoint(
+  uid: string,
+  input: {
+    sessionId: string;
+    startedAt: string;
+    scorePoints: number;
+    totalQuestions: number;
+    answers: DsSessionAnswerRecord[];
+    questionIds: string[];
+    sessionLeftSec: number;
+  },
+): Promise<void> {
+  const slimAnswers: DsSessionAnswerRecord[] = input.answers.map((a) => ({
+    sourceId: a.sourceId,
+    topic: a.topic,
+    outcome: a.outcome,
+    ...(a.picked != null ? { picked: a.picked } : {}),
+  }));
+  const gradeOn20Provisional = computeDsGradeOn20(
+    input.scorePoints,
+    input.totalQuestions,
+    false,
+  );
+  const partial: DsSessionRecord = {
+    sessionId: input.sessionId,
+    examId: DS_SDGN_QCM_EXAM_ID,
+    startedAt: input.startedAt,
+    finishedAt: "",
+    scorePoints: input.scorePoints,
+    totalQuestions: input.totalQuestions,
+    questionsAnswered: slimAnswers.length,
+    correctCount: slimAnswers.filter((a) => a.outcome === 1).length,
+    wrongCount: slimAnswers.filter((a) => a.outcome === 0).length,
+    skippedCount: 0,
+    forcedZero: false,
+    gradeOn20: 0,
+    gradeOn20Provisional,
+    status: "incomplete",
+    completed: false,
+    questionIds: input.questionIds,
+    answers: slimAnswers,
+    topicStats: computeTopicStats(slimAnswers),
+    sessionLeftSec: input.sessionLeftSec,
+    resumeIndex: slimAnswers.length,
+  };
+  const base = `dsTab.${DS_SDGN_QCM_EXAM_ID}`;
+  await updateDoc(userDocRef(uid), {
+    [`${base}.examId`]: DS_SDGN_QCM_EXAM_ID,
+    [`${base}.attemptStarted`]: true,
+    [`${base}.score`]: input.scorePoints,
+    [`${base}.total`]: input.totalQuestions,
+    [`${base}.gradeOn20`]: gradeOn20Provisional,
+    [`${base}.lastSession`]: partial,
+    [`${base}.lastSessionId`]: input.sessionId,
+  });
+}
+
 export async function markDsAttemptStarted(uid: string, sessionId: string): Promise<void> {
   await updateDoc(userDocRef(uid), {
     [`dsTab.${DS_SDGN_QCM_EXAM_ID}.examId`]: DS_SDGN_QCM_EXAM_ID,
@@ -343,6 +405,21 @@ function reconcileSessionWithExamTabRoot(
   const rootScore = asNumber(examTab.score);
   const rootForced = Boolean(examTab.forcedZero);
 
+  if (rootForced && rootGrade != null && rootGrade > 0) {
+    const prov = Math.max(
+      rootGrade,
+      asNumber(session.gradeOn20Provisional) ?? 0,
+      asNumber(session.gradeOn20) ?? 0,
+    );
+    return {
+      ...session,
+      forcedZero: true,
+      gradeOn20: 0,
+      gradeOn20Provisional: prov,
+      status: session.status ?? "disqualified",
+    };
+  }
+
   if (!rootForced && rootGrade != null && rootGrade > 0 && (session.forcedZero || session.gradeOn20 === 0)) {
     const answered = session.questionsAnswered ?? session.answers?.length ?? 0;
     const total = session.totalQuestions ?? asNumber(examTab.total) ?? 0;
@@ -371,13 +448,81 @@ export function readDsTabExamRoot(
   return readDsTabRoot(userData);
 }
 
+function collectDsGradesFromTree(value: unknown, depth: number, out: number[]): void {
+  if (!value || typeof value !== "object" || depth > 24) return;
+  if (Array.isArray(value)) {
+    for (const item of value) collectDsGradesFromTree(item, depth + 1, out);
+    return;
+  }
+  const rec = value as Record<string, unknown>;
+  for (const key of ["gradeOn20", "gradeOn20Provisional"] as const) {
+    const n = parseFlexibleNumber(rec[key]);
+    if (n != null && n > 0) out.push(n);
+  }
+  for (const child of Object.values(rec)) {
+    collectDsGradesFromTree(child, depth + 1, out);
+  }
+}
+
+/**
+ * Meilleure note /20 dans dsTab (racine, lastSession, sessions, champs aplatis).
+ * Indispensable quand forcedZero met gradeOn20 a 0 mais garde la note en provisional.
+ */
+export function resolveDsGradeOn20FromUser(
+  userData: Record<string, unknown> | null | undefined,
+): number {
+  if (!userData) return 0;
+  const grades: number[] = [];
+
+  const tab = readDsTabRoot(userData);
+  if (tab) {
+    collectDsGradesFromTree(tab, 0, grades);
+    const score = parseFlexibleNumber(tab.score);
+    const total = parseFlexibleNumber(tab.total);
+    if (score != null && total != null && total > 0) {
+      grades.push(computeDsGradeOn20(score, total, false));
+    }
+  }
+
+  const prefix = `dsTab.${DS_SDGN_QCM_EXAM_ID}.`;
+  for (const [key, val] of Object.entries(userData)) {
+    if (!key.startsWith(prefix)) continue;
+    if (!key.endsWith(".gradeOn20") && !key.endsWith(".gradeOn20Provisional")) continue;
+    const n = parseFlexibleNumber(val);
+    if (n != null && n > 0) grades.push(n);
+  }
+
+  const session = readDsTabLastSession(userData);
+  if (session) {
+    const answers = session.answers ?? [];
+    const total =
+      session.totalQuestions ??
+      session.questionIds?.length ??
+      (answers.length > 0 ? answers.length : 0);
+    const score =
+      session.scorePoints ??
+      (answers.length > 0 ? computeDsScoreFromAnswers(answers) : 0);
+    if (total > 0 && (score > 0 || answers.length > 0)) {
+      grades.push(computeDsGradeOn20(score, total, false));
+    }
+    const correct =
+      session.correctCount ?? answers.filter((a) => a.outcome === 1).length;
+    const wrong =
+      session.wrongCount ?? answers.filter((a) => a.outcome === 0).length;
+    if (total > 0 && (correct > 0 || wrong > 0)) {
+      const fromCounts = correct * DS_SCORE_CORRECT + wrong * DS_SCORE_WRONG;
+      grades.push(computeDsGradeOn20(fromCounts, total, false));
+    }
+  }
+
+  return grades.length > 0 ? Math.max(...grades) : 0;
+}
+
 export function readDsTabExamGradeOn20(
   userData: Record<string, unknown> | null | undefined,
 ): number | undefined {
-  const tab = readDsTabRoot(userData);
-  if (!tab) return undefined;
-  const grade = parseFlexibleNumber(tab.gradeOn20);
-  return grade ?? undefined;
+  const g = resolveDsGradeOn20FromUser(userData);
+  return g > 0 ? g : undefined;
 }
 
 export function hasDsTabExamData(userData: Record<string, unknown> | null | undefined): boolean {
