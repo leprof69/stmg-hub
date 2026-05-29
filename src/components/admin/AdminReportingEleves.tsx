@@ -34,7 +34,6 @@ export default function AdminReportingEleves({
   onRetirerJetons,
   onResetMdp,
   onRetablirJetons,
-  onResetDsSdgn,
   formatDsDisplayStatusLabel,
   formatDateFr,
   formatDuration,
@@ -223,10 +222,31 @@ export default function AdminReportingEleves({
                         textAlign: "center",
                         verticalAlign: "middle",
                         fontWeight: 800,
-                        color: "#1D4ED8",
+                        color: eleve.platformIntegrity?.xpSuspended ? "#B45309" : "#1D4ED8",
                       }}
+                      onClick={(e) => e.stopPropagation()}
                     >
                       {formatJetons(eleve.xp || 0)}
+                      {eleve.platformIntegrity?.xpSuspended ? (
+                        <button
+                          type="button"
+                          onClick={() => onRetablirJetons(eleve)}
+                          style={{
+                            display: "block",
+                            margin: "4px auto 0",
+                            padding: "3px 8px",
+                            borderRadius: 8,
+                            border: "none",
+                            background: "#D97706",
+                            color: "white",
+                            fontSize: "0.65rem",
+                            fontWeight: 800,
+                            cursor: "pointer",
+                          }}
+                        >
+                          {"R\u00e9tablir jetons"}
+                        </button>
+                      ) : null}
                     </td>
                     <td style={{ padding: "10px 12px", textAlign: "center", verticalAlign: "middle" }}>
                       <span style={{ color: actif.color, fontWeight: 800, fontSize: "0.78rem" }}>{actif.label}</span>
@@ -441,22 +461,9 @@ export default function AdminReportingEleves({
                             />
                             {eleve.platformIntegrity?.xpSuspended ? (
                               <ActionBtn
-                                label={"R\u00e9tablir jetons"}
+                                label={"R\u00e9tablir jetons (anti-triche onglet)"}
                                 color="#047857"
                                 onClick={() => onRetablirJetons(eleve)}
-                              />
-                            ) : null}
-                            {eleve.dsSdgnRow?.hasDsData && onResetDsSdgn ? (
-                              <ActionBtn
-                                label={
-                                  eleve.dsSdgnRow.displayStatus === "disqualified"
-                                    ? "D\u00e9bloquer DS anti-triche"
-                                    : "Reset DS SDGN"
-                                }
-                                color={
-                                  eleve.dsSdgnRow.displayStatus === "disqualified" ? "#B91C1C" : "#B45309"
-                                }
-                                onClick={() => onResetDsSdgn(eleve)}
                               />
                             ) : null}
                             <span style={{ fontSize: "0.72rem", color: "#94A3B8", marginLeft: "auto" }}>

@@ -43,11 +43,13 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
 
   const handleResetOneStudent = async (row) => {
     const label = row.studentName || row.studentId;
-    const hint =
-      row.displayStatus === "disqualified"
-        ? " (anti-triche / note 0 \u2014 l\u00e9l\u00e8ve pourra repasser)"
-        : "";
-    if (!window.confirm(`R\u00e9initialiser le DS SDGN pour ${label} ?${hint}`)) return;
+    if (
+      !window.confirm(
+        `Repasse exceptionnelle du QCM SDGN pour ${label} ?\n\nCela efface la tentative enregistr\u00e9e (note, anti-triche DS).\nPour r\u00e9tablir uniquement les jetons (onglet / missions), utilise \u00ab R\u00e9tablir jetons \u00bb dans le tableau \u00e9l\u00e8ves.`,
+      )
+    ) {
+      return;
+    }
     setResettingId(row.studentId);
     try {
       await resetDsSdgnTabExamForUser(row.studentId);
@@ -101,9 +103,14 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
       <p style={{ margin: "0 0 4px", fontFamily: "'Fredoka One', cursive", color: "#047857", fontSize: "1rem" }}>
         {"Rapport DS SDGN Premi\u00e8re"}
       </p>
-      <p style={{ margin: "0 0 14px", color: "#475569", fontSize: "0.82rem", lineHeight: 1.45 }}>
+      <p style={{ margin: "0 0 8px", color: "#475569", fontSize: "0.82rem", lineHeight: 1.45 }}>
         {
           "Export de toute la classe : termines, non termines et jamais commences. Note /20, acquis par notion, detail des reponses."
+        }
+      </p>
+      <p style={{ margin: "0 0 14px", color: "#B45309", fontSize: "0.78rem", lineHeight: 1.45, fontWeight: 700 }}>
+        {
+          "Alerte onglet / jetons bloqu\u00e9s : bouton \u00ab R\u00e9tablir jetons \u00bb dans le reporting \u00e9l\u00e8ves (ne supprime pas la note DS). Repasse QCM ci-dessous = cas exceptionnel uniquement."
         }
       </p>
 
@@ -156,7 +163,7 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
             cursor: resetting ? "wait" : "pointer",
           }}
         >
-          {resetting ? "Reset..." : "Autoriser \u00e0 repasser (reset)"}
+          {resetting ? "Reset..." : "Repasse QCM (toute la classe filtr\u00e9e)"}
         </button>
       </div>
 
@@ -254,11 +261,7 @@ export default function AdminDsSdgnReport({ premiereRows, onAfterReset }) {
                             cursor: resettingId || resetting ? "wait" : "pointer",
                           }}
                         >
-                          {resettingId === row.studentId
-                            ? "..."
-                            : row.displayStatus === "disqualified"
-                              ? "D\u00e9bloquer anti-triche"
-                              : "Reset DS"}
+                          {resettingId === row.studentId ? "..." : "Repasse QCM"}
                         </button>
                       )}
                     </td>

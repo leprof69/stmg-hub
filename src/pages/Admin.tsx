@@ -14,7 +14,6 @@ import { getPrestigeTotal } from "../services/userProfileService";
 import { buildStudentMissionInsights } from "../lib/adminMissionInsights";
 import { readMissionClaims } from "../lib/missionsProgress";
 import { buildDsSdgnStudentRow, formatDsDisplayStatusLabel } from "../lib/adminDsSdgnReport";
-import { resetDsSdgnTabExamForUser } from "../services/dsTabExamService";
 
 const COLORS = {
   S: "#3B82F6", T: "#7C3AED", M: "#F97316",
@@ -251,7 +250,13 @@ export default function Admin() {
   };
 
   const retablirJetonsAntiTriche = async (userId, nomAffiche) => {
-    if (!window.confirm(`Rétablir les jetons pour ${nomAffiche} ? (lève la suspension « changement d’onglet »)`)) return;
+    if (
+      !window.confirm(
+        `Rétablir les jetons pour ${nomAffiche} ?\n\nL'élève pourra à nouveau gagner des jetons (Missions, jeux, etc.).\nCela ne modifie pas la note du DS QCM si il a été disqualifié.`,
+      )
+    ) {
+      return;
+    }
     try {
       await updateDoc(doc(db, "users", userId), {
         "platformIntegrity.xpSuspended": false,
@@ -505,6 +510,7 @@ export default function Admin() {
       if (filtreActivite === "sdgn") okActivite = (eleve.sdgnExerciseCount || 0) > 0;
       if (filtreActivite === "participation") okActivite = (eleve.participationPoints || 0) >= 1;
       if (filtreActivite === "sans_participation") okActivite = (eleve.participationPoints || 0) <= 0;
+      if (filtreActivite === "jetons_suspendus") okActivite = Boolean(eleve.platformIntegrity?.xpSuspended);
 
       return okClasse && okLycee && okRecherche && okActivite;
     }).sort((a, b) => {
@@ -744,7 +750,7 @@ export default function Admin() {
     }
     if (
       !window.confirm(
-        `Réinitialiser les DS pour ${targets.length} élève(s) ?\n- Copies Objectif Bac (ancien DS)\n- QCM SDGN Première (dsTab, anti-triche inclus)`,
+        `Réinitialiser les copies DS Objectif Bac pour ${targets.length} élève(s) ?\n\nLe QCM SDGN Première n'est pas effacé ici (utilise le bloc Rapport DS SDGN pour une repasse QCM).`,
       )
     ) {
       return;
@@ -753,14 +759,11 @@ export default function Admin() {
     setResetDsLoading(true);
     try {
       await Promise.all(
-        targets.map(async (user) => {
-          await updateDoc(doc(db, "users", user.id), {
+        targets.map((user) =>
+          updateDoc(doc(db, "users", user.id), {
             [`objectifBacDs.${DS_EXAM_ID}`]: deleteField(),
-          });
-          if (user.classe === "premiere") {
-            await resetDsSdgnTabExamForUser(user.id);
-          }
-        }),
+          }),
+        ),
       );
       await chargerEleves();
       alert(`DS réinitialisé pour ${targets.length} élève(s).`);
@@ -775,6 +778,14 @@ export default function Admin() {
   const elevesSuspects = useMemo(
     () => [...reportingRows].filter((e) => (e.antiCheatEvents || 0) > 0).sort((a, b) => (b.antiCheatEvents || 0) - (a.antiCheatEvents || 0)).slice(0, 8),
     [reportingRows]
+  );
+
+  const elevesJetonsSuspendus = useMemo(
+    () =>
+      reportingRows
+        .filter((e) => Boolean(e.platformIntegrity?.xpSuspended))
+        .sort((a, b) => String(a.nomAffiche).localeCompare(String(b.nomAffiche), "fr")),
+    [reportingRows],
   );
 
   const importerChapitres = async () => {
@@ -1004,14 +1015,48 @@ export default function Admin() {
                     📄 Exporter toutes les copies DS (PDF)
                   </Btn>
                   <Btn onClick={resetDsLocksForFilteredStudents} color={COLORS.H} small disabled={resetDsLoading}>
-                    {resetDsLoading ? "⏳ Reset DS..." : "♻️ Reset DS filtrés (Bac + QCM SDGN)"}
+                    {resetDsLoading ? "⏳ Reset..." : "♻️ Reset copies DS Bac (filtrés)"}
                   </Btn>
                 </div>
               </div>
 
+              {elevesJetonsSuspendus.length > 0 && (
+                <div style={{ marginBottom: 12, background: "#FFFBEB", border: "1px solid #FCD34D", borderRadius: 12, padding: "10px 12px" }}>
+                  <p style={{ margin: "0 0 6px", color: "#92400E", fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem" }}>
+                    {"\u26a0 Jetons suspendus (alerte anti-triche onglet)"}
+                  </p>
+                  <p style={{ margin: "0 0 8px", color: "#78350F", fontSize: "0.78rem", lineHeight: 1.4 }}>
+                    {
+                      "Ces \u00e9l\u00e8ves ne peuvent plus gagner de jetons. Clique pour r\u00e9tablir (la note DS reste inchang\u00e9e si disqualifi\u00e9)."
+                    }
+                  </p>
+                  <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                    {elevesJetonsSuspendus.map((e) => (
+                      <button
+                        key={`jetons-suspendus-${e.id}`}
+                        type="button"
+                        onClick={() => void retablirJetonsAntiTriche(e.id, e.nomAffiche)}
+                        style={{
+                          background: "#D97706",
+                          color: "white",
+                          border: "none",
+                          borderRadius: 999,
+                          padding: "6px 12px",
+                          fontSize: "0.75rem",
+                          fontWeight: 800,
+                          cursor: "pointer",
+                        }}
+                      >
+                        {`${e.nomAffiche} \u2014 R\u00e9tablir jetons`}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {elevesSuspects.length > 0 && (
                 <div style={{ marginBottom: 12, background: "#FFF1F2", border: "1px solid #FDA4AF", borderRadius: 12, padding: "10px 12px" }}>
-                  <p style={{ margin: "0 0 6px", color: "#9F1239", fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem" }}>🚨 Élèves à surveiller (missions)</p>
+                  <p style={{ margin: "0 0 6px", color: "#9F1239", fontFamily: "'Fredoka One', cursive", fontSize: "0.85rem" }}>{"Signalements missions (historique)"}</p>
                   <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                     {elevesSuspects.map((e) => (
                       <span key={`suspect-${e.id}`} style={{ background: "#BE123C", color: "white", borderRadius: 999, padding: "4px 9px", fontSize: "0.75rem", fontWeight: 700 }}>
@@ -1063,6 +1108,7 @@ export default function Admin() {
                   <option value="sdgn">Au moins une mission SDGN</option>
                   <option value="participation">Participation cartes (&ge; 1 pt)</option>
                   <option value="sans_participation">Sans participation (0 pt)</option>
+                  <option value="jetons_suspendus">Jetons suspendus (anti-triche)</option>
                 </select>
               </div>
 
@@ -1095,27 +1141,6 @@ export default function Admin() {
                 }}
                 onResetMdp={(eleve) => void envoyerLienResetMdp(eleve)}
                 onRetablirJetons={(eleve) => void retablirJetonsAntiTriche(eleve.id, eleve.nomAffiche)}
-                onResetDsSdgn={async (eleve) => {
-                  if (!eleve.dsSdgnRow?.hasDsData) return;
-                  const hint =
-                    eleve.dsSdgnRow.displayStatus === "disqualified"
-                      ? " (anti-triche)"
-                      : "";
-                  if (
-                    !window.confirm(
-                      `Réinitialiser le QCM SDGN pour ${eleve.nomAffiche} ?${hint} L'élève pourra repasser le DS.`,
-                    )
-                  ) {
-                    return;
-                  }
-                  try {
-                    await resetDsSdgnTabExamForUser(eleve.id);
-                    await chargerEleves();
-                  } catch (err) {
-                    console.error(err);
-                    alert("Erreur reset DS SDGN.");
-                  }
-                }}
                 formatDsDisplayStatusLabel={formatDsDisplayStatusLabel}
                 formatDateFr={formatDateFr}
                 formatDuration={formatDuration}
