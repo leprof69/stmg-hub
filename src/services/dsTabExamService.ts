@@ -11,13 +11,15 @@ import {
   DS_SCORE_WRONG,
   rebuildQuestionIdsForResume,
 } from "../lib/dsSdgnQcmDeck";
+import { rebuildTerminaleQuestionIdsForResume } from "../lib/dsSdgnTerminaleQcmDeck";
 import { userDocRef } from "./userProfileService";
 
 export const DS_SDGN_QCM_EXAM_ID = "sdgn_premiere_qcm_v1";
+export const DS_SDGN_TERMINALE_QCM_EXAM_ID = "sdgn_terminale_qcm_v1";
 
 export type DsSessionAnswerRecord = {
   sourceId: string;
-  topic: DsSdgnPremiereTopic;
+  topic: DsSdgnPremiereTopic | string;
   outcome: 0 | 1;
   picked?: 0 | 1 | 2 | 3;
   scenarioTitle?: string;
@@ -44,7 +46,7 @@ export type DsSessionRecord = {
   completed: boolean;
   questionIds: string[];
   answers: DsSessionAnswerRecord[];
-  topicStats: Record<DsSdgnPremiereTopic, import("../lib/dsSdgnGrading").DsTopicStat>;
+  topicStats: Record<DsSdgnPremiereTopic, import("../lib/dsSdgnGrading").DsTopicStat> | Record<string, import("../lib/dsSdgnGrading").DsTopicStat>;
   /** Temps restant global (s) au moment de l\u2019arr\u00eat. */
   sessionLeftSec?: number;
   /** Index de la prochaine question (= nombre de r\u00e9ponses d\u00e9j\u00e0 enregistr\u00e9es). */
@@ -64,8 +66,31 @@ export type DsTabResultPayload = {
 
 const MAX_SESSION_HISTORY = 12;
 
+/** Firestore refuse les champs undefined (erreur silencieuse cote client). */
+function stripUndefinedDeep(value: unknown): unknown {
+  if (value === undefined) return undefined;
+  if (value === null) return null;
+  if (Array.isArray(value)) {
+    return value
+      .map((item) => stripUndefinedDeep(item))
+      .filter((item) => item !== undefined);
+  }
+  if (typeof value !== "object") return value;
+  const out: Record<string, unknown> = {};
+  for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
+    const cleaned = stripUndefinedDeep(val);
+    if (cleaned !== undefined) out[key] = cleaned;
+  }
+  return out;
+}
+
+function firestorePatch(patch: Record<string, unknown>): Record<string, unknown> {
+  return stripUndefinedDeep(patch) as Record<string, unknown>;
+}
+
 export type BuildDsSessionInput = {
   sessionId: string;
+  examId?: string;
   startedAt: string;
   finishedAt: string;
   scorePoints: number;
@@ -79,16 +104,17 @@ export type BuildDsSessionInput = {
   status: DsSessionStatus;
   questionIds: string[];
   answers: DsSessionAnswerRecord[];
-  topicStats: Record<DsSdgnPremiereTopic, import("../lib/dsSdgnGrading").DsTopicStat>;
+  topicStats: Record<DsSdgnPremiereTopic, import("../lib/dsSdgnGrading").DsTopicStat> | Record<string, import("../lib/dsSdgnGrading").DsTopicStat>;
   sessionLeftSec?: number;
   resumeIndex?: number;
 };
 
 export function buildDsSessionRecord(input: BuildDsSessionInput): DsSessionRecord {
   const completed = input.status === "completed";
-  return {
+  const examId = input.examId ?? DS_SDGN_QCM_EXAM_ID;
+  const record: DsSessionRecord = {
     sessionId: input.sessionId,
-    examId: DS_SDGN_QCM_EXAM_ID,
+    examId,
     startedAt: input.startedAt,
     finishedAt: input.finishedAt,
     scorePoints: input.scorePoints,
@@ -99,18 +125,22 @@ export function buildDsSessionRecord(input: BuildDsSessionInput): DsSessionRecor
     skippedCount: input.skippedCount,
     forcedZero: input.forcedZero,
     gradeOn20: input.gradeOn20,
-    gradeOn20Provisional:
-      input.status === "incomplete" || input.status === "disqualified"
-        ? computeDsGradeOn20(input.scorePoints, input.totalQuestions, false)
-        : undefined,
     status: input.status,
     completed,
     questionIds: input.questionIds,
     answers: input.answers,
     topicStats: input.topicStats,
-    sessionLeftSec: input.sessionLeftSec,
-    resumeIndex: input.resumeIndex,
   };
+  if (input.status === "incomplete" || input.status === "disqualified") {
+    record.gradeOn20Provisional = computeDsGradeOn20(
+      input.scorePoints,
+      input.totalQuestions,
+      false,
+    );
+  }
+  if (input.sessionLeftSec != null) record.sessionLeftSec = input.sessionLeftSec;
+  if (input.resumeIndex != null) record.resumeIndex = input.resumeIndex;
+  return record;
 }
 
 function parseFlexibleNumber(value: unknown): number | null {
@@ -208,9 +238,9 @@ function pickExamTabFromDsTabContainer(
   return best;
 }
 
-/** Reponses all\u00e9g\u00e9es (sans texte de sc\u00e9nario) pour tenir dans le doc Firestore users. */
+/** Reponses allegees (sans texte de scenario) pour tenir dans le doc Firestore users. */
 export function slimDsSessionForFirestore(session: DsSessionRecord): DsSessionRecord {
-  return {
+  const slim: DsSessionRecord = {
     ...session,
     answers: (session.answers ?? []).map((a) => ({
       sourceId: a.sourceId,
@@ -219,6 +249,7 @@ export function slimDsSessionForFirestore(session: DsSessionRecord): DsSessionRe
       ...(a.picked != null ? { picked: a.picked } : {}),
     })),
   };
+  return firestorePatch(slim as unknown as Record<string, unknown>) as DsSessionRecord;
 }
 
 export type DsSdgnPremiereLastSnapshot = {
@@ -232,11 +263,25 @@ export type DsSdgnPremiereLastSnapshot = {
   updatedAt: string;
 };
 
-function readDsSdgnPremiereLastSnapshot(
+export type DsSdgnTerminaleLastSnapshot = DsSdgnPremiereLastSnapshot;
+
+function resolveExamId(examId?: string): string {
+  return examId ?? DS_SDGN_QCM_EXAM_ID;
+}
+
+function dsLastSnapshotKey(examId: string): "dsSdgnPremiereLast" | "dsSdgnTerminaleLast" {
+  return examId === DS_SDGN_TERMINALE_QCM_EXAM_ID
+    ? "dsSdgnTerminaleLast"
+    : "dsSdgnPremiereLast";
+}
+
+function readDsSdgnLastSnapshot(
   userData: Record<string, unknown> | null | undefined,
+  examId: string,
 ): DsSdgnPremiereLastSnapshot | null {
   if (!userData) return null;
-  const snap = userData.dsSdgnPremiereLast;
+  const key = dsLastSnapshotKey(examId);
+  const snap = userData[key];
   if (!snap || typeof snap !== "object") return null;
   const rec = snap as Record<string, unknown>;
   const grade = parseFlexibleNumber(rec.gradeOn20);
@@ -251,6 +296,12 @@ function readDsSdgnPremiereLastSnapshot(
     finishedAt: typeof rec.finishedAt === "string" ? rec.finishedAt : "",
     updatedAt: typeof rec.updatedAt === "string" ? rec.updatedAt : "",
   };
+}
+
+function readDsSdgnPremiereLastSnapshot(
+  userData: Record<string, unknown> | null | undefined,
+): DsSdgnPremiereLastSnapshot | null {
+  return readDsSdgnLastSnapshot(userData, DS_SDGN_QCM_EXAM_ID);
 }
 
 function collectGradesFromSessionsMap(
@@ -307,23 +358,34 @@ function deepFindExamTabInTree(
 
 function readDsTabRoot(
   userData: Record<string, unknown> | null | undefined,
+  examId: string = DS_SDGN_QCM_EXAM_ID,
 ): Record<string, unknown> | null {
   if (!userData) return null;
 
   const dsTab = userData.dsTab;
   if (dsTab && typeof dsTab === "object" && !Array.isArray(dsTab)) {
-    const fromContainer = pickExamTabFromDsTabContainer(dsTab as Record<string, unknown>);
-    if (fromContainer) return fromContainer;
+    const direct = (dsTab as Record<string, unknown>)[examId];
+    if (direct && typeof direct === "object" && !Array.isArray(direct)) {
+      return direct as Record<string, unknown>;
+    }
+    if (examId === DS_SDGN_QCM_EXAM_ID) {
+      const fromContainer = pickExamTabFromDsTabContainer(dsTab as Record<string, unknown>);
+      if (fromContainer) return fromContainer;
+    }
   }
 
-  const legacyFlat = readLegacyFlatDsTabExam(userData);
-  if (legacyFlat) return legacyFlat;
+  if (examId === DS_SDGN_QCM_EXAM_ID) {
+    const legacyFlat = readLegacyFlatDsTabExam(userData);
+    if (legacyFlat) return legacyFlat;
+    return deepFindExamTabInTree(userData);
+  }
 
-  return deepFindExamTabInTree(userData);
+  return null;
 }
 
 export async function persistDsTabResult(uid: string, payload: DsTabResultPayload): Promise<void> {
-  const base = `dsTab.${DS_SDGN_QCM_EXAM_ID}`;
+  const examId = payload.session.examId ?? DS_SDGN_QCM_EXAM_ID;
+  const base = `dsTab.${examId}`;
   const session = slimDsSessionForFirestore(payload.session);
   const gradeOn20 = Math.max(
     payload.gradeOn20,
@@ -346,6 +408,7 @@ export async function persistDsTabResult(uid: string, payload: DsTabResultPayloa
   const profile = profileSnap.exists()
     ? (profileSnap.data() as Record<string, unknown>)
     : undefined;
+  const isAdminUser = profile?.role === "admin";
 
   const payloadForSync: DsTabResultPayload = {
     ...payload,
@@ -353,22 +416,32 @@ export async function persistDsTabResult(uid: string, payload: DsTabResultPayloa
     session,
   };
 
-  const { syncDsSdgnResultSummary } = await import("./dsSdgnResultsService");
-  const { writeDsSdgnNote } = await import("./dsSdgnNotesService");
-  await writeDsSdgnNote({
-    uid,
-    prenom: typeof profile?.prenom === "string" ? profile.prenom : undefined,
-    nom: typeof profile?.nom === "string" ? profile.nom : undefined,
-    email: typeof profile?.email === "string" ? profile.email : undefined,
-    classe: typeof profile?.classe === "string" ? profile.classe : undefined,
-    gradeOn20,
-    scorePoints: payload.score,
-    totalQuestions: payload.total,
-    questionsAnswered: session.questionsAnswered ?? session.answers?.length ?? 0,
-    status: session.status,
-    updatedAt: snapshot.updatedAt,
-  });
-  await syncDsSdgnResultSummary(uid, payloadForSync, profile);
+  if (!isAdminUser) {
+    const { syncDsSdgnResultSummary } = await import("./dsSdgnResultsService");
+    const { writeDsSdgnNote } = await import("./dsSdgnNotesService");
+    try {
+      await writeDsSdgnNote({
+        uid,
+        prenom: typeof profile?.prenom === "string" ? profile.prenom : undefined,
+        nom: typeof profile?.nom === "string" ? profile.nom : undefined,
+        email: typeof profile?.email === "string" ? profile.email : undefined,
+        classe: typeof profile?.classe === "string" ? profile.classe : undefined,
+        gradeOn20,
+        scorePoints: payload.score,
+        totalQuestions: payload.total,
+        questionsAnswered: session.questionsAnswered ?? session.answers?.length ?? 0,
+        status: session.status,
+        updatedAt: snapshot.updatedAt,
+      });
+    } catch (err) {
+      console.warn("dsSdgnNotes non enregistre", err);
+    }
+    try {
+      await syncDsSdgnResultSummary(uid, payloadForSync, profile);
+    } catch (err) {
+      console.warn("dsSdgnResults non synchronise", err);
+    }
+  }
 
   const historyPatch: Record<string, unknown> = {
     [`${base}.sessions.${session.sessionId}`]: {
@@ -392,8 +465,8 @@ export async function persistDsTabResult(uid: string, payload: DsTabResultPayloa
   };
 
   const patch: Record<string, unknown> = {
-    dsSdgnPremiereLast: snapshot,
-    [`${base}.examId`]: DS_SDGN_QCM_EXAM_ID,
+    [dsLastSnapshotKey(examId)]: snapshot,
+    [`${base}.examId`]: examId,
     [`${base}.score`]: payload.score,
     [`${base}.total`]: payload.total,
     [`${base}.skipped`]: payload.skipped,
@@ -402,29 +475,48 @@ export async function persistDsTabResult(uid: string, payload: DsTabResultPayloa
     [`${base}.gradeOn20`]: gradeOn20,
     [`${base}.lastSessionId`]: session.sessionId,
     [`${base}.lastSession`]: session,
-    ...historyPatch,
+    ...(isAdminUser ? {} : historyPatch),
   };
 
   if (payload.resumeGranted !== undefined) {
     patch[`${base}.resumeGranted`] = payload.resumeGranted;
   }
 
+  const essentialPatch = firestorePatch({
+    [dsLastSnapshotKey(examId)]: snapshot,
+    [`${base}.examId`]: examId,
+    [`${base}.gradeOn20`]: gradeOn20,
+    [`${base}.score`]: payload.score,
+    [`${base}.total`]: payload.total,
+    [`${base}.finishedAt`]: payload.finishedAt,
+    [`${base}.forcedZero`]: payload.forcedZero,
+    [`${base}.lastSessionId`]: session.sessionId,
+    [`${base}.lastSession`]: session,
+  });
+
   try {
-    await updateDoc(userDocRef(uid), patch);
+    await updateDoc(userDocRef(uid), firestorePatch(patch));
   } catch (err) {
     console.error(
-      "dsTab complet non enregistre (copie trop lourde ?) — note dans dsSdgnResults OK",
+      "dsTab complet non enregistre (copie trop lourde ?) — repli sur champs essentiels",
       err,
     );
-    await updateDoc(userDocRef(uid), {
-      dsSdgnPremiereLast: snapshot,
-      [`${base}.gradeOn20`]: gradeOn20,
-      [`${base}.score`]: payload.score,
-      [`${base}.total`]: payload.total,
-      [`${base}.finishedAt`]: payload.finishedAt,
-      [`${base}.forcedZero`]: payload.forcedZero,
-      [`${base}.lastSessionId`]: session.sessionId,
-    });
+    try {
+      await updateDoc(userDocRef(uid), essentialPatch);
+    } catch (err2) {
+      console.error("dsTab repli essentiel echoue — snapshot minimal", err2);
+      await updateDoc(
+        userDocRef(uid),
+        firestorePatch({
+          [dsLastSnapshotKey(examId)]: snapshot,
+          [`${base}.gradeOn20`]: gradeOn20,
+          [`${base}.score`]: payload.score,
+          [`${base}.total`]: payload.total,
+          [`${base}.finishedAt`]: payload.finishedAt,
+          [`${base}.lastSessionId`]: session.sessionId,
+        }),
+      );
+    }
   }
 }
 
@@ -432,6 +524,7 @@ export async function persistDsTabResult(uid: string, payload: DsTabResultPayloa
 export async function persistDsTabCheckpoint(
   uid: string,
   input: {
+    examId?: string;
     sessionId: string;
     startedAt: string;
     scorePoints: number;
@@ -439,8 +532,10 @@ export async function persistDsTabCheckpoint(
     answers: DsSessionAnswerRecord[];
     questionIds: string[];
     sessionLeftSec: number;
+    topicStats?: Record<string, import("../lib/dsSdgnGrading").DsTopicStat>;
   },
 ): Promise<void> {
+  const examId = resolveExamId(input.examId);
   const slimAnswers: DsSessionAnswerRecord[] = input.answers.map((a) => ({
     sourceId: a.sourceId,
     topic: a.topic,
@@ -454,7 +549,7 @@ export async function persistDsTabCheckpoint(
   );
   const partial: DsSessionRecord = {
     sessionId: input.sessionId,
-    examId: DS_SDGN_QCM_EXAM_ID,
+    examId,
     startedAt: input.startedAt,
     finishedAt: "",
     scorePoints: input.scorePoints,
@@ -470,11 +565,15 @@ export async function persistDsTabCheckpoint(
     completed: false,
     questionIds: input.questionIds,
     answers: slimAnswers,
-    topicStats: computeTopicStats(slimAnswers),
+    topicStats:
+      input.topicStats ??
+      computeTopicStats(
+        slimAnswers as { topic: DsSdgnPremiereTopic; outcome: 0 | 1 }[],
+      ),
     sessionLeftSec: input.sessionLeftSec,
     resumeIndex: slimAnswers.length,
   };
-  const base = `dsTab.${DS_SDGN_QCM_EXAM_ID}`;
+  const base = `dsTab.${examId}`;
   const snapshot: DsSdgnPremiereLastSnapshot = {
     gradeOn20: gradeOn20Provisional,
     scorePoints: input.scorePoints,
@@ -490,58 +589,75 @@ export async function persistDsTabCheckpoint(
   const profile = profileSnap.exists()
     ? (profileSnap.data() as Record<string, unknown>)
     : undefined;
-  const { syncDsSdgnCheckpointSummary } = await import("./dsSdgnResultsService");
-  const { writeDsSdgnNote } = await import("./dsSdgnNotesService");
-  await writeDsSdgnNote({
-    uid,
-    prenom: typeof profile?.prenom === "string" ? profile.prenom : undefined,
-    nom: typeof profile?.nom === "string" ? profile.nom : undefined,
-    email: typeof profile?.email === "string" ? profile.email : undefined,
-    classe: typeof profile?.classe === "string" ? profile.classe : undefined,
-    gradeOn20: gradeOn20Provisional,
-    scorePoints: input.scorePoints,
-    totalQuestions: input.totalQuestions,
-    questionsAnswered: slimAnswers.length,
-    status: "incomplete",
-    updatedAt: snapshot.updatedAt,
-  });
-  await syncDsSdgnCheckpointSummary(
-    uid,
-    {
-      session: partial,
-      gradeOn20: gradeOn20Provisional,
-      score: input.scorePoints,
-      total: input.totalQuestions,
-    },
-    profile,
-  );
+  const isAdminUser = profile?.role === "admin";
 
-  await updateDoc(userDocRef(uid), {
-    dsSdgnPremiereLast: snapshot,
-    [`${base}.examId`]: DS_SDGN_QCM_EXAM_ID,
+  if (!isAdminUser) {
+    const { syncDsSdgnCheckpointSummary } = await import("./dsSdgnResultsService");
+    const { writeDsSdgnNote } = await import("./dsSdgnNotesService");
+    try {
+      await writeDsSdgnNote({
+        uid,
+        prenom: typeof profile?.prenom === "string" ? profile.prenom : undefined,
+        nom: typeof profile?.nom === "string" ? profile.nom : undefined,
+        email: typeof profile?.email === "string" ? profile.email : undefined,
+        classe: typeof profile?.classe === "string" ? profile.classe : undefined,
+        gradeOn20: gradeOn20Provisional,
+        scorePoints: input.scorePoints,
+        totalQuestions: input.totalQuestions,
+        questionsAnswered: slimAnswers.length,
+        status: "incomplete",
+        updatedAt: snapshot.updatedAt,
+      });
+    } catch (err) {
+      console.warn("dsSdgnNotes checkpoint non enregistre", err);
+    }
+    try {
+      await syncDsSdgnCheckpointSummary(
+        uid,
+        {
+          session: partial,
+          gradeOn20: gradeOn20Provisional,
+          score: input.scorePoints,
+          total: input.totalQuestions,
+        },
+        profile,
+      );
+    } catch (err) {
+      console.warn("dsSdgnResults checkpoint non synchronise", err);
+    }
+  }
+
+  await updateDoc(userDocRef(uid), firestorePatch({
+    [dsLastSnapshotKey(examId)]: snapshot,
+    [`${base}.examId`]: examId,
     [`${base}.attemptStarted`]: true,
     [`${base}.score`]: input.scorePoints,
     [`${base}.total`]: input.totalQuestions,
     [`${base}.gradeOn20`]: gradeOn20Provisional,
-    [`${base}.lastSession`]: partial,
+    [`${base}.lastSession`]: slimDsSessionForFirestore(partial),
     [`${base}.lastSessionId`]: input.sessionId,
-  });
+  }));
 }
 
-export async function markDsAttemptStarted(uid: string, sessionId: string): Promise<void> {
+export async function markDsAttemptStarted(
+  uid: string,
+  sessionId: string,
+  examId: string = DS_SDGN_QCM_EXAM_ID,
+): Promise<void> {
   await updateDoc(userDocRef(uid), {
-    [`dsTab.${DS_SDGN_QCM_EXAM_ID}.examId`]: DS_SDGN_QCM_EXAM_ID,
-    [`dsTab.${DS_SDGN_QCM_EXAM_ID}.attemptStarted`]: true,
-    [`dsTab.${DS_SDGN_QCM_EXAM_ID}.startedAt`]: new Date().toISOString(),
-    [`dsTab.${DS_SDGN_QCM_EXAM_ID}.currentSessionId`]: sessionId,
-    [`dsTab.${DS_SDGN_QCM_EXAM_ID}.resumeGranted`]: false,
+    [`dsTab.${examId}.examId`]: examId,
+    [`dsTab.${examId}.attemptStarted`]: true,
+    [`dsTab.${examId}.startedAt`]: new Date().toISOString(),
+    [`dsTab.${examId}.currentSessionId`]: sessionId,
+    [`dsTab.${examId}.resumeGranted`]: false,
   });
 }
 
 export function readDsTabExamMeta(
   userData: Record<string, unknown> | null | undefined,
+  examId: string = DS_SDGN_QCM_EXAM_ID,
 ): { attemptStarted: boolean; startedAt?: string; resumeGranted: boolean } {
-  const examTab = readDsTabRoot(userData);
+  const examTab = readDsTabRoot(userData, examId);
   if (!examTab) return { attemptStarted: false, resumeGranted: false };
   return {
     attemptStarted: Boolean(examTab.attemptStarted),
@@ -632,8 +748,9 @@ function reconcileSessionWithExamTabRoot(
 
 export function readDsTabExamRoot(
   userData: Record<string, unknown> | null | undefined,
+  examId: string = DS_SDGN_QCM_EXAM_ID,
 ): Record<string, unknown> | null {
-  return readDsTabRoot(userData);
+  return readDsTabRoot(userData, examId);
 }
 
 function collectDsGradesFromTree(value: unknown, depth: number, out: number[]): void {
@@ -658,22 +775,23 @@ function collectDsGradesFromTree(value: unknown, depth: number, out: number[]): 
  */
 export function resolveDsGradeOn20FromUser(
   userData: Record<string, unknown> | null | undefined,
+  examId: string = DS_SDGN_QCM_EXAM_ID,
 ): number {
   if (!userData) return 0;
   const grades: number[] = [];
 
-  const premiereLast = readDsSdgnPremiereLastSnapshot(userData);
-  if (premiereLast && premiereLast.gradeOn20 > 0) {
-    grades.push(premiereLast.gradeOn20);
+  const lastSnap = readDsSdgnLastSnapshot(userData, examId);
+  if (lastSnap && lastSnap.gradeOn20 > 0) {
+    grades.push(lastSnap.gradeOn20);
     const fromSnap = computeDsGradeOn20(
-      premiereLast.scorePoints,
-      premiereLast.totalQuestions,
+      lastSnap.scorePoints,
+      lastSnap.totalQuestions,
       false,
     );
     if (fromSnap > 0) grades.push(fromSnap);
   }
 
-  const tab = readDsTabRoot(userData);
+  const tab = readDsTabRoot(userData, examId);
   if (tab) {
     collectDsGradesFromTree(tab, 0, grades);
     collectGradesFromSessionsMap(tab, grades);
@@ -684,7 +802,7 @@ export function resolveDsGradeOn20FromUser(
     }
   }
 
-  const prefix = `dsTab.${DS_SDGN_QCM_EXAM_ID}.`;
+  const prefix = `dsTab.${examId}.`;
   for (const [key, val] of Object.entries(userData)) {
     if (!key.startsWith(prefix)) continue;
     if (!key.endsWith(".gradeOn20") && !key.endsWith(".gradeOn20Provisional")) continue;
@@ -692,7 +810,7 @@ export function resolveDsGradeOn20FromUser(
     if (n != null && n > 0) grades.push(n);
   }
 
-  const session = readDsTabLastSession(userData);
+  const session = readDsTabLastSession(userData, examId);
   if (session) {
     const answers = session.answers ?? [];
     const total =
@@ -720,17 +838,21 @@ export function resolveDsGradeOn20FromUser(
 
 export function readDsTabExamGradeOn20(
   userData: Record<string, unknown> | null | undefined,
+  examId: string = DS_SDGN_QCM_EXAM_ID,
 ): number | undefined {
-  const g = resolveDsGradeOn20FromUser(userData);
+  const g = resolveDsGradeOn20FromUser(userData, examId);
   return g > 0 ? g : undefined;
 }
 
-export function hasDsTabExamData(userData: Record<string, unknown> | null | undefined): boolean {
-  const premiereLast = readDsSdgnPremiereLastSnapshot(userData);
-  if (premiereLast && (premiereLast.gradeOn20 > 0 || premiereLast.questionsAnswered > 0)) {
+export function hasDsTabExamData(
+  userData: Record<string, unknown> | null | undefined,
+  examId: string = DS_SDGN_QCM_EXAM_ID,
+): boolean {
+  const lastSnap = readDsSdgnLastSnapshot(userData, examId);
+  if (lastSnap && (lastSnap.gradeOn20 > 0 || lastSnap.questionsAnswered > 0)) {
     return true;
   }
-  const examTab = readDsTabRoot(userData);
+  const examTab = readDsTabRoot(userData, examId);
   if (!examTab) return false;
   if (examTab.lastSession) return true;
   if (asNumber(examTab.gradeOn20) != null) return true;
@@ -740,8 +862,9 @@ export function hasDsTabExamData(userData: Record<string, unknown> | null | unde
 
 export function readDsTabLastSession(
   userData: Record<string, unknown> | null | undefined,
+  examId: string = DS_SDGN_QCM_EXAM_ID,
 ): DsSessionRecord | null {
-  const examTab = readDsTabRoot(userData);
+  const examTab = readDsTabRoot(userData, examId);
   if (!examTab) return null;
 
   const last = examTab.lastSession;
@@ -783,28 +906,36 @@ function normalizeDsSessionRecord(session: DsSessionRecord): DsSessionRecord {
   };
 }
 
-/** L\u2019\u00e9l\u00e8ve peut reprendre l\u00e0 o\u00f9 il s\u2019est arr\u00eat\u00e9 (apr\u00e8s action prof). */
-export function canStudentResumeDsSdgnExam(
+/** L'eleve peut reprendre une session en cours (non terminee). */
+export function canStudentContinueDsSdgnExam(
   userData: Record<string, unknown> | null | undefined,
+  examId: string = DS_SDGN_QCM_EXAM_ID,
 ): boolean {
-  const meta = readDsTabExamMeta(userData);
-  if (!meta.resumeGranted) return false;
-  const session = readDsTabLastSession(userData);
-  const questionIds = session ? rebuildQuestionIdsForResume(session) : null;
+  const session = readDsTabLastSession(userData, examId);
+  if (!session) return false;
+  if (session.status === "completed" && session.completed && !session.forcedZero) {
+    return false;
+  }
+  const questionIds =
+    examId === DS_SDGN_TERMINALE_QCM_EXAM_ID
+      ? rebuildTerminaleQuestionIdsForResume(session)
+      : rebuildQuestionIdsForResume(session);
   if (!questionIds?.length) return false;
-  const answered = session?.answers?.length ?? 0;
-  const total = session?.totalQuestions ?? questionIds.length;
+  const answered = session.answers?.length ?? session.questionsAnswered ?? 0;
+  const total = session.totalQuestions ?? questionIds.length;
+  if (answered <= 0) return false;
   return answered < total;
 }
 
-/** Session non termin\u00e9e (en cours, reprise, ou anti-triche interrompu). */
+/** Session non termin\u00e9e (en cours ou anti-triche interrompu). */
 export function isDsSdgnSessionInProgress(
   userData: Record<string, unknown> | null | undefined,
+  examId: string = DS_SDGN_QCM_EXAM_ID,
 ): boolean {
-  if (canStudentResumeDsSdgnExam(userData)) return true;
+  if (canStudentContinueDsSdgnExam(userData, examId)) return true;
 
-  const session = readDsTabLastSession(userData);
-  const meta = readDsTabExamMeta(userData);
+  const session = readDsTabLastSession(userData, examId);
+  const meta = readDsTabExamMeta(userData, examId);
 
   if (session?.status === "completed" && session.completed && !session.forcedZero) {
     return false;
@@ -824,19 +955,27 @@ export function isDsSdgnSessionInProgress(
 /** Une tentative termin\u00e9e bloque une nouvelle session ; reprise autoris\u00e9e = exception. */
 export function isDsSdgnExamLocked(
   userData: Record<string, unknown> | null | undefined,
-  options?: { globallyClosed?: boolean },
+  options?: { globallyClosed?: boolean; examId?: string },
 ): boolean {
+  const examId = resolveExamId(options?.examId);
   if (options?.globallyClosed) return true;
-  if (canStudentResumeDsSdgnExam(userData)) return false;
+  if (canStudentContinueDsSdgnExam(userData, examId)) return false;
 
-  const session = readDsTabLastSession(userData);
+  const session = readDsTabLastSession(userData, examId);
+  const rootGrade = resolveDsGradeOn20FromUser(userData, examId);
+  const answered = session?.questionsAnswered ?? session?.answers?.length ?? 0;
+  const total = session?.totalQuestions ?? 0;
+  const finishedAll = total > 0 && answered >= total;
+
   if (session?.status === "completed" && session.completed && !session.forcedZero) {
     return true;
   }
 
-  const meta = readDsTabExamMeta(userData);
-  if (meta.attemptStarted) return true;
-  return session !== null;
+  if (rootGrade > 0 && finishedAll) return true;
+
+  const meta = readDsTabExamMeta(userData, examId);
+  if (meta.attemptStarted && finishedAll && rootGrade > 0) return true;
+  return false;
 }
 
 export type ForceFinalizeDsSdgnOutcome = "skipped" | "finalized";
@@ -893,7 +1032,9 @@ export async function forceFinalizeDsSdgnExamForUser(
       ? session.questionIds
       : (questionIds ?? []),
     answers,
-    topicStats: computeTopicStats(answers),
+    topicStats: computeTopicStats(
+      answers as { topic: DsSdgnPremiereTopic; outcome: 0 | 1 }[],
+    ),
     sessionLeftSec: 0,
     resumeIndex: answers.length,
   });
@@ -911,103 +1052,6 @@ export async function forceFinalizeDsSdgnExamForUser(
   await persistDsTabResult(uid, payload);
 
   return "finalized";
-}
-
-export async function resetDsSdgnTabExamForUser(uid: string): Promise<void> {
-  await updateDoc(userDocRef(uid), {
-    [`dsTab.${DS_SDGN_QCM_EXAM_ID}`]: deleteField(),
-  });
-  try {
-    const { deleteDoc, doc } = await import("firebase/firestore");
-    const { db } = await import("./firebase");
-    const { DS_SDGN_RESULTS_COLLECTION } = await import("./dsSdgnResultsService");
-    await deleteDoc(doc(db, DS_SDGN_RESULTS_COLLECTION, uid));
-  } catch {
-    /* ignore */
-  }
-}
-
-export type GrantDsSdgnResumeResult = {
-  scorePoints: number;
-  gradeOn20Provisional: number;
-  questionsAnswered: number;
-  totalQuestions: number;
-  sessionLeftSec: number;
-};
-
-/**
- * Prof : autorise l\u2019\u00e9l\u00e8ve \u00e0 reprendre le DS (m\u00eame questions, score conserv\u00e9).
- */
-export async function grantDsSdgnExamResume(uid: string): Promise<GrantDsSdgnResumeResult | null> {
-  const snap = await getDoc(userDocRef(uid));
-  if (!snap.exists()) return null;
-
-  const userData = snap.data() as Record<string, unknown>;
-  const session = readDsTabLastSession(userData);
-  if (!session) return null;
-
-  const answers = session.answers ?? [];
-  const questionIds = rebuildQuestionIdsForResume(session);
-  if (!questionIds?.length) return null;
-  const totalQuestions = session.totalQuestions ?? questionIds.length;
-  if (answers.length >= totalQuestions) return null;
-
-  const scorePoints = computeDsScoreFromAnswers(answers);
-  const gradeOn20Provisional = computeDsGradeOn20(scorePoints, totalQuestions, false);
-  const sessionLeftSec = session.sessionLeftSec ?? 50 * 60;
-
-  const updatedSession: DsSessionRecord = {
-    ...session,
-    questionIds,
-    totalQuestions,
-    scorePoints,
-    forcedZero: false,
-    status: "incomplete",
-    completed: false,
-    gradeOn20: 0,
-    gradeOn20Provisional,
-    questionsAnswered: answers.length,
-    resumeIndex: answers.length,
-    sessionLeftSec,
-    correctCount: answers.filter((a) => a.outcome === 1).length,
-    wrongCount: answers.filter((a) => a.outcome === 0).length,
-    topicStats: computeTopicStats(answers),
-  };
-
-  const base = `dsTab.${DS_SDGN_QCM_EXAM_ID}`;
-  await updateDoc(userDocRef(uid), {
-    [`${base}.resumeGranted`]: true,
-    [`${base}.forcedZero`]: false,
-    [`${base}.score`]: scorePoints,
-    [`${base}.gradeOn20`]: gradeOn20Provisional,
-    [`${base}.lastSession`]: updatedSession,
-    [`${base}.sessions.${session.sessionId}`]: {
-      sessionId: updatedSession.sessionId,
-      finishedAt: updatedSession.finishedAt,
-      startedAt: updatedSession.startedAt,
-      gradeOn20: gradeOn20Provisional,
-      scorePoints,
-      totalQuestions,
-      forcedZero: false,
-      topicStats: updatedSession.topicStats,
-      correctCount: updatedSession.correctCount,
-      wrongCount: updatedSession.wrongCount,
-      skippedCount: updatedSession.skippedCount,
-      status: "incomplete",
-      completed: false,
-      questionsAnswered: answers.length,
-      sessionLeftSec,
-      resumeIndex: answers.length,
-    },
-  });
-
-  return {
-    scorePoints,
-    gradeOn20Provisional,
-    questionsAnswered: answers.length,
-    totalQuestions,
-    sessionLeftSec,
-  };
 }
 
 export function trimDsSessionHistory(

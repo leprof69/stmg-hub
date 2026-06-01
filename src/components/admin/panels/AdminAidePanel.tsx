@@ -19,7 +19,7 @@ const AIDE_ITEMS = [
     emoji: "\ud83d\udcdd",
     titre: "Examens & DS",
     texte:
-      "Export PDF copies Bac, reset copies Bac (filtr\u00e9s), rapport QCM SDGN Premi\u00e8re (repasse QCM), r\u00e9visions Bac Terminale.",
+      "Export PDF copies Bac, reset copies Bac (filtres), PDF notes + notions DS SDGN Premiere, revisions Bac Terminale.",
     couleurKey: "G" as const,
   },
   {
@@ -66,13 +66,6 @@ export default function AdminAidePanel() {
               <td style={{ padding: "8px 10px" }}>{"L\u2019\u00e9l\u00e8ve regagne des jetons (Missions, jeux)"}</td>
               <td style={{ padding: "8px 10px", fontFamily: "monospace", fontSize: "0.78rem" }}>
                 platformIntegrity.xpSuspended = false
-              </td>
-            </tr>
-            <tr style={{ background: "#FFF7ED" }}>
-              <td style={{ padding: "8px 10px", fontWeight: 800 }}>{"Repasse QCM"}</td>
-              <td style={{ padding: "8px 10px" }}>{"Efface la tentative DS SDGN, peut refaire le QCM"}</td>
-              <td style={{ padding: "8px 10px", fontFamily: "monospace", fontSize: "0.78rem" }}>
-                dsTab.sdgn_premiere_qcm_v1 supprim\u00e9
               </td>
             </tr>
             <tr>

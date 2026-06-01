@@ -67,7 +67,6 @@ export default function AdminElevesPanel() {
         }}
         onResetMdp={(eleve) => void a.envoyerLienResetMdp(eleve)}
         onRetablirJetons={(eleve) => void a.retablirJetonsAntiTriche(eleve.id, eleve.nomAffiche)}
-        formatDsDisplayStatusLabel={a.formatDsDisplayStatusLabel}
         formatDateFr={a.formatDateFr}
         formatDuration={a.formatDuration}
       />

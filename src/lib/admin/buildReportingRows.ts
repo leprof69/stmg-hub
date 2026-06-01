@@ -1,4 +1,3 @@
-import { buildDsSdgnStudentRow, isPremiereClasse } from "../adminDsSdgnReport";
 import { buildStudentMissionInsights } from "../adminMissionInsights";
 import { readMissionClaims } from "../missionsProgress";
 import { CARD_BONUS_BY_ID } from "./adminConstants";
@@ -110,9 +109,6 @@ export function buildReportingRows(eleves: Record<string, unknown>[], todayKey =
       (eleve.nom as string) ||
       (eleve.email as string) ||
       `\u00c9l\u00e8ve ${String(eleve.id).slice(0, 6)}`;
-    const dsSdgnRow = isPremiereClasse(eleve.classe)
-      ? buildDsSdgnStudentRow({ ...eleve, id: String(eleve.id), nomAffiche: nom })
-      : null;
 
     return {
       ...eleve,
@@ -144,7 +140,6 @@ export function buildReportingRows(eleves: Record<string, unknown>[], todayKey =
       sessionTodaySec: Number((eleve.sessionTimeToday as Record<string, number>)?.[todayKey]) || 0,
       sessionCount: Number(eleve.sessionCount) || 0,
       lastSessionDurationSec: Number(eleve.lastSessionDurationSec) || 0,
-      dsSdgnRow,
     };
   });
 }

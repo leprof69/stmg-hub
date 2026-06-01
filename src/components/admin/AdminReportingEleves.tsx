@@ -34,7 +34,6 @@ export default function AdminReportingEleves({
   onRetirerJetons,
   onResetMdp,
   onRetablirJetons,
-  formatDsDisplayStatusLabel,
   formatDateFr,
   formatDuration,
 }) {
@@ -279,19 +278,6 @@ export default function AdminReportingEleves({
                             />
                             <MetricBox label="Note participation" value={`${note20} / 20`} accent="#D97706" />
                             <MetricBox label={"Derni\u00e8re activit\u00e9"} value={formatDateFr(eleve.lastActivity)} accent="#0369A1" />
-                            {eleve.dsSdgnRow ? (
-                              <MetricBox
-                                label="DS SDGN Premi\u00e8re"
-                                value={formatDsDisplayStatusLabel(eleve.dsSdgnRow.displayStatus)}
-                                accent={
-                                  eleve.dsSdgnRow.displayStatus === "disqualified"
-                                    ? "#DC2626"
-                                    : eleve.dsSdgnRow.displayStatus === "completed"
-                                      ? "#059669"
-                                      : "#D97706"
-                                }
-                              />
-                            ) : null}
                           </div>
 
                           <p style={{ margin: "0 0 6px", fontSize: "0.75rem", color: "#64748B", fontWeight: 700 }}>

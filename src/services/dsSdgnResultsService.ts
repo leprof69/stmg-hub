@@ -4,6 +4,7 @@ import { DS_SCORE_CORRECT, DS_SCORE_WRONG } from "../lib/dsSdgnQcmDeck";
 import { computeDsGradeOn20 } from "../lib/dsSdgnGrading";
 import {
   DS_SDGN_QCM_EXAM_ID,
+  DS_SDGN_TERMINALE_QCM_EXAM_ID,
   hasDsTabExamData,
   readDsTabExamRoot,
   resolveDsGradeOn20FromUser,
@@ -12,6 +13,8 @@ import {
   type DsSessionStatus,
   type DsTabResultPayload,
 } from "./dsTabExamService";
+
+const DS_SDGN_EXAM_IDS = [DS_SDGN_QCM_EXAM_ID, DS_SDGN_TERMINALE_QCM_EXAM_ID] as const;
 import { userDocRef } from "./userProfileService";
 
 export const DS_SDGN_RESULTS_COLLECTION = "dsSdgnResults";
@@ -42,8 +45,23 @@ export type DsSdgnResultSummary = {
   updatedAt: string;
 };
 
-function resultDocRef(uid: string) {
-  return doc(db, DS_SDGN_RESULTS_COLLECTION, uid);
+function resultDocId(uid: string, examId: string): string {
+  return `${uid}__${examId}`;
+}
+
+function parseResultDocId(docId: string): { uid: string; examId: string } {
+  const sep = docId.indexOf("__");
+  if (sep === -1) {
+    return { uid: docId, examId: DS_SDGN_QCM_EXAM_ID };
+  }
+  return {
+    uid: docId.slice(0, sep),
+    examId: docId.slice(sep + 2),
+  };
+}
+
+function resultDocRef(uid: string, examId: string = DS_SDGN_QCM_EXAM_ID) {
+  return doc(db, DS_SDGN_RESULTS_COLLECTION, resultDocId(uid, examId));
 }
 
 /** Firestore refuse les champs undefined (erreur silencieuse cote client). */
@@ -69,7 +87,11 @@ function toFirestoreSummary(summary: DsSdgnResultSummary): Record<string, unknow
 }
 
 async function writeSummaryDoc(summary: DsSdgnResultSummary): Promise<void> {
-  await setDoc(resultDocRef(summary.uid), toFirestoreSummary(summary), { merge: true });
+  await setDoc(
+    resultDocRef(summary.uid, summary.examId ?? DS_SDGN_QCM_EXAM_ID),
+    toFirestoreSummary(summary),
+    { merge: true },
+  );
 }
 
 export function summaryFromPayload(
@@ -78,9 +100,10 @@ export function summaryFromPayload(
   profile?: Record<string, unknown>,
 ): DsSdgnResultSummary {
   const session = payload.session;
+  const examId = session.examId ?? DS_SDGN_QCM_EXAM_ID;
   return {
     uid,
-    examId: DS_SDGN_QCM_EXAM_ID,
+    examId,
     prenom: typeof profile?.prenom === "string" ? profile.prenom : undefined,
     nom: typeof profile?.nom === "string" ? profile.nom : undefined,
     email: typeof profile?.email === "string" ? profile.email : undefined,
@@ -116,7 +139,11 @@ export async function syncDsSdgnResultSummary(
     computeDsGradeOn20(payload.score, payload.total, false),
     payload.gradeOn20,
   );
-  await setDoc(resultDocRef(uid), { ...summary, gradeOn20: grade }, { merge: true });
+  await setDoc(
+    resultDocRef(uid, summary.examId),
+    toFirestoreSummary({ ...summary, gradeOn20: grade }),
+    { merge: true },
+  );
 }
 
 /** Checkpoint en cours : ecrit la note dans dsSdgnResults avant la fin du DS. */
@@ -131,13 +158,14 @@ export async function syncDsSdgnCheckpointSummary(
   profile?: Record<string, unknown>,
 ): Promise<void> {
   const session = input.session;
+  const examId = session.examId ?? DS_SDGN_QCM_EXAM_ID;
   const grade = Math.max(
     input.gradeOn20,
     computeDsGradeOn20(input.score, input.total, false),
   );
   const summary: DsSdgnResultSummary = {
     uid,
-    examId: DS_SDGN_QCM_EXAM_ID,
+    examId,
     prenom: typeof profile?.prenom === "string" ? profile.prenom : undefined,
     nom: typeof profile?.nom === "string" ? profile.nom : undefined,
     email: typeof profile?.email === "string" ? profile.email : undefined,
@@ -159,17 +187,18 @@ export async function syncDsSdgnCheckpointSummary(
     answersCount: session.answers?.length ?? 0,
     updatedAt: new Date().toISOString(),
   };
-  await setDoc(resultDocRef(uid), toFirestoreSummary(summary), { merge: true });
+  await setDoc(resultDocRef(uid, examId), toFirestoreSummary(summary), { merge: true });
 }
 
 export function summaryFromUserProfile(
   user: Record<string, unknown>,
+  examId: string = DS_SDGN_QCM_EXAM_ID,
 ): DsSdgnResultSummary | null {
   const uid = String(user.id ?? "");
-  if (!uid || !hasDsTabExamData(user)) return null;
+  if (!uid || !hasDsTabExamData(user, examId)) return null;
 
-  const session = readDsTabLastSession(user);
-  const grade = resolveDsGradeOn20FromUser(user);
+  const session = readDsTabLastSession(user, examId);
+  const grade = resolveDsGradeOn20FromUser(user, examId);
 
   if (!session && grade <= 0) return null;
 
@@ -195,7 +224,7 @@ export function summaryFromUserProfile(
 
   const summary: DsSdgnResultSummary = {
     uid,
-    examId: DS_SDGN_QCM_EXAM_ID,
+    examId,
     prenom: typeof user.prenom === "string" ? user.prenom : undefined,
     nom: typeof user.nom === "string" ? user.nom : undefined,
     email: typeof user.email === "string" ? user.email : undefined,
@@ -223,9 +252,15 @@ export function summaryFromUserProfile(
 
 export async function fetchAllDsSdgnResultSummaries(): Promise<DsSdgnResultSummary[]> {
   const snap = await getDocs(collection(db, DS_SDGN_RESULTS_COLLECTION));
-  return snap.docs
-    .map((d) => ({ ...(d.data() as DsSdgnResultSummary), uid: d.id }))
-    .filter((s) => s.examId === DS_SDGN_QCM_EXAM_ID || !s.examId);
+  return snap.docs.map((d) => {
+    const parsed = parseResultDocId(d.id);
+    const data = d.data() as DsSdgnResultSummary;
+    return {
+      ...data,
+      uid: parsed.uid,
+      examId: data.examId ?? parsed.examId,
+    };
+  });
 }
 
 export type BackfillDsSdgnResultsReport = {
@@ -292,91 +327,81 @@ export async function backfillDsSdgnResultsFromUsers(
     if (!uid) continue;
 
     let freshUser = user;
-    const fromCached = resolveDsGradeOn20FromUser(user);
-    if (fromCached <= 0) {
-      try {
-        const snap = await getDoc(userDocRef(uid));
-        if (snap.exists()) {
-          freshUser = { id: uid, ...snap.data() };
-        }
-      } catch {
-        /* ignore */
+    try {
+      const snap = await getDoc(userDocRef(uid));
+      if (snap.exists()) {
+        freshUser = { id: uid, ...snap.data() };
       }
+    } catch {
+      /* ignore */
     }
-    const fromUser = resolveDsGradeOn20FromUser(freshUser);
-    let summary = summaryFromUserProfile(freshUser);
-    if (!summary && fromUser <= 0 && !hasDsTabExamData(user)) continue;
 
-    candidates += 1;
+    for (const examId of DS_SDGN_EXAM_IDS) {
+      if (!hasDsTabExamData(freshUser, examId)) continue;
 
-    if (summary) {
+      candidates += 1;
+      const fromUser = resolveDsGradeOn20FromUser(freshUser, examId);
+      let summary = summaryFromUserProfile(freshUser, examId);
+      if (!summary) continue;
+
       const mergedGrade = Math.max(
         fromUser,
         summary.gradeOn20 ?? 0,
         resolveGradeFromDsSdgnSummary(summary),
       );
       summary = { ...summary, gradeOn20: mergedGrade };
-      if (mergedGrade > 0) gradesFound += 0; // already counted
-    } else if (fromUser > 0) {
-      summary = summaryFromUserProfile({ ...user, id: uid });
-      if (summary) summary = { ...summary, gradeOn20: fromUser };
-    }
 
-    if (!summary) continue;
-
-    try {
-      if (summary.gradeOn20 > 0) {
-        const tab = readDsTabExamRoot(user);
-        const cur = parseFlexibleNumber(tab?.gradeOn20) ?? 0;
-        const patch: Record<string, unknown> = {
-          dsSdgnPremiereLast: {
-            gradeOn20: summary.gradeOn20,
-            scorePoints: summary.scorePoints,
-            totalQuestions: summary.totalQuestions,
-            questionsAnswered: summary.questionsAnswered,
-            status: summary.status,
-            forcedZero: summary.forcedZero,
-            finishedAt: summary.finishedAt,
-            updatedAt: new Date().toISOString(),
-          },
-        };
-        if (cur < summary.gradeOn20 - 0.001) {
-          patch[`dsTab.${DS_SDGN_QCM_EXAM_ID}.gradeOn20`] = summary.gradeOn20;
-          patch[`dsTab.${DS_SDGN_QCM_EXAM_ID}.score`] =
-            summary.scorePoints || tab?.score || 0;
+      try {
+        if (summary.gradeOn20 > 0 && examId === DS_SDGN_QCM_EXAM_ID) {
+          const tab = readDsTabExamRoot(freshUser, examId);
+          const cur = parseFlexibleNumber(tab?.gradeOn20) ?? 0;
+          const patch: Record<string, unknown> = {
+            dsSdgnPremiereLast: {
+              gradeOn20: summary.gradeOn20,
+              scorePoints: summary.scorePoints,
+              totalQuestions: summary.totalQuestions,
+              questionsAnswered: summary.questionsAnswered,
+              status: summary.status,
+              forcedZero: summary.forcedZero,
+              finishedAt: summary.finishedAt,
+              updatedAt: new Date().toISOString(),
+            },
+          };
+          if (cur < summary.gradeOn20 - 0.001) {
+            patch[`dsTab.${DS_SDGN_QCM_EXAM_ID}.gradeOn20`] = summary.gradeOn20;
+            patch[`dsTab.${DS_SDGN_QCM_EXAM_ID}.score`] =
+              summary.scorePoints || tab?.score || 0;
+          }
+          await updateDoc(userDocRef(uid), patch);
+          userDocsPatched += 1;
         }
-        await updateDoc(userDocRef(uid), patch);
-        userDocsPatched += 1;
+
+        const existing = await getDoc(resultDocRef(uid, examId));
+        if (existing.exists()) {
+          const prev = existing.data() as DsSdgnResultSummary;
+          const prevGrade = Number(prev.gradeOn20) || 0;
+          const newGrade = Number(summary.gradeOn20) || 0;
+          const gradeImproved = newGrade > prevGrade + 0.001;
+          const unchanged =
+            !gradeImproved &&
+            Math.abs(prevGrade - newGrade) < 0.001 &&
+            prev.answersCount === summary.answersCount;
+          if (unchanged) {
+            skipped += 1;
+            continue;
+          }
+        }
+        await writeSummaryDoc(summary);
+        written += 1;
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        const name =
+          summary.prenom || summary.nom || summary.email || uid.slice(0, 6);
+        errors.push(`${name} (${examId}): ${msg}`);
+        if (errors.length >= 8) break;
       }
-
-      const existing = await getDoc(resultDocRef(uid));
-      if (existing.exists()) {
-        const prev = existing.data() as DsSdgnResultSummary;
-        const prevGrade = Number(prev.gradeOn20) || 0;
-        const newGrade = Number(summary.gradeOn20) || 0;
-        const gradeImproved = newGrade > prevGrade + 0.001;
-        const unchanged =
-          !gradeImproved &&
-          Math.abs(prevGrade - newGrade) < 0.001 &&
-          prev.answersCount === summary.answersCount;
-        if (unchanged && newGrade <= 0) {
-          skipped += 1;
-          continue;
-        }
-        if (unchanged && newGrade > 0) {
-          skipped += 1;
-          continue;
-        }
-      }
-      await writeSummaryDoc(summary);
-      written += 1;
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
-      const name =
-        summary.prenom || summary.nom || summary.email || uid.slice(0, 6);
-      errors.push(`${name}: ${msg}`);
-      if (errors.length >= 5) break;
     }
+    if (errors.length >= 8) break;
   }
 
   const uniqueGrades = users.filter(

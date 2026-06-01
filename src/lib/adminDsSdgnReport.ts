@@ -1,30 +1,21 @@
-import { SDGN_CHAPTER_LABELS } from "../data/sdgn/registry";
-import { SDGN_MISSION_QCM_CURATED, type SdgnMissionQcm } from "../data/sdgn/sdgnMissionQcmBank";
-import { buildEmptyTopicStats } from "./dsSdgnGrading";
 import {
   resolveGradeFromDsSdgnSummary,
   type DsSdgnResultSummary,
 } from "../services/dsSdgnResultsService";
 import {
   DS_SDGN_QCM_EXAM_ID,
+  DS_SDGN_TERMINALE_QCM_EXAM_ID,
   hasDsTabExamData,
   readDsTabExamMeta,
   readDsTabExamGradeOn20,
   resolveDsGradeOn20FromUser,
   readDsTabLastSession,
-  type DsSessionAnswerRecord,
   type DsSessionRecord,
   type DsSessionStatus,
 } from "../services/dsTabExamService";
-import {
-  DS_SDGN_TOPIC_LABELS,
-  DS_SDGN_TOPIC_ORDER,
-  type DsSdgnPremiereTopic,
-} from "./dsSdgnQcmTopics";
-
-const QCM_BY_ID: Record<string, SdgnMissionQcm> = Object.fromEntries(
-  SDGN_MISSION_QCM_CURATED.map((q) => [q.id, q]),
-);
+import { buildEmptyTopicStats } from "./dsSdgnGrading";
+import { buildEmptyTerminaleTopicStats } from "./dsSdgnTerminaleGrading";
+import { isPremiereClasse, isTerminaleClasse } from "./dsSdgnClasse";
 
 export type DsSdgnDisplayStatus = "not_started" | DsSessionStatus;
 
@@ -41,32 +32,11 @@ export type DsSdgnStudentReportRow = {
   examRootGrade?: number;
 };
 
-export type DsSdgnAnswerDetailRow = {
-  studentId: string;
-  studentName: string;
-  sessionId: string;
-  index: number;
-  sourceId: string;
-  topic: DsSdgnPremiereTopic;
-  topicLabel: string;
-  chapter: number;
-  chapterLabel: string;
-  scenarioTitle: string;
-  scenarioText: string;
-  question: string;
-  choices: string[];
-  correctChoice: string;
-  pickedChoice: string;
-  outcomeLabel: string;
-  acquisQuestion: string;
-};
-
 export type DsSdgnClassReport = {
   examId: string;
   examLabel: string;
   generatedAt: string;
   students: DsSdgnStudentReportRow[];
-  answerDetails: DsSdgnAnswerDetailRow[];
   withDsDataCount: number;
   completedCount: number;
   incompleteCount: number;
@@ -148,31 +118,26 @@ export function resolveDsSdgnDisplayStatus(
   return "not_started";
 }
 
-/** @deprecated Utiliser resolveDsSdgnDisplayStatus */
-export function deriveDsDisplayStatus(
-  session: DsSessionRecord | null,
-  attemptStarted: boolean,
-): DsSdgnDisplayStatus {
-  const grade = session?.gradeOn20 ?? session?.gradeOn20Provisional;
-  return resolveDsSdgnDisplayStatus(session, grade, attemptStarted);
-}
-
-export function buildDsSdgnStudentRow(eleve: {
-  id: string;
-  nomAffiche?: string;
-  prenom?: string;
-  nom?: string;
-  email?: string;
-  classe?: string;
-  lycee?: string;
-  dsTab?: Record<string, unknown>;
-}): DsSdgnStudentReportRow {
+export function buildDsSdgnStudentRow(
+  eleve: {
+    id: string;
+    nomAffiche?: string;
+    prenom?: string;
+    nom?: string;
+    email?: string;
+    classe?: string;
+    lycee?: string;
+    dsTab?: Record<string, unknown>;
+  },
+  examId: string = DS_SDGN_QCM_EXAM_ID,
+): DsSdgnStudentReportRow {
   const userRecord = eleve as Record<string, unknown>;
-  const session = readDsTabLastSession(userRecord);
-  const meta = readDsTabExamMeta(userRecord);
-  const hasData = hasDsTabExamData(userRecord);
-  const resolvedGrade = resolveDsGradeOn20FromUser(userRecord);
-  const examRootGrade = resolvedGrade > 0 ? resolvedGrade : readDsTabExamGradeOn20(userRecord);
+  const session = readDsTabLastSession(userRecord, examId);
+  const meta = readDsTabExamMeta(userRecord, examId);
+  const hasData = hasDsTabExamData(userRecord, examId);
+  const resolvedGrade = resolveDsGradeOn20FromUser(userRecord, examId);
+  const examRootGrade =
+    resolvedGrade > 0 ? resolvedGrade : readDsTabExamGradeOn20(userRecord, examId);
   const displayStatus: DsSdgnDisplayStatus = hasData
     ? resolveDsSdgnDisplayStatus(session, examRootGrade, meta.attemptStarted)
     : "not_started";
@@ -196,22 +161,24 @@ export function buildDsSdgnStudentRow(eleve: {
   };
 }
 
-export function isPremiereClasse(classe: unknown): boolean {
-  const c = String(classe ?? "")
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-  return (
-    c === "premiere" ||
-    c === "1ere" ||
-    c.startsWith("1ere ") ||
-    c.includes("premiere")
-  );
-}
-
 /** Toutes les lignes Premi\u00e8re pour le rapport DS (depuis profils Firestore). */
 export function buildPremiereDsReportingRows(
   eleves: Record<string, unknown>[],
+): DsSdgnStudentReportRow[] {
+  return buildDsReportingRowsForExam(eleves, DS_SDGN_QCM_EXAM_ID, isPremiereClasse);
+}
+
+/** Toutes les lignes Terminale pour le rapport DS. */
+export function buildTerminaleDsReportingRows(
+  eleves: Record<string, unknown>[],
+): DsSdgnStudentReportRow[] {
+  return buildDsReportingRowsForExam(eleves, DS_SDGN_TERMINALE_QCM_EXAM_ID, isTerminaleClasse);
+}
+
+function buildDsReportingRowsForExam(
+  eleves: Record<string, unknown>[],
+  examId: string,
+  matchClasse: (classe: unknown) => boolean,
 ): DsSdgnStudentReportRow[] {
   const byId = new Map<string, DsSdgnStudentReportRow>();
 
@@ -220,14 +187,17 @@ export function buildPremiereDsReportingRows(
     if (!id) continue;
     const nom =
       String(e.prenom || e.nom || e.email || "") || `\u00c9l\u00e8ve ${id.slice(0, 6)}`;
-    const row = buildDsSdgnStudentRow({
-      ...e,
-      id,
-      nomAffiche: nom,
-    } as Parameters<typeof buildDsSdgnStudentRow>[0]);
+    const row = buildDsSdgnStudentRow(
+      {
+        ...e,
+        id,
+        nomAffiche: nom,
+      } as Parameters<typeof buildDsSdgnStudentRow>[0],
+      examId,
+    );
 
     const include =
-      isPremiereClasse(e.classe) || hasDsTabExamData(e as Record<string, unknown>);
+      matchClasse(e.classe) || hasDsTabExamData(e as Record<string, unknown>, examId);
     if (!include) continue;
     byId.set(id, row);
   }
@@ -237,23 +207,23 @@ export function buildPremiereDsReportingRows(
   );
 }
 
-/** Compte les profils avec dsTab SDGN detecte (diagnostic admin). */
-export function countUsersWithDsSdgnExamData(
-  users: Record<string, unknown>[],
-): number {
-  return users.filter((u) => hasDsTabExamData(u as Record<string, unknown>)).length;
-}
-
 function buildDsSdgnStudentRowFromSummary(
   summary: DsSdgnResultSummary,
   user?: Record<string, unknown>,
 ): DsSdgnStudentReportRow {
-  const sessionFromUser = user ? readDsTabLastSession(user as Record<string, unknown>) : null;
+  const examId = summary.examId ?? DS_SDGN_QCM_EXAM_ID;
+  const sessionFromUser = user
+    ? readDsTabLastSession(user as Record<string, unknown>, examId)
+    : null;
+  const emptyTopicStats =
+    examId === DS_SDGN_TERMINALE_QCM_EXAM_ID
+      ? buildEmptyTerminaleTopicStats()
+      : buildEmptyTopicStats();
   const session: DsSessionRecord | null =
     sessionFromUser ??
     ({
       sessionId: summary.sessionId ?? summary.uid,
-      examId: DS_SDGN_QCM_EXAM_ID,
+      examId,
       startedAt: summary.startedAt ?? summary.finishedAt,
       finishedAt: summary.finishedAt,
       scorePoints: summary.scorePoints,
@@ -268,7 +238,7 @@ function buildDsSdgnStudentRowFromSummary(
       completed: summary.completed,
       questionIds: [],
       answers: [],
-      topicStats: summary.topicStats ?? buildEmptyTopicStats(),
+      topicStats: summary.topicStats ?? emptyTopicStats,
     } as DsSessionRecord);
 
   const name =
@@ -279,7 +249,9 @@ function buildDsSdgnStudentRowFromSummary(
     (user?.nom as string) ||
     `Eleve ${summary.uid.slice(0, 6)}`;
 
-  const fromUser = user ? resolveDsGradeOn20FromUser(user as Record<string, unknown>) : 0;
+  const fromUser = user
+    ? resolveDsGradeOn20FromUser(user as Record<string, unknown>, examId)
+    : 0;
   const fromSummary = resolveGradeFromDsSdgnSummary(summary);
   const bestGrade = Math.max(summary.gradeOn20 ?? 0, fromUser, fromSummary);
   const examRootGrade = bestGrade > 0 ? bestGrade : undefined;
@@ -297,67 +269,22 @@ function buildDsSdgnStudentRowFromSummary(
   };
 }
 
-export type DsSdgnDirectGradeRow = {
-  studentId: string;
-  studentName: string;
-  gradeOn20: number;
-};
-
-/** Liste simple Nom | Note pour le panneau admin (priorit\u00e9 users.dsTab). */
-export function buildDsSdgnDirectGradesList(
-  summaries: DsSdgnResultSummary[],
-  users: Record<string, unknown>[],
-): DsSdgnDirectGradeRow[] {
-  const userById = new Map(users.map((u) => [String(u.id), u]));
-  const byId = new Map<string, DsSdgnDirectGradeRow>();
-
-  for (const summary of summaries) {
-    if (summary.examId && summary.examId !== DS_SDGN_QCM_EXAM_ID) continue;
-    const user = userById.get(summary.uid);
-    const fromUser = user ? resolveDsGradeOn20FromUser(user as Record<string, unknown>) : 0;
-    const fromSummary = resolveGradeFromDsSdgnSummary(summary);
-    const grade = Math.max(summary.gradeOn20 ?? 0, fromUser, fromSummary);
-    const name =
-      summary.prenom ||
-      summary.nom ||
-      summary.email ||
-      (user?.prenom as string) ||
-      (user?.nom as string) ||
-      `Eleve ${summary.uid.slice(0, 6)}`;
-    byId.set(summary.uid, { studentId: summary.uid, studentName: name, gradeOn20: grade });
-  }
-
-  for (const user of users) {
-    if (user.role === "admin") continue;
-    const id = String(user.id ?? "");
-    if (!id || byId.has(id)) continue;
-    if (!isPremiereClasse(user.classe) && !hasDsTabExamData(user as Record<string, unknown>)) {
-      continue;
-    }
-    const grade = resolveDsGradeOn20FromUser(user as Record<string, unknown>);
-    if (grade <= 0 && !hasDsTabExamData(user as Record<string, unknown>)) continue;
-    const name =
-      String(user.prenom || user.nom || user.email || "") || `Eleve ${id.slice(0, 6)}`;
-    byId.set(id, { studentId: id, studentName: name, gradeOn20: grade });
-  }
-
-  return Array.from(byId.values()).sort((a, b) =>
-    a.studentName.localeCompare(b.studentName, "fr"),
-  );
-}
-
 /**
  * Source fiable pour l'admin : collection dsSdgnResults (remplie a chaque fin de DS).
  */
 export function buildReportingRowsFromDsSdgnSummaries(
   summaries: DsSdgnResultSummary[],
   users: Record<string, unknown>[],
+  examId: string = DS_SDGN_QCM_EXAM_ID,
 ): DsSdgnStudentReportRow[] {
   const userById = new Map(users.map((u) => [String(u.id), u]));
   const byId = new Map<string, DsSdgnStudentReportRow>();
+  const matchClasse =
+    examId === DS_SDGN_TERMINALE_QCM_EXAM_ID ? isTerminaleClasse : isPremiereClasse;
 
   for (const summary of summaries) {
-    if (summary.examId && summary.examId !== DS_SDGN_QCM_EXAM_ID) continue;
+    const sid = summary.examId ?? DS_SDGN_QCM_EXAM_ID;
+    if (sid !== examId) continue;
     const user = userById.get(summary.uid);
     byId.set(summary.uid, buildDsSdgnStudentRowFromSummary(summary, user));
   }
@@ -366,16 +293,19 @@ export function buildReportingRowsFromDsSdgnSummaries(
     if (user.role === "admin") continue;
     const id = String(user.id ?? "");
     if (!id || byId.has(id)) continue;
-    if (!isPremiereClasse(user.classe)) continue;
+    if (!matchClasse(user.classe)) continue;
     const nom =
       String(user.prenom || user.nom || user.email || "") || `\u00c9l\u00e8ve ${id.slice(0, 6)}`;
     byId.set(
       id,
-      buildDsSdgnStudentRow({
-        ...user,
-        id,
-        nomAffiche: nom,
-      } as Parameters<typeof buildDsSdgnStudentRow>[0]),
+      buildDsSdgnStudentRow(
+        {
+          ...user,
+          id,
+          nomAffiche: nom,
+        } as Parameters<typeof buildDsSdgnStudentRow>[0],
+        examId,
+      ),
     );
   }
 
@@ -384,17 +314,18 @@ export function buildReportingRowsFromDsSdgnSummaries(
   );
 }
 
-/** Reinjecte lastSession complet (reponses) depuis users.dsTab pour Excel/PDF. */
+/** Reinjecte lastSession complet (reponses) depuis users.dsTab pour le PDF. */
 export function enrichExportRowsWithUserSessions(
   rows: DsSdgnStudentReportRow[],
   users: Record<string, unknown>[],
+  examId: string = DS_SDGN_QCM_EXAM_ID,
 ): DsSdgnStudentReportRow[] {
   const userById = new Map(users.map((u) => [String(u.id), u]));
   return rows.map((row) => {
     const user = userById.get(row.studentId);
     if (!user) return row;
-    const fullSession = readDsTabLastSession(user as Record<string, unknown>);
-    const rootGrade = resolveDsGradeOn20FromUser(user as Record<string, unknown>);
+    const fullSession = readDsTabLastSession(user as Record<string, unknown>, examId);
+    const rootGrade = resolveDsGradeOn20FromUser(user as Record<string, unknown>, examId);
     if (!fullSession) {
       if (rootGrade > 0) {
         return {
@@ -422,98 +353,34 @@ export function enrichExportRowsWithUserSessions(
 }
 
 export function buildExportReportForAdmin(
-  premiereRows: DsSdgnStudentReportRow[],
+  rows: DsSdgnStudentReportRow[],
   usersAll: Record<string, unknown>[],
+  examId: string,
+  examLabel: string,
 ): DsSdgnClassReport {
-  const withActivity = premiereRows.filter(
+  const withActivity = rows.filter(
     (r) =>
       r.hasDsData ||
       r.displayStatus !== "not_started" ||
       (r.examRootGrade != null && r.examRootGrade > 0),
   );
-  const enriched = enrichExportRowsWithUserSessions(withActivity, usersAll);
-  return buildDsSdgnClassReportFromStudents(enriched);
+  const enriched = enrichExportRowsWithUserSessions(withActivity, usersAll, examId);
+  return buildDsSdgnClassReportFromStudents(enriched, examId, examLabel);
 }
 
-/** Tous les comptes (hors admin) avec une copie DS enregistr\u00e9e \u2014 pour export complet. */
-export function buildDsSdgnClassReportFromAllUsersWithDsData(
-  users: Record<string, unknown>[],
+function buildReportPayload(
+  students: DsSdgnStudentReportRow[],
+  examId: string,
+  examLabel: string,
 ): DsSdgnClassReport {
-  const rows: DsSdgnStudentReportRow[] = [];
-  for (const u of users) {
-    if (u.role === "admin") continue;
-    const id = String(u.id ?? "");
-    if (!id) continue;
-    if (!hasDsTabExamData(u as Record<string, unknown>)) continue;
-    const nom =
-      String(u.prenom || u.nom || u.email || "") || `\u00c9l\u00e8ve ${id.slice(0, 6)}`;
-    rows.push(
-      buildDsSdgnStudentRow({
-        ...u,
-        id,
-        nomAffiche: nom,
-      } as Parameters<typeof buildDsSdgnStudentRow>[0]),
-    );
-  }
-  return buildDsSdgnClassReportFromStudents(rows);
-}
-
-function answerDetailFromRecord(
-  student: DsSdgnStudentReportRow,
-  session: DsSessionRecord,
-  answer: DsSessionAnswerRecord,
-  index: number,
-): DsSdgnAnswerDetailRow {
-  const bank = QCM_BY_ID[answer.sourceId];
-  const chapter = bank?.chapter ?? 0;
-  const chLabel =
-    chapter in SDGN_CHAPTER_LABELS
-      ? SDGN_CHAPTER_LABELS[chapter as keyof typeof SDGN_CHAPTER_LABELS]
-      : "";
-  const correctIdx = bank?.bonIndex ?? 0;
-  const choices = bank?.choix ?? ["?", "?", "?", "?"];
-  const picked =
-    answer.picked != null ? choices[answer.picked] ?? "\u2014" : "\u2014 (temps \u00e9coul\u00e9)";
-  const ok = answer.outcome === 1;
-
-  return {
-    studentId: student.studentId,
-    studentName: student.studentName,
-    sessionId: session.sessionId,
-    index: index + 1,
-    sourceId: answer.sourceId,
-    topic: answer.topic,
-    topicLabel: DS_SDGN_TOPIC_LABELS[answer.topic],
-    chapter,
-    chapterLabel: chLabel,
-    scenarioTitle: answer.scenarioTitle || DS_SDGN_TOPIC_LABELS[answer.topic],
-    scenarioText: answer.scenarioText || "",
-    question: bank?.question ?? answer.sourceId,
-    choices: [...choices],
-    correctChoice: choices[correctIdx] ?? "",
-    pickedChoice: picked,
-    outcomeLabel: ok ? "Correct" : "Incorrect / non r\u00e9pondu",
-    acquisQuestion: ok ? "Acquis" : "Non acquis",
-  };
-}
-
-function buildReportPayload(students: DsSdgnStudentReportRow[]): DsSdgnClassReport {
   const sorted = [...students].sort((a, b) =>
     a.studentName.localeCompare(b.studentName, "fr"),
   );
-  const answerDetails: DsSdgnAnswerDetailRow[] = [];
-  for (const student of sorted) {
-    if (!student.session?.answers?.length) continue;
-    student.session.answers.forEach((answer, idx) => {
-      answerDetails.push(answerDetailFromRecord(student, student.session!, answer, idx));
-    });
-  }
   return {
-    examId: DS_SDGN_QCM_EXAM_ID,
-    examLabel: "DS SDGN Premi\u00e8re \u2014 QCM chronom\u00e9tr\u00e9",
+    examId,
+    examLabel,
     generatedAt: new Date().toISOString(),
     students: sorted,
-    answerDetails,
     withDsDataCount: sorted.filter((s) => s.hasDsData).length,
     completedCount: sorted.filter((s) => s.displayStatus === "completed").length,
     incompleteCount: sorted.filter(
@@ -522,32 +389,12 @@ function buildReportPayload(students: DsSdgnStudentReportRow[]): DsSdgnClassRepo
   };
 }
 
-/** Depuis les profils Firestore (avec dsTab). */
-export function buildDsSdgnClassReport(
-  eleves: {
-    id: string;
-    nomAffiche?: string;
-    prenom?: string;
-    nom?: string;
-    email?: string;
-    classe?: string;
-    lycee?: string;
-    dsTab?: Record<string, unknown>;
-  }[],
-): DsSdgnClassReport {
-  return buildReportPayload(eleves.map((e) => buildDsSdgnStudentRow(e)));
-}
-
-/** Depuis les lignes dsSdgnRow d\u00e9j\u00e0 construites (admin reporting). */
 export function buildDsSdgnClassReportFromStudents(
   students: DsSdgnStudentReportRow[],
+  examId: string = DS_SDGN_QCM_EXAM_ID,
+  examLabel = "DS SDGN Premi\u00e8re \u2014 QCM chronom\u00e9tr\u00e9",
 ): DsSdgnClassReport {
-  return buildReportPayload(students);
+  return buildReportPayload(students, examId, examLabel);
 }
 
-export function formatDsTopicAcquisLabel(acquis: boolean, total: number): string {
-  if (total <= 0) return "Non \u00e9valu\u00e9";
-  return acquis ? "Acquis" : "Non acquis";
-}
-
-export { DS_SDGN_TOPIC_ORDER };
+export { isPremiereClasse, isTerminaleClasse } from "./dsSdgnClasse";

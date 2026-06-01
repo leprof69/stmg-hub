@@ -17,31 +17,14 @@ export default function AdminExamensPanel() {
           padding: "14px 16px",
         }}
       >
-        <p style={{ margin: "0 0 8px", fontFamily: "'Fredoka One', cursive", color: "#166534", fontSize: "0.92rem" }}>
-          {"Trois actions diff\u00e9rentes \u2014 ne pas confondre"}
+        <p style={{ margin: "0 0 6px", fontFamily: "'Fredoka One', cursive", color: "#166534", fontSize: "0.92rem" }}>
+          {"Examens"}
         </p>
-        <ul style={{ margin: 0, paddingLeft: 18, color: "#14532D", fontSize: "0.84rem", lineHeight: 1.55 }}>
-          <li>
-            <strong>{"R\u00e9tablir jetons"}</strong>
-            {" : l\u2019\u00e9l\u00e8ve peut \u00e0 nouveau gagner des jetons (Missions, jeux). Ne modifie pas une note DS."}
-          </li>
-          <li>
-            <strong>{"Autoriser reprise"}</strong>
-            {" (SDGN Premi\u00e8re) : l\u2019\u00e9l\u00e8ve continue le DS (score + r\u00e9ponses conserv\u00e9s)."}
-          </li>
-          <li>
-            <strong>{"Cl\u00f4turer le DS"}</strong>
-            {" : coupe tout le monde en cours et ferme le QCM pour la classe (notes d\u00e9j\u00e0 finies conserv\u00e9es)."}
-          </li>
-          <li>
-            <strong>{"Repasse QCM"}</strong>
-            {" : efface tout et recommence le DS \u00e0 z\u00e9ro."}
-          </li>
-          <li>
-            <strong>{"Reset copies DS Bac"}</strong>
-            {" : efface les r\u00e9ponses Objectif Bac (\u00e9preuve surveill\u00e9e), pas le QCM SDGN."}
-          </li>
-        </ul>
+        <p style={{ margin: 0, color: "#14532D", fontSize: "0.84rem", lineHeight: 1.5 }}>
+          {
+            "Objectif Bac : copies surveillees. DS SDGN : export PDF classe (1\u00e8re et Terminale) depuis cet onglet."
+          }
+        </p>
       </div>
 
       <div style={{ background: "white", borderRadius: 20, padding: 18, border: "1px solid #E2E8F0" }}>
@@ -86,12 +69,10 @@ export default function AdminExamensPanel() {
 
         <AdminDsSdgnReport
           premiereRows={a.premiereReportingRows}
-          usersAll={a.usersAll}
-          dsSdgnSummaries={a.dsSdgnSummaries}
-          dsSdgnNotes={a.dsSdgnNotes}
-          onSyncDsResults={a.syncDsSdgnResultsFromFirebase}
-          onSaveDsSdgnNote={a.saveDsSdgnNoteForStudent}
-          onAfterReset={a.chargerEleves}
+          terminaleRows={a.terminaleDsReportingRows}
+          adminSelfRecord={a.adminSelfRecord}
+          onBuildExportReport={a.buildDsSdgnExportReport}
+          onRefreshStudents={a.chargerEleves}
         />
 
         <AdminBacRevisionReport terminaleRows={a.terminaleReportingRows} />

@@ -196,7 +196,13 @@ function pickThemedSituation(item: SdgnMissionQcm): string | null {
 export function getDsQuestionKind(item: SdgnMissionQcm): DsQuestionKind {
   if (isDsPureCoursBankId(item.id)) return "cours";
   if (isDsSdgnCalculationQuestion(item.question, item.choix)) return "calcul";
-  if (item.id.startsWith("sdgn-ds-cas-")) return "cas";
+  if (
+    item.id.startsWith("sdgn-ds-cas-") ||
+    item.id.startsWith("sdgn-t-ds-") ||
+    item.id.startsWith("sdgn-p-ds-")
+  ) {
+    return "cas";
+  }
   if (isDsQuestionWithEmbeddedCase(item.question)) return "cas";
   if (pickThemedSituation(item)) return "cas";
   return "cours";
@@ -222,6 +228,9 @@ export function buildIntegratedDsQuestionText(item: SdgnMissionQcm): string {
 
 /** Texte affich\u00e9 \u00e0 l'\u00e9l\u00e8ve (un seul bloc, pas de cas s\u00e9par\u00e9). */
 export function buildDsDisplayEnonce(item: SdgnMissionQcm): string {
+  if (item.id.startsWith("sdgn-p-ds-") || item.id.startsWith("sdgn-t-ds-")) {
+    return item.question;
+  }
   const kind = getDsQuestionKind(item);
   if (kind === "cas" && pickThemedSituation(item) && !isDsQuestionWithEmbeddedCase(item.question)) {
     return buildIntegratedDsQuestionText(item);

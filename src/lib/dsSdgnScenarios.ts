@@ -27,7 +27,7 @@ export function wrapDsPlayQuestion(item: SdgnMissionQcm, quiz: GameQuizQ): DsPla
     topic,
     questionKind,
     kindLabel: DS_QUESTION_KIND_LABEL[questionKind],
-    /** 30 s par question sauf type Calcul. */
-    questionTimed: questionKind !== "calcul",
+    /** Pas de chrono par question (DS : temps global session uniquement). */
+    questionTimed: false,
   };
 }

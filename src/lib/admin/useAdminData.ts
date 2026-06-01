@@ -7,10 +7,15 @@ import * as XLSX from "xlsx";
 import { formatJetons, formatJetonsDelta } from "../jetons";
 import { getPrestigeTotal } from "../../services/userProfileService";
 import {
+  buildExportReportForAdmin,
   buildPremiereDsReportingRows,
   buildReportingRowsFromDsSdgnSummaries,
-  formatDsDisplayStatusLabel,
+  buildTerminaleDsReportingRows,
 } from "../adminDsSdgnReport";
+import {
+  DS_SDGN_QCM_EXAM_ID,
+  DS_SDGN_TERMINALE_QCM_EXAM_ID,
+} from "../../services/dsTabExamService";
 import {
   backfillDsSdgnResultsFromUsers,
   fetchAllDsSdgnResultSummaries,
@@ -298,12 +303,18 @@ export function useAdminData() {
     [reportingRows]
   );
 
+  const adminSelfRecord = useMemo(() => {
+    const uid = auth.currentUser?.uid;
+    if (!uid) return null;
+    return usersAll.find((u) => u.id === uid) ?? null;
+  }, [usersAll]);
+
   const premiereReportingRows = useMemo(() => {
     if (dsSdgnNotes.length > 0) {
       return buildReportingRowsFromDsSdgnSummaries(
         dsSdgnNotes.map((n) => ({
           uid: n.uid,
-          examId: "sdgn_premiere_qcm_v1",
+          examId: DS_SDGN_QCM_EXAM_ID,
           prenom: n.prenom,
           nom: n.nom,
           email: n.email,
@@ -322,13 +333,37 @@ export function useAdminData() {
           updatedAt: n.updatedAt,
         })),
         usersAll,
+        DS_SDGN_QCM_EXAM_ID,
       );
     }
     if (dsSdgnSummaries.length > 0) {
-      return buildReportingRowsFromDsSdgnSummaries(dsSdgnSummaries, usersAll);
+      const premiereSummaries = dsSdgnSummaries.filter(
+        (s) => (s.examId ?? DS_SDGN_QCM_EXAM_ID) === DS_SDGN_QCM_EXAM_ID,
+      );
+      if (premiereSummaries.length > 0) {
+        return buildReportingRowsFromDsSdgnSummaries(
+          premiereSummaries,
+          usersAll,
+          DS_SDGN_QCM_EXAM_ID,
+        );
+      }
     }
     return buildPremiereDsReportingRows(eleves);
   }, [dsSdgnNotes, dsSdgnSummaries, usersAll, eleves]);
+
+  const terminaleDsReportingRows = useMemo(() => {
+    const terminaleSummaries = dsSdgnSummaries.filter(
+      (s) => (s.examId ?? DS_SDGN_QCM_EXAM_ID) === DS_SDGN_TERMINALE_QCM_EXAM_ID,
+    );
+    if (terminaleSummaries.length > 0) {
+      return buildReportingRowsFromDsSdgnSummaries(
+        terminaleSummaries,
+        usersAll,
+        DS_SDGN_TERMINALE_QCM_EXAM_ID,
+      );
+    }
+    return buildTerminaleDsReportingRows(eleves);
+  }, [dsSdgnSummaries, usersAll, eleves]);
 
   const reportingFiltres = useMemo(() => {
     return reportingRows.filter((eleve) => {
@@ -585,7 +620,7 @@ export function useAdminData() {
     }
     if (
       !window.confirm(
-        `Réinitialiser les copies DS Objectif Bac pour ${targets.length} élève(s) ?\n\nLe QCM SDGN Première n'est pas effacé ici (utilise le bloc Rapport DS SDGN pour une repasse QCM).`,
+        `Réinitialiser les copies DS Objectif Bac pour ${targets.length} élève(s) ?\n\nLe QCM SDGN Première n'est pas effacé.`,
       )
     ) {
       return;
@@ -732,7 +767,6 @@ export function useAdminData() {
     DS_EXAM_ID,
     DS_LOCK_TYPE,
     DS_EXERCISES,
-    formatDsDisplayStatusLabel,
     formatDateFr,
     formatDuration,
     toDayKey,
@@ -744,44 +778,77 @@ export function useAdminData() {
     importMissions,
     eleves,
     usersAll,
-    dsSdgnSummaries,
-    dsSdgnNotes,
-    saveDsSdgnNoteForStudent: async (uid, gradeOn20) => {
-      const { adminSaveDsSdgnNote } = await import("../../services/dsSdgnNotesService");
-      const user = usersAll.find((u) => u.id === uid);
-      await adminSaveDsSdgnNote(uid, gradeOn20, {
-        prenom: user?.prenom,
-        nom: user?.nom,
-        email: user?.email,
-        classe: user?.classe,
-      });
-      const notes = await fetchAllDsSdgnNotes();
-      setDsSdgnNotes(notes);
-    },
-    syncDsSdgnResultsFromFirebase: async () => {
-      const notesRebuild = await rebuildAllDsSdgnNotesFromUsers(usersAll);
-      const backfill = await backfillDsSdgnResultsFromUsers(usersAll);
-      if (backfill.candidates > 0 && backfill.written === 0 && backfill.errors.length > 0) {
-        const detail = backfill.errors.slice(0, 3).join("\n");
-        throw new Error(
-          `Ecriture impossible (${backfill.errors.length} erreur(s)).\n${detail}`,
+    adminSelfRecord,
+    buildDsSdgnExportReport: async (examId: string) => {
+      await rebuildAllDsSdgnNotesFromUsers(usersAll);
+      await backfillDsSdgnResultsFromUsers(usersAll);
+      const snapshot = await getDocs(collection(db, "users"));
+      const allUsers = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+      const isTerminale = examId === DS_SDGN_TERMINALE_QCM_EXAM_ID;
+      const examLabel = isTerminale
+        ? "DS SDGN Terminale \u2014 QCM chronom\u00e9tr\u00e9"
+        : "DS SDGN Premi\u00e8re \u2014 QCM chronom\u00e9tr\u00e9";
+
+      let rows;
+      if (!isTerminale) {
+        const notes = await fetchAllDsSdgnNotes();
+        if (notes.length > 0) {
+          rows = buildReportingRowsFromDsSdgnSummaries(
+            notes.map((n) => ({
+              uid: n.uid,
+              examId: DS_SDGN_QCM_EXAM_ID,
+              prenom: n.prenom,
+              nom: n.nom,
+              email: n.email,
+              classe: n.classe,
+              gradeOn20: n.gradeOn20,
+              scorePoints: n.scorePoints,
+              totalQuestions: n.totalQuestions,
+              questionsAnswered: n.questionsAnswered ?? 0,
+              correctCount: 0,
+              wrongCount: 0,
+              forcedZero: false,
+              status: n.status || "completed",
+              completed: n.gradeOn20 > 0,
+              finishedAt: n.updatedAt,
+              answersCount: n.questionsAnswered ?? 0,
+              updatedAt: n.updatedAt,
+            })),
+            allUsers,
+            DS_SDGN_QCM_EXAM_ID,
+          );
+        } else {
+          const summaries = await fetchAllDsSdgnResultSummaries();
+          const premiereSummaries = summaries.filter(
+            (s) => (s.examId ?? DS_SDGN_QCM_EXAM_ID) === DS_SDGN_QCM_EXAM_ID,
+          );
+          if (premiereSummaries.length > 0) {
+            rows = buildReportingRowsFromDsSdgnSummaries(
+              premiereSummaries,
+              allUsers,
+              DS_SDGN_QCM_EXAM_ID,
+            );
+          } else {
+            rows = buildPremiereDsReportingRows(allUsers.filter((u) => u.role !== "admin"));
+          }
+        }
+      } else {
+        const summaries = await fetchAllDsSdgnResultSummaries();
+        const terminaleSummaries = summaries.filter(
+          (s) => (s.examId ?? DS_SDGN_QCM_EXAM_ID) === DS_SDGN_TERMINALE_QCM_EXAM_ID,
         );
+        if (terminaleSummaries.length > 0) {
+          rows = buildReportingRowsFromDsSdgnSummaries(
+            terminaleSummaries,
+            allUsers,
+            DS_SDGN_TERMINALE_QCM_EXAM_ID,
+          );
+        } else {
+          rows = buildTerminaleDsReportingRows(allUsers.filter((u) => u.role !== "admin"));
+        }
       }
-      const summaries = await fetchAllDsSdgnResultSummaries();
-      setDsSdgnSummaries(summaries);
-      const notes = await fetchAllDsSdgnNotes();
-      setDsSdgnNotes(notes);
-      return {
-        written: backfill.written,
-        skipped: backfill.skipped,
-        candidates: backfill.candidates,
-        total: summaries.length,
-        errors: backfill.errors,
-        gradesFound: Math.max(backfill.gradesFound, notesRebuild.withGrade),
-        userDocsPatched: backfill.userDocsPatched,
-        notesWritten: notesRebuild.written,
-        notesWithGrade: notesRebuild.withGrade,
-      };
+
+      return buildExportReportForAdmin(rows, allUsers, examId, examLabel);
     },
     chargementEleves,
     erreurEleves,
@@ -833,6 +900,7 @@ export function useAdminData() {
     reportingRows,
     terminaleReportingRows,
     premiereReportingRows,
+    terminaleDsReportingRows,
     reportingFiltres,
     maxParticipationReporting,
     dashboardStats,

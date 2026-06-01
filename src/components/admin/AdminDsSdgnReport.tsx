@@ -1,329 +1,208 @@
 // @ts-nocheck
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { getDoc } from "firebase/firestore";
+import { auth } from "../../services/firebase";
+import { userDocRef } from "../../services/userProfileService";
 import {
   buildDsSdgnClassReportFromStudents,
-  buildDsSdgnDirectGradesList,
-  buildExportReportForAdmin,
-  countUsersWithDsSdgnExamData,
-  formatDsDisplayStatusLabel,
-  formatDsGradeForReport,
+  type DsSdgnStudentReportRow,
 } from "../../lib/adminDsSdgnReport";
-import { exportDsSdgnGradesOnlyPdf } from "../../lib/exportDsSdgnGradesOnlyPdf";
-import { exportDsSdgnClassReportPdf } from "../../lib/exportDsSdgnReportPdf";
-import { exportDsSdgnClassReportXlsx } from "../../lib/exportDsSdgnReportXlsx";
-import { DS_SDGN_TOPIC_LABELS, DS_SDGN_TOPIC_ORDER } from "../../lib/dsSdgnQcmTopics";
 import {
-  closeDsSdgnPremiereExamForAll,
-  reopenDsSdgnPremiereExam,
-  subscribeDsSdgnExamConfig,
-} from "../../services/dsSdgnExamConfigService";
+  buildPersonalReportFromUserRecord,
+  exportDsSdgnClassReportPdf,
+  exportDsSdgnPersonalSessionPdf,
+} from "../../lib/exportDsSdgnReportPdf";
 import {
-  grantDsSdgnExamResume,
-  resetDsSdgnTabExamForUser,
+  DS_SDGN_QCM_EXAM_ID,
+  DS_SDGN_TERMINALE_QCM_EXAM_ID,
+  readDsTabLastSession,
 } from "../../services/dsTabExamService";
+
+const DS_EXPORT_TRACKS = [
+  {
+    key: "premiere",
+    examId: DS_SDGN_QCM_EXAM_ID,
+    examLabel: "QCM 1\u00e8re STMG",
+    title: "DS SDGN 1\u00e8re",
+    pdfLabel: "1\u00e8re",
+  },
+  {
+    key: "terminale",
+    examId: DS_SDGN_TERMINALE_QCM_EXAM_ID,
+    examLabel: "QCM Terminale STMG",
+    title: "DS SDGN Terminale",
+    pdfLabel: "Terminale",
+  },
+];
+
+function adminDisplayName(record) {
+  if (!record) return "Admin";
+  return (
+    record.nomAffiche ||
+    [record.prenom, record.nom].filter(Boolean).join(" ") ||
+    record.email ||
+    "Admin"
+  );
+}
+
+async function fetchFreshAdminRecord(fallback) {
+  const uid = auth.currentUser?.uid;
+  if (!uid) return fallback;
+  try {
+    const snap = await getDoc(userDocRef(uid));
+    if (!snap.exists()) return fallback;
+    return { id: uid, ...snap.data() };
+  } catch {
+    return fallback;
+  }
+}
 
 export default function AdminDsSdgnReport({
   premiereRows,
-  usersAll = [],
-  dsSdgnSummaries = [],
-  dsSdgnNotes = [],
-  onSyncDsResults,
-  onSaveDsSdgnNote,
-  onAfterReset,
+  terminaleRows,
+  adminSelfRecord,
+  onBuildExportReport,
+  onRefreshStudents,
 }) {
-  const [recherche, setRecherche] = useState("");
-  const [exporting, setExporting] = useState(false);
-  const [exportingPdf, setExportingPdf] = useState(false);
-  const [exportingGradesPdf, setExportingGradesPdf] = useState(false);
-  const [syncingResults, setSyncingResults] = useState(false);
-  const [resetting, setResetting] = useState(false);
-  const [resettingId, setResettingId] = useState(null);
-  const [restoringId, setRestoringId] = useState(null);
-  const [closingExam, setClosingExam] = useState(false);
-  const [reopeningExam, setReopeningExam] = useState(false);
-  const [examConfig, setExamConfig] = useState({ closed: false, closedAt: null });
-  const [gradeDrafts, setGradeDrafts] = useState({});
-  const [savingGradeId, setSavingGradeId] = useState(null);
+  const [exportingPdf, setExportingPdf] = useState(null);
+  const [exportingSelfPdf, setExportingSelfPdf] = useState(null);
 
-  useEffect(() => {
-    return subscribeDsSdgnExamConfig(setExamConfig);
-  }, []);
-
-  const filteredRows = useMemo(() => {
-    const q = recherche.trim().toLowerCase();
-    return premiereRows.filter((eleve) => {
-      if (!q) return true;
-      const hay = `${eleve.studentName || ""} ${eleve.email || ""}`.toLowerCase();
-      return hay.includes(q);
-    });
-  }, [premiereRows, recherche]);
-
-  const report = useMemo(
-    () => buildDsSdgnClassReportFromStudents(filteredRows),
-    [filteredRows],
+  const premiereReport = useMemo(
+    () => buildDsSdgnClassReportFromStudents(premiereRows),
+    [premiereRows],
   );
 
-  const dsTabDetectedTotal = useMemo(
-    () => Math.max(countUsersWithDsSdgnExamData(usersAll), dsSdgnSummaries.length),
-    [usersAll, dsSdgnSummaries.length],
+  const terminaleReport = useMemo(
+    () =>
+      buildDsSdgnClassReportFromStudents(
+        terminaleRows,
+        DS_SDGN_TERMINALE_QCM_EXAM_ID,
+        "DS SDGN Terminale \u2014 QCM chronom\u00e9tr\u00e9",
+      ),
+    [terminaleRows],
   );
 
-  const directGrades = useMemo(() => {
-    const notesById = new Map((dsSdgnNotes || []).map((n) => [n.uid, n]));
-    const fromNotes = buildDsSdgnDirectGradesList(dsSdgnSummaries, usersAll);
-    const byId = new Map(fromNotes.map((r) => [r.studentId, r]));
+  const adminSessions = useMemo(() => {
+    if (!adminSelfRecord) return [];
+    const userRecord = adminSelfRecord as Record<string, unknown>;
+    const studentName = adminDisplayName(adminSelfRecord);
 
-    for (const note of dsSdgnNotes || []) {
-      const name =
-        note.prenom ||
-        note.nom ||
-        note.email ||
-        `Eleve ${String(note.uid).slice(0, 6)}`;
-      const prev = byId.get(note.uid);
-      const grade = Math.max(Number(note.gradeOn20) || 0, prev?.gradeOn20 ?? 0);
-      byId.set(note.uid, { studentId: note.uid, studentName: name, gradeOn20: grade });
-    }
-
-    for (const u of usersAll) {
-      if (u.role === "admin") continue;
-      const id = String(u.id ?? "");
-      if (!id) continue;
-      const c = String(u.classe ?? "").toLowerCase();
-      const isPrem =
-        c.includes("premiere") || c === "1ere" || c.startsWith("1ere ");
-      if (!isPrem && !notesById.has(id) && !byId.has(id)) continue;
-      if (byId.has(id)) continue;
-      const name = u.prenom || u.nom || u.email || `Eleve ${id.slice(0, 6)}`;
-      byId.set(id, { studentId: id, studentName: name, gradeOn20: 0 });
-    }
-
-    return Array.from(byId.values()).sort((a, b) =>
-      a.studentName.localeCompare(b.studentName, "fr"),
-    );
-  }, [dsSdgnNotes, dsSdgnSummaries, usersAll]);
-
-  const gradesWithNote = useMemo(
-    () => directGrades.filter((g) => g.gradeOn20 > 0),
-    [directGrades],
-  );
-
-  const buildFullExportReport = () => buildExportReportForAdmin(premiereRows, usersAll);
-
-  const handleExport = () => {
-    setExporting(true);
-    try {
-      const full = buildFullExportReport();
-      if (!full.students.length) {
-        window.alert(
-          "Aucune copie DS d\u00e9tect\u00e9e dans Firebase. Rafra\u00eechis la liste \u00e9l\u00e8ves puis r\u00e9essaie.",
-        );
-        return;
-      }
-      exportDsSdgnClassReportXlsx(full);
-    } catch (err) {
-      console.error(err);
-      window.alert("Export Excel impossible pour le moment.");
-    } finally {
-      setExporting(false);
-    }
-  };
-
-  const handleExportGradesPdf = async () => {
-    setExportingGradesPdf(true);
-    try {
-      if (!directGrades.length) {
-        window.alert("Aucune copie DS. Clique sur Synchroniser copies DS puis reessaie.");
-        return;
-      }
-      const result = await exportDsSdgnGradesOnlyPdf(directGrades);
-      window.alert(
-        `PDF notes telecharge : ${result.filename}\n\n${result.withGrade} note(s) /20 sur ${result.students} eleve(s)`,
+    return DS_EXPORT_TRACKS.map((track) => {
+      const reportInput = buildPersonalReportFromUserRecord(
+        userRecord,
+        track.examId,
+        track.examLabel,
+        studentName,
       );
-    } catch (err) {
-      console.error(err);
-      const msg = err instanceof Error ? err.message : String(err);
-      window.alert(`Export PDF notes impossible.\n\n${msg}`);
-    } finally {
-      setExportingGradesPdf(false);
-    }
-  };
+      const session = readDsTabLastSession(userRecord, track.examId);
+      const answered = session?.questionsAnswered ?? session?.answers?.length ?? 0;
 
-  const handleExportPdf = async () => {
-    setExportingPdf(true);
+      return {
+        ...track,
+        studentName,
+        answered,
+        gradeOn20: reportInput?.gradeOn20 ?? 0,
+        hasData: Boolean(reportInput),
+      };
+    }).filter((t) => t.hasData);
+  }, [adminSelfRecord]);
+
+  const handleExportClassPdf = async (track) => {
+    setExportingPdf(track.key);
     try {
-      const full = buildFullExportReport();
+      if (!onBuildExportReport) {
+        window.alert("Export indisponible.");
+        return;
+      }
+      const full = await onBuildExportReport(track.examId);
       if (!full.students.length) {
         window.alert(
-          "Aucune copie DS d\u00e9tect\u00e9e dans Firebase. Rafra\u00eechis la liste \u00e9l\u00e8ves puis r\u00e9essaie.",
+          `Aucune copie DS ${track.pdfLabel} detectee. Verifie que les eleves ont bien termine le QCM.`,
         );
         return;
       }
-      const result = await exportDsSdgnClassReportPdf(full);
+      const stamp = new Date().toISOString().slice(0, 10);
+      const result = await exportDsSdgnClassReportPdf(
+        full,
+        `notes-ds-sdgn-${track.key}-${stamp}.pdf`,
+      );
+      onRefreshStudents?.();
       window.alert(
-        `PDF telecharge : ${result.filename}\n\n` +
-          `${result.students} eleve(s)\n` +
-          `${result.answers} reponses detaillees dans le PDF\n\n` +
-          `(Section 1 = notes /20 de chaque eleve)`,
+        `PDF telecharge : ${result.filename}\n\n${result.students} eleve(s) ${track.pdfLabel}.`,
       );
     } catch (err) {
       console.error(err);
       const msg = err instanceof Error ? err.message : String(err);
       window.alert(`Export PDF impossible.\n\n${msg}`);
     } finally {
-      setExportingPdf(false);
+      setExportingPdf(null);
     }
   };
 
-  const canGrantResume = (row) => {
-    const sess = row.session;
-    if (!sess) return false;
-    const answered = sess.answers?.length ?? sess.questionsAnswered ?? 0;
-    const total = sess.totalQuestions ?? sess.questionIds?.length ?? 0;
-    if (answered <= 0) return false;
-    if (total > 0 && answered >= total) return false;
-    const stoppable =
-      row.displayStatus === "disqualified" ||
-      row.displayStatus === "incomplete" ||
-      Boolean(sess.forcedZero);
-    return stoppable;
-  };
-
-  const handleGrantResume = async (row) => {
-    const sess = row.session;
-    const answers = sess?.answers ?? [];
-    const total = sess?.totalQuestions ?? answers.length;
-    const label = row.studentName || row.studentId;
-    if (!canGrantResume(row)) {
-      window.alert(
-        "Reprise impossible : pas assez de donn\u00e9es (r\u00e9ponses ou liste de questions manquante). Utilise \u00ab Repasse QCM \u00bb pour tout recommencer.",
-      );
-      return;
-    }
-    if (
-      !window.confirm(
-        `Autoriser ${label} \u00e0 reprendre son DS ?\n\n${answers.length}/${total} questions d\u00e9j\u00e0 faites \u2014 score et historique conserv\u00e9s.\nL\u2019\u00e9l\u00e8ve clique \u00ab Continuer le DS \u00bb sur la page DS.`,
-      )
-    ) {
-      return;
-    }
-    setRestoringId(row.studentId);
+  const handleExportSelfPdf = async (track) => {
+    setExportingSelfPdf(track.key);
     try {
-      const result = await grantDsSdgnExamResume(row.studentId);
-      if (!result) {
-        window.alert("Reprise impossible (session introuvable ou DS d\u00e9j\u00e0 termin\u00e9).");
+      const fresh = await fetchFreshAdminRecord(adminSelfRecord);
+      const studentName = adminDisplayName(fresh ?? adminSelfRecord);
+      const reportInput = buildPersonalReportFromUserRecord(
+        fresh as Record<string, unknown>,
+        track.examId,
+        track.examLabel,
+        studentName,
+      );
+      if (!reportInput) {
+        window.alert("Aucune session DS. Lance le QCM depuis la page DS, puis reviens ici.");
         return;
       }
-      window.alert(
-        `Reprise autoris\u00e9e pour ${label}. Il peut continuer \u00e0 la question ${result.questionsAnswered + 1}/${result.totalQuestions} (${result.gradeOn20Provisional}/20 prov.).`,
-      );
-      onAfterReset?.();
+      const result = await exportDsSdgnPersonalSessionPdf(reportInput);
+      onRefreshStudents?.();
+      window.alert(`PDF telecharge : ${result.filename}`);
     } catch (err) {
       console.error(err);
-      window.alert("Erreur lors de l\u2019autorisation de reprise.");
+      window.alert("Export PDF impossible. Reessaie dans quelques secondes.");
     } finally {
-      setRestoringId(null);
+      setExportingSelfPdf(null);
     }
   };
 
-  const handleResetOneStudent = async (row) => {
-    const label = row.studentName || row.studentId;
-    if (
-      !window.confirm(
-        `Repasse exceptionnelle du QCM SDGN pour ${label} ?\n\nCela efface la tentative enregistr\u00e9e (note, anti-triche DS).\nPour r\u00e9tablir uniquement les jetons (onglet / missions), utilise \u00ab R\u00e9tablir jetons \u00bb dans le tableau \u00e9l\u00e8ves.`,
-      )
-    ) {
-      return;
-    }
-    setResettingId(row.studentId);
-    try {
-      await resetDsSdgnTabExamForUser(row.studentId);
-      onAfterReset?.();
-    } catch (err) {
-      console.error(err);
-      window.alert("Erreur lors de la r\u00e9initialisation.");
-    } finally {
-      setResettingId(null);
-    }
-  };
-
-  const inProgressCount = useMemo(
-    () =>
-      premiereRows.filter(
-        (row) => row.displayStatus === "incomplete" || row.displayStatus === "disqualified",
-      ).length,
-    [premiereRows],
+  const renderTrackBlock = (track, report, rows) => (
+    <div
+      key={track.key}
+      style={{
+        marginBottom: 12,
+        padding: "12px 14px",
+        borderRadius: 10,
+        border: "1px solid #6EE7B7",
+        background: "rgba(255,255,255,0.75)",
+      }}
+    >
+      <p style={{ margin: "0 0 6px", fontWeight: 900, color: "#065F46", fontSize: "0.88rem" }}>
+        {track.title}
+      </p>
+      <p style={{ margin: "0 0 10px", color: "#64748B", fontSize: "0.78rem" }}>
+        {`${rows.length} eleve(s) suivis \u00b7 ${report.completedCount} termine(s) \u00b7 ${report.incompleteCount} en cours ou interrompu(s)`}
+      </p>
+      <button
+        type="button"
+        disabled={exportingPdf != null || exportingSelfPdf != null}
+        onClick={() => void handleExportClassPdf(track)}
+        style={{
+          padding: "9px 16px",
+          borderRadius: 8,
+          border: "none",
+          background: "#059669",
+          color: "white",
+          fontWeight: 800,
+          fontSize: "0.82rem",
+          cursor: exportingPdf != null || exportingSelfPdf != null ? "wait" : "pointer",
+        }}
+      >
+        {exportingPdf === track.key
+          ? "Preparation PDF..."
+          : `PDF classe ${track.pdfLabel}`}
+      </button>
+    </div>
   );
-
-  const handleCloseExamForAll = async () => {
-    const ids = premiereRows.map((r) => r.studentId);
-    const msg =
-      `Cl\u00f4turer le DS SDGN pour toute la Premi\u00e8re ?\n\n` +
-      `\u2022 ${inProgressCount} session(s) en cours seront coup\u00e9es (note sur les r\u00e9ponses d\u00e9j\u00e0 faites)\n` +
-      `\u2022 Personne ne pourra lancer ou reprendre le QCM\n` +
-      `\u2022 Les notes d\u00e9j\u00e0 termin\u00e9es (ex. 14,9) sont conserv\u00e9es`;
-    if (!window.confirm(msg)) return;
-    setClosingExam(true);
-    try {
-      const result = await closeDsSdgnPremiereExamForAll(ids);
-      window.alert(
-        `DS cl\u00f4tur\u00e9.\n${result.finalized} session(s) finalis\u00e9e(s).\n${result.skipped} compte(s) sans changement (d\u00e9j\u00e0 termin\u00e9 ou jamais commenc\u00e9).`,
-      );
-      onAfterReset?.();
-    } catch (err) {
-      console.error(err);
-      window.alert("Impossible de cl\u00f4turer le DS (droits Firestore ou connexion).");
-    } finally {
-      setClosingExam(false);
-    }
-  };
-
-  const handleReopenExam = async () => {
-    if (
-      !window.confirm(
-        "Rouvrir le DS pour la classe ?\n\nLes \u00e9l\u00e8ves qui ont d\u00e9j\u00e0 une note ne pourront toujours pas recommencer sans \u00ab Repasse QCM \u00bb.",
-      )
-    ) {
-      return;
-    }
-    setReopeningExam(true);
-    try {
-      await reopenDsSdgnPremiereExam();
-      window.alert("DS rouvert : les \u00e9l\u00e8ves sans note peuvent lancer le QCM.");
-    } catch (err) {
-      console.error(err);
-      window.alert("Impossible de rouvrir le DS.");
-    } finally {
-      setReopeningExam(false);
-    }
-  };
-
-  const handleResetAttempts = async () => {
-    const targets = filteredRows.filter((row) => row.displayStatus !== "not_started");
-    if (!targets.length) {
-      window.alert("Aucun \u00e9l\u00e8ve avec une tentative DS \u00e0 r\u00e9initialiser (filtre actuel).");
-      return;
-    }
-    const msg = `R\u00e9initialiser le QCM SDGN pour ${targets.length} \u00e9l\u00e8ve(s) ? Ils pourront repasser le DS.`;
-    if (!window.confirm(msg)) return;
-    setResetting(true);
-    try {
-      await Promise.all(targets.map((row) => resetDsSdgnTabExamForUser(row.studentId)));
-      window.alert(`QCM SDGN r\u00e9initialis\u00e9 pour ${targets.length} \u00e9l\u00e8ve(s).`);
-      onAfterReset?.();
-    } catch (err) {
-      console.error(err);
-      window.alert("Erreur lors de la r\u00e9initialisation.");
-    } finally {
-      setResetting(false);
-    }
-  };
-
-  const statusColor = (status) => {
-    if (status === "completed") return "#059669";
-    if (status === "incomplete") return "#D97706";
-    if (status === "disqualified") return "#DC2626";
-    return "#94A3B8";
-  };
 
   return (
     <div
@@ -335,197 +214,19 @@ export default function AdminDsSdgnReport({
         background: "linear-gradient(135deg,#ECFDF5,#F8FAFC)",
       }}
     >
-      <p style={{ margin: "0 0 4px", fontFamily: "'Fredoka One', cursive", color: "#047857", fontSize: "1rem" }}>
-        {"Rapport DS SDGN Premi\u00e8re"}
-      </p>
-      <p style={{ margin: "0 0 8px", color: "#475569", fontSize: "0.82rem", lineHeight: 1.45 }}>
-        {
-          "Export de toute la classe : termines, non termines et jamais commences. Note /20, acquis par notion, detail des reponses."
-        }
-      </p>
-      <p style={{ margin: "0 0 8px", color: "#0369A1", fontSize: "0.78rem", lineHeight: 1.45 }}>
-        {`${dsSdgnNotes.length} note(s) dsSdgnNotes \u00b7 ${dsSdgnSummaries.length} dsSdgnResults \u00b7 ${dsTabDetectedTotal} dsTab \u00b7 ${report.withDsDataCount} lignes detail.`}
-      </p>
-
-      <div
+      <p
         style={{
-          marginBottom: 16,
-          padding: "14px 16px",
-          borderRadius: 14,
-          border: "3px solid #059669",
-          background: "#FFFFFF",
-          boxShadow: "0 4px 14px rgba(5,150,105,0.15)",
+          margin: "0 0 4px",
+          fontFamily: "'Fredoka One', cursive",
+          color: "#047857",
+          fontSize: "1rem",
         }}
       >
-        <p
-          style={{
-            margin: "0 0 6px",
-            fontFamily: "'Fredoka One', cursive",
-            color: "#047857",
-            fontSize: "1.15rem",
-          }}
-        >
-          {"NOTES /20 \u2014 collection dsSdgnNotes (source officielle)"}
-        </p>
-        <p style={{ margin: "0 0 10px", color: "#475569", fontSize: "0.8rem", lineHeight: 1.45 }}>
-          {`${gradesWithNote.length} note(s) sur ${directGrades.length} eleve(s). Tu peux saisir ou corriger une note a la main (colonne Enregistrer) si Firebase n'a pas le score.`}
-        </p>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
-          <button
-            type="button"
-            disabled={exportingGradesPdf || directGrades.length === 0}
-            onClick={() => void handleExportGradesPdf()}
-            style={{
-              padding: "10px 18px",
-              borderRadius: 10,
-              border: "none",
-              background: directGrades.length > 0 ? "#059669" : "#94A3B8",
-              color: "white",
-              fontWeight: 900,
-              fontSize: "0.9rem",
-              cursor: directGrades.length > 0 ? "pointer" : "not-allowed",
-            }}
-          >
-            {exportingGradesPdf ? "PDF..." : "Telecharger PDF (notes uniquement)"}
-          </button>
-        </div>
-        <div style={{ maxHeight: 280, overflowY: "auto", borderRadius: 10, border: "1px solid #D1FAE5" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.88rem" }}>
-            <thead>
-              <tr style={{ background: "#ECFDF5", position: "sticky", top: 0 }}>
-                <th style={{ padding: "10px 12px", textAlign: "left" }}>{"\u00c9l\u00e8ve"}</th>
-                <th style={{ padding: "10px 12px", textAlign: "right", width: 90 }}>{"Note"}</th>
-                <th style={{ padding: "10px 12px", textAlign: "right", width: 140 }}>{"Saisie"}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {directGrades.map((g) => {
-                const draft = gradeDrafts[g.studentId] ?? (g.gradeOn20 > 0 ? String(g.gradeOn20) : "");
-                return (
-                <tr key={g.studentId} style={{ borderTop: "1px solid #E2E8F0" }}>
-                  <td style={{ padding: "8px 12px", fontWeight: 700 }}>{g.studentName}</td>
-                  <td
-                    style={{
-                      padding: "8px 12px",
-                      textAlign: "right",
-                      fontWeight: 900,
-                      fontSize: "1rem",
-                      color: g.gradeOn20 > 0 ? "#047857" : "#DC2626",
-                    }}
-                  >
-                    {g.gradeOn20 > 0 ? String(g.gradeOn20) : "\u2014"}
-                  </td>
-                  <td style={{ padding: "6px 8px", textAlign: "right" }}>
-                    <input
-                      type="text"
-                      inputMode="decimal"
-                      placeholder="/20"
-                      value={draft}
-                      onChange={(e) =>
-                        setGradeDrafts((prev) => ({ ...prev, [g.studentId]: e.target.value }))
-                      }
-                      style={{
-                        width: 52,
-                        padding: "4px 6px",
-                        marginRight: 6,
-                        borderRadius: 6,
-                        border: "1px solid #CBD5E1",
-                        fontSize: "0.85rem",
-                      }}
-                    />
-                    <button
-                      type="button"
-                      disabled={!onSaveDsSdgnNote || savingGradeId === g.studentId}
-                      onClick={async () => {
-                        const v = Number(String(draft).replace(",", "."));
-                        if (!Number.isFinite(v) || v < 0 || v > 20) {
-                          window.alert("Note entre 0 et 20.");
-                          return;
-                        }
-                        setSavingGradeId(g.studentId);
-                        try {
-                          await onSaveDsSdgnNote(g.studentId, v);
-                          onAfterReset?.();
-                        } catch (err) {
-                          const msg = err instanceof Error ? err.message : String(err);
-                          window.alert(`Erreur : ${msg}\n\nDeployer les regles Firestore (collection dsSdgnNotes).`);
-                        } finally {
-                          setSavingGradeId(null);
-                        }
-                      }}
-                      style={{
-                        padding: "4px 8px",
-                        borderRadius: 6,
-                        border: "none",
-                        background: "#059669",
-                        color: "white",
-                        fontWeight: 800,
-                        fontSize: "0.75rem",
-                        cursor: "pointer",
-                      }}
-                    >
-                      {savingGradeId === g.studentId ? "..." : "OK"}
-                    </button>
-                  </td>
-                </tr>
-              );
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div style={{ marginBottom: 12 }}>
-        <button
-          type="button"
-          disabled={syncingResults}
-          onClick={async () => {
-            if (!onSyncDsResults) return;
-            setSyncingResults(true);
-            try {
-              const r = await onSyncDsResults();
-              if (r.total === 0 && r.candidates === 0) {
-                window.alert(
-                  "Aucune copie DS trouvee dans users.dsTab.\n\nVerifie dans Firebase Console : users / un eleve / dsTab / sdgn_premiere_qcm_v1 / gradeOn20",
-                );
-                return;
-              }
-              window.alert(
-                `Recalcul OK.\n\n` +
-                  `dsSdgnNotes : ${r.notesWithGrade ?? 0} note(s) /20 (${r.notesWritten ?? 0} doc(s))\n` +
-                  `dsSdgnResults : ${r.gradesFound ?? 0} note(s), ${r.total} copie(s)\n` +
-                  `${r.written} mise(s) a jour` +
-                  (r.errors?.length
-                    ? `\n\nAvertissements :\n${r.errors.slice(0, 3).join("\n")}`
-                    : ""),
-              );
-              onAfterReset?.();
-            } catch (err) {
-              const msg = err instanceof Error ? err.message : String(err);
-              window.alert(
-                `Echec sync.\n\n${msg}\n\nSi "permission-denied" : reconnecte-toi en compte admin, ou redeploie les regles Firestore.`,
-              );
-            } finally {
-              setSyncingResults(false);
-            }
-          }}
-          style={{
-            padding: "8px 14px",
-            borderRadius: 10,
-            border: "1px solid #0284C7",
-            background: "white",
-            color: "#0369A1",
-            fontWeight: 800,
-            fontSize: "0.82rem",
-            cursor: syncingResults ? "wait" : "pointer",
-          }}
-        >
-          {syncingResults ? "Calcul..." : "Recalculer et enregistrer les notes"}
-        </button>
-      </div>
-      <p style={{ margin: "0 0 14px", color: "#B45309", fontSize: "0.78rem", lineHeight: 1.45, fontWeight: 700 }}>
+        {"DS SDGN (1\u00e8re et Terminale)"}
+      </p>
+      <p style={{ margin: "0 0 14px", color: "#475569", fontSize: "0.82rem", lineHeight: 1.45 }}>
         {
-          "Anti-triche accidentel : \u00ab Autoriser reprise \u00bb laisse l\u2019\u00e9l\u00e8ve continuer le DS (score + r\u00e9ponses conserv\u00e9s). \u00ab Repasse QCM \u00bb efface tout."
+          "Classe : PDF notes. Ton parcours : lance le QCM sur la page DS, puis PDF rapport ici (+1 / -0,5 pt)."
         }
       </p>
 
@@ -533,260 +234,61 @@ export default function AdminDsSdgnReport({
         style={{
           marginBottom: 14,
           padding: "12px 14px",
-          borderRadius: 12,
-          border: examConfig.closed ? "1px solid #FCA5A5" : "1px solid #86EFAC",
-          background: examConfig.closed ? "#FEF2F2" : "#F0FDF4",
+          borderRadius: 10,
+          border: "1px solid #93C5FD",
+          background: "rgba(239,246,255,0.9)",
         }}
       >
-        <p style={{ margin: "0 0 8px", fontWeight: 800, color: examConfig.closed ? "#B91C1C" : "#047857", fontSize: "0.88rem" }}>
-          {examConfig.closed ? "DS ferm\u00e9 pour la classe" : "DS ouvert (lancement QCM autoris\u00e9)"}
+        <p style={{ margin: "0 0 8px", fontWeight: 900, color: "#1E40AF", fontSize: "0.85rem" }}>
+          {"Mon QCM (admin)"}
         </p>
-        {examConfig.closed && examConfig.closedAt && (
-          <p style={{ margin: "0 0 10px", fontSize: "0.78rem", color: "#7F1D1D" }}>
-            {`Cl\u00f4tur\u00e9 le ${new Date(examConfig.closedAt).toLocaleString("fr-FR")}`}
+        {adminSessions.length > 0 ? (
+          <ul style={{ margin: "0 0 10px", paddingLeft: 18, color: "#334155", fontSize: "0.8rem" }}>
+            {adminSessions.map((track) => (
+              <li key={track.key} style={{ marginBottom: 4 }}>
+                {`${track.examLabel} : ${track.gradeOn20} /20 \u00b7 ${track.answered} rep.`}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p style={{ margin: "0 0 10px", color: "#64748B", fontSize: "0.8rem" }}>
+            {"Aucun QCM enregistre. Lance 1\u00e8re ou Terminale depuis la page DS."}
           </p>
         )}
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-          <button
-            type="button"
-            disabled={closingExam || examConfig.closed}
-            onClick={() => void handleCloseExamForAll()}
-            style={{
-              padding: "9px 16px",
-              borderRadius: 10,
-              border: "none",
-              background: examConfig.closed ? "#94A3B8" : "#DC2626",
-              color: "white",
-              fontWeight: 800,
-              fontSize: "0.85rem",
-              cursor: examConfig.closed ? "not-allowed" : "pointer",
-            }}
-          >
-            {closingExam ? "Cl\u00f4ture..." : "Cl\u00f4turer le DS (toute Premi\u00e8re)"}
-          </button>
-          {examConfig.closed && (
+          {DS_EXPORT_TRACKS.map((track) => (
             <button
+              key={track.key}
               type="button"
-              disabled={reopeningExam}
-              onClick={() => void handleReopenExam()}
+              disabled={
+                exportingSelfPdf != null ||
+                exportingPdf != null ||
+                !adminSessions.some((s) => s.key === track.key)
+              }
+              onClick={() => void handleExportSelfPdf(track)}
               style={{
-                padding: "9px 16px",
-                borderRadius: 10,
-                border: "1px solid #059669",
-                background: "white",
-                color: "#047857",
+                padding: "8px 14px",
+                borderRadius: 8,
+                border: "none",
+                background: "#0D9488",
+                color: "white",
                 fontWeight: 800,
-                fontSize: "0.85rem",
-                cursor: reopeningExam ? "wait" : "pointer",
+                fontSize: "0.8rem",
+                cursor:
+                  exportingSelfPdf != null || exportingPdf != null ? "wait" : "pointer",
+                opacity: adminSessions.some((s) => s.key === track.key) ? 1 : 0.45,
               }}
             >
-              {reopeningExam ? "..." : "Rouvrir le DS"}
+              {exportingSelfPdf === track.key
+                ? "Preparation PDF..."
+                : `Mon PDF ${track.pdfLabel}`}
             </button>
-          )}
+          ))}
         </div>
-        <p style={{ margin: "10px 0 0", fontSize: "0.75rem", color: "#64748B", lineHeight: 1.45 }}>
-          {
-            "Coupe imm\u00e9diatement les \u00e9l\u00e8ves en plein QCM (leur navigateur enregistre la copie) et bloque tout nouveau lancement."
-          }
-        </p>
       </div>
 
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 10, alignItems: "center", marginBottom: 14 }}>
-        <input
-          value={recherche}
-          onChange={(e) => setRecherche(e.target.value)}
-          placeholder="Filtrer un \u00e9l\u00e8ve..."
-          style={{
-            minWidth: 200,
-            flex: 1,
-            padding: "8px 10px",
-            borderRadius: 10,
-            border: "1px solid #CBD5E1",
-            fontSize: "0.85rem",
-          }}
-        />
-        <span style={{ fontSize: "0.78rem", color: "#64748B" }}>
-          {`${report.withDsDataCount} avec DS enregistr\u00e9 \u00b7 ${report.completedCount} termin\u00e9(s) \u00b7 ${report.incompleteCount} en cours / interrompu \u00b7 ${report.students.filter((s) => s.displayStatus === "not_started").length} jamais commenc\u00e9(s)`}
-        </span>
-        <button
-          type="button"
-          disabled={exporting || exportingPdf || dsTabDetectedTotal === 0}
-          onClick={handleExport}
-          style={{
-            padding: "9px 16px",
-            borderRadius: 10,
-            border: "none",
-            background: dsTabDetectedTotal > 0 ? "#059669" : "#94A3B8",
-            color: "white",
-            fontWeight: 800,
-            fontSize: "0.85rem",
-            cursor: dsTabDetectedTotal > 0 ? "pointer" : "not-allowed",
-          }}
-        >
-          {exporting ? "Export..." : "Exporter Excel (copies DS)"}
-        </button>
-        <button
-          type="button"
-          disabled={exporting || exportingPdf || dsTabDetectedTotal === 0}
-          onClick={() => void handleExportPdf()}
-          style={{
-            padding: "9px 16px",
-            borderRadius: 10,
-            border: "none",
-            background: dsTabDetectedTotal > 0 ? "#0F766E" : "#94A3B8",
-            color: "white",
-            fontWeight: 800,
-            fontSize: "0.85rem",
-            cursor: dsTabDetectedTotal > 0 ? "pointer" : "not-allowed",
-          }}
-        >
-          {exportingPdf ? "PDF..." : "Exporter PDF (rapport complet)"}
-        </button>
-        <button
-          type="button"
-          disabled={resetting || !filteredRows.some((r) => r.displayStatus !== "not_started")}
-          onClick={handleResetAttempts}
-          style={{
-            padding: "9px 16px",
-            borderRadius: 10,
-            border: "1px solid #F59E0B",
-            background: "white",
-            color: "#B45309",
-            fontWeight: 800,
-            fontSize: "0.85rem",
-            cursor: resetting ? "wait" : "pointer",
-          }}
-        >
-          {resetting ? "Reset..." : "Repasse QCM (toute la classe filtr\u00e9e)"}
-        </button>
-      </div>
-
-      {!report.students.length ? (
-        <p style={{ margin: 0, color: "#64748B", fontSize: "0.88rem" }}>
-          {"Aucun \u00e9l\u00e8ve de Premi\u00e8re avec les filtres actuels."}
-        </p>
-      ) : (
-        <div style={{ overflowX: "auto", background: "white", borderRadius: 12, border: "1px solid #E2E8F0" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.78rem" }}>
-            <thead>
-              <tr style={{ background: "#F1F5F9", textAlign: "left" }}>
-                <th style={{ padding: "8px 10px" }}>{"\u00c9l\u00e8ve"}</th>
-                <th style={{ padding: "8px 10px" }}>{"Statut"}</th>
-                <th style={{ padding: "8px 10px" }}>{"Prog."}</th>
-                <th style={{ padding: "8px 10px" }}>{"Note /20"}</th>
-                {DS_SDGN_TOPIC_ORDER.map((topic) => (
-                  <th key={topic} style={{ padding: "8px 10px", whiteSpace: "nowrap" }}>
-                    {DS_SDGN_TOPIC_LABELS[topic]}
-                  </th>
-                ))}
-                <th style={{ padding: "8px 10px" }}>{"Actions"}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {report.students.map((row) => {
-                const sess = row.session;
-                const answered = sess?.questionsAnswered ?? sess?.answers?.length ?? 0;
-                const planned = sess?.totalQuestions;
-                const prog =
-                  planned != null && planned > 0
-                    ? `${answered}/${planned}`
-                    : row.displayStatus === "not_started"
-                      ? "\u2014"
-                      : answered > 0
-                        ? `${answered}/?`
-                        : "\u2014";
-                return (
-                  <tr key={row.studentId} style={{ borderTop: "1px solid #E2E8F0" }}>
-                    <td style={{ padding: "8px 10px", fontWeight: 700 }}>{row.studentName}</td>
-                    <td
-                      style={{
-                        padding: "8px 10px",
-                        fontWeight: 700,
-                        color: statusColor(row.displayStatus),
-                      }}
-                    >
-                      {formatDsDisplayStatusLabel(row.displayStatus)}
-                    </td>
-                    <td style={{ padding: "8px 10px" }}>{prog}</td>
-                    <td style={{ padding: "8px 10px", fontWeight: 800, color: "#0F766E" }}>
-                      {formatDsGradeForReport(row)}
-                    </td>
-                    {DS_SDGN_TOPIC_ORDER.map((topic) => {
-                      const stat = sess?.topicStats?.[topic];
-                      const label =
-                        row.displayStatus === "not_started"
-                          ? "\u2014"
-                          : !stat || stat.total <= 0
-                            ? "N/E"
-                            : stat.acquis
-                              ? "Acquis"
-                              : "Non acquis";
-                      const color =
-                        label === "Acquis"
-                          ? "#059669"
-                          : label === "Non acquis"
-                            ? "#DC2626"
-                            : "#94A3B8";
-                      return (
-                        <td key={topic} style={{ padding: "8px 10px", color, fontWeight: 700 }}>
-                          {label}
-                        </td>
-                      );
-                    })}
-                    <td style={{ padding: "8px 10px", whiteSpace: "nowrap" }}>
-                      {row.displayStatus === "not_started" ? (
-                        <span style={{ color: "#94A3B8" }}>{"\u2014"}</span>
-                      ) : (
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                          {canGrantResume(row) && (
-                            <button
-                              type="button"
-                              disabled={Boolean(restoringId) || Boolean(resettingId) || resetting}
-                              onClick={() => handleGrantResume(row)}
-                              style={{
-                                padding: "5px 10px",
-                                borderRadius: 8,
-                                border: "1px solid #059669",
-                                background: "#ECFDF5",
-                                color: "#047857",
-                                fontWeight: 800,
-                                fontSize: "0.72rem",
-                                cursor: restoringId || resettingId || resetting ? "wait" : "pointer",
-                              }}
-                            >
-                              {restoringId === row.studentId ? "..." : "Autoriser reprise"}
-                            </button>
-                          )}
-                          <button
-                            type="button"
-                            disabled={Boolean(resettingId) || Boolean(restoringId) || resetting}
-                            onClick={() => handleResetOneStudent(row)}
-                            style={{
-                              padding: "5px 10px",
-                              borderRadius: 8,
-                              border:
-                                row.displayStatus === "disqualified"
-                                  ? "1px solid #F87171"
-                                  : "1px solid #F59E0B",
-                              background: "white",
-                              color: row.displayStatus === "disqualified" ? "#B91C1C" : "#B45309",
-                              fontWeight: 800,
-                              fontSize: "0.72rem",
-                              cursor: resettingId || restoringId || resetting ? "wait" : "pointer",
-                            }}
-                          >
-                            {resettingId === row.studentId ? "..." : "Repasse QCM"}
-                          </button>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
+      {renderTrackBlock(DS_EXPORT_TRACKS[0], premiereReport, premiereRows)}
+      {renderTrackBlock(DS_EXPORT_TRACKS[1], terminaleReport, terminaleRows)}
     </div>
   );
 }

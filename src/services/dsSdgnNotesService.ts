@@ -179,25 +179,3 @@ export async function rebuildAllDsSdgnNotesFromUsers(
 
   return { written, withGrade, scanned, errors };
 }
-
-export async function adminSaveDsSdgnNote(
-  uid: string,
-  gradeOn20: number,
-  profile?: { prenom?: string; nom?: string; email?: string; classe?: string },
-): Promise<void> {
-  const existing = await getDoc(noteRef(uid));
-  const prev = existing.exists() ? (existing.data() as DsSdgnNote) : null;
-  await writeDsSdgnNote({
-    uid,
-    prenom: profile?.prenom ?? prev?.prenom,
-    nom: profile?.nom ?? prev?.nom,
-    email: profile?.email ?? prev?.email,
-    classe: profile?.classe ?? prev?.classe,
-    gradeOn20,
-    scorePoints: prev?.scorePoints ?? 0,
-    totalQuestions: prev?.totalQuestions ?? 0,
-    questionsAnswered: prev?.questionsAnswered,
-    status: prev?.status ?? "completed",
-    updatedAt: new Date().toISOString(),
-  });
-}

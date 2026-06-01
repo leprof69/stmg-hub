@@ -10,7 +10,7 @@ export type GameQuizQ = {
   sourceId: string;
 };
 
-function hashSeed(key: string): number {
+export function hashSeed(key: string): number {
   let h = 2166136261;
   for (let i = 0; i < key.length; i++) {
     h ^= key.charCodeAt(i);
@@ -19,11 +19,21 @@ function hashSeed(key: string): number {
   return h >>> 0;
 }
 
-function seededUnit(seedKey: string, step: number): number {
+export function seededUnit(seedKey: string, step: number): number {
   let s = (hashSeed(`${seedKey}:${step}`) + 0x9e3779b9) >>> 0;
   s = Math.imul(s ^ (s >>> 16), 0x85ebca6b) >>> 0;
   s = Math.imul(s ^ (s >>> 13), 0xc2b2ae35) >>> 0;
   return ((s ^ (s >>> 16)) >>> 0) / 0xffffffff;
+}
+
+/** M\u00e9lange d\u00e9terministe (seed \u00e9l\u00e8ve + session) pour un ordre diff\u00e9rent par copie. */
+export function shuffleArrayWithSeed<T>(items: readonly T[], seedKey: string): T[] {
+  const arr = [...items];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(seededUnit(seedKey, i) * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
 }
 
 /** Mélange A–D pour que la bonne réponse ne reste pas toujours en B (banque ~93 % bonIndex 1). */

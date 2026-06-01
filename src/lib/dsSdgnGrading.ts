@@ -42,7 +42,8 @@ export function computeTopicStats(
 ): Record<DsSdgnPremiereTopic, DsTopicStat> {
   const stats = buildEmptyTopicStats();
   for (const a of answers) {
-    const row = stats[a.topic];
+    const row = stats[a.topic as DsSdgnPremiereTopic];
+    if (!row) continue;
     row.total += 1;
     if (a.outcome === 1) row.correct += 1;
   }
