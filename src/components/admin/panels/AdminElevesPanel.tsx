@@ -1,9 +1,47 @@
+import { useState } from "react";
 import AdminReportingEleves from "../AdminReportingEleves";
 import AdminFiltersBar from "../AdminFiltersBar";
 import { useAdmin } from "../AdminContext";
+import {
+  exportParticipationPremiereCsv,
+  exportParticipationPremierePdf,
+} from "../../../lib/exportParticipationPremiere";
 
 export default function AdminElevesPanel() {
   const a = useAdmin();
+  const [exportingParticipation, setExportingParticipation] = useState<"csv" | "pdf" | null>(null);
+
+  const premiereExport = {
+    exporting: exportingParticipation,
+    onCsv: () => {
+      setExportingParticipation("csv");
+      try {
+        const result = exportParticipationPremiereCsv(a.reportingRows);
+        a.setFlashReporting(
+          `CSV t\u00e9l\u00e9charg\u00e9 : ${result.filename} (${result.count} \u00e9l\u00e8ve(s) de 1\u00e8re).`,
+        );
+      } catch (err) {
+        console.error(err);
+        a.setFlashReporting("Export CSV impossible.");
+      } finally {
+        setExportingParticipation(null);
+      }
+    },
+    onPdf: () => {
+      setExportingParticipation("pdf");
+      void exportParticipationPremierePdf(a.reportingRows)
+        .then((result) => {
+          a.setFlashReporting(
+            `PDF t\u00e9l\u00e9charg\u00e9 : ${result.filename} (${result.count} \u00e9l\u00e8ve(s) de 1\u00e8re).`,
+          );
+        })
+        .catch((err) => {
+          console.error(err);
+          a.setFlashReporting("Export PDF impossible.");
+        })
+        .finally(() => setExportingParticipation(null));
+    },
+  };
 
   return (
     <div style={{ background: "white", borderRadius: 20, padding: 18, border: "1px solid #E2E8F0" }}>
@@ -69,6 +107,7 @@ export default function AdminElevesPanel() {
         onRetablirJetons={(eleve) => void a.retablirJetonsAntiTriche(eleve.id, eleve.nomAffiche)}
         formatDateFr={a.formatDateFr}
         formatDuration={a.formatDuration}
+        premiereExport={premiereExport}
       />
     </div>
   );

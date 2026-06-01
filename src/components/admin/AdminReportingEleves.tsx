@@ -36,6 +36,7 @@ export default function AdminReportingEleves({
   onRetablirJetons,
   formatDateFr,
   formatDuration,
+  premiereExport,
 }) {
   if (!rows.length) {
     return (
@@ -86,6 +87,61 @@ export default function AdminReportingEleves({
             </span>
           ))}
         </div>
+        {premiereExport ? (
+          <div
+            style={{
+              marginTop: 10,
+              paddingTop: 10,
+              borderTop: "1px solid #FCD34D",
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 8,
+              alignItems: "center",
+            }}
+          >
+            <span style={{ fontSize: "0.78rem", fontWeight: 800, color: "#78350F", flex: "1 1 180px" }}>
+              {"Liste 1\u00e8re : note de participation (cartes rare+) et inventaire des cartes."}
+            </span>
+            <button
+              type="button"
+              disabled={premiereExport.exporting != null}
+              onClick={premiereExport.onPdf}
+              style={{
+                background: premiereExport.exporting != null ? "#E5E7EB" : "#16A34A",
+                color: premiereExport.exporting != null ? "#9CA3AF" : "white",
+                border: "none",
+                fontFamily: "'Fredoka One', cursive",
+                fontSize: "0.85rem",
+                padding: "8px 16px",
+                borderRadius: 14,
+                cursor: premiereExport.exporting != null ? "not-allowed" : "pointer",
+                boxShadow: premiereExport.exporting != null ? "none" : "0 4px 15px #16A34A40",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {premiereExport.exporting === "pdf" ? "Export..." : "PDF 1\u00e8re"}
+            </button>
+            <button
+              type="button"
+              disabled={premiereExport.exporting != null}
+              onClick={premiereExport.onCsv}
+              style={{
+                background: premiereExport.exporting != null ? "#E5E7EB" : "#D97706",
+                color: premiereExport.exporting != null ? "#9CA3AF" : "white",
+                border: "none",
+                fontFamily: "'Fredoka One', cursive",
+                fontSize: "0.85rem",
+                padding: "8px 16px",
+                borderRadius: 14,
+                cursor: premiereExport.exporting != null ? "not-allowed" : "pointer",
+                boxShadow: premiereExport.exporting != null ? "none" : "0 4px 15px #D9770640",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {premiereExport.exporting === "csv" ? "Export..." : "CSV 1\u00e8re"}
+            </button>
+          </div>
+        ) : null}
       </div>
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center", marginBottom: 10 }}>

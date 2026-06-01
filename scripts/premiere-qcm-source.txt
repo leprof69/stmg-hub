@@ -1,0 +1,707 @@
+Thème 1 : De l'individu à l'acteur (Questions 1 à 25)
+
+1. Un chef de projet réagit systématiquement avec agressivité lorsqu'on remet en cause ses décisions lors des réunions. Quel concept de l'individu explique cette réaction ?
+A) Son attitude, car l'agressivité est un trait de caractère inné et permanent qui détermine son comportement en toute circonstance.
+B) Son attitude, car il s'agit d'une prédisposition acquise et évaluative le poussant à réagir de cette manière face à cette situation précise.
+C) Sa personnalité, car l'agressivité résulte ici d'un calcul rationnel pour maintenir son influence minoritaire au sein du groupe.
+D) Sa personnalité, car c'est une réaction ponctuelle et isolée dictée par l'émotion du moment.
+Réponse : B.
+
+2. Pour calculer le coût global du travail mensuel d'un employé, le service des Ressources Humaines doit additionner :
+A) Le salaire net versé à l'employé et les cotisations patronales.
+B) Le salaire brut (qui inclut déjà les cotisations salariales) et les cotisations patronales.
+C) Le salaire net, les cotisations salariales et les cotisations patronales.
+D) Le salaire brut et les cotisations salariales uniquement.
+Réponse : B.
+
+3. Dans une agence bancaire, le directeur vouvoie ses employés mais exige qu'ils se tutoient entre eux. Ces comportements constituent :
+A) Des rituels, car ce sont des pratiques régulières visant à célébrer la culture de l'entreprise.
+B) Des codes, c'est-à-dire un ensemble de signes et de règles informelles de communication propres à ce groupe d'appartenance.
+C) Des normes, car il s'agit de règles écrites et formelles figurant dans le règlement intérieur.
+D) Des stéréotypes, car le directeur attribue des caractéristiques réductrices à ses employés.
+Réponse : B.
+
+4. Un recruteur refuse d'embaucher une candidate au poste de développeuse en affirmant : "Les femmes sont moins attirées par le code informatique". À quel mécanisme fait-il appel ?
+A) À une attribution causale, car il justifie l'échec de la candidate par un facteur externe au travail.
+B) À un préjugé, car il exprime un sentiment personnel positif ou négatif envers la candidate.
+C) À un stéréotype, car il applique une croyance réductrice et généralisatrice à l'ensemble d'un groupe social.
+D) À une norme d'organisation, car le recrutement dans ce secteur est réglementé par la branche professionnelle.
+Réponse : C.
+
+5. Une entreprise verse une prime exceptionnelle à une équipe ayant terminé un projet en avance. Quel est le rôle de cette rétribution ?
+A) C'est une incitation, car elle modifie le salaire brut de base de manière permanente pour récompenser la qualification.
+B) C'est une incitation, car elle vise à mobiliser les acteurs en liant leur intérêt financier à l'atteinte d'un objectif de l'organisation.
+C) C'est une rémunération directe, car elle dépend strictement du temps de travail figurant sur le contrat.
+D) C'est une reconnaissance immatérielle, car elle améliore prioritairement les conditions de travail de l'équipe.
+Réponse : B.
+
+6. Pour réduire la fatigue visuelle de ses opérateurs de saisie, l'entreprise installe de nouveaux écrans et des chaises ergonomiques. La direction agit sur :
+A) La Qualité de Vie au Travail (QVT), ce qui devrait mécaniquement augmenter le coût global du travail à long terme.
+B) La Qualité de Vie au Travail (QVT), afin d'agir sur les conditions de travail pour améliorer le bien-être et, indirectement, la productivité.
+C) L'élargissement des tâches, car l'employé dispose de nouveaux outils informatiques.
+D) L'enrichissement des tâches, car le confort donne plus d'autonomie et de responsabilités à l'acteur.
+Réponse : B.
+
+7. Un conflit éclate entre deux services. Le directeur écoute les arguments des deux parties et leur propose de créer une nouvelle procédure de travail qui satisfait tout le monde. Il s'agit d'une gestion de conflit par :
+A) Évitement, car le directeur a refusé de trancher en faveur d'un service.
+B) Recours hiérarchique, car le directeur a utilisé son pouvoir d'autorité pour imposer une sanction.
+C) Dépassement, car la confrontation a été transformée en une coopération débouchant sur une solution innovante.
+D) Dépassement, car un arbitre externe à l'entreprise a été mandaté pour juger le litige.
+Réponse : C.
+
+8. Dans un hypermarché, un magasinier voit son poste évoluer : il doit désormais contrôler la réception, vérifier les dates de péremption et gérer les retours fournisseurs sur tablette. Cette évolution de l'activité de travail correspond à :
+A) Un élargissement des tâches, car il effectue des tâches plus nombreuses mais de même nature.
+B) Un enrichissement des tâches, car ses nouvelles missions impliquent davantage de réflexion, de contrôle et d'autonomie.
+C) Une flexibilité quantitative, l'employé travaillant désormais sur de plus grandes plages horaires.
+D) Une modification de la qualification, les outils numériques remplaçant obligatoirement son diplôme initial.
+Réponse : B.
+
+9. Le dirigeant de l'entreprise "TechInnov" explique : "Je fixe les objectifs de vente seul, mais j'organise des réunions pour que les vendeurs me donnent leur avis sur la façon de les atteindre". Quel est son style de direction selon R. Likert ?
+A) Participatif, car il organise des réunions pour laisser l'équipe prendre la décision finale de vente.
+B) Consultatif, car il sollicite l'opinion de ses collaborateurs tout en conservant le pouvoir décisionnel final.
+C) Paternaliste, car il utilise la consultation comme une récompense pour fidéliser les vendeurs.
+D) Autoritaire, car l'organisation de réunions est imposée de manière formelle et descendante.
+Réponse : B.
+
+10. La productivité du travail au sein d'une organisation se définit et se calcule théoriquement par :
+A) Le rapport entre la quantité (ou la valeur) de la production et les moyens humains mobilisés pour l'obtenir.
+B) Le rapport entre le chiffre d'affaires généré et le montant total des cotisations sociales.
+C) L'augmentation absolue du volume de biens produits d'une année sur l'autre, quel que soit l'effectif engagé.
+D) L'écart de rentabilité entre le salaire brut versé et la valeur ajoutée générée par un employé.
+Réponse : A, pas une simple augmentation de volume ou un indicateur purement financier).
+
+11. Un employé de préfecture refuse d'appliquer une nouvelle directive de l'État, arguant que celle-ci est contraire aux valeurs d'équité du service public. Ce blocage trouve sa source dans :
+A) Une divergence d'intérêts financiers entre l'employé et l'administration hiérarchique.
+B) L'influence de l'identité numérique de l'employé sur son temps de travail.
+C) Une confrontation entre les normes de l'organisation et le système de valeurs de l'individu.
+D) La mise en œuvre obligatoire d'un style de direction de type laisser-faire.
+Réponse : C.
+
+12. L'indicateur "Taux d'absentéisme" est utilisé par le manager d'une équipe pour :
+A) Mesurer précisément la performance commerciale de ses vendeurs sur le terrain.
+B) Évaluer la rentabilité financière des heures supplémentaires en fin d'année.
+C) Détecter un dysfonctionnement social ou un problème de motivation (conditions de travail, climat) au sein de l'action collective.
+D) Calculer le montant exact des cotisations patronales à verser aux organismes sociaux.
+Réponse : C.
+
+13. L'argumentation logique, lors d'une communication de groupe, se caractérise par le fait que l'émetteur :
+A) S'appuie sur la preuve, les faits chiffrés ou le raisonnement déductif pour convaincre son auditoire.
+B) Cherche à séduire l'auditoire en mobilisant exclusivement des émotions et des valeurs affectives.
+C) Utilise sa position statutaire dans l'organigramme pour forcer l'adhésion immédiate.
+D) Isole un individu pour lui imposer une norme informelle de l'entreprise.
+Réponse : A.
+
+14. L'entreprise "Bois & Co" décide de se séparer de ses camions de livraison et confie dorénavant le transport de ses meubles à une société spécialisée. Comment nomme-t-on cette décision d'organisation ?
+A) Une internalisation, car l'entreprise intègre de nouvelles compétences logistiques au sein de son fonctionnement.
+B) Une flexibilité qualitative interne, car l'entreprise modifie la durée du travail de ses salariés restants.
+C) Une externalisation (sous-traitance), car l'organisation confie une activité secondaire à un tiers pour se recentrer sur son métier de base.
+D) Une contractualisation de type flexibilité quantitative interne.
+Réponse : C.
+
+15. Un salarié charismatique parvient toujours à faire adopter ses idées lors des réunions, bien qu'il n'ait aucune fonction de manager officiel. Il détient :
+A) Une relation d'autorité, conférée par le règlement intérieur strict de l'organisation.
+B) Un leadership, c'est-à-dire une capacité d'influence informelle reconnue et acceptée par le reste du groupe.
+C) Un statut de superviseur direct tel que défini par la fiche de poste.
+D) Une fonction de veille informationnelle au sein de l'intelligence collective asynchrone.
+Réponse : B, le leadership est informel/reconnu par les pairs).
+
+16. Quelle est la différence théorique fondamentale entre une "qualification" et une "compétence" pour un individu au travail ?
+A) La qualification est innée (don naturel), tandis que la compétence s'acquiert par le diplôme d'État.
+B) La qualification est reconnue institutionnellement (diplôme, classification de branche), tandis que la compétence est la capacité prouvée à mobiliser des savoirs dans une situation de travail précise.
+C) La qualification détermine la personnalité, tandis que la compétence détermine l'attitude et les émotions.
+D) Il n'y a aucune différence, ces deux termes désignant rigoureusement le savoir-être psychologique du salarié.
+Réponse : B sans être compétent face à un imprévu logiciel. L'option A inverse totalement inné et acquis).
+
+17. Un syndicat organise un rassemblement devant les bureaux de la direction pour exiger le paiement d'heures supplémentaires non rémunérées l'an passé. Il s'agit :
+A) D'un conflit de valeurs, car le syndicat défend prioritairement l'écologie.
+B) D'un conflit de pouvoir, les salariés souhaitant nommer le nouveau PDG de l'entreprise.
+C) D'un conflit d'intérêts, portant sur la répartition de la richesse et les conditions de rétribution matérielle du travail.
+D) D'une communication interpersonnelle d'évitement, imposée par l'asymétrie d'information.
+Réponse : C.
+
+18. Une entreprise autorise ses salariés à consulter leurs réseaux sociaux privés au bureau, sous réserve de ne jamais mentionner le nom de l'entreprise. Quel risque cherche-t-elle à limiter ?
+A) Le coût global du travail, car le temps passé en ligne est systématiquement déduit du salaire brut.
+B) La porosité entre l'espace privé et l'espace professionnel, qui pourrait engager la responsabilité et dégrader l'image (l'identité numérique) de l'organisation sur internet.
+C) L'influence de l'intelligence collective des salariés sur les décisions stratégiques du sommet hiérarchique.
+D) L'apparition de données ouvertes (Open Data) dans les dossiers financiers de l'entreprise.
+Réponse : B.
+
+19. Dans le cadre de la gestion d'un conflit entre deux membres d'une équipe, l'attitude du manager consistant à nier le problème et à espérer qu'il disparaisse avec le temps est appelée :
+A) L'ajustement mutuel coercitif.
+B) Le dépassement par la négociation.
+C) Le recours hiérarchique formel.
+D) L'évitement.
+Réponse : D exigent une action managériale. L'évitement est caractérisé par la non-action et la fuite).
+
+20. Le fait que les salariés du service commercial partagent des "rites" (comme fêter chaque nouveau contrat en sonnant une cloche dans l'open-space) permet à l'organisation de :
+A) Définir juridiquement la structure de propriété de l'entreprise.
+B) Réduire la qualification nécessaire pour être embauché dans ce service.
+C) Renforcer le sentiment d'appartenance au groupe et cimenter la culture d'entreprise.
+D) Automatiser le calcul de l'efficience et de la productivité du travail.
+Réponse : C.
+
+21. La fiche de poste est un outil de gestion des ressources humaines qui permet principalement de :
+A) Fixer la stratégie commerciale de l'entreprise à un horizon de cinq ans.
+B) Formaliser les attentes de l'organisation (missions, compétences exigées, position hiérarchique) envers un acteur donné sur une fonction précise.
+C) Calculer automatiquement les cotisations patronales à la fin du mois grâce à un algorithme.
+D) Déterminer la personnalité et les émotions du candidat lors de l'entretien de recrutement.
+Réponse : B.
+
+22. Le groupe d'individus avec lequel un acteur interagit au quotidien dans son service (et dont il adopte naturellement les façons de faire) constitue son :
+A) Groupe d'appartenance, qui lui transmet ses normes de travail et ses comportements.
+B) Groupe de référence, dont il ne fait pas partie mais dont il copie les codes idéalisés pour y entrer un jour.
+C) Groupe formel d'intelligence collective asynchrone.
+D) Comité de pilotage stratégique de l'ajustement mutuel.
+Réponse : A. Le groupe de référence est celui qu'on vise ou que l'on imite de loin).
+
+23. Lors d'une réunion, le directeur utilise des arguments menaçants ("Si on ne fait pas ça, le service sera fermé d'ici trois mois"). Il utilise un registre d'influence :
+A) Logique et rationnel, fondé sur les chiffres du BFR.
+B) Affectif et émotionnel, cherchant à déclencher la peur pour obtenir une soumission rapide.
+C) Paradoxal, en demandant l'inverse de ce qu'il souhaite.
+D) Basé sur l'intelligence collective des communautés en ligne.
+Réponse : B.
+
+24. Le recours massif à des contrats courts (CDD, intérim) dans une usine de conditionnement traduit une volonté managériale de rechercher :
+A) Une flexibilité qualitative (ou fonctionnelle) pour accroître la polyvalence des ouvriers sur les machines.
+B) Une flexibilité quantitative externe, pour ajuster immédiatement le volume de main-d'œuvre aux variations d'activité sans contrainte juridique forte.
+C) Une amélioration pérenne de la culture d'organisation et des rituels internes d'intégration.
+D) Une hausse de la valeur perçue par le client final en magasin.
+Réponse : B.
+
+25. Une entreprise propose des horaires "à la carte" permettant aux salariés de choisir quotidiennement leurs heures d'arrivée et de départ. C'est un aménagement visant à :
+A) Supprimer les cotisations salariales sur la fiche de paie.
+B) Accroître la supervision directe et le contrôle visuel par le manager de proximité.
+C) Améliorer les conditions de travail (Qualité de Vie au Travail) en facilitant l'équilibre vie professionnelle / vie personnelle.
+D) Mettre en place un système de données ouvertes (Open Data) sur le temps de présence.
+Réponse : C ou d'un enjeu fiscal).
+
+Thème 2 : Numérique et intelligence collective (Questions 26 à 50)
+
+26. Un tableau Excel contient la suite de chiffres "12, 14, 18, 11". En management des systèmes d'information, ces éléments bruts sont considérés comme :
+A) Des informations, car ils sont saisis de manière structurée dans un outil numérique.
+B) Des données, car ce sont des éléments factuels, non contextualisés, qui n'ont pas encore de signification propre.
+C) Des connaissances, car ils résultent de l'expérience opérationnelle de l'employé qui les a tapés.
+D) Des processus de gestion, car ils s'enchaînent de manière logique de gauche à droite.
+Réponse : B, ce ne sont que des données "mortes").
+
+27. Lorsqu'une légende précise que "12, 14, 18, 11" correspondent à l'évolution du "Chiffre d'affaires en millions d'euros des quatre derniers trimestres", on est en présence :
+A) D'une donnée à caractère personnel soumise au RGPD.
+B) D'un flux de travail (workflow) automatisé.
+C) D'une information, car la donnée a été traitée et contextualisée pour lui donner du sens et aider à la décision.
+D) D'une automatisation décisionnelle algorithmique.
+Réponse : C pour l'action du manager).
+
+28. Pour s'inscrire à une newsletter, un site web exige le nom, l'adresse e-mail et le code postal de l'internaute. Selon le RGPD, le recueil de ces éléments constitue :
+A) Un traitement de données ouvertes (Open Data), librement accessibles et revendables à tous les concurrents.
+B) Un traitement de Mégadonnées (Big Data) nécessitant des serveurs externes de type Cloud.
+C) Un traitement de données à caractère personnel, soumettant l'entreprise à de strictes obligations de consentement, finalité et sécurisation.
+D) Un traitement d'intelligence collective asynchrone pour la R&D.
+Réponse : C.
+
+29. La métropole de Bordeaux publie gratuitement sur son site les fichiers bruts des incidents sur son réseau d'eau, afin que des start-ups puissent créer des applications innovantes de signalement. Ce principe est celui :
+A) De l'informatique en nuage (Cloud Computing) municipal.
+B) De l'Open Data (données ouvertes), visant la transparence démocratique et la stimulation économique par des acteurs tiers.
+C) Des Mégadonnées (Big Data) prédictives.
+D) Du système de gestion intégrée exclusif au secteur public.
+Réponse : B.
+
+30. L'entreprise Netflix croise l'heure de connexion, l'historique de visionnage et le lieu de résidence de millions d'utilisateurs pour leur recommander un film spécifique. Ce ciblage s'appuie sur l'exploitation :
+A) Des réseaux sociaux d'entreprise (RSE) ouverts au public.
+B) Des données ouvertes (Open Data) gouvernementales.
+C) Des Mégadonnées (Big Data), transformant un volume massif, véloce et varié de données en un avantage stratégique prédictif.
+D) De l'automatisation des processus de gestion purement industrielle.
+Réponse : C.
+
+31. Dans l'entreprise, lorsqu'un magasinier valide la réception d'une palette sur son écran, le stock informatique augmente, la facture fournisseur est pré-remplie et la production est alertée de la disponibilité. Ce système informatisé est :
+A) Un Progiciel de Gestion Intégré (PGI/ERP), garantissant l'unicité de la donnée et l'interconnexion en temps réel des processus métiers.
+B) Un espace de travail collaboratif de type Cloud (Drive).
+C) Une application de "Shadow IT" créée secrètement par les employés de l'entrepôt.
+D) Une communauté en ligne de fournisseurs de la grande distribution.
+Réponse : A.
+
+32. Une PME décide de ne plus acheter de serveurs physiques. Elle loue des espaces de stockage et utilise des logiciels de comptabilité directement accessibles via un navigateur web. Elle a recours au :
+A) Crowdsourcing (externalisation du développement vers la foule).
+B) Cloud Computing (informatique en nuage), qui offre de la flexibilité mais déplace le risque vers la dépendance au réseau internet et au prestataire.
+C) Processus d'Open Data financier, la comptabilité devant être publique.
+D) Système de Blockchain (chaîne de blocs) totalement décentralisée.
+Réponse : B.
+
+33. En sciences de gestion, comment définit-on précisément un "processus de gestion" (ex: le processus de recrutement ou d'achat) ?
+A) L'algorithme mathématique qui permet de calculer le seuil de rentabilité RH ou commercial.
+B) L'enchaînement structuré de tâches et d'activités logiques, mobilisant différents acteurs (avec leurs flux d'information) pour atteindre un objectif précis de l'organisation.
+C) Le règlement intérieur fixant les horaires de travail de l'atelier de fabrication.
+D) Le document comptable de synthèse résumant les flux financiers de l'année.
+Réponse : B et non un algorithme isolé ou un document statique).
+
+34. L'utilisation d'une plateforme collaborative (ex: Slack, Teams ou réseau social d'entreprise) modifie le fonctionnement de l'organisation en :
+A) Rendant obligatoire la présence physique simultanée des salariés dans le même bureau open-space.
+B) Cassant les silos hiérarchiques, favorisant la transversalité, le partage informel de l'information et le travail à distance.
+C) Centralisant exclusivement l'information descendante entre les mains du dirigeant.
+D) Remplaçant l'intégralité du système de gestion intégrée (PGI) de l'entreprise.
+Réponse : B.
+
+35. Un cabinet comptable déploie une intelligence artificielle (IA) qui scanne et classe automatiquement les factures fournisseurs selon leur nature, sans intervention humaine. Quel est l'effet organisationnel ?
+A) L'IA crée une rigidité qui ralentit inévitablement le processus de facturation.
+B) L'automatisation de cette tâche répétitive modifie l'activité, réduit les coûts et permet au comptable de se recentrer sur des missions d'analyse à plus forte valeur.
+C) L'IA transforme mécaniquement les factures privées en données ouvertes (Open Data) accessibles à l'administration.
+D) L'IA remplace purement et simplement la prise de décision stratégique globale du dirigeant du cabinet.
+Réponse : B.
+
+36. Le "Système d'Information" (SI) d'une organisation se compose de matériel, de logiciels, de données et d'humains. Quel est son rôle fondamental ?
+A) Collecter, stocker, traiter et diffuser l'information pertinente pour coordonner l'action des acteurs et éclairer la prise de décision.
+B) Remplacer progressivement le capital humain par des automates robotisés sur la chaîne de montage.
+C) Mesurer exclusivement la rentabilité financière des investissements en bourse de l'entreprise.
+D) Publier systématiquement les secrets de fabrication sur les réseaux sociaux pour générer de l'e-réputation.
+Réponse : A.
+
+37. Pour créer son nouveau logo, une start-up lance un concours sur internet où des centaines de graphistes amateurs proposent leurs idées. La start-up ne paiera que le gagnant. Elle utilise la méthode du :
+A) Cloud computing (informatique en nuage pour stocker les images).
+B) Big Data (informatique décisionnelle de masse).
+C) Crowdsourcing (externalisation vers la foule), mobilisant l'intelligence collective d'une communauté externe pour résoudre un problème interne.
+D) Blockchain (chaîne de blocs pour sécuriser les dessins).
+Réponse : C pour une tâche (sourcing) est le crowdsourcing).
+
+38. La politique de sécurité du Système d'Information impose qu'un vendeur ne puisse pas consulter la base de données des salaires de la direction. Cela justifie que l'information est :
+A) Une donnée ouverte (Open Data) devant paradoxalement être protégée du Big Data.
+B) Une ressource stratégique dont l'accessibilité doit être définie par des droits stricts en fonction du rôle et du besoin de chaque acteur.
+C) Une information obsolète qui n'a plus aucune valeur pour la décision commerciale.
+D) Un élément crypté réservé au seul système d'intelligence artificielle de l'entreprise.
+Réponse : B, pas de bloquer l'IA ou de la considérer comme obsolète).
+
+39. Une boutique physique de vêtements lance une application mobile permettant à ses clients de réserver un article en ligne et de venir l'essayer en magasin ("Click and Collect"). Le numérique génère ici :
+A) Une rigidité organisationnelle, le magasin physique entrant en conflit d'intérêts avec l'application.
+B) De l'agilité organisationnelle, la "digitalisation" ouvrant de nouveaux canaux (omnicanal) pour s'adapter avec souplesse aux comportements connectés des consommateurs.
+C) L'obligation juridique de délocaliser la production des vêtements pour payer l'application.
+D) La baisse mathématique et automatique de la marge commerciale unitaire de l'entreprise.
+Réponse : B pour capter de nouvelles ventes de manière transverse, il n'y a pas d'obligation de délocaliser ou de baisser les prix).
+
+40. Dans un logiciel RH, la validation des congés suit un cheminement automatique inaltérable : saisie du salarié -> alerte au manager -> clic de validation -> transmission à la paie. Ce circuit informatisé est un :
+A) Réseau social d'entreprise (RSE) asynchrone.
+B) Algorithme de Big Data prédictif sur l'absentéisme.
+C) Flux de travail (Workflow), qui automatise, fiabilise et trace l'enchaînement des étapes d'un processus de gestion.
+D) Document formel de e-communication externe.
+Réponse : C.
+
+41. En sciences de gestion, le terme de "Digitalisation" (ou transformation numérique) d'une organisation désigne :
+A) Le remplacement régulier des ordinateurs et imprimantes du parc informatique de l'entreprise.
+B) La mutation profonde de l'organisation, de ses processus de travail et de ses modèles de création de valeur sous l'impulsion structurante des technologies digitales.
+C) La suppression pure et simple des boutiques physiques au profit d'un unique site e-commerce.
+D) La traduction de tous les anciens documents d'archives papier au format PDF.
+Réponse : B ni acheter des PC, c'est changer radicalement la façon de travailler, de s'organiser et de vendre).
+
+42. L'encyclopédie Wikipédia ou le système de signalement des bouchons par les utilisateurs sur l'application Waze sont des exemples majeurs illustrant :
+A) La standardisation des qualifications dans l'économie numérique.
+B) L'intelligence collective, où la collaboration d'une multitude d'acteurs produit en réseau une information plus riche que l'expertise individuelle isolée.
+C) Le fonctionnement d'un PGI (Progiciel de Gestion Intégré) gouvernemental.
+D) La création de valeur générée par des algorithmes de "boîte noire" en asymétrie d'information.
+Réponse : B.
+
+43. L'outil "Intranet" d'une entreprise se distingue de son site web institutionnel car il a pour vocation de :
+A) Assurer la e-communication commerciale de masse pour attirer de nouveaux clients (prospection B2C).
+B) Publier les rapports financiers annuels en Open Data pour rassurer les actionnaires.
+C) Sécuriser la e-communication interne, offrant un espace de partage d'informations et d'outils collaboratifs réservé aux seuls membres de l'organisation.
+D) Stocker les mots de passe des clients dans le strict respect du RGPD européen.
+Réponse : C.
+
+44. L'implantation d'un progiciel (PGI) impose souvent de revoir les méthodes de travail humaines pour qu'elles s'adaptent au fonctionnement du logiciel. On dit alors que le Système d'Information a un rôle :
+A) Obsolescent sur la formation professionnelle.
+B) Structurant, car en automatisant les processus, il contraint, modèle et normalise les habitudes de travail des acteurs de l'organisation.
+C) Destructeur de valeur partenariale en logistique.
+D) De libéralisation de l'ajustement mutuel informel.
+Réponse : B à l'entreprise et dicte la façon d'exécuter la tâche).
+
+45. Un constructeur de moteurs d'avion installe des capteurs connectés (IoT) qui transmettent des données en plein vol. L'analyse de ces données techniques lui permet :
+A) D'éditer automatiquement les fiches de paie des pilotes (Workflow RH).
+B) De développer un service de maintenance prédictive à forte valeur ajoutée, transformant le modèle économique classique vers l'économie de la fonctionnalité.
+C) De publier les plans industriels confidentiels du moteur en Open Data.
+D) De s'affranchir du respect des règles de sécurité du droit du travail.
+Réponse : B.
+
+46. L'utilisation du BYOD (Bring Your Own Device - utiliser son smartphone personnel au travail) par les employés engendre un paradoxe stratégique pour le DSI (Directeur des Systèmes d'Information) :
+A) Il augmente fortement la productivité mais réduit paradoxalement l'enveloppe des cotisations patronales.
+B) Il favorise l'agilité et le travail en mobilité, mais crée en retour une vulnérabilité critique pour la sécurité et la confidentialité des données de l'entreprise.
+C) Il améliore le bilan social de l'année mais dégrade simultanément la valeur partenariale.
+D) Il rend obligatoire l'usage de la Blockchain pour envoyer des e-mails sécurisés.
+Réponse : B.
+
+47. Lequel de ces phénomènes justifie qu'un PGI (Progiciel de Gestion Intégré) puisse engendrer une forte "rigidité organisationnelle" ?
+A) Le logiciel d'intelligence artificielle s'adapte intuitivement à chaque nouvelle idée d'un employé sans nécessiter aucun paramétrage.
+B) Le paramétrage informatique impose un enchaînement strict des tâches : il est impossible de passer à l'étape suivante si l'étape précédente n'est pas validée selon la norme, empêchant tout contournement ou improvisation.
+C) Le logiciel de Cloud permet de télé-travailler depuis l'étranger, éloignant les managers.
+D) Le logiciel génère des Mégadonnées de manière totalement aléatoire et erronée.
+Réponse : B.
+
+48. Une entreprise de e-commerce qui ne protège pas suffisamment sa base de données clients contre le piratage informatique s'expose à :
+A) Une lourde amende administrative pour non-respect de l'Open Data français.
+B) Une destruction de sa valeur perçue (perte de confiance) et des sanctions juridiques pour manquement aux obligations de sécurisation imposées par le RGPD.
+C) Un risque d'obsolescence programmée de ses serveurs informatiques.
+D) Une augmentation mathématique et automatique de son Besoin en Fonds de Roulement (BFR).
+Réponse : B et viole le RGPD. Il n'impacte ni le BFR, ni l'Open Data).
+
+49. L'intelligence artificielle (IA) remplace certaines analyses humaines. Le risque d'un algorithme de "boîte noire" (dont le concepteur lui-même ne comprend pas le cheminement décisionnel) utilisé par une administration publique est de :
+A) Garantir une objectivité mathématique parfaite, dépourvue de tout biais d'apprentissage.
+B) Violer le principe légal de "transparence des algorithmes", rendant impossible l'explication de la décision (ex: un refus d'affectation universitaire) à l'usager.
+C) Publier automatiquement et anonymement des données personnelles sur des réseaux sociaux publics.
+D) Réduire le seuil de rentabilité de l'organisation publique.
+Réponse : B empêche par définition cette transparence).
+
+50. La e-communication d'une organisation contemporaine intègre :
+A) Uniquement l'envoi de newsletters commerciales aux clients existants du fichier CRM.
+B) L'ensemble coordonné des flux d'informations numérisés (réseaux sociaux, site institutionnel, applications mobiles, intranet) à destination des publics externes et internes.
+C) L'automatisation robotique exclusive des entrepôts d'expédition pour fluidifier l'information logistique.
+D) La publication du bilan fonctionnel financier sur un tableur Excel en fin d'année.
+Réponse : B que vers le public (externe), et non limitée à l'e-mail ou à la logistique).
+
+Thème 3 : Création de valeur et performance (Questions 51 à 75)
+
+51. L'entreprise de jus de fruits "FruitPur" réalise 2 millions d'€ de Chiffre d'Affaires. Elle achète pour 600 000 € de fruits et 200 000 € de bouteilles en verre. Elle paie 400 000 € de salaires. Sa Valeur Ajoutée (VA) est de :
+A) 800 000 €, obtenue en retranchant toutes les charges d'exploitation (achats + salaires) du chiffre d'affaires.
+B) 1 200 000 €, calculée par la différence entre le chiffre d'affaires (2M€) et les seules consommations intermédiaires achetées aux fournisseurs (600k + 200k).
+C) 2 000 000 €, la création de richesse se mesurant exclusivement par les ventes facturées, sans déduction.
+D) 1 400 000 €, correspondant au coût d'achat des matières additionné aux salaires de production.
+Réponse : B. Les salaires seront payés grâce à cette VA).
+
+52. Dans le mécanisme de répartition de la Valeur Ajoutée, l'autofinancement désigne la part de richesse :
+A) Reversée obligatoirement aux établissements de crédit sous forme d'intérêts d'emprunt.
+B) Versée au personnel sous forme de primes de participation aux bénéfices de l'année.
+C) Conservée par l'entreprise (mise en réserve) pour financer elle-même ses futurs investissements et assurer sa pérennité.
+D) Distribuée aux actionnaires lors du versement annuel des dividendes d'actions.
+Réponse : C après avoir payé tout le monde, y compris les actionnaires).
+
+53. L'action en bourse d'un constructeur automobile chute lourdement de 20 % le jour où il annonce un retard sur la sortie de son nouveau modèle électrique. Quelle notion illustre cette chute ?
+A) La destruction de la valeur financière boursière (actionnariale), car le marché révise à la baisse ses anticipations de profits futurs sur ce constructeur.
+B) L'anéantissement de la valeur sociale, l'entreprise devant nécessairement licencier du personnel suite à cette baisse.
+C) La baisse mécanique de la marge commerciale unitaire du précédent modèle à essence.
+D) La détérioration inévitable de la valeur partenariale avec ses sous-traitants d'Amérique du Sud.
+Réponse : A.
+
+54. Un fabricant de montres de luxe vend ses produits 5 000 €, alors que son coût de revient complet n'est que de 500 €. Sur quel pilier repose la justification économique de cette marge colossale ?
+A) La valeur boursière, le client spéculant sur l'augmentation du prix du métal précieux sur les marchés.
+B) La valeur partenariale, le réseau de distributeurs exclusifs exigeant d'être rémunéré à ce niveau d'excellence.
+C) La valeur perçue, c'est-à-dire l'évaluation subjective par le client des bénéfices immatériels (prestige, image de marque) dépassant largement les caractéristiques physiques du produit.
+D) L'efficience du processus industriel, l'entreprise ayant réduit ses charges variables au strict minimum vital.
+Réponse : C qui font que le client accepte de payer ce prix, c'est la définition de la valeur perçue).
+
+55. En management, qualifier un processus ou une action "d'efficient" signifie que l'organisation :
+A) A réussi à atteindre l'objectif fixé, sans aucune considération pour le dépassement du budget alloué.
+B) A maximisé le rapport entre le résultat obtenu et les ressources (coûts, temps, énergie) mobilisées pour y parvenir.
+C) A externalisé la tâche complexe vers un prestataire étranger moins coûteux.
+D) A augmenté son chiffre d'affaires sur un marché concurrentiel saturé.
+Réponse : B.
+
+56. La mairie de la ville X s'était fixé l'objectif de rénover 10 écoles avec un budget de 1 million d'euros. En fin d'année, seules 10 écoles sont rénovées, mais la mairie a dépensé 1,5 million d'euros. L'analyse révèle que l'action est :
+A) Inefficace (but quantitatif non atteint) et inefficiente (budget explosé).
+B) Efficace (les 10 écoles sont bien rénovées) mais inefficiente (gaspillage ou dérive manifeste des ressources financières prévues).
+C) Efficiente (les travaux sont faits) mais inefficace (les impôts locaux vont augmenter).
+D) Optimale, car la performance publique ne se mesure que par la qualité des infrastructures livrées, sans notion de coût.
+Réponse : B est atteint = Efficace. Les moyens financiers sont dépassés = Inefficient).
+
+57. Le directeur d'un magasin de sport étudie son "Chiffre d'affaires", sa "Part de marché locale" et son "Taux de fidélité client". Quel type de performance évalue-t-il ?
+A) La performance environnementale, liée à l'empreinte carbone des articles de distribution.
+B) La performance sociale, mesurant l'engagement des vendeurs en magasin pour fidéliser la clientèle.
+C) La performance commerciale, reflétant la position, l'attractivité et le dynamisme de l'entreprise sur son marché face aux concurrents.
+D) La rentabilité économique et financière des capitaux investis dans le magasin.
+Réponse : C.
+
+58. L'association "Solidarité Logement" a pour mission d'héberger des sans-abris. Sa création de valeur et sa performance se mesurent prioritairement par :
+A) La rentabilité boursière de ses placements financiers de long terme issus des dons.
+B) La distribution d'un excédent financier monétaire sous forme de primes à ses bénévoles.
+C) L'atteinte de son objet social (nombre de personnes hébergées) conditionnée au maintien de son équilibre budgétaire (dépenses couvertes par les dons/subventions).
+D) La réduction de son seuil de rentabilité commercial sur les repas distribués.
+Réponse : C sans faire faillite (donc maintenir l'équilibre budgétaire)).
+
+59. La distinction théorique entre rentabilité et profitabilité en analyse financière stipule que la profitabilité mesure :
+A) Le bénéfice net généré par rapport aux capitaux investis par les actionnaires (Définition de la Rentabilité financière).
+B) La capacité de l'entreprise à dégager de la marge sur son activité, mesurée par le rapport entre un Résultat (bénéfice) et le Chiffre d'affaires (volume d'affaires).
+C) L'augmentation du prix de l'action en bourse sur une année civile complète.
+D) Le dividende brut distribué divisé par l'excédent brut d'exploitation.
+Réponse : B. Profitabilité = un bénéfice par rapport aux ventes/CA (compte de résultat)).
+
+60. Un petit hôtel de quartier parvient à se hisser numéro 1 sur le site TripAdvisor grâce à des avis enthousiastes soulignant la gentillesse du personnel. Quelle est la conséquence stratégique ?
+A) La hausse mécanique et immédiate de sa valeur partenariale avec ses banquiers.
+B) La consolidation de sa valeur perçue (e-réputation qualitative) qui se traduira très probablement par une amélioration de sa performance commerciale (hausse des réservations futures).
+C) Une baisse du bilan social de l'entreprise.
+D) La transformation de ses charges variables en charges fixes d'exploitation.
+Réponse : B.
+
+61. Sur un marché ultra-concurrentiel, une entreprise ne peut pas augmenter ses prix de vente sous peine de perdre ses clients. Si le coût de l'électricité et des matières premières explose, l'entreprise subit :
+A) Un effet d'aubaine, car la hausse des coûts engendre automatiquement une subvention publique compensatrice.
+B) Un effet de ciseau, la hausse des charges non répercutée sur le prix écrasant la marge unitaire et dégradant la rentabilité.
+C) Une amélioration de son seuil de rentabilité unitaire, le produit devenant un produit d'appel.
+D) Une augmentation mécanique de la valeur de ses immobilisations au bilan comptable.
+Réponse : B, réduisant la marge à néant).
+
+62. Le "Tableau de bord", instrument de pilotage quotidien du manager, tire sa pertinence du fait qu'il :
+A) Publie obligatoirement l'intégralité des milliers d'écritures comptables de l'année en Open Data.
+B) Sélectionne et synthétise un nombre restreint d'indicateurs clés (KPI), financiers et non financiers, mis à jour régulièrement pour repérer les écarts et alerter le décideur.
+C) Est l'unique outil de présentation des données de licenciement au conseil des prud'hommes.
+D) Remplace totalement le PGI (Progiciel de Gestion Intégré) dans la saisie des commandes fournisseurs.
+Réponse : B, il doit alerter rapidement via des KPI synthétiques).
+
+63. Une entreprise industrielle remplace un composant chimique toxique (mais très bon marché) par un produit naturel écologique beaucoup plus cher, réduisant ses bénéfices annuels de 15 %. Ce choix démontre :
+A) La suprématie absolue de la théorie de la valeur actionnariale de court terme.
+B) La recherche d'une performance environnementale assumée, illustrant que les différentes dimensions de la "Performance Globale" (ici écologie vs profitabilité) peuvent imposer des arbitrages contradictoires.
+C) L'application stricte du modèle de l'économie de la fonctionnalité et du circuit court.
+D) La détérioration de la valeur perçue par le client final, peu soucieux d'écologie.
+Réponse : B.
+
+64. Lors de l'Assemblée Générale annuelle, les actionnaires exigent la distribution de 80 % des bénéfices en dividendes. Les syndicats s'y opposent par la grève, réclamant que cette somme finance une hausse générale des salaires. Cette situation illustre :
+A) L'harmonie sociale imposée par le droit du travail dans la répartition des excédents.
+B) Le caractère structurellement conflictuel de la création de valeur, l'entreprise devant arbitrer la répartition de la Valeur Ajoutée entre des acteurs aux intérêts matériels opposés (conflit de répartition).
+C) L'impossibilité d'utiliser le compte de résultat pour mesurer le profit net de l'entreprise.
+D) La prédominance absolue de la valeur partenariale sur la rentabilité économique.
+Réponse : B est le conflit d'intérêts de base en gestion économique).
+
+65. Le document nommé "Bilan Social" (obligatoire au-delà de 300 salariés) permet aux représentants du personnel (CSE) d'évaluer :
+A) La rentabilité boursière des capitaux propres et le niveau d'endettement à long terme.
+B) La performance sociale de l'organisation à l'aide d'indicateurs quantitatifs sur l'emploi (effectifs), les rémunérations, les conditions de travail, la santé et la formation sur les trois dernières années.
+C) Le montant exact de l'impôt sur les sociétés (IS) versé à l'État et aux collectivités.
+D) Le budget alloué au mécénat civique et au parrainage sportif.
+Réponse : B.
+
+66. Un constructeur automobile coopère depuis 10 ans avec le même fabricant de batteries. Ils partagent leurs données R&D, co-financent l'innovation et s'engagent sur des volumes d'achat sur cinq ans. Ce lien développe :
+A) Une stratégie de désintermédiation visant à éliminer les grossistes du marché.
+B) La valeur partenariale, un actif immatériel fondamental qui repose sur la stabilité, la confiance et la co-création de richesse entre l'organisation et un acteur majeur de son écosystème.
+C) Le modèle économique "Freemium" appliqué à l'industrie lourde de l'automobile.
+D) L'Open Data, car les brevets co-développés deviennent accessibles à l'ensemble de la concurrence européenne.
+Réponse : B, c'est la définition de la valeur partenariale).
+
+67. Une piscine municipale affiche une fréquentation record et la satisfaction des habitants est totale. Néanmoins, en raison de tarifs d'entrée dérisoires, la mairie doit combler un déficit d'exploitation annuel de 300 000 €. L'analyse de gestion indique que ce service public est :
+A) Efficace et efficient, le déficit prouvant la bonne et juste utilisation des deniers publics.
+B) Efficace (la finalité sociale d'accès au sport pour tous est atteinte) mais inefficient d'un point de vue financier (déséquilibre important entre ressources propres et coûts de fonctionnement).
+C) Créateur d'une forte valeur actionnariale pour la commune rurale.
+D) Inefficace, puisque le taux de rentabilité commerciale de la buvette est nul.
+Réponse : B est atteint = efficacité. Le coût est démesuré = inefficience financière. Dans le secteur public, l'inefficience financière est parfois un choix politique assumé).
+
+68. Un hypermarché achète un lot de téléviseurs 10 000 € HT à l'usine et le revend 14 000 € HT à ses clients. En gestion de la distribution, que représente cette différence de 4 000 € ?
+A) La taxe sur la valeur ajoutée (TVA) collectée pour le compte de l'État.
+B) La marge commerciale brute, indicateur fondamental de la performance des entreprises de distribution, qui servira ensuite à couvrir les autres charges (loyers, salaires) avant de pouvoir dégager un bénéfice.
+C) Le Résultat Net Comptable (profit final) directement et intégralement distribuable aux actionnaires.
+D) La quote-part d'autofinancement exigée par les normes IFRS.
+Réponse : B.
+
+69. La mutation du management vers le concept de "Performance Globale" exige théoriquement de l'entreprise qu'elle :
+A) Maximise exclusivement sa rentabilité boursière trimestrielle pour attirer les fonds de pension anglo-saxons.
+B) Pilote et équilibre sa rentabilité économique (profit), la gestion de son capital humain (social) et la réduction de ses impacts négatifs sur la société civile et l'écologie (environnement), dans une approche systémique (RSE).
+C) Accélère sa délocalisation dans les pays émergents pour annuler son empreinte carbone nationale.
+D) Finance son Besoin en Fonds de Roulement (BFR) uniquement par la vente de ses actifs immatériels.
+Réponse : B.
+
+70. Le chiffre d'affaires d'une entreprise de livraison bondit de + 40 % sur une année. Pourtant, son résultat net (bénéfice final) chute de - 20 % sur la même période. Quelle contrainte de gestion explique ce phénomène paradoxal ?
+A) Une sur-fidélisation de la clientèle ayant allongé la durée du cycle de vie du service de livraison.
+B) Une dérive des charges opérationnelles (explosion du coût du carburant, hausse des salaires) progressant beaucoup plus vite que la croissance des ventes, ce qui a écrasé la profitabilité.
+C) L'émission d'un grand nombre de nouvelles actions gratuites en bourse qui diluent le bénéfice.
+D) L'amélioration inattendue de l'efficience des processus logistiques dans les entrepôts.
+Réponse : B montent plus vite que le CA, le bénéfice baisse).
+
+71. Le lancement d'un nouveau jeu vidéo est entaché de bugs majeurs, déclenchant une vague de critiques virulentes et des notes de 1/10 sur les réseaux sociaux. Quelle est l'incidence stratégique pour le studio de développement ?
+A) L'amélioration automatique du bilan social, les développeurs faisant des heures supplémentaires valorisantes.
+B) La destruction de la valeur perçue (e-réputation), ce "bad buzz" entraînant une fuite des joueurs et l'effondrement prévisible de la performance commerciale (chute des ventes).
+C) La hausse mathématique du seuil de rentabilité unitaire des produits dématérialisés.
+D) L'obligation réglementaire d'adopter un modèle de Crowdsourcing pour réparer le jeu à l'aide des joueurs.
+Réponse : B.
+
+72. Lors de l'analyse de la répartition de la Valeur Ajoutée produite, la part affectée au paiement de l'Impôt sur les Sociétés (IS) représente :
+A) La rémunération du risque exigée par les investisseurs privés (Business Angels).
+B) La part de la richesse captée par l'État et les administrations publiques, constituant un prélèvement obligatoire pesant sur la création de valeur de l'entreprise.
+C) La mise en réserves (autofinancement) exigée par le Code de Commerce pour anticiper les faillites.
+D) Le coût du travail redistribué aux organisations syndicales paritaires.
+Réponse : B par l'entreprise).
+
+73. Une entreprise de "Fast Fashion" est accusée dans un documentaire de polluer massivement des rivières asiatiques. Outre la faute éthique, quel est le risque sur sa création de valeur ?
+A) L'augmentation inéluctable de sa valeur partenariale avec les ONG écologistes locales.
+B) La dégradation de son image (valeur perçue) et de sa performance environnementale, exposant la marque à un rejet sociétal et au boycott de consommateurs exigeants (menace commerciale lourde).
+C) La requalification immédiate de ses fournisseurs en contrats de travail salariés par l'administration française.
+D) L'amélioration paradoxale de l'efficience logistique par le blocage des flux navals marchands.
+Réponse : B.
+
+74. Le gestionnaire consulte le "Compte de Résultat" d'une entreprise dans le but d'analyser :
+A) Le patrimoine immobilier et financier (ce qu'elle possède à l'actif et ce qu'elle doit au passif) à la date précise du 31 décembre.
+B) La dynamique de formation du résultat (bénéfice ou perte) sur l'exercice écoulé, en listant les flux de richesse créés (les Produits/ventes) face à l'ensemble des coûts consommés (les Charges/achats, salaires).
+C) L'empreinte carbone globale issue du cycle de production de l'ensemble de la chaîne de fournisseurs.
+D) La répartition statistique des salaires entre les hommes et les femmes au sein des filiales.
+Réponse : B. Le Compte de résultat est le film de l'année (Produits - Charges) pour voir si on a gagné ou perdu de l'argent sur l'exercice).
+
+75. La performance d'une administration publique (ex: préfecture, caisse d'allocations) diffère dans son évaluation de celle d'une entreprise privée car :
+A) Elle n'est soumise à aucune exigence de tenue comptable ni de maîtrise des budgets opérationnels par l'État.
+B) Sa finalité première n'est pas la profitabilité financière, mais l'efficacité de son action (satisfaction de l'usager, qualité du service public, délais) évaluée sous la contrainte d'une allocation optimale de l'argent public (efficience budgétaire).
+C) Elle distribue la totalité de sa valeur ajoutée excédentaire sous forme de primes aux usagers du service concerné.
+D) Elle opère sur un marché concurrentiel libre où la loi de l'offre et de la demande fixe le prix de l'impôt.
+Réponse : B sans gaspiller l'impôt (efficient)).
+
+Thème 4 : Temps et risque (Questions 76 à 100)
+
+76. L'entreprise "Piscines&Spas" réalise 85 % de son chiffre d'affaires annuel entre mai et juillet. Cette fluctuation d'activité liée au climat oblige le gestionnaire à intégrer le concept de :
+A) Délocalisation stratégique, pour produire dans l'hémisphère sud en hiver.
+B) Saisonnalité, une contrainte temporelle forte imposant d'anticiper la production et de gérer la trésorerie pour couvrir les mois de très faible activité (découpage du temps).
+C) Seuil de rentabilité météorologique, calculant le nombre de jours de pluie consécutifs.
+D) Biais d'apprentissage des algorithmes de vente en ligne.
+Réponse : B.
+
+77. La mise en place d'un système de "Veille informationnelle" (technologique, concurrentielle, réglementaire) est une démarche prospective permettant au sommet stratégique de :
+A) Surveiller l'activité sur l'intranet pour déceler les traces de "Shadow IT" chez les employés récalcitrants.
+B) Capter, structurer et analyser en continu les signaux de l'environnement externe afin de réduire l'incertitude sur l'avenir, d'anticiper les risques et de repérer des opportunités d'innovation.
+C) Automatiser le calcul du coût complet unitaire via un algorithme d'intelligence artificielle interne.
+D) Diffuser systématiquement tous les brevets de l'entreprise sur des portails d'Open Data.
+Réponse : B.
+
+78. L'élaboration d'un "budget" par le service du contrôle de gestion (budget des ventes, des achats, de trésorerie) consiste à :
+A) Retracer précisément l'historique comptable des dépenses de l'année écoulée pour clôturer le Bilan Fonctionnel.
+B) Utiliser des outils de simulation et des données prospectives pour traduire en chiffres les décisions futures, allouer les ressources et vérifier la viabilité de l'exploitation sur les mois à venir.
+C) Mesurer a posteriori l'évolution de la valeur environnementale des actifs immatériels.
+D) Garantir de manière absolue l'élimination de tout aléa concurrentiel sur le court terme.
+Réponse : B pour simuler ce qui va se passer financièrement).
+
+79. L'entreprise "InnovJouet" supporte 120 000 € de charges fixes annuelles (loyer, assurances, salaires administratifs). Elle vend sa trottinette 80 € l'unité pour un coût variable de 40 € de composants. Son "seuil de rentabilité" (en quantités) sera atteint à :
+A) 1 500 unités, car il faut diviser les charges fixes (120 000) par le prix de vente (80).
+B) 3 000 unités, car la Marge sur Coût Variable unitaire (80 - 40 = 40 €) permet, en vendant 3 000 trottinettes, de couvrir exactement les 120 000 € de charges fixes (résultat d'exploitation nul).
+C) 120 000 unités, correspondant au chiffre d'affaires critique imposé par les normes de la comptabilité analytique.
+D) 4 000 unités, chiffre obtenu en divisant de manière stricte les charges fixes par le coût variable unitaire brut.
+Réponse : B.
+
+80. L'apparition foudroyante de l'Intelligence Artificielle générative (type ChatGPT) constitue, pour les grandes agences traditionnelles de traduction et de rédaction, un facteur de risque :
+A) Interne, révélant la rétention volontaire d'informations par le service RH sur les compétences des salariés.
+B) Externe, caractérisant une rupture technologique majeure susceptible de rendre leur modèle économique obsolète et nécessitant une restructuration d'urgence.
+C) Interne, lié à l'inadéquation de la pyramide des âges et à l'échec de la GPEC des traducteurs séniors.
+D) Environnemental, en raison de l'empreinte carbone exponentielle des serveurs du prestataire Cloud.
+Réponse : B).
+
+81. Le PDG de l'entreprise décide de lancer un nouveau produit très clivant, sur un simple pressentiment, en refusant d'investir dans une étude de marché. Le lancement est un désastre financier total. L'origine de ce risque est :
+A) Un aléa externe d'ordre macro-économique, l'inflation pénalisant le pouvoir d'achat du secteur.
+B) Un facteur interne de risque, découlant de l'aptitude excessive du dirigeant à la prise de risque (sortie de la zone de confort non sécurisée par des outils d'information prospectifs fiables).
+C) La programmation volontaire de l'obsolescence esthétique du produit par les designers.
+D) L'application coercitive du principe de transparence des algorithmes sur les réseaux sociaux.
+Réponse : B du décideur).
+
+82. Une agence immobilière fixe le prix d'un immeuble en se basant sur une expertise foncière datant d'il y a quatre ans. L'immeuble ne trouve aucun acheteur. L'erreur de gestion réside dans l'oubli que la valeur de l'information dépend étroitement de :
+A) Son caractère gratuit et librement diffusable au public (principe d'Open Data).
+B) Son actualité : face aux fluctuations permanentes du marché, une donnée n'est pertinente et fiable pour la décision que si elle est pérenne ou très récemment mise à jour.
+C) Sa source exclusivement interne, extraite du système d'information de gestion (SIG) de l'agence.
+D) Son interopérabilité avec les systèmes d'information des différentes banques de prêt.
+Réponse : B.
+
+83. Dans la démarche de planification stratégique, l'allongement de l'horizon prévisionnel (passer de prévisions à 1 an à des scénarios à 10 ans) se heurte inéluctablement au principe selon lequel :
+A) Les Progiciels de Gestion Intégrés (PGI) sont bridés informatiquement pour refuser le stockage de données prospectives lointaines.
+B) Le temps est source d'incertitude : plus la période projetée est longue, plus les aléas externes (ruptures technologiques, concurrentielles, géopolitiques) fragilisent la fiabilité de la décision initiale.
+C) Les charges fixes d'exploitation se transforment obligatoirement, sur le long terme, en charges variables directes.
+D) La rentabilité boursière exige un retour sur investissement trimestriel immédiat, interdisant toute réflexion à long terme.
+Réponse : B.
+
+84. Une usine européenne de batteries s'approvisionne en lithium auprès d'un unique fournisseur asiatique. La fermeture inopinée des ports lors d'une crise sanitaire mondiale paralyse totalement l'usine en quelques semaines. Le risque matérialisé est :
+A) Une obsolescence programmée de l'outil de production interne.
+B) Un risque externe d'approvisionnement lié à une forte dépendance (absence de sécurisation de la chaîne logistique par des fournisseurs alternatifs), menaçant la continuité de l'organisation.
+C) Une asymétrie d'information commerciale savamment orchestrée par le gouvernement étranger.
+D) L'effet de levier financier négatif écrasant la capacité d'autofinancement de l'usine.
+Réponse : B).
+
+85. Le chef d'un grand projet de construction utilise un calendrier prévisionnel informatisé (type diagramme de Gantt) pour planifier l'intervention des gros œuvres, puis des électriciens, puis des peintres. Cet outil de gestion du temps a pour vocation de :
+A) Mesurer a posteriori la rentabilité économique des capitaux engagés sur le chantier de construction.
+B) Coordonner l'interdépendance des tâches successives, optimiser l'allocation des acteurs dans le temps et anticiper les retards critiques pour s'assurer du respect de l'échéance finale.
+C) Transférer légalement la structure de propriété des bâtiments construits aux sous-traitants.
+D) Calculer le coût marginal de l'heure supplémentaire effectuée par chaque corps de métier.
+Réponse : B.
+
+86. Le directeur d'une succursale masque sciemment ses pertes d'exploitation récurrentes dans les rapports de performance mensuels adressés au siège social, de peur de perdre son poste. Le siège continue donc de maintenir cette succursale déficitaire. Ce dysfonctionnement illustre :
+A) La phase de déclin naturel inhérente au cycle de vie de tout point de vente commercial.
+B) L'efficacité de la théorie des parties prenantes dans la sauvegarde assumée des emplois locaux.
+C) La rétention et l'asymétrie d'information comme facteurs internes de risque, faussant la lucidité de la prise de décision stratégique globale.
+D) L'excellente application des méthodes de gestion de crise face aux aléas externes imprévisibles.
+Réponse : C et la cache (rétention) pour son propre intérêt. Le dirigeant du siège prend de mauvaises décisions à cause de cela).
+
+87. Le concept managérial du "Cycle de vie d'un produit" (Lancement, Croissance, Maturité, Déclin) impose au décideur de surveiller attentivement le passage à la phase de Déclin, car l'entreprise s'y expose au risque :
+A) De ne plus pouvoir physiquement satisfaire une demande en surchauffe sur un marché émergent.
+B) D'obsolescence de son offre face à l'évolution des attentes des consommateurs ou à l'apparition de produits de substitution, imposant de relancer le produit ou de l'abandonner pour limiter les pertes.
+C) D'atteindre son seuil de rentabilité de manière trop précoce, ce qui dégraderait immédiatement la valeur perçue.
+D) D'une actualisation trop rapide des compétences techniques exigées par le bilan social.
+Réponse : B. Il ne se vend plus, il coûte de l'argent en stock, c'est un risque mortel si l'entreprise n'innove pas pour le remplacer).
+
+88. En analyse financière, justifier l'adage selon lequel "un euro encaissé aujourd'hui a plus de valeur qu'un euro encaissé dans cinq ans" repose sur le principe économique que :
+A) L'usure matérielle de la monnaie fiduciaire (billets) impose de la dépenser le plus rapidement possible.
+B) Le lien entre le temps et la valeur exige de prendre en compte le coût d'opportunité : une somme disponible immédiatement peut être placée pour générer des intérêts, rémunérant le temps d'immobilisation et le risque d'inflation (principe d'actualisation).
+C) L'inflation est une donnée ouverte (Open Data) qui compense automatiquement les pertes de change internationales.
+D) Le Besoin en Fonds de Roulement (BFR) se calcule exclusivement sur la base des flux monétaires journaliers, interdisant le crédit.
+Réponse : B.
+
+89. Malgré l'avènement incontestable de la photographie numérique, la direction de la très ancienne entreprise Kodak a obstinément refusé de modifier son modèle économique lucratif basé sur la pellicule argentique, menant au dépôt de bilan en 2012. Cette faillite spectaculaire s'explique théoriquement par :
+A) L'obsolescence délibérée des matières premières photographiques imposée par les accords mondiaux de RSE.
+B) Un facteur interne de risque décisionnel : l'incapacité du sommet stratégique à réagir aux signaux de son environnement par crainte de "cannibaliser" ses produits phares, figeant l'organisation dans sa zone de confort face à une rupture technologique.
+C) Les contraintes réglementaires trop sévères du RGPD interdisant de stocker des photos numériques sur des serveurs distants.
+D) La flexibilité quantitative externe poussée à l'extrême par la GPEC des laboratoires photos.
+Réponse : B par peur du changement face à une rupture technologique pourtant évidente).
+
+90. Une importante flotte de camions de livraison frigorifiques est dépendante à 100 % du gazole. Une crise géopolitique majeure fait doubler le prix du baril de pétrole en quelques semaines sur les marchés mondiaux. L'incidence directe sur l'outil de gestion est :
+A) Un risque externe de dépendance énergétique engendrant une hausse mécanique et brutale des charges variables, qui amputera violemment la marge d'exploitation si le transporteur ne peut répercuter cette hausse sur les factures de ses clients.
+B) L'amélioration inespérée de l'Excédent Brut d'Exploitation (EBE) déclenchée par l'effet déductif des taxes écologiques sur le bilan.
+C) Le renouvellement automatique et gratuit du parc par des camions électriques financé par le Cloud Computing logistique.
+D) Une baisse très significative du Besoin en Fonds de Roulement (BFR), le gazole acheté au jour le jour ne nécessitant aucun stockage.
+Réponse : A. Si le coût explose et que les prix restent fixes, l'effet de ciseau écrase la marge bénéficiaire).
+
+91. Avant de commercialiser un nouveau modèle d'ordinateur portable, le contrôleur de gestion utilise les fonctionnalités de "simulation" ("Que se passe-t-il si ?") d'un tableur (Excel). L'utilité managériale de cet outil informatique dans la gestion des risques est de :
+A) Garantir sur le plan pénal l'absence absolue de tout risque de faillite pour les actionnaires de l'entreprise.
+B) Modéliser divers scénarios prévisionnels (baisse du prix de vente, envolée des coûts des composants) pour évaluer l'incidence financière de l'incertitude sur la rentabilité future et sécuriser la prise de décision du dirigeant.
+C) Convertir automatiquement les données comptables à caractère personnel en données ouvertes (Open Data) pour optimiser la communication financière externe.
+D) Brouiller de manière cryptographique la lecture des comptes de l'entreprise pour générer une asymétrie d'information légale face aux concurrents agressifs.
+Réponse : B pour voir si l'entreprise résistera à l'aléa).
+
+92. L'unique usine d'assemblage d'un constructeur de téléphones subit un violent incendie, détruisant les lignes de montage et provoquant un arrêt total de la production de la marque pendant trois mois. Quelle est l'incidence économique (perte d'exploitation) la plus destructrice pour l'organisation ?
+A) Aucune, le principe fondamental de la méthode des coûts spécifiques annulant automatiquement toutes les charges financières en cas d'inactivité prouvée de l'usine.
+B) Le double effet ciseau paralysant la trésorerie : la perte massive du chiffre d'affaires due à l'incapacité de livrer, aggravée par le maintien inéluctable des charges fixes de structure (salaires, loyers, amortissements) qui continuent de courir et creusent un lourd déficit.
+C) La hausse incontrôlable du Fonds de Roulement Net Global, les compagnies d'assurances injectant massivement des fonds d'urgence directement dans les capitaux propres de la société.
+D) La baisse mathématique du seuil de rentabilité unitaire, l'usine fermée n'ayant temporairement plus aucune charge variable (composants) à supporter et à imputer sur les stocks.
+Réponse : B. C'est le principe de la perte d'exploitation).
+
+93. La marque de "Fast Fashion" Shein produit d'énormes volumes de vêtements très peu chers, fabriqués en Asie et expédiés individuellement par fret aérien. Face à des consommateurs occidentaux (Génération Z) de plus en plus éduqués aux désastres climatiques, la marque affronte prioritairement un risque :
+A) Lié à l'allongement de la phase de maturité du cycle de vie de ses t-shirts en polyester dans les pays émergents.
+B) Lié à l'automatisation des flux comptables qui ralentira la Supply Chain de ses immenses usines sous-traitantes en Chine.
+C) D'ordre environnemental et réputationnel : la prise de conscience brutale de l'empreinte écologique désastreuse de son modèle d'affaires pourrait déporter la demande vers des alternatives durables et provoquer un appel au boycott dévastateur pour ses ventes (risque commercial).
+D) Lié à la sur-actualisation de ses Mégadonnées (Big Data) financières sur la Bourse technologique de Hong Kong imposée par les auditeurs mondiaux.
+Réponse : C.
+
+94. Dans les méthodes modernes d'anticipation et de gestion du temps, la démarche "prospective" (analyse du long terme, à 10 ou 15 ans) diffère fondamentalement de la prévision budgétaire traditionnelle (court/moyen terme, de 1 à 3 ans) par :
+A) Le type exclusif de structure juridique visée : la prospective est un monopole réservé aux grandes administrations publiques, la prévision budgétaire aux sociétés anonymes.
+B) Sa nature même et son degré de certitude : le budget chiffre finement les équilibres financiers d'exploitation proches, tandis que la prospective élabore de larges scénarios stratégiques qualitatifs pour aider l'organisation à survivre face aux incertitudes lourdes de l'avenir (ex: impact de l'Intelligence Artificielle en 2035).
+C) L'obligation légale stricte de valider toute démarche prospective par un vote bloquant du Comité Social et Économique (CSE) de l'entreprise.
+D) L'utilisation exclusive du mécanisme d'ajustement mutuel inter-organisationnel pour fiabiliser les calculs d'investissement productif.
+Réponse : B face au risque de rupture majeure).
+
+95. Pour prémunir sa fragile trésorerie contre le risque grandissant de faillites (impayés) de la part de ses propres clients industriels (B2B), une PME française décide de souscrire un contrat d'assurance-crédit onéreux auprès de la Coface. La méthode de gestion des risques adoptée ici est :
+A) L'acceptation du risque, l'entreprise décidant de provisionner comptablement elle-même sur ses fonds propres ses futures pertes sur créances irrécouvrables identifiées par l'expert-comptable.
+B) Le transfert du risque à un acteur tiers spécialisé (l'assureur), moyennant le paiement anticipé d'une prime, ce qui permet à la PME de lisser et de circonscrire strictement l'incidence financière d'un aléa commercial.
+C) L'évitement pur et simple du risque, l'entreprise modifiant brutalement ses conditions générales de vente pour n'accepter que les paiements comptants par virement avant toute livraison de marchandises.
+D) La réduction du risque à la source par l'intégration d'une innovation de procédé robotisée sur sa chaîne de montage, limitant ainsi les défauts de fabrication et donc les refus de paiement.
+Réponse : B.
+
+96. Avant de lancer la production en grande série d'une nouvelle gamme de chaussures sportives très innovantes, la marque "MarchePro" finance une vaste enquête quantitative pour tester l'attrait des prototypes sur un panel représentatif de 2 000 consommateurs européens. Cet outil d'étude vise stratégiquement à :
+A) Capter illégalement des données à caractère personnel très sensibles pour alimenter une base en Open Data revendable aux GAFAM.
+B) Réduire l'incertitude quant à la future adéquation du produit avec l'évolution réelle de la demande, limitant ainsi le risque d'échec commercial majeur et la destruction du capital massif investi dans l'usine.
+C) Homogénéiser comptablement les méthodes d'imputation des coûts complets prévisionnels entre les différents ateliers de fabrication de la marque.
+D) Casser la routine managériale en imposant un brutal contrôle par les résultats au seul département en charge du design et du stylisme.
+Réponse : B de se planter et de perdre des millions d'investissements).
+
+97. Une PME de la "DeepTech" affiche actuellement une rentabilité d'exploitation très fragile. Pourtant, son PDG décide d'emprunter des millions d'euros pour investir 60 % de son chiffre d'affaires dans la Recherche et Développement (R&D) d'une technologie d'informatique quantique encore totalement balbutiante. Ce cas démontre avant tout :
+A) Le principe classique d'obsolescence programmée appliqué par anticipation au système d'information de gestion des ressources humaines de la startup.
+B) Une forte aptitude au risque du dirigeant, faisant un pari stratégique assumé sur une rupture technologique qui, en cas de succès, conférera un avantage concurrentiel inédit et monopolistique à l'organisation, ou précipitera irrémédiablement sa faillite.
+C) Le rejet catégorique de l'architecture en nuage (Cloud Computing) pour héberger et sécuriser de manière centralisée les brevets très sensibles de la DeepTech.
+D) L'application coercitive de la théorie des parties prenantes, le pool bancaire dictant contre l'avis du dirigeant les choix d'innovation audacieux de l'entreprise.
+Réponse : B.
+
+98. Lors de la construction complexe d'un navire de croisière géant, le lourd retard pris par l'équipe chargée de poser le câblage électrique dans les kilomètres de coursives empêche totalement l'équipe de décoration (panneaux, moquettes) de commencer son propre travail, décalant au final de deux mois la livraison du navire à l'armateur. Ce risque d'organisation souligne principalement :
+A) La complexité de la gestion du temps face à la stricte interdépendance (séquentialité) des différentes tâches au sein d'un processus de production tendu par des délais contractuels incompressibles.
+B) L'asymétrie d'information structurelle existant historiquement entre le commanditaire du navire (le client) et le chantier naval de construction.
+C) L'efficience absolue et l'agilité logistique offertes par la structure divisionnelle décentralisée de la grande entreprise de construction navale.
+D) L'application stricte du principe de démocratie participative syndicale dans la fixation des rythmes de travail et du calendrier prévisionnel des ouvriers sur les chantiers.
+Réponse : A.
+
+99. Une grande chaîne de magasins de jouets, persuadée d'une très forte demande par les influenceurs en ligne, constitue des stocks massifs (100 000 pièces) de trottinettes électriques haut de gamme pour les fêtes de fin d'année. En décembre, la mode est passée et le produit est ignoré. L'entreprise doit brader ses stocks avec -50% de démarque pour récupérer un peu de liquidité. L'incidence du risque pour l'organisation s'analyse théoriquement comme :
+A) Un pur aléa climatique imprévisible ayant subitement dégradé l'attractivité saisonnière des nouvelles mobilités douces urbaines en hiver.
+B) Une erreur d'anticipation temporelle interne figeant massivement les ressources financières vitales de l'entreprise dans des emplois d'exploitation devenus brutalement obsolètes, dégradant violemment sa rentabilité (vente à perte) et l'équilibre de son BFR.
+C) Un risque externe d'approvisionnement strictement lié à la dépendance de la chaîne logistique envers les rares fabricants chinois de batteries au lithium-ion.
+D) La volonté de la direction de réduire volontairement son empreinte environnementale par la liquidation accélérée des invendus polluants sur le marché domestique.
+Réponse : B, plombant gravement le BFR et la trésorerie).
+
+100. En conclusion sur l'enseignement global de la gestion des organisations (SDGN), on peut légitimement affirmer que la notion de "prise de risque" est :
+A) Toujours le symptôme alarmant d'une carence flagrante des outils de simulation budgétaire et d'un management empirique incompétent qu'il faut totalement bannir du monde de l'entreprise au XXIe siècle.
+B) Consubstantielle (inséparable) de l'acte même d'entreprendre et de gérer : la pérennité et la performance d'une organisation naissent de sa capacité stratégique à identifier, évaluer et accepter des risques calculés pour innover, se différencier et s'adapter en continu aux violentes mutations de son environnement.
+C) Une notion théorique désormais limitée aux seules entreprises du secteur concurrentiel marchand, les organisations publiques de l'État ou associatives ne prenant, par définition légale et structurelle, strictement aucun risque.
+D) Un concept totalement et définitivement éliminé aujourd'hui par la prédictibilité absolue et sans faille conférée par le traitement en temps réel des Mégadonnées (Big Data) couplé à l'Intelligence Artificielle prédictive.
+Réponse : B. On ne peut pas entreprendre ni gagner d'argent sans risque, même avec les meilleurs algorithmes).
