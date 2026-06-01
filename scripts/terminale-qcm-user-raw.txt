@@ -1,0 +1,703 @@
+Alors maintenant tu va remplacer le QCM terminal avec ces questions : *1. Une start-up décide de lever des fonds en vendant de nouvelles actions à des investisseurs sur une plateforme internet.**
+A) C'est du Crowdsourcing, car c'est un financement externe augmentant les capitaux propres.
+B) C'est du Crowdsourcing, car c'est un financement externe augmentant la dette.
+C) C'est du Crowdfunding (Equity), car c'est un financement externe augmentant les capitaux propres.
+D) C'est du Crowdfunding (Equity), car c'est un financement externe augmentant la dette.
+*Réponse : C*
+
+**2. Le Fonds de Roulement Net Global (FRNG) de "MecaParts" est de 50 000€ et son Besoin en Fonds de Roulement (BFR) est de 80 000€.**
+A) La Trésorerie Nette est positive (+30 000€), car les ressources stables couvrent le BFR.
+B) La Trésorerie Nette est positive (+30 000€), car le BFR couvre les ressources stables.
+C) La Trésorerie Nette est négative (-30 000€), car les ressources stables ne couvrent pas le BFR.
+D) La Trésorerie Nette est négative (-30 000€), car le BFR couvre les ressources stables.
+*Réponse : C*
+
+**3. Le fabricant de pneus Michelin a cessé de vendre certains pneus aux routiers pour facturer "le kilomètre parcouru", incluant l'entretien.**
+A) C'est un modèle Freemium, car il remplace la vente du bien par la vente de la performance d'usage.
+B) C'est un modèle Freemium, car il remplace la gratuité de base par une option payante.
+C) C'est l'économie de la fonctionnalité, car il remplace la vente du bien par la vente de la performance d'usage.
+D) C'est l'économie de la fonctionnalité, car il remplace la gratuité de base par une option payante.
+*Réponse : C*
+
+**4. Les charges de loyer et d'assurance de l'usine restent identiques même si la production chute de moitié suite à une crise.**
+A) Ce sont des charges variables, car elles sont indépendantes de l'activité.
+B) Ce sont des charges variables, car elles sont proportionnelles à l'activité.
+C) Ce sont des charges fixes, car elles sont indépendantes de l'activité.
+D) Ce sont des charges fixes, car elles sont proportionnelles à l'activité.
+*Réponse : C*
+
+**5. L'usine "Toyota" ne lance la fabrication d'une voiture que lorsqu'un client a formellement signé la commande en concession.**
+A) C'est une logistique en flux poussés, déclenchée par la demande réelle pour limiter les stocks.
+B) C'est une logistique en flux poussés, déclenchée par les prévisions pour saturer l'usine.
+C) C'est une logistique en flux tendus, déclenchée par la demande réelle pour limiter les stocks.
+D) C'est une logistique en flux tendus, déclenchée par les prévisions pour saturer l'usine.
+*Réponse : C*
+
+**6. Pour éviter d'inscrire l'achat d'une machine (100 000€) dans ses dettes au bilan, le dirigeant opte pour un loyer avec option d'achat.**
+A) Il utilise l'autofinancement, un financement interne hors bilan.
+B) Il utilise l'autofinancement, un financement externe préservant la capacité d'endettement.
+C) Il utilise le crédit-bail, un financement interne hors bilan.
+D) Il utilise le crédit-bail, un financement externe préservant la capacité d'endettement bilanciel.
+*Réponse : D*
+
+**7. Un artisan calcule que la vente de chaque meuble couvre ses coûts d'achat et dégage un surplus de 200€.**
+A) Il a calculé sa valeur ajoutée, qui permet d'absorber les charges fixes.
+B) Il a calculé sa valeur ajoutée, qui mesure l'EBE (Excédent Brut d'Exploitation).
+C) Il a calculé sa marge sur coût variable (MCV), qui permet d'absorber les charges fixes.
+D) Il a calculé sa marge sur coût variable (MCV), qui mesure l'EBE (Excédent Brut d'Exploitation).
+*Réponse : C*
+
+**8. L'entreprise vend l'imprimante à perte, mais se rattrape en vendant les cartouches d'encre indispensables très cher.**
+A) C'est un modèle Freemium, car la rentabilité repose sur les consommables captifs.
+B) C'est un modèle Freemium, car l'offre de base est gratuite.
+C) C'est un modèle "Bait and Hook" (appât et hameçon), car la rentabilité repose sur les consommables captifs.
+D) C'est un modèle "Bait and Hook" (appât et hameçon), car l'offre de base est gratuite.
+*Réponse : C*
+
+**9. En analyse fonctionnelle, le décalage financier entre les paiements aux fournisseurs et les encaissements des clients génère :**
+A) Le Fonds de Roulement Net Global (FRNG), lié au cycle d'investissement.
+B) Le Fonds de Roulement Net Global (FRNG), lié au cycle d'exploitation.
+C) Le Besoin en Fonds de Roulement (BFR), lié au cycle d'investissement.
+D) Le Besoin en Fonds de Roulement (BFR), lié au cycle d'exploitation.
+*Réponse : D*
+
+**10. La comptabilité intègre chaque année la perte de valeur liée à l'usure des camions de livraison dans ses charges.**
+A) C'est l'amortissement comptable, considéré comme une charge variable de structure.
+B) C'est l'amortissement comptable, considéré comme une charge fixe de structure.
+C) C'est la provision financière, considérée comme une charge variable de structure.
+D) C'est la provision financière, considérée comme une charge fixe de structure.
+*Réponse : B*
+
+**11. Zara renouvelle ses collections en permanence et produit de petites séries selon les ventes réelles constatées en magasin.**
+A) Sa Supply Chain vise l'efficience par la saturation des usines (flux poussés).
+B) Sa Supply Chain vise l'agilité et la réactivité à la demande (flux tendus).
+C) Sa Supply Chain vise l'efficience par le stockage massif (flux tendus).
+D) Sa Supply Chain vise l'agilité par la saturation des usines (flux poussés).
+*Réponse : B*
+
+**12. Une PME a une trésorerie nette (TN) structurellement négative. L'analyse révèle que :**
+A) Ses ressources stables (FRNG) sont supérieures à son cycle d'exploitation (BFR).
+B) Ses ressources stables (FRNG) sont insuffisantes pour financer son cycle d'exploitation (BFR).
+C) Ses clients la paient plus rapidement que ses fournisseurs.
+D) Ses investissements ont été entièrement autofinancés.
+*Réponse : B*
+
+**13. L'usine fabrique le produit B dont la marge sur coût spécifique est négative de 10 000€.**
+A) Il faut conserver le produit B, car il couvre la marge sur coût variable.
+B) Il faut conserver le produit B, car il absorbe les charges fixes communes indirectes.
+C) Il faut abandonner le produit B, car il ne parvient même pas à couvrir ses propres charges fixes directes.
+D) Il faut abandonner le produit B, car il détruit la valeur partenariale.
+*Réponse : C*
+
+**14. L'État verse une subvention pour le maintien à domicile des personnes âgées dépendantes.**
+A) Cette organisation publique produit un service marchand, financé par les impôts et subventions.
+B) Cette organisation publique produit un service marchand, dont l'efficacité se mesure par la rentabilité financière.
+C) Cette organisation publique produit un service non marchand, financé par les impôts et subventions.
+D) Cette organisation publique produit un service non marchand, dont l'efficacité se mesure par la rentabilité financière.
+*Réponse : C*
+
+**15. Une usine de skateboards subit une chute des commandes de 30% mais conserve toutes ses machines et locaux.**
+A) Le coût variable unitaire va augmenter, réduisant la rentabilité (effet de ciseau).
+B) Le coût variable unitaire va diminuer, réduisant la rentabilité (effet de ciseau).
+C) Le coût fixe unitaire va augmenter, réduisant la rentabilité car les charges se répartissent sur moins de produits.
+D) Le coût fixe unitaire va diminuer, réduisant la rentabilité car les charges se répartissent sur moins de produits.
+*Réponse : C*
+
+**16. Une ONG environnementale dépend exclusivement des dons citoyens.**
+A) Sa performance financière se mesure par le maintien d'un équilibre budgétaire (dépenses couvertes par les dons).
+B) Sa performance financière se mesure par la rentabilité de ses capitaux propres.
+C) Sa performance commerciale se mesure par le maintien d'un équilibre budgétaire (dépenses couvertes par les dons).
+D) Sa performance commerciale se mesure par la rentabilité de ses capitaux propres.
+*Réponse : A*
+
+**17. Dans la méthode des coûts complets, le loyer du siège social et le salaire du PDG sont considérés comme :**
+A) Des charges variables directes, imputées aux produits selon des unités d'œuvre.
+B) Des charges variables directes, affectées directement aux produits.
+C) Des charges fixes indirectes, imputées aux produits selon des unités d'œuvre (clés de répartition).
+D) Des charges fixes indirectes, affectées directement aux produits.
+*Réponse : C*
+
+**18. Une start-up lève 2 millions d'euros sur une plateforme internet en échange d'une prise de participation (Equity).**
+A) C'est du Crowdfunding, un mode de financement externe qui augmente la dette.
+B) C'est du Crowdfunding, un mode de financement externe qui augmente les capitaux propres.
+C) C'est du Shadow IT, un mode de financement externe qui augmente la dette.
+D) C'est du Shadow IT, un mode de financement externe qui augmente les capitaux propres.
+*Réponse : B*
+
+**19. L'Excédent Brut d'Exploitation (EBE) est un solde intermédiaire de gestion crucial car :**
+A) Il mesure la rentabilité du seul cycle d'exploitation (coeur de métier) avant amortissements et intérêts.
+B) Il mesure le résultat net final (après impôts, amortissements et intérêts) distribuable aux actionnaires.
+C) Il indique la trésorerie exacte disponible en banque au 31 décembre.
+D) Il indique la capacité de l'entreprise à lever de la dette obligataire à court terme.
+*Réponse : A*
+
+**20. Lors de l'Affectation du Résultat, l'entreprise décide de conserver une partie du bénéfice net (mise en réserves).**
+A) C'est le dividende, qui permet de rémunérer les actionnaires.
+B) C'est le dividende, qui permet de financer les investissements futurs.
+C) C'est l'autofinancement, qui permet de rémunérer les actionnaires.
+D) C'est l'autofinancement, qui permet de financer les investissements futurs (pérennité).
+*Réponse : D*
+
+**21. Une entreprise affiche un CA de 800 000€, des achats de marchandises de 300 000€, et paie 200 000€ de salaires.**
+A) Sa Valeur Ajoutée (VA) est de 300 000€ (CA - achats - salaires).
+B) Sa Valeur Ajoutée (VA) est de 500 000€ (CA - achats).
+C) Son Résultat Net est de 500 000€ (CA - achats).
+D) Son Résultat Net est de 300 000€ (CA - achats - salaires).
+*Réponse : B*
+
+**22. La capacité d'une entreprise à honorer ses dettes à court terme sans risquer la cessation de paiements s'évalue par :**
+A) L'analyse de sa liquidité (Trésorerie et BFR).
+B) L'analyse de sa rentabilité financière (ROE).
+C) L'analyse de sa profitabilité (Marge nette).
+D) L'analyse de son autofinancement.
+*Réponse : A*
+
+**23. L'entreprise "FourniBat" allonge le délai de règlement accordé à ses clients de 30 à 60 jours.**
+A) Mathématiquement, son FRNG va augmenter, améliorant sa trésorerie nette.
+B) Mathématiquement, son FRNG va diminuer, dégradant sa trésorerie nette.
+C) Mathématiquement, son BFR va augmenter, dégradant sa trésorerie nette.
+D) Mathématiquement, son BFR va diminuer, améliorant sa trésorerie nette.
+*Réponse : C*
+
+**24. Les compagnies aériennes modifient dynamiquement le prix des billets en fonction de la demande (heure, taux de remplissage).**
+A) C'est du Yield Management, visant à fixer un prix d'écrémage unique.
+B) C'est du Yield Management, visant à maximiser le CA d'une capacité fixe (avion).
+C) C'est de la domination par les coûts, visant à fixer un prix d'écrémage unique.
+D) C'est de la domination par les coûts, visant à maximiser le CA d'une capacité fixe (avion).
+*Réponse : B*
+
+**25. Dans la chaîne de valeur de M. Porter, la "logistique interne", la "production" et la "commercialisation" constituent :**
+A) Les activités de soutien, générant indirectement de la valeur pour le client final.
+B) Les activités de soutien, créant directement l'offre pour le client final.
+C) Les activités principales, générant indirectement de la valeur pour le client final.
+D) Les activités principales, créant directement la valeur de l'offre pour le client final.
+*Réponse : D*
+
+**26. L'acquisition d'un Progiciel de Gestion Intégré (PGI/ERP) très coûteux est comptabilisée au bilan comme :**
+A) Une immobilisation corporelle (investissement amortissable à long terme).
+B) Une immobilisation incorporelle (investissement immatériel amortissable à long terme).
+C) Une charge d'exploitation exceptionnelle détruisant le résultat de l'année.
+D) Un décaissement neutre pour le compte de résultat.
+*Réponse : B*
+
+**27. La désintermédiation permet à un producteur de vendre directement sur son site web sans passer par les magasins distributeurs.**
+A) Le but est de capter la marge commerciale des distributeurs pour accroître sa propre profitabilité.
+B) Le but est d'augmenter les charges fixes liées au commissionnement des intermédiaires.
+C) Le but est d'allonger le délai de paiement du BFR fournisseur.
+D) Le but est de réduire la valeur ajoutée globale du produit.
+*Réponse : A*
+
+**28. En période de forte inflation des matières premières, si l'entreprise ne peut pas augmenter son prix de vente (pression concurrentielle), elle subit :**
+A) Un effet de levier financier positif sur sa rentabilité.
+B) Un effet de levier financier négatif sur sa rentabilité.
+C) Un effet de ciseau, la hausse des charges écrasant mathématiquement sa marge bénéficiaire.
+D) Un effet de ciseau, la hausse des charges dopant artificiellement son seuil de rentabilité.
+*Réponse : C*
+
+**29. Le ratio (Bénéfice Net / Chiffre d'Affaires) permet d'évaluer la :**
+A) Rentabilité financière de l'organisation.
+B) Profitabilité (marge nette) de l'organisation.
+C) Valeur partenariale de l'organisation.
+D) Capacité d'autofinancement de l'organisation.
+*Réponse : B*
+
+**30. Le ratio (Bénéfice Net / Capitaux Propres) permet d'évaluer la :**
+A) Rentabilité financière de l'organisation.
+B) Profitabilité (marge nette) de l'organisation.
+C) Valeur partenariale de l'organisation.
+D) Capacité d'autofinancement de l'organisation.
+*Réponse : A*
+
+**31. Si le FRNG est de 200 000€ et l'Actif Immobilisé (Emplois stables) de 500 000€, à combien s'élèvent les Ressources Stables (capitaux propres et emprunts longs) ?**
+A) 300 000€ (Actif Immobilisé - FRNG).
+B) 300 000€ (FRNG + Actif Immobilisé).
+C) 700 000€ (Actif Immobilisé - FRNG).
+D) 700 000€ (FRNG + Actif Immobilisé).
+*Réponse : D (Rappel : FRNG = RS - ES. Donc RS = FRNG + ES = 200k + 500k = 700k).*
+
+**32. Une entreprise lance un nouveau smartphone technologique à un prix délibérément très supérieur au coût de production.**
+A) C'est une stratégie de pénétration, visant à maximiser le volume des ventes rapides.
+B) C'est une stratégie de pénétration, ciblant les "innovateurs" prêts à payer pour la nouveauté.
+C) C'est une stratégie d'écrémage, visant à maximiser le volume des ventes rapides.
+D) C'est une stratégie d'écrémage, ciblant les "innovateurs" pour maximiser la marge unitaire.
+*Réponse : D*
+
+**33. Une entreprise B2B constate que le délai de rotation (encaissement) de ses créances clients est passé de 30 jours à 90 jours (moyenne du secteur : 40 jours).**
+A) C'est le signe d'un FRNG excédentaire face aux dettes fournisseurs.
+B) C'est le signe d'une excellente politique de prix d'écrémage.
+C) C'est le signe d'un lourd Besoin en Fonds de Roulement (BFR) pesant dangereusement sur la trésorerie et le risque d'impayés.
+D) C'est le signe d'une domination par les coûts réussie face à la concurrence.
+*Réponse : C*
+
+**34. Le plan de financement prévisionnel est un outil essentiel car il sert à :**
+A) Analyser rétrospectivement la rentabilité financière de l'année N-1.
+B) Anticiper si les ressources futures (autofinancement, emprunts) couvriront les emplois futurs (investissements prévus).
+C) Calculer le coût marginal du dernier produit fabriqué.
+D) Déclarer officiellement l'impôt sur les sociétés.
+*Réponse : B*
+
+**35. L'introduction en Bourse (IPO) d'une grande entreprise permet de lever des fonds de financement de manière :**
+A) Interne, par l'augmentation de l'endettement bancaire (dettes).
+B) Interne, par l'augmentation du capital ouvert au public (capitaux propres).
+C) Externe, par l'augmentation de l'endettement bancaire (dettes).
+D) Externe, par l'augmentation du capital ouvert au public (capitaux propres).
+*Réponse : D*
+
+**36. Le PDG prend toutes les décisions seul, ne consulte personne et utilise la menace de licenciement pour maintenir les quotas de production.**
+A) Son style (Likert) est consultatif, car il s'appuie sur la crainte et la contrainte.
+B) Son style (Likert) est consultatif, car il centralise le pouvoir par la récompense.
+C) Son style (Likert) est autoritaire exploiteur, car il s'appuie sur la crainte et la contrainte.
+D) Son style (Likert) est autoritaire exploiteur, car il centralise le pouvoir par la récompense.
+*Réponse : C*
+
+**37. Un groupe d'infirmiers refuse de porter une nouvelle blouse qu'ils jugent dégradante pour la dignité de leur profession. Ce conflit est un conflit :**
+A) D'intérêts, car il porte sur les conditions matérielles du contrat de travail.
+B) D'intérêts, car il porte sur l'éthique et l'identité du métier.
+C) De valeurs, car il porte sur les conditions matérielles du contrat de travail.
+D) De valeurs, car il porte sur l'éthique et l'identité du métier.
+*Réponse : D*
+
+**38. La direction d'un grand magasin décide d'isoler un salarié syndicaliste dans un bureau lointain et de l'ignorer en espérant qu'il démissionne.**
+A) Le mode de résolution du conflit est le dépassement.
+B) Le mode de résolution du conflit est l'ajustement mutuel.
+C) Le mode de résolution du conflit est l'évitement.
+D) Le mode de résolution du conflit est le recours hiérarchique.
+*Réponse : C*
+
+**39. Selon F.W. Taylor (l'OST), l'augmentation de la performance industrielle s'obtient prioritairement par :**
+A) L'enrichissement des tâches et le développement de l'autonomie ouvrière.
+B) La séparation stricte entre la conception intellectuelle et l'exécution, et la parcellisation (division) extrême des tâches chronométrées.
+C) La GPEC et le déploiement de l'intelligence collective asynchrone.
+D) L'application systématique d'un style de direction participatif.
+*Réponse : B*
+
+**40. Pour Frederick Herzberg, si l'on augmente le salaire d'un cadre qui s'ennuie intellectuellement dans ses fonctions :**
+A) Cela éliminera son insatisfaction immédiate (facteur d'hygiène), mais cela ne créera aucune véritable motivation durable (réservée aux facteurs moteurs).
+B) Cela éliminera son insatisfaction immédiate (facteur moteur), mais cela ne créera aucune véritable motivation durable (réservée aux facteurs d'hygiène).
+C) Cela le motivera durablement (facteur d'hygiène), l'argent étant le seul levier d'accomplissement.
+D) Cela le motivera durablement (facteur moteur), l'argent étant le seul levier d'accomplissement.
+*Réponse : A*
+
+### THÈME 2 : Les organisations et les acteurs (Questions 41 à 75)
+
+**41. Le taux de "Turn-over" (rotation du personnel) d'un service client monte en flèche à 35%. L'analyse RH en déduit :**
+A) Un indicateur de performance commerciale en très forte hausse.
+B) L'instauration d'un excellent climat social favorisant la flexibilité externe.
+C) Un dysfonctionnement social profond (mauvaises conditions de travail) générant de lourds coûts cachés (frais de recrutement, perte de qualité).
+D) La réussite indiscutable de la stratégie de marque employeur de l'entreprise.
+*Réponse : C*
+
+**42. La "Marque Employeur" (Marketing RH) est utilisée par la direction de l'entreprise pour :**
+A) Augmenter le prix de vente des produits auprès des clients (B2C) et rassurer les investisseurs (asymétrie d'information).
+B) Rendre l'entreprise attractive aux yeux des candidats externes et fidéliser les salariés actuels dans un contexte de guerre des talents.
+C) Publier légalement le bilan comptable et fonctionnel annuel sur les réseaux sociaux.
+D) Négocier avec les banques commerciales des taux d'intérêt plus favorables au financement du BFR.
+*Réponse : B*
+
+**43. Lors de l'Assemblée Générale d'une SCOP (Société Coopérative), le principe "1 personne = 1 voix" s'applique lors du vote.**
+A) Cela illustre la centralisation du pouvoir décisionnel entre les mains des actionnaires majoritaires fondateurs.
+B) Cela illustre une gouvernance démocratique participative où le pouvoir de décision est dissocié de l'apport financier (capital) du votant.
+C) Cela illustre un mécanisme d'ajustement mutuel contraint par la loi sur les sociétés commerciales.
+D) Cela illustre l'application stricte des algorithmes d'Open Data décisionnel.
+*Réponse : B*
+
+**44. L'élargissement des tâches, tel qu'il est défini en GRH, consiste à :**
+A) Accorder au salarié des tâches incluant conception et contrôle qualité (hausse de l'autonomie et de la responsabilité intellectuelle).
+B) Augmenter le salaire de l'employé proportionnellement au temps de travail effectif (heures supplémentaires).
+C) Confier au salarié un plus grand nombre de tâches d'exécution de même niveau de complexité (polyvalence horizontale).
+D) Externaliser purement et simplement le travail d'exécution vers un sous-traitant (flexibilité).
+*Réponse : C*
+
+**45. L'enrichissement des tâches, tel qu'il est défini en GRH, consiste à :**
+A) Accorder au salarié des tâches incluant conception et contrôle qualité (hausse de l'autonomie et de la responsabilité intellectuelle verticale).
+B) Augmenter le salaire de l'employé proportionnellement au temps de travail effectif (heures supplémentaires).
+C) Confier au salarié un plus grand nombre de tâches d'exécution de même niveau de complexité (polyvalence horizontale).
+D) Externaliser purement et simplement le travail d'exécution vers un sous-traitant (flexibilité).
+*Réponse : A*
+
+**46. Un chirurgien renommé de l'hôpital impose le protocole opératoire à un infirmier avec lequel il n'a aucun lien de subordination juridique.**
+A) Son influence sur le groupe repose sur son autorité formelle légale.
+B) Son influence sur le groupe repose sur l'influence affective (empathie).
+C) Son influence sur le groupe repose sur son expertise, son savoir-faire et sa compétence (leadership technique reconnu).
+D) Son influence sur le groupe repose sur la coercition et les sanctions salariales.
+*Réponse : C*
+
+**47. L'entreprise cartographie les départs massifs en retraite prévus d'ici 5 ans pour anticiper les embauches et les formations nécessaires au remplacement des savoir-faire stratégiques.**
+A) C'est la démarche du Bilan Social obligatoire.
+B) C'est la démarche de la RSE environnementale.
+C) C'est la démarche de la GPEC (Gestion Prévisionnelle des Emplois et des Compétences).
+D) C'est la démarche du Yield Management des salaires variables.
+*Réponse : C*
+
+**48. En pleine Assemblée, les associés exigent 80% des profits en dividendes, tandis que les salariés réclament que cette somme finance une augmentation générale de 5%. C'est :**
+A) Un conflit de valeurs éthiques sur la RSE.
+B) Un conflit d'intérêts fondamental portant sur la répartition financière de la richesse créée (Valeur Ajoutée).
+C) Une divergence culturelle de l'organisation due à un manque de rituels.
+D) Un problème de standardisation des procédés selon Mintzberg.
+*Réponse : B*
+
+**49. La participation et l'intéressement (primes) sont des dispositifs légaux mis en place visant à :**
+A) Remplacer illégalement le versement du salaire minimum (SMIC).
+B) Associer financièrement les salariés aux résultats ou aux performances de l'entreprise pour aligner leurs intérêts et accroître leur motivation.
+C) Rémunérer les fournisseurs de matières premières avec des actions de l'entreprise.
+D) Financer le Besoin en Fonds de Roulement (BFR) en sollicitant l'épargne des clients.
+*Réponse : B*
+
+**50. Une PME a une structure simple : le patron (fondateur) décide de la stratégie et contrôle tous ses ouvriers directement dans l'atelier sans aucun cadre intermédiaire.**
+A) Le mécanisme de coordination de Mintzberg est la standardisation des résultats.
+B) Le mécanisme de coordination de Mintzberg est la supervision directe (le chef donne les ordres et contrôle l'exécution).
+C) Le mécanisme de coordination de Mintzberg est l'ajustement mutuel informel.
+D) Le mécanisme de coordination de Mintzberg est la standardisation des qualifications.
+*Réponse : B*
+
+**51. Deux développeurs informatiques se coordonnent de manière totalement informelle, discutant toute la journée pour coder une application complexe inédite sans procédure préétablie.**
+A) Le mécanisme de coordination de Mintzberg est la standardisation des résultats.
+B) Le mécanisme de coordination de Mintzberg est la supervision directe.
+C) Le mécanisme de coordination de Mintzberg est l'ajustement mutuel (communication informelle face à la complexité et l'imprévu).
+D) Le mécanisme de coordination de Mintzberg est la standardisation des qualifications.
+*Réponse : C*
+
+**52. Dans un cabinet d'avocats, les associés travaillent de manière autonome sur leurs dossiers respectifs sans se consulter, car ils ont tous obtenu le même diplôme d'État (le barreau).**
+A) Le mécanisme de coordination est assuré en amont par la standardisation des procédés.
+B) Le mécanisme de coordination est assuré en amont par la standardisation des qualifications (la formation initiale dicte les méthodes de travail et les réflexes professionnels).
+C) Le mécanisme de coordination est assuré par la supervision directe du DRH.
+D) Le mécanisme de coordination est assuré par le "Shadow IT" juridique.
+*Réponse : B*
+
+**53. L'entreprise industrielle verse une "Prime de nuit" de 200€ aux préparateurs de commandes travaillant en horaires décalés. Ce versement représente :**
+A) Une rémunération fixe de base indissociable de la qualification du diplôme.
+B) Une incitation (rémunération variable/périphérique) liée aux conditions ou aux résultats de l'activité.
+C) Le versement d'un dividende social participatif.
+D) Une charge fixe d'exploitation indépendante du volume de travail.
+*Réponse : B*
+
+**54. La théorie de la "Contingence" (Joan Woodward, Lawrence & Lorsch) stipule en management des organisations que :**
+A) Il existe une structure organisationnelle parfaite et universelle applicable à toutes les entreprises ("One best way").
+B) La "meilleure" structure dépend toujours des facteurs de contingence externes et internes (âge, taille, technologie, stabilité de l'environnement) propres à l'entreprise.
+C) Le salaire est l'unique facteur de contingence expliquant la motivation ou la démotivation des ouvriers.
+D) La hiérarchie décisionnelle doit rester invariablement centralisée, quelle que soit la taille de la structure.
+*Réponse : B*
+
+**55. Dans une organisation "matricielle" (structure croisée), la principale difficulté pour un salarié réside dans le fait qu'il :**
+A) Ne possède statutairement plus aucun supérieur hiérarchique direct.
+B) Dépend simultanément d'une double ligne hiérarchique (ex: un chef de département métier ET un chef de produit transverse), risquant de générer des conflits d'autorité.
+C) Doit gérer exclusivement les relations fournisseurs en flux tendus (JAT).
+D) N'est rémunéré qu'au travers des dividendes distribués en fin d'exercice comptable.
+*Réponse : B*
+
+**56. L'externalisation (Outsourcing) de la hotline du service client vers un prestataire basé en Asie présente pour l'entreprise le risque majeur de :**
+A) Transformer ses charges variables d'exploitation en lourdes charges fixes (effet de levier négatif).
+B) Perdre le contrôle sur la qualité de l'expérience client (CX) et subir une forte dépendance stratégique vis-à-vis du prestataire étranger.
+C) Augmenter la valeur partenariale de manière excessive avec ses propres salariés français.
+D) Se voir interdire l'usage du Cloud Computing et du RGPD par l'État français.
+*Réponse : B*
+
+**57. Le "Droit à la déconnexion" a été instauré légalement par le code du travail pour lutter principalement contre :**
+A) Les cyberattaques et fuites de données de type DDoS sur les serveurs de l'entreprise (Shadow IT).
+B) L'effondrement constaté de la productivité industrielle (chute du ROI) lors des phases de télétravail.
+C) La porosité toxique entre la vie professionnelle et la vie personnelle induite par l'hyper-connexion aux outils numériques (smartphones, mails), génératrice de Risques Psychosociaux (burn-out, stress).
+D) L'utilisation abusive de l'Open Data gouvernemental par les collaborateurs de la DSI.
+*Réponse : C*
+
+**58. L'adoption d'une structure "Divisionnelle" (décentralisée par divisions autonomes) est stratégiquement indispensable pour une entreprise qui :**
+A) Ne vend qu'un seul produit sur un marché local unique très ciblé.
+B) Est fortement diversifiée (opérant sur plusieurs métiers très différents ou sur de nombreux continents isolés) et qui nécessite que chaque pôle réagisse rapidement à son propre marché.
+C) Souhaite recentraliser 100% du pouvoir décisionnel opérationnel au siège social parisien.
+D) Souhaite fonctionner exclusivement par ajustement mutuel informel, sans aucune hiérarchie intermédiaire.
+*Réponse : B*
+
+**59. Le Bilan Social (obligatoire dans les entreprises de plus de 300 salariés) synthétise obligatoirement des indicateurs qualitatifs et quantitatifs comme :**
+A) L'EBE, le FRNG et l'évolution du BFR sur les 3 dernières années d'exploitation.
+B) Les effectifs, l'absentéisme, les accidents du travail, les rémunérations et les frais de formation sur les 3 dernières années.
+C) L'empreinte carbone, la pollution de l'air et les rejets toxiques de l'usine sur les 3 dernières années (Bilan Carbone).
+D) Le cours boursier de l'action, les OPA et la valorisation financière sur les 3 dernières années.
+*Réponse : B*
+
+**60. Une culture d'entreprise forte, partagée à travers des rites, des mythes et des valeurs solides, a pour effet managérial de :**
+A) Détruire la marque employeur auprès de la nouvelle génération Z (digital natives).
+B) Fédérer les collaborateurs, faciliter leur intégration rapide et fournir un cadre décisionnel commun qui limite le besoin de contrôles formels et de procédures bureaucratiques strictes.
+C) Obliger l'entreprise à adopter légalement le statut de Société Coopérative et Participative (SCOP).
+D) Rendre la Gestion Prévisionnelle des Emplois et des Compétences (GPEC) totalement obsolète et inutile.
+*Réponse : B*
+
+**61. Face à un taux de rebut (défauts de fabrication) très élevé, la direction instaure les principes du "Lean Management", ce qui implique concrètement :**
+A) D'embaucher massivement des contrôleurs qualité (supervision directe) situés exclusivement en toute fin de chaîne de montage.
+B) D'impliquer tous les opérateurs de base dans la chasse méthodique aux gaspillages (temps, matière) et dans l'amélioration continue (Kaizen) de la qualité, directement au niveau de leur poste de travail.
+C) D'augmenter les stocks de sécurité (matières premières) pour cacher les défauts dans la chaîne logistique (Supply Chain).
+D) De recentraliser toutes les décisions techniques relatives à la qualité à la direction générale basée à Paris.
+*Réponse : B*
+
+**62. En sociologie des organisations, le "Contrat psychologique" liant l'employé et son employeur désigne :**
+A) Le contrat de travail écrit à durée indéterminée (CDI) validé par l'avocat d'affaires de l'entreprise.
+B) L'ensemble des attentes et obligations implicites réciproques (non formalisées par écrit) : par exemple, la loyauté et l'implication de l'employé en échange d'employabilité et d'évolution de carrière garanties par l'employeur.
+C) L'accord formel d'intéressement aux bénéfices validé et signé par le Comité Social et Économique (CSE).
+D) Le document légal d'habilitation relatif à la charte informatique et au traitement des données personnelles (RGPD) de l'entreprise.
+*Réponse : B*
+
+**63. L'intelligence collective au sein d'une équipe gérant un projet d'innovation complexe s'épanouit de manière optimale si la structure de l'organisation est :**
+A) Cloisonnée en silos métiers hermétiques (structure fonctionnelle rigide et pyramidale).
+B) Transversale et décloisonnée (structure par projet / matricielle), favorisant l'échange d'informations horizontal entre des profils complémentaires.
+C) Totalement centralisée et hyper-bureaucratique (standardisation extrême des procédés).
+D) Exclusivement basée sur une rémunération variable individuelle ultra-compétitive encourageant la compétition interne.
+*Réponse : B*
+
+**64. Un lanceur d'alerte, salarié d'un laboratoire, alerte publiquement que l'entreprise déverse secrètement des produits toxiques dans la rivière voisine au lieu de les recycler.**
+A) Il est légalement licenciable pour faute lourde, caractérisée par la divulgation du secret des affaires et l'atteinte à l'image de marque.
+B) Il est protégé par la loi contre les sanctions hiérarchiques, à la condition expresse qu'il agisse de bonne foi et de manière désintéressée dans l'intérêt général face à un danger grave.
+C) Il n'est protégé par la loi que s'il réclame officiellement une récompense financière à la justice pénale (commission).
+D) Il est tenu, selon le principe de la blockchain, de publier anonymement l'intégralité des données confidentielles sur le Dark Web.
+*Réponse : B*
+
+**65. Le recrutement via l'utilisation de "CV anonymes" (sans nom, âge, ou photo) ou de grilles d'évaluation techniques standardisées vise stratégiquement la DRH à :**
+A) Baisser les coûts spécifiques et les charges variables associés aux cabinets de recrutement.
+B) Garantir l'équité, contourner les biais cognitifs inconscients (stéréotypes, préjugés discriminatoires) des recruteurs et se focaliser sur les compétences réelles (hard skills).
+C) Éviter l'application des lourdes sanctions du RGPD en ne stockant aucune donnée personnelle pendant 5 ans.
+D) Réduire l'employabilité et bloquer l'évolution de carrière des cadres seniors (plus de 55 ans) de l'entreprise.
+*Réponse : B*
+
+**66. La théorie de l'Agence (concept de M. Jensen & W. Meckling) met en évidence le conflit d'intérêts financier et stratégique fondamental pouvant survenir entre :**
+A) L'État (qui souhaite maximiser l'impôt perçu) et les banquiers prêteurs (qui souhaitent la stabilité).
+B) Le dirigeant (l'Agent) qui peut être tenté de viser la croissance, le prestige ou sa propre rémunération, et l'actionnaire (le Principal) qui exige la maximisation de la rentabilité financière et des dividendes.
+C) Les syndicats de salariés (qui veulent des salaires) et le médecin du travail (qui souhaite limiter la productivité).
+D) Le DSI (qui veut bloquer le Cloud) et le service marketing (qui veut déployer le Big Data).
+*Réponse : B*
+
+**67. La flexibilité "quantitative externe", très prisée dans certains secteurs (BTP, grande distribution), consiste pour la direction RH à :**
+A) Demander aux salariés embauchés en CDI de réaliser massivement des heures supplémentaires non rémunérées.
+B) Poly-former (qualifier) les ouvriers pour qu'ils puissent changer de poste d'une heure à l'autre selon les besoins de la chaîne.
+C) Recourir massivement à l'intérim, aux CDD courts ou à la sous-traitance pour ajuster très rapidement le volume de main-d'œuvre à la fluctuation de la demande des clients.
+D) Modifier en temps réel les horaires d'ouverture et de fermeture du point de vente physique (annualisation du temps de travail).
+*Réponse : C*
+
+**68. L'évolution démographique de la pyramide des âges d'une grande entreprise industrielle laisse présager un vieillissement massif de ses effectifs avec 40% de départs en retraite prévus sur 3 ans. Cela nécessite d'activer en urgence :**
+A) Le mécanisme d'Open Data pour partager la base de données salariés avec Pôle Emploi.
+B) Une politique ambitieuse de GPEC (gestion du transfert de compétences rares, embauches anticipées de jeunes, tutorat).
+C) Le Yield Management de la grille des salaires variables pour limiter la masse salariale fixe.
+D) L'effet de massue financier pour payer les lourdes indemnités de départ.
+*Réponse : B*
+
+**69. La promotion de la Qualité de Vie au Travail (QVT) est aujourd'hui considérée par le management comme un puissant levier de performance globale car :**
+A) Elle augmente mathématiquement les charges fixes, ce qui améliore indirectement la valeur des immobilisations au bilan.
+B) Un salarié épanoui (reconnaissance, équilibre) est plus engagé, plus productif, moins absent et plus fidèle, ce qui réduit significativement les "coûts cachés" (RPS, turnover) destructeurs de valeur économique.
+C) Elle permet légalement à l'entreprise de s'affranchir du paiement de la taxe sur la valeur ajoutée (TVA) et des cotisations patronales.
+D) Elle impose la supervision directe du télétravail par webcam, maximisant ainsi l'efficacité des heures de travail à domicile.
+*Réponse : B*
+
+**70. Le leadership "transformationnel" se caractérise en psychologie des organisations par un manager / leader qui :**
+A) Gère ses équipes exclusivement par la sanction, le contrôle tatillon des procédures et le micro-management autoritaire.
+B) Inspire, stimule intellectuellement ses troupes, écoute leurs besoins (empathie) et donne une vision fédératrice porteuse de sens, les poussant à transcender leurs intérêts individuels pour le projet collectif.
+C) Fuit la responsabilité et ne prend volontairement aucune décision, laissant l'équipe s'auto-gérer dans le chaos (laisser-faire absolu).
+D) Utilise exclusivement l'influence paradoxale et la manipulation des informations financières asymétriques.
+*Réponse : B*
+
+## THÈME 3 : Digital, RSE et Société (Questions 71 à 100)
+
+**71. Une start-up utilise des "Smart Contracts" auto-exécutables garantissant le versement d'une prime sans aucun notaire ni banque intermédiaire.**
+A) C'est la technologie du Cloud hybride, basé sur la centralisation d'un serveur étatique.
+B) C'est la technologie de la Blockchain, registre numérique distribué et infalsifiable validé par consensus algorithmique.
+C) C'est la technologie du Big Data, analysant les comportements des assureurs.
+D) C'est la technologie du Shadow IT, permettant de contourner la loi de finance.
+*Réponse : B*
+
+**72. Un système "boîte noire" (Intelligence Artificielle) suspend automatiquement les allocations d'une famille. Selon la loi imposant la "transparence algorithmique" :**
+A) Le code source informatique du logiciel doit être publié en open source sur Wikipédia.
+B) L'administration doit pouvoir expliquer en langage clair à l'allocataire les critères, données et pondérations ayant conduit l'IA à prendre cette décision le concernant.
+C) Les données médicales et financières des allocataires doivent être anonymisées puis revendues en Open Data.
+D) Les algorithmes de décision publique doivent obligatoirement être hébergés sur des serveurs Cloud hors de l'Union Européenne.
+*Réponse : B*
+
+**73. L'entreprise "Pure Cosmetic" affiche des feuilles vertes sur ses emballages et parle de nature, mais la composition révèle 90% d'ingrédients pétrochimiques toxiques.**
+A) C'est une démarche de Mécénat éthique justifiée par le volume de production.
+B) C'est du Social washing, une démarche de RSE visant à préserver l'emploi local au détriment de l'écologie.
+C) C'est du Greenwashing (éco-blanchiment), une pratique de communication trompeuse créant un décalage entre le discours et la réalité, exposant la marque à un bad buzz réputationnel.
+D) C'est l'application optimale du Yield Management écologique, fixant les prix selon la demande verte.
+*Réponse : C*
+
+**74. La marque de vêtements d'extérieur "Patagonia" garantit ses produits à vie, propose de les réparer gratuitement en atelier et reverse 1% de son chiffre d'affaires à des ONG environnementales.**
+A) Son modèle d'affaires intègre l'obsolescence programmée esthétique stricte.
+B) Son modèle d'affaires intègre la RSE et l'économie circulaire au cœur de sa création de valeur (Product Lifecycle Management - allongement de la durée de vie du bien).
+C) Son modèle d'affaires intègre le concept économique du Low-Cost extrême.
+D) Son modèle d'affaires relève de l'Open Data industriel et de la désintermédiation.
+*Réponse : B*
+
+**75. La plateforme "Vinted" ne possède pas un seul vêtement, elle se rémunère en prélevant une "commission de protection" sur chaque vente entre particuliers.**
+A) Son modèle économique (Business Model) est basé sur l'intégration verticale totale des usines de production jusqu'au client final.
+B) Son modèle économique est basé sur l'intermédiation numérique de plateforme (C2C), bouleversant la chaîne de valeur traditionnelle grâce à la puissance des "externalités de réseau" (effet boule de neige).
+C) Son modèle économique est basé sur la stratégie dite "Bait and Hook" (appât et hameçon) des consommables.
+D) Son modèle économique est financé exclusivement par le Crowdfunding communautaire (dons).
+*Réponse : B*
+
+**76. L'hébergement du Progiciel (PGI) et des données critiques de l'entreprise sur des serveurs distants gérés par un prestataire comme Amazon (AWS) ou Microsoft (Azure) s'appelle :**
+A) L'architecture réseau Peer-to-Peer (P2P).
+B) Le Cloud Computing (Informatique en nuage), qui apporte de l'agilité et transforme un lourd investissement initial (CAPEX) en abonnement variable (OPEX), tout en posant des questions de souveraineté des données.
+C) Le "Shadow IT" sécurisé (informatique de l'ombre autorisée).
+D) Le Crowdsourcing de logiciels libres (logiciels de la multitude).
+*Réponse : B*
+
+**77. La "désintermédiation" accélérée par le numérique consiste pour un fabricant (par exemple Nike) à :**
+A) Vendre directement ses baskets au consommateur final via son propre site e-commerce, en contournant et supprimant les magasins distributeurs classiques (ex: Intersport) pour capter 100% de la marge commerciale.
+B) Ajouter de nouveaux courtiers, intermédiaires et grossistes pour atteindre massivement les marchés internationaux.
+C) Remplacer sa monnaie de paiement traditionnelle par des cryptomonnaies décentralisées.
+D) Sous-traiter l'intégralité de sa production industrielle dans des pays émergents d'Asie.
+*Réponse : A*
+
+**78. L'approche marketing et logistique dite "Omnicanale" exige pour réussir :**
+A) De cloisonner hermétiquement et de gérer séparément le magasin physique et le site web (stratégie en silos).
+B) Une interopérabilité parfaite et en temps réel des systèmes d'information (stocks, CRM, caisses) pour offrir au consommateur un parcours d'achat "sans couture" et fluide entre le digital et le physique (ex: Click & Collect, retour en magasin d'un achat web).
+C) La suppression pure et simple de l'ensemble des vendeurs dans les boutiques physiques.
+D) L'abandon définitif de la tarification dynamique de type Yield Management.
+*Réponse : B*
+
+**79. En matière de protection des données (RGPD européen), le principe de "minimisation des données" impose à l'entreprise de :**
+A) Réduire la capacité de stockage de ses disques durs pour améliorer son bilan carbone et sa performance environnementale.
+B) Ne collecter, traiter et conserver que les données personnelles qui sont strictement adéquates, pertinentes et limitées à ce qui est nécessaire au vu des finalités annoncées (ex: ne pas exiger la date de naissance pour vendre une paire de ciseaux).
+C) Supprimer l'intégralité de sa base de données CRM (clients) au 31 décembre de chaque année comptable.
+D) N'utiliser dans son ciblage publicitaire que des données publiques libres de droits disponibles en Open Data.
+*Réponse : B*
+
+**80. Une violente cyberattaque de type Ransomware (logiciel rançonneur) détruit les disques durs contenant les fichiers comptables d'une PME.**
+A) Le pilier de la "Transparence algorithmique" de la cybersécurité est violé.
+B) Le pilier de la "Disponibilité et l'intégrité de l'information" est violé, l'entreprise se retrouvant paralysée car ses données critiques sont inaccessibles et/ou modifiées.
+C) Le pilier de la "Rentabilité financière" de l'audit comptable est détruit.
+D) Le pilier de la "Traçabilité des emails" du réseau intranet est corrompu.
+*Réponse : B*
+
+**81. Le fait qu'une application tierce comme Google Maps puisse afficher les horaires des trains SNCF en temps réel nécessite une connexion logicielle spécifique entre les serveurs, appelée :**
+A) Clé primaire du modèle relationnel (SQL).
+B) API (Interface de Programmation d'Application), une porte d'accès sécurisée permettant l'interopérabilité et l'échange de données entre les deux systèmes d'information distincts.
+C) Blockchain de transport décentralisée.
+D) Cloud hybride fermé de type intranet.
+*Réponse : B*
+
+**82. Dans une base de données relationnelle (modèle SQL) gérant les clients, la "clé primaire" (ex: Numéro_Client_unique) a pour fonction de :**
+A) Crypter la base de données pour empêcher le vol par rançongiciel.
+B) Identifier de manière absolument unique et non nulle chaque enregistrement (chaque ligne client) d'une table, évitant les doublons et garantissant l'intégrité référentielle des données.
+C) Bloquer les attaques de déni de service (DDoS) sur le serveur web.
+D) Partager automatiquement les données non confidentielles en Open Data avec l'État.
+*Réponse : B*
+
+**83. "Aéspace Valley" regroupe autour de Toulouse le géant Airbus, une multitude de sous-traitants, des écoles d'ingénieurs aéronautiques et des laboratoires de recherche publics.**
+A) L'enjeu de ce "Cluster" (pôle de compétitivité) est de s'isoler géographiquement de la féroce concurrence mondiale en créant un monopole.
+B) L'enjeu de ce "Cluster" est de bénéficier d'externalités positives de réseau géographique (transfert rapide de compétences, émulation technologique en R&D, vaste bassin d'emploi hyper-qualifié) qui rendent l'ensemble du territoire hyper-compétitif à l'international.
+C) L'enjeu est de pratiquer le mécénat environnemental, rendu obligatoire par les directives RSE de l'Union Européenne.
+D) L'enjeu est de faciliter l'imposition par l'État d'une centralisation du pouvoir décisionnel industriel.
+*Réponse : B*
+
+**84. L'outil informatisé "Workflow" (Flux de travaux) accroît significativement l'efficience d'un processus administratif (ex: validation d'un contrat) en :**
+A) Rendant l'information opaque et inaccessible pour le personnel d'exécution, au profit des seuls dirigeants.
+B) Automatisant le routage des documents numériques, en encadrant strictement l'enchaînement des validations obligatoires, et en assurant la traçabilité complète des actions effectuées par chaque acteur.
+C) Remplaçant intégralement le jugement du DRH ou du directeur financier par un algorithme prédictif autonome.
+D) Mettant instantanément les données contractuelles en Open Data mondial pour garantir la transparence des affaires.
+*Réponse : B*
+
+**85. Une PME industrielle choisit de confier la gestion intégrale de ses fiches de paie et de ses contrats de travail à un prestataire RH externe spécialisé (cabinet comptable).**
+A) C'est de l'intégration verticale vers l'amont de la chaîne de valeur.
+B) C'est de l'externalisation (BPO - Business Process Outsourcing), décision stratégique permettant à la PME de variabiliser ses coûts RH et de se recentrer sur son cœur de métier (l'industrie), au prix d'une certaine dépendance envers le prestataire.
+C) C'est de la flexibilité interne qualitative, impliquant une restructuration des compétences des propres salariés de l'usine.
+D) C'est du Crowdsourcing administratif, reposant sur l'intelligence de la communauté web.
+*Réponse : B*
+
+**86. Le "Social Selling" (vente sociale) pratiqué par les commerciaux sur le marché B2B (ventes entre entreprises) consiste à :**
+A) Vendre des espaces publicitaires et des bannières web aux syndicats et comités d'entreprise.
+B) Remplacer l'appel téléphonique à froid (Cold Calling) par une utilisation stratégique des réseaux sociaux professionnels (ex: LinkedIn) pour identifier les prospects, démontrer son expertise, interagir et créer une relation de confiance avant de proposer une offre commerciale.
+C) Externaliser la force de vente terrain en faisant appel à des plateformes de freelances indépendants.
+D) Vendre les stocks de produits invendus de l'entreprise sur des groupes Facebook ou Marketplace à prix coûtant (déstockage).
+*Réponse : B*
+
+**87. L'éthique dans les affaires (Compliance) s'impose de plus en plus aux grandes multinationales françaises via la loi sur le "devoir de vigilance", qui les oblige légalement à :**
+A) Espionner par webcam les employés travaillant à domicile en télétravail pour garantir la confidentialité du SI.
+B) Établir un plan pour prévenir et traiter les risques graves d'atteinte aux droits humains fondamentaux (travail forcé) et à l'environnement, non seulement dans leurs propres usines, mais sur l'ensemble de leur chaîne de valeur mondiale (y compris chez leurs sous-traitants très lointains).
+C) Distribuer obligatoirement 50% de leurs bénéfices nets annuels (après impôts) à des ONG dans les pays émergents (Mécénat contraint).
+D) N'utiliser que des intelligences artificielles "transparentes" pour le recrutement de leurs cadres dirigeants.
+*Réponse : B*
+
+**88. "L'innovation de rupture", telle que conceptualisée par l'économiste J. Schumpeter (ex: Netflix tuant les vidéoclubs Blockbuster, ou le smartphone remplaçant l'appareil photo numérique), s'accompagne toujours d'un phénomène brutal de :**
+A) Coopétition asymétrique entre les start-ups et les acteurs historiques.
+B) "Destruction créatrice" : la nouvelle technologie ou le nouvel usage remplace l'ancien modèle dominant et provoque souvent la chute brutale des entreprises historiques qui n'ont pas su ou voulu pivoter, tout en créant de nouveaux marchés et de la croissance économique.
+C) Standardisation des qualifications et des procédés de travail à l'échelle du secteur industriel mondial.
+D) Stabilisation du seuil de rentabilité unitaire des produits concernés.
+*Réponse : B*
+
+**89. Le financement d'un projet technologique par l'émission de "Tokens" (jetons numériques en cryptomonnaie) vendus sur internet à des investisseurs du monde entier s'appelle :**
+A) Un emprunt bancaire obligataire indexé sur le taux d'intérêt de la Banque Centrale.
+B) Une ICO (Initial Coin Offering) reposant sur la technologie Blockchain, une forme totalement désintermédiée et non régulée de levée de fonds contournant les banques traditionnelles.
+C) Une augmentation de capital social classique soumise à l'Autorité des Marchés Financiers (AMF).
+D) Un crédit-bail adossé à des actifs logiciels immatériels.
+*Réponse : B*
+
+**90. Une entreprise qui développe une nouvelle application mobile de manière "Agile" (ex: Méthode Scrum) se caractérise par le fait qu'elle :**
+A) Fige un lourd cahier des charges extrêmement détaillé pendant 3 ans sans aucune modification avant de livrer le produit final parfait (méthode traditionnelle du Cycle en V).
+B) Procède par cycles de développement itératifs très courts ("sprints"), livre rapidement des versions intermédiaires (MVP - Produit Minimum Viable) et s'adapte en continu aux retours et aux tests des utilisateurs pour faire face à l'incertitude du marché.
+C) Refuse toute communication interne et travaille en silos hermétiques pour garantir le secret industriel de son code source.
+D) Utilise obligatoirement la supervision directe autocratique pour forcer les développeurs à tenir les délais impartis.
+*Réponse : B*
+
+**91. Dans le domaine du Big Data, la création d'un "Data Lake" (Lac de données) permet stratégiquement à l'entreprise de :**
+A) Structurer les données comptables et financières de manière très stricte dans des tables relationnelles (SQL) figées.
+B) Stocker massivement et à bas coût des données brutes, hétérogènes et non structurées (textes, vidéos, logs informatiques, signaux de capteurs IoT) en vue d'une exploration et d'une analyse prédictive ultérieure par des data scientists (Data Mining).
+C) Détruire automatiquement et irrémédiablement les données personnelles des clients après 30 jours pour satisfaire aux exigences drastiques du RGPD.
+D) Rafraîchir les serveurs de calcul avec de l'eau recyclée (Greenwashing technologique).
+*Réponse : B*
+
+**92. Un "biais algorithmique" (ou biais d'apprentissage) décelé dans un logiciel d'Intelligence Artificielle utilisé pour trier les centaines de milliers de CV reçus par l'entreprise signifie que l'IA :**
+A) Fait preuve d'une objectivité mathématique et statistique infaillible, dénuée de toute subjectivité.
+B) Reproduit et amplifie de manière aveugle ("boîte noire") des discriminations humaines passées (ex: sexisme, racisme) qui étaient présentes, souvent implicitement, dans les données historiques sur lesquelles l'algorithme a été entraîné (Machine Learning).
+C) Est victime d'une attaque externe par des hackers visant à paralyser le serveur via des requêtes multiples (DDoS).
+D) Refuse de lire les CV enregistrés au format PDF ou Word, exigeant un format Open Data.
+*Réponse : B*
+
+**93. La campagne de communication digitale en ligne ("Paid Media") d'une entreprise consiste pour le service marketing à :**
+A) Payer de l'espace publicitaire sur des plateformes (Meta, Google Ads) pour diffuser des annonces hyper-ciblées garantissant une visibilité et une acquisition de trafic immédiates.
+B) Espérer passivement qu'une vidéo postée par un influenceur "fan" devienne virale gratuitement sur les réseaux (Earned Media / Bouche-à-oreille).
+C) Mettre à jour et animer son propre site internet vitrine et sa page Facebook officielle (Owned Media).
+D) Publier son bilan comptable et ses objectifs de RSE en Open Data pour rassurer les parties prenantes.
+*Réponse : A*
+
+**94. L'utilisation persistante du "Shadow IT" (outils informatiques comme WhatsApp ou Google Drive non validés par la DSI) par les salariés pour aller plus vite dans leur travail quotidien illustre souvent en management le dangereux décalage entre :**
+A) La rentabilité boursière exigée par les actionnaires et le BFR imposé par les fournisseurs.
+B) La lourdeur, la complexité ou la rigidité du Système d'Information officiel imposé par le siège, et le besoin irrépressible d'agilité, de fluidité et de rapidité d'exécution des collaborateurs sur le terrain opérationnel.
+C) L'architecture du Cloud privé hébergé en interne et celle du Cloud public hébergé par Amazon.
+D) Les engagements solennels de RSE annoncés par le dirigeant et les pratiques réelles de greenwashing.
+*Réponse : B*
+
+**95. Une marque de cosmétique de luxe finance la recherche fondamentale contre les maladies orphelines dans un institut de santé public de manière très discrète, sans publicité. C'est du :**
+A) Sponsoring (Parrainage) commercial, visant un retour sur investissement immédiat par la vente.
+B) Mécénat, c'est-à-dire un soutien financier (ou en nature) d'intérêt général apporté sans attente de contrepartie publicitaire directe ou de ROI (retour sur investissement) à court terme pour l'entreprise donatrice.
+C) Crowdfunding en Equity (financement participatif en capital) pour le compte de l'institut.
+D) Social Washing agressif, destiné à masquer un bilan carbone catastrophique.
+*Réponse : B*
+
+**96. L'utilisation réussie par une entreprise de la stratégie de ciblage ultra-personnalisé "One-to-One" requiert technologiquement de sa part :**
+A) De produire en masse des biens hyper-standardisés selon le modèle historique du Fordisme pour écraser les coûts de revient.
+B) D'exploiter algorithmiquement une base de données client (CRM) d'une grande richesse, qualifiée par les historiques d'achats et la navigation web, pour proposer des offres hyper-personnalisées (Big Data).
+C) De supprimer son système d'information marketing centralisé pour favoriser l'ajustement mutuel informel des vendeurs.
+D) De communiquer exclusivement par le biais de campagnes d'affichage urbain 4x3m "Mass Market".
+*Réponse : B*
+
+**97. Une organisation "orientée processus" (vision transversale) cherche à casser l'organisation traditionnelle en "silos" (fonctions verticales isolées qui ne se parlent pas). Elle utilisera préférentiellement comme architecture du système d'information :**
+A) Une multitude d'applications métiers (logiciels de niche) totalement indépendantes et techniquement incompatibles (sans interopérabilité).
+B) Un Progiciel de Gestion Intégré (PGI/ERP) unique adossé à une base de données partagée, et des outils de Workflow interconnectant informatiquement les différents services (ventes, compta, stock) de bout en bout.
+C) Un réseau pair-à-pair (P2P) non sécurisé, installé en "Shadow IT" par les salariés eux-mêmes.
+D) Le rejet total de l'automatisation au profit exclusif de la supervision directe de la direction générale.
+*Réponse : B*
+
+**98. L'essor massif, foudroyant et pérenne du commerce d'occasion en ligne (plateformes de type Vinted, LeBonCoin, BackMarket) traduit en marketing une profonde mutation sociétale vers :**
+A) La consommation hyper-mondialisée de produits manufacturés jetables et polluants, encouragée par le triomphe de la Fast Fashion.
+B) L'économie circulaire, la rationalité économique (pouvoir d'achat face à l'inflation) et une montée en puissance de l'anti-consumérisme écologique (désir de prolonger la vie du produit).
+C) La demande exclusive par le client roi de produits manufacturés ultra-personnalisés et neufs à prix d'écrémage.
+D) La disparition programmée de la monnaie fiduciaire scripturale au profit du troc physique direct de main à main.
+*Réponse : B*
+
+**99. En contrôle de gestion stratégique, le "Tableau de Bord Prospectif" (Balanced Scorecard de Norton & Kaplan) est jugé infiniment supérieur au seul bilan comptable pour piloter l'entreprise de demain car il :**
+A) Ne se focalise strictement que sur les données financières passées et auditées de l'année N-1 (la rentabilité historique).
+B) Équilibre le pilotage de la performance globale sur quatre axes d'analyse interdépendants : Finance (rentabilité), Client (satisfaction/part de marché), Processus Internes (qualité/délais/productivité) et Apprentissage (RH/GPEC/Innovation).
+C) Est publié en Open Data sur le site du ministère de l'Économie pour valider le taux d'imposition sur les sociétés.
+D) Remplace techniquement le PGI de l'entreprise par des intelligences artificielles génératives (ChatGPT).
+*Réponse : B*
+
+**100. (Le test ultime) La start-up technologique "TechSuccess" est en hypercroissance : ses ventes explosent sur le marché B2B. Son modèle d'affaires exige de payer les usines sous-traitantes asiatiques comptant à la commande, alors que ses gros clients (grandes surfaces) la paient à 60, voire 90 jours après livraison. La production tourne à plein régime. Le Directeur Général se réjouit du Chiffre d'Affaires record. Le Directeur Financier (DAF), lui, convoque une réunion de crise en panique absolue. Pourquoi le CFO a-t-il techniquement raison de s'alarmer ?**
+A) Parce que l'hypercroissance des ventes augmente inévitablement les charges fixes structurelles du siège social, ce qui détruira l'effet de levier et la marge sur coûts spécifiques de l'année suivante, rendant les investissements obsolètes.
+B) Parce que la redoutée "crise de croissance" est mortelle : l'augmentation massive des ventes gonfle vertigineusement le Besoin en Fonds de Roulement (BFR) (explosion des créances clients en attente de paiement). Si le Fonds de Roulement (FRNG) n'est pas augmenté d'urgence (via une levée de fonds ou un emprunt long terme), la Trésorerie Nette s'effondrera instantanément dans le rouge, menant la start-up hyper-rentable (qui fait des bénéfices sur le papier)... directement à la cessation de paiements (faillite).
+C) Parce que les bénéfices exceptionnels générés par ce chiffre d'affaires devront être légalement reversés sous forme de participation obligatoire et d'intéressement aux salariés, ce qui entraînera un conflit de répartition irréversible de la valeur ajoutée avec les actionnaires.
+D) Parce que l'effet de levier financier deviendra mathématiquement négatif (effet de massue) si le chiffre d'affaires, exprimé en brut, dépasse d'un coup la valeur comptable des capitaux propres inscrits au passif du bilan.
+*Réponse : B (La "crise de croissance" : une entreprise qui fait du profit peut mourir si son BFR absorbe toute sa trésorerie. Vendre plus = plus d'argent "coincé" dehors (créances) = besoin de cash vital).*
