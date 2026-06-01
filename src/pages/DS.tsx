@@ -126,8 +126,8 @@ const DS_TRACK_GATE_KEYS: Record<DsTrack, string> = {
 };
 
 const DS_TRACK_PASSWORDS: Record<DsTrack, string> = {
-  premiere: "fraise",
-  terminale: "cerise",
+  premiere: "tomate",
+  terminale: "tastykrousty",
 };
 
 /** Debloque anti-triche (changement d'onglet). */
