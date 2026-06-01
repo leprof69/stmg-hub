@@ -11,9 +11,15 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "scripts" / "premiere-qcm-source.txt"
 OUT = ROOT / "src" / "data" / "sdgn" / "sdgnDsPremiereQcm.ts"
 
-THEME_RE = re.compile(r"Th\u00e8me\s+(\d+)\s*:", re.UNICODE)
+THEME_RE = re.compile(
+    r"Th[e\u00e9\u00e8\u00ea\u00ebE\u00c9\u00c8\u00ca\u00cb]\s*me\s+(\d+)\s*:",
+    re.I | re.UNICODE,
+)
 ANSWER_RE = re.compile(r"\nR\u00e9ponse\s*:\s*([ABCD])\b", re.I | re.UNICODE)
-THEME_HEADER_RE = re.compile(r"^.*?Th\u00e8me\s+\d+\s*:[^\n]*\n", re.S | re.UNICODE)
+THEME_HEADER_RE = re.compile(
+    r"^#{0,3}\s*.*?Th[e\u00e9\u00e8\u00ea\u00ebE\u00c9\u00c8\u00ca\u00cb]\s*me\s+\d+\s*:[^\n]*\n+",
+    re.S | re.I | re.UNICODE,
+)
 CHOICE_RE = re.compile(r"^([ABCD])\)\s*", re.M)
 
 ANSWER_MAP = {"A": 0, "B": 1, "C": 2, "D": 3}
@@ -48,16 +54,19 @@ def parse_questions(text: str) -> list[dict]:
         if not block:
             continue
 
-        theme_match = THEME_RE.search(block)
-        if theme_match:
-            current_theme = int(theme_match.group(1))
-            block = THEME_HEADER_RE.sub("", block, count=1)
-
         num_match = re.match(r"(\d+)\.\s+(.*)", block, re.S)
         if not num_match:
+            theme_only = THEME_RE.search(block)
+            if theme_only:
+                current_theme = int(theme_only.group(1))
             continue
 
         num = int(num_match.group(1))
+        prefix = block[: num_match.start()]
+        theme_before = THEME_RE.search(prefix)
+        if theme_before:
+            current_theme = int(theme_before.group(1))
+
         rest = num_match.group(2).strip()
 
         answer_match = ANSWER_RE.search(rest)
@@ -88,6 +97,10 @@ def parse_questions(text: str) -> list[dict]:
                 "bonIndex": ANSWER_MAP[answer_letter],
             }
         )
+
+        theme_after = THEME_RE.search(rest[answer_match.end() :])
+        if theme_after:
+            current_theme = int(theme_after.group(1))
 
     questions.sort(key=lambda q: q["num"])
     return questions
