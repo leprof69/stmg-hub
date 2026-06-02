@@ -36,6 +36,7 @@ import {
   rebuildTerminaleQuestionIdsForResume,
   type DsTerminalePlayQuestion,
   DS_SDGN_TERMINALE_SESSION_SEC,
+  DS_SDGN_TERMINALE_QUESTION_SEC,
   getDsSdgnTerminaleQuestionCount,
 } from "../lib/dsSdgnTerminaleQcmDeck";
 import { DS_SDGN_TOPIC_LABELS, DS_SDGN_TOPIC_ORDER } from "../lib/dsSdgnQcmTopics";
@@ -68,6 +69,7 @@ function getTrackMeta(track: DsTrack) {
     return {
       examId: DS_SDGN_TERMINALE_QCM_EXAM_ID,
       sessionSec: DS_SDGN_TERMINALE_SESSION_SEC,
+      questionSec: DS_SDGN_TERMINALE_QUESTION_SEC,
       title: "QCM Terminale STMG",
       subtitle: "Sciences de Gestion et Num\u00e9rique \u2014 100 questions",
       questionCount: getDsSdgnTerminaleQuestionCount(),
@@ -76,6 +78,7 @@ function getTrackMeta(track: DsTrack) {
   return {
     examId: DS_SDGN_QCM_EXAM_ID,
     sessionSec: DS_SDGN_PREMIERE_SESSION_SEC,
+    questionSec: null,
     title: "QCM 1\u00e8re STMG",
     subtitle: "Sciences de Gestion et Num\u00e9rique (1\u00e8re STMG) \u2014 100 questions",
     questionCount: getDsSdgnPremiereQuestionCount(),
@@ -158,6 +161,7 @@ export default function DS({ profil, onExamFinished }: Props) {
   const trackMeta = getTrackMeta(activeTrack);
   const examId = trackMeta.examId;
   const sessionSec = trackMeta.sessionSec;
+  const questionSec = trackMeta.questionSec;
   const [phase, setPhase] = useState<Phase>("hub");
   const [pendingTrackGate, setPendingTrackGate] = useState<{
     track: DsTrack;
@@ -171,6 +175,7 @@ export default function DS({ profil, onExamFinished }: Props) {
   const [answered, setAnswered] = useState(false);
   const [picked, setPicked] = useState<number | null>(null);
   const [sessionLeft, setSessionLeft] = useState(sessionSec);
+  const [questionLeft, setQuestionLeft] = useState(questionSec ?? 0);
   const [wrongCount, setWrongCount] = useState(0);
   const [interruptMsg, setInterruptMsg] = useState("");
   const [saveState, setSaveState] = useState<"idle" | "saving" | "ok" | "err">("idle");
@@ -185,6 +190,7 @@ export default function DS({ profil, onExamFinished }: Props) {
   const [timerKey, setTimerKey] = useState(0);
 
   const sessionTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const questionTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const phaseRef = useRef<Phase>("hub");
   const finishedRef = useRef(false);
   const scoreRef = useRef(0);
@@ -196,6 +202,7 @@ export default function DS({ profil, onExamFinished }: Props) {
   const indexRef = useRef(0);
   const answeredRef = useRef(false);
   const sessionLeftRef = useRef(sessionSec);
+  const questionLeftRef = useRef(questionSec ?? 0);
   const examIdRef = useRef(examId);
   const isTerminaleRef = useRef(isTerminale);
   const antiCheatBlockedRef = useRef(false);
@@ -236,6 +243,7 @@ export default function DS({ profil, onExamFinished }: Props) {
   indexRef.current = index;
   answeredRef.current = answered;
   sessionLeftRef.current = sessionLeft;
+  questionLeftRef.current = questionLeft;
   antiCheatBlockedRef.current = antiCheatBlocked;
 
   const immersiveActive = phase === "play";
@@ -254,7 +262,9 @@ export default function DS({ profil, onExamFinished }: Props) {
 
   const clearTimers = useCallback(() => {
     if (sessionTimerRef.current) clearInterval(sessionTimerRef.current);
+    if (questionTimerRef.current) clearInterval(questionTimerRef.current);
     sessionTimerRef.current = null;
+    questionTimerRef.current = null;
   }, []);
 
   const flushSave = useCallback(
@@ -439,8 +449,10 @@ export default function DS({ profil, onExamFinished }: Props) {
       setIndex(next);
       setAnswered(false);
       setPicked(null);
+      setQuestionLeft(questionSec ?? 0);
+      questionLeftRef.current = questionSec ?? 0;
     },
-    [recordAnswer, flushSave],
+    [recordAnswer, flushSave, questionSec],
   );
 
   const resolveAnswer = useCallback(
@@ -481,6 +493,8 @@ export default function DS({ profil, onExamFinished }: Props) {
     setPicked(null);
     setSessionLeft(opts.sessionLeftSec);
     sessionLeftRef.current = opts.sessionLeftSec;
+    setQuestionLeft(questionSec ?? 0);
+    questionLeftRef.current = questionSec ?? 0;
     setPhase("play");
   };
 
@@ -592,6 +606,29 @@ export default function DS({ profil, onExamFinished }: Props) {
       sessionTimerRef.current = null;
     };
   }, [phase, antiCheatBlocked, timerKey]);
+
+  /** Chrono par question (Terminale). */
+  useEffect(() => {
+    if (phase !== "play" || antiCheatBlocked) return undefined;
+    if (!isTerminale || !questionSec || answered) return undefined;
+    if (questionLeftRef.current <= 0) {
+      questionLeftRef.current = questionSec;
+      setQuestionLeft(questionSec);
+    }
+    questionTimerRef.current = setInterval(() => {
+      questionLeftRef.current = Math.max(0, questionLeftRef.current - 1);
+      setQuestionLeft(questionLeftRef.current);
+      if (questionLeftRef.current <= 0) {
+        setAnswered(true);
+        setPicked(null);
+        window.setTimeout(() => goNext("wrong", null), 150);
+      }
+    }, 1000);
+    return () => {
+      if (questionTimerRef.current) clearInterval(questionTimerRef.current);
+      questionTimerRef.current = null;
+    };
+  }, [phase, antiCheatBlocked, isTerminale, questionSec, answered, goNext, timerKey]);
 
   const sessionMmSs = useMemo(() => {
     const m = Math.floor(sessionLeft / 60);
@@ -905,7 +942,14 @@ export default function DS({ profil, onExamFinished }: Props) {
 
       <div className="flex justify-between items-center text-sm text-slate-400 mb-4 pr-14">
         <span>{`Question ${index + 1} / ${questions.length}`}</span>
-        <span className="tabular-nums">{`Temps restant ${sessionMmSs}`}</span>
+        <div className="text-right">
+          {isTerminale ? (
+            <p className={`tabular-nums ${questionLeft <= 8 ? "text-amber-300 ds-timer-urgent" : ""}`}>
+              {`Question: ${questionLeft}s`}
+            </p>
+          ) : null}
+          <p className="tabular-nums">{`Temps restant ${sessionMmSs}`}</p>
+        </div>
       </div>
 
       <div className="h-1.5 rounded-full bg-slate-800 mb-6 overflow-hidden">

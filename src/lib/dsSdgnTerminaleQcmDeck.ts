@@ -12,6 +12,7 @@ import { buildDsDisplayEnonce, DS_QUESTION_KIND_LABEL, type DsQuestionKind } fro
 export { DS_SCORE_CORRECT, DS_SCORE_WRONG, formatDsScore } from "./dsSdgnQcmDeck";
 
 export const DS_SDGN_TERMINALE_SESSION_SEC = 50 * 60;
+export const DS_SDGN_TERMINALE_QUESTION_SEC = 30;
 
 export const DS_SDGN_TERMINALE_EXAM_BANK: SdgnMissionQcm[] =
   SDGN_DS_TERMINALE_QCM.filter(isDsBankQuestionEligible);
