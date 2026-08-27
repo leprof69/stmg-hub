@@ -11,8 +11,8 @@ import {
   trackNavigation,
   type UserProfile,
 } from "./services/userProfileService";
-import Login from "./pages/Login";
-import Onboarding from "./pages/Onboarding";
+const Login = lazy(() => import("./pages/Login"));
+const Onboarding = lazy(() => import("./pages/Onboarding"));
 import Accueil from "./pages/Accueil";
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Chapitres = lazy(() => import("./pages/Chapitres"));
@@ -254,7 +254,13 @@ function App() {
 
   const montrerAccueilMarketing = !utilisateur || accueilSiteVisible;
   if (montrerAccueilMarketing) {
-    if (!utilisateur && afficherLogin) return <Login key={modeLogin} modeInitial={modeLogin} />;
+    if (!utilisateur && afficherLogin) {
+      return (
+        <Suspense fallback={<div className="min-h-screen bg-gray-900 flex items-center justify-center"><p className="text-white text-xl">Chargement...</p></div>}>
+          <Login key={modeLogin} modeInitial={modeLogin} />
+        </Suspense>
+      );
+    }
     return (
       <Accueil
         estConnecte={!!utilisateur}
@@ -280,7 +286,11 @@ function App() {
   }
 
   if (!profil) {
-    return <Onboarding onTermine={() => chargerProfil(utilisateur)} />;
+    return (
+      <Suspense fallback={<div className="min-h-screen bg-gray-900 flex items-center justify-center"><p className="text-white text-xl">Chargement...</p></div>}>
+        <Onboarding onTermine={() => chargerProfil(utilisateur)} />
+      </Suspense>
+    );
   }
 
   if (afficherAccueil) {
