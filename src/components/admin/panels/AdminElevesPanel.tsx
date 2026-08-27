@@ -56,7 +56,7 @@ export default function AdminElevesPanel() {
       >
         <p style={{ margin: 0, color: "#92400E", fontSize: "0.86rem", fontWeight: 700, lineHeight: 1.45 }}>
           {
-            "Tableau de suivi : activit\u00e9, missions, Focus, cartes, jetons. Actions par ligne : ajouter/retirer jetons, reset MDP, r\u00e9tablir jetons si suspendus."
+            "Tableau de suivi : activit\u00e9, cartes, jetons. Actions par ligne : ajouter/retirer jetons, reset MDP, r\u00e9tablir jetons si suspendus."
           }
         </p>
       </div>
@@ -89,8 +89,6 @@ export default function AdminElevesPanel() {
         onToggleDetail={(id) => a.setReportingDetailId((cur) => (cur === id ? null : id))}
         quickJetons={a.quickJetons}
         onQuickJetonsChange={(id, val) => a.setQuickJetons((prev) => ({ ...prev, [id]: val }))}
-        sdgnExpanded={a.sdgnExpanded}
-        onToggleSdgn={(id) => a.setSdgnExpanded((prev) => ({ ...prev, [id]: !prev[id] }))}
         recompenseEnCours={a.recompenseEnCours}
         resetPwdUserId={a.resetPwdUserId}
         onAjouterJetons={(eleve) => {

@@ -48,9 +48,9 @@ export default function ProfilePageBgOverlay({ bgKey }: { bgKey: string }) {
   return (
     <div style={wrap}>
       {[
-        { c: "rgba(99,102,241,0.12)", x: "18%", y: "48%", r: "min(42vw, 280px)", d: "0s" },
+        { c: "rgba(37,99,235,0.12)", x: "18%", y: "48%", r: "min(42vw, 280px)", d: "0s" },
         { c: "rgba(56,189,248,0.1)", x: "82%", y: "28%", r: "min(38vw, 240px)", d: "1.4s" },
-        { c: "rgba(167,139,250,0.1)", x: "52%", y: "78%", r: "min(40vw, 260px)", d: "2.8s" },
+        { c: "rgba(14,165,233,0.10)", x: "52%", y: "78%", r: "min(40vw, 260px)", d: "2.8s" },
       ].map((o, i) => (
         <div
           key={i}

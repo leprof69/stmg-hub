@@ -2,7 +2,6 @@ import { AdminProvider, useAdmin } from "./AdminContext";
 import AdminBtn from "./AdminBtn";
 import AdminOverviewPanel from "./panels/AdminOverviewPanel";
 import AdminElevesPanel from "./panels/AdminElevesPanel";
-import AdminExamensPanel from "./panels/AdminExamensPanel";
 import AdminJetonsPanel from "./panels/AdminJetonsPanel";
 import AdminImportsPanel from "./panels/AdminImportsPanel";
 import AdminAidePanel from "./panels/AdminAidePanel";
@@ -93,7 +92,6 @@ function AdminShell() {
 
         {a.sectionActif === "overview" && <AdminOverviewPanel />}
         {a.sectionActif === "eleves" && <AdminElevesPanel />}
-        {a.sectionActif === "examens" && <AdminExamensPanel />}
         {a.sectionActif === "jetons" && <AdminJetonsPanel />}
         {a.sectionActif === "contenus" && <AdminImportsPanel />}
         {a.sectionActif === "aide" && <AdminAidePanel />}

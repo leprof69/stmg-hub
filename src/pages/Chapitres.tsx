@@ -4,31 +4,48 @@ import { collection, query, where, getDocs, orderBy, doc, getDoc, updateDoc } fr
 import { formatJetonsDelta } from "../lib/jetons";
 import { PLATFORM_XP_BLOCKED_MESSAGE, usePlatformIntegrity } from "../contexts/PlatformIntegrityContext";
 
+const CSS = `
+@keyframes ch-up  { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
+@keyframes ch-orb { 0%,100%{opacity:.4} 50%{opacity:.75} }
+.ch-chapitre { transition:all .2s ease; }
+.ch-chapitre:hover { transform:translateX(3px); }
+.ch-btn { transition:all .18s ease; }
+.ch-btn:hover { opacity:.88; transform:translateY(-1px); }
+`;
+
 const matieres = [
-  { nom: "Management", emoji: "🏢" },
-  { nom: "Sciences de Gestion", emoji: "💻" },
-  { nom: "Économie", emoji: "📈" },
-  { nom: "Droit", emoji: "⚖️" },
-  { nom: "Marketing", emoji: "🎯" },
-  { nom: "Ressources Humaines", emoji: "👥" },
-  { nom: "Gestion Finance", emoji: "💰" },
+  { nom: "Management",          emoji: "🏢", couleur: "#2563EB" },
+  { nom: "Sciences de Gestion", emoji: "💻", couleur: "#06B6D4" },
+  { nom: "Économie",            emoji: "📈", couleur: "#10B981" },
+  { nom: "Droit",               emoji: "⚖️", couleur: "#0EA5E9" },
+  { nom: "Marketing",           emoji: "🎯", couleur: "#F97316" },
+  { nom: "Ressources Humaines", emoji: "👥", couleur: "#F59E0B" },
+  { nom: "Gestion Finance",     emoji: "💰", couleur: "#10B981" },
 ];
 
 export default function Chapitres({ profil, onXPGagne }) {
   const { xpRewardsSuspended } = usePlatformIntegrity();
   const XP_PAR_ACTION = { application: 12, fiche: 8 };
   const [matiereSelectionnee, setMatiereSelectionnee] = useState("Management");
-  const [classeSelectionnee, setClasseSelectionnee] = useState(profil.classe);
-  const [chapitres, setChapitres] = useState([]);
-  const [chargement, setChargement] = useState(false);
+  const [classeSelectionnee,  setClasseSelectionnee]  = useState(profil.classe);
+  const [chapitres,    setChapitres]    = useState([]);
+  const [chargement,   setChargement]   = useState(false);
   const [chapitreOuvert, setChapitreOuvert] = useState(null);
-  const [notifXP, setNotifXP] = useState(null);
+  const [notifXP,      setNotifXP]      = useState(null);
   const peutChoisirClasse = profil.role === "admin" || profil.classe === "terminale";
+
+  const matiereActive = matieres.find(m => m.nom === matiereSelectionnee) ?? matieres[0];
+
+  useEffect(() => {
+    const s = document.createElement("style");
+    s.textContent = CSS;
+    document.head.appendChild(s);
+    return () => { try { document.head.removeChild(s); } catch {} };
+  }, []);
 
   useEffect(() => {
     const chargerChapitres = async () => {
-      setChargement(true);
-      setChapitreOuvert(null);
+      setChargement(true); setChapitreOuvert(null);
       try {
         const q = query(
           collection(db, "chapitres"),
@@ -37,20 +54,16 @@ export default function Chapitres({ profil, onXPGagne }) {
           orderBy("ordre")
         );
         const snapshot = await getDocs(q);
-        const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setChapitres(data);
-      } catch (err) {
-        console.error(err);
-      }
+        setChapitres(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
+      } catch (err) { console.error(err); }
       setChargement(false);
     };
     chargerChapitres();
   }, [matiereSelectionnee, classeSelectionnee]);
 
-  const ouvrirAppEtGagnerXP = async (url, actionType) => {
+  const ouvrirAppEtGagnerXP = async (url: string | undefined, actionType: string) => {
     if (!url) return;
     window.open(url, "_blank");
-
     try {
       const user = auth.currentUser;
       if (!user) return;
@@ -63,8 +76,7 @@ export default function Chapitres({ profil, onXPGagne }) {
       const userRef = doc(db, "users", user.uid);
       const snap = await getDoc(userRef);
       if (!snap.exists()) return;
-      const data = snap.data();
-      await updateDoc(userRef, { xp: (data.xp || 0) + xpGain });
+      await updateDoc(userRef, { xp: ((snap.data().xp || 0) + xpGain) });
       setNotifXP(`${formatJetonsDelta(xpGain)} gagnés !`);
       if (onXPGagne) onXPGagne();
       setTimeout(() => setNotifXP(null), 2200);
@@ -76,104 +88,187 @@ export default function Chapitres({ profil, onXPGagne }) {
   };
 
   return (
-    <div className="min-h-screen p-4" style={{ background: "linear-gradient(180deg, #F8FAFF 0%, #F1F5F9 100%)", color: "#0f172a" }}>
+    <div style={{ minHeight:"100vh", padding:"28px 16px 52px", color:"#F1F5F9", fontFamily:"'Nunito',sans-serif", position:"relative" }}>
+
+      {/* Ambient orb */}
+      <div style={{ position:"fixed", top:"8%", left:"50%", transform:"translateX(-50%)", width:"600px", height:"300px", background:`radial-gradient(ellipse, ${matiereActive.couleur}12 0%, transparent 70%)`, pointerEvents:"none", zIndex:0, animation:"ch-orb 5s ease-in-out infinite", transition:"background .5s" }} />
+
+      {/* Toast XP */}
       {notifXP && (
-        <div className="fixed top-20 right-6 z-50 bg-amber-500 text-white font-bold px-5 py-3 rounded-xl shadow-xl">
+        <div style={{ position:"fixed", top:"80px", right:"20px", zIndex:100, background:"linear-gradient(135deg,#F59E0B,#F97316)", color:"white", fontFamily:"'Nunito',sans-serif", fontWeight:900, padding:"12px 20px", borderRadius:"14px", boxShadow:"0 8px 24px rgba(245,158,11,.4)", fontSize:"0.95rem" }}>
           {notifXP}
         </div>
       )}
-      <div className="max-w-4xl mx-auto">
 
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold" style={{ fontFamily: "'Fredoka One', cursive" }}>📚 Mes Chapitres</h1>
+      <div style={{ maxWidth:"900px", margin:"0 auto", position:"relative", zIndex:1 }}>
+
+        {/* ══ HERO HEADER ══ */}
+        <div style={{ marginBottom:"22px", animation:"ch-up .5s ease both" }}>
+          <div style={{ display:"flex", alignItems:"center", gap:"14px", marginBottom:"6px" }}>
+            <div style={{
+              width:"52px", height:"52px", borderRadius:"16px",
+              background:`${matiereActive.couleur}1C`, border:`2px solid ${matiereActive.couleur}50`,
+              display:"flex", alignItems:"center", justifyContent:"center",
+              fontSize:"1.6rem", boxShadow:`0 0 22px ${matiereActive.couleur}30`,
+              transition:"all .3s ease",
+            }}>
+              {matiereActive.emoji}
+            </div>
+            <div>
+              <h1 style={{
+                fontFamily:"'Nunito',sans-serif", fontWeight:900, fontSize:"2rem", lineHeight:1, margin:"0 0 4px",
+                background:`linear-gradient(135deg, #F1F5F9 30%, ${matiereActive.couleur})`,
+                WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent",
+                transition:"background .3s",
+              }}>
+                {matiereSelectionnee}
+              </h1>
+              <p style={{ color:"#475569", fontSize:"0.8rem", fontWeight:700, margin:0 }}>
+                {chapitres.length > 0 ? `${chapitres.length} chapitre${chapitres.length > 1 ? "s" : ""} disponibles` : "Sélectionne une matière"}
+                {" · "}
+                {classeSelectionnee === "premiere" ? "Première STMG" : "Terminale STMG"}
+              </p>
+            </div>
+          </div>
         </div>
 
-        {/* SÉLECTEUR DE CLASSE — admin + terminale (révisions première) */}
+        {/* ══ SÉLECTEUR CLASSE ══ */}
         {peutChoisirClasse && (
-          <div className="flex gap-3 mb-4">
-            <button
-              onClick={() => setClasseSelectionnee("premiere")}
-              className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${classeSelectionnee === "premiere" ? "bg-green-600 text-white" : "bg-white border border-slate-300 text-slate-600 hover:bg-slate-100"}`}
-            >
-              📗 Première STMG
-            </button>
-            <button
-              onClick={() => setClasseSelectionnee("terminale")}
-              className={`px-4 py-2 rounded-lg font-semibold text-sm transition-all ${classeSelectionnee === "terminale" ? "bg-blue-600 text-white" : "bg-white border border-slate-300 text-slate-600 hover:bg-slate-100"}`}
-            >
-              📘 Terminale STMG
-            </button>
+          <div style={{ display:"flex", gap:"8px", marginBottom:"14px", animation:"ch-up .5s .04s ease both" }}>
+            {[
+              { id:"premiere",  label:"📗 Première",  couleur:"#10B981" },
+              { id:"terminale", label:"📘 Terminale",  couleur:"#2563EB" },
+            ].map(c => (
+              <button key={c.id} onClick={() => setClasseSelectionnee(c.id)}
+                style={{
+                  background: classeSelectionnee === c.id ? `${c.couleur}20` : "rgba(13,27,53,.5)",
+                  border: `1.5px solid ${classeSelectionnee === c.id ? c.couleur+"65" : "rgba(30,53,96,.7)"}`,
+                  color: classeSelectionnee === c.id ? c.couleur : "#64748B",
+                  fontFamily:"'Nunito',sans-serif", fontWeight:800, fontSize:"0.85rem",
+                  padding:"8px 16px", borderRadius:"12px", cursor:"pointer", transition:"all .18s",
+                  boxShadow: classeSelectionnee === c.id ? `0 0 14px ${c.couleur}22` : "none",
+                }}>
+                {c.label}
+              </button>
+            ))}
           </div>
         )}
 
-        {/* ONGLETS MATIÈRES */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          {matieres.map((matiere) => (
-            <button
-              key={matiere.nom}
-              onClick={() => setMatiereSelectionnee(matiere.nom)}
-              className={`px-4 py-2 rounded-lg font-semibold transition-all ${matiereSelectionnee === matiere.nom ? "bg-blue-600 text-white" : "bg-white border border-slate-300 text-slate-600 hover:bg-slate-100"}`}
-            >
-              {matiere.emoji} {matiere.nom}
+        {/* ══ ONGLETS MATIÈRES ══ */}
+        <div style={{ display:"flex", flexWrap:"wrap", gap:"8px", marginBottom:"24px", animation:"ch-up .5s .08s ease both" }}>
+          {matieres.map((m) => (
+            <button key={m.nom} onClick={() => setMatiereSelectionnee(m.nom)}
+              style={{
+                background: matiereSelectionnee === m.nom ? `${m.couleur}1E` : "rgba(13,27,53,.5)",
+                border: `1.5px solid ${matiereSelectionnee === m.nom ? m.couleur+"65" : "rgba(30,53,96,.7)"}`,
+                color: matiereSelectionnee === m.nom ? m.couleur : "#64748B",
+                fontFamily:"'Nunito',sans-serif", fontWeight:800, fontSize:"0.85rem",
+                padding:"9px 16px", borderRadius:"14px", cursor:"pointer", transition:"all .18s",
+                boxShadow: matiereSelectionnee === m.nom ? `0 0 16px ${m.couleur}28` : "none",
+              }}>
+              {m.emoji} {m.nom}
             </button>
           ))}
         </div>
 
-        {/* LISTE CHAPITRES */}
+        {/* ══ LISTE CHAPITRES ══ */}
         {chargement ? (
-          <p className="text-center text-slate-500 py-8">Chargement...</p>
+          <div style={{ textAlign:"center", padding:"60px 0" }}>
+            <p style={{ fontSize:"2rem", margin:"0 0 10px" }}>⏳</p>
+            <p style={{ color:"#475569", fontWeight:700 }}>Chargement des chapitres...</p>
+          </div>
         ) : chapitres.length === 0 ? (
-          <div className="bg-white border border-slate-200 rounded-xl p-8 text-center shadow-sm">
-            <p className="text-4xl mb-3">🔒</p>
-            <p className="text-slate-500">Aucun chapitre disponible pour l'instant</p>
-            <p className="text-slate-400 text-sm mt-1">Le contenu arrive bientôt !</p>
+          <div style={{
+            background:"rgba(13,27,53,.72)", border:`1px solid ${matiereActive.couleur}20`,
+            borderRadius:"24px", padding:"48px 20px", textAlign:"center",
+          }}>
+            <p style={{ fontSize:"3rem", marginBottom:"12px" }}>🔒</p>
+            <p style={{ color:"#64748B", fontWeight:800, fontSize:"1rem", margin:"0 0 6px" }}>Aucun chapitre disponible pour l'instant</p>
+            <p style={{ color:"#334155", fontSize:"0.85rem", margin:0 }}>Le contenu arrive bientôt !</p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div style={{ display:"flex", flexDirection:"column", gap:"10px", animation:"ch-up .5s .12s ease both" }}>
             {chapitres.map((chapitre) => {
               const estOuvert = chapitreOuvert === chapitre.id;
               return (
-                <div key={chapitre.id} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                <div key={chapitre.id} className="ch-chapitre" style={{
+                  background: estOuvert ? "rgba(13,27,53,.95)" : "rgba(13,27,53,.65)",
+                  border: `1px solid ${estOuvert ? matiereActive.couleur+"50" : "rgba(30,53,96,.75)"}`,
+                  borderLeft: `3px solid ${estOuvert ? matiereActive.couleur : matiereActive.couleur+"40"}`,
+                  borderRadius:"18px", overflow:"hidden",
+                  boxShadow: estOuvert ? `0 0 30px ${matiereActive.couleur}18, 0 12px 32px rgba(0,0,0,.3)` : "none",
+                  transition:"all .22s ease",
+                }}>
 
-                  {/* EN-TÊTE CLIQUABLE */}
-                  <div
-                    className="p-5 cursor-pointer hover:bg-slate-50 transition-all"
-                    onClick={() => setChapitreOuvert(estOuvert ? null : chapitre.id)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded-full font-bold whitespace-nowrap">
-                          Chap. {chapitre.ordre}
-                        </span>
-                        <span className="text-yellow-400 text-xs font-semibold">{formatJetonsDelta(chapitre.xp)}</span>
-                      </div>
-                      <span className="text-slate-400 text-lg">{estOuvert ? "▲" : "▼"}</span>
+                  {/* EN-TÊTE CHAPITRE */}
+                  <div onClick={() => setChapitreOuvert(estOuvert ? null : chapitre.id)}
+                    style={{ padding:"18px 20px", cursor:"pointer", display:"flex", alignItems:"center", gap:"14px", position:"relative", overflow:"hidden" }}>
+                    {/* Big chapter number decoration */}
+                    <span style={{
+                      position:"absolute", right:"60px", top:"50%", transform:"translateY(-50%)",
+                      fontFamily:"'Nunito',sans-serif", fontWeight:900, fontSize:"4rem",
+                      color:estOuvert ? `${matiereActive.couleur}12` : "rgba(30,53,96,.25)",
+                      lineHeight:1, pointerEvents:"none", userSelect:"none",
+                      transition:"color .3s",
+                    }}>
+                      {String(chapitre.ordre).padStart(2,"0")}
+                    </span>
+
+                    {/* Numéro pill */}
+                    <div style={{
+                      background: estOuvert ? matiereActive.couleur : `${matiereActive.couleur}25`,
+                      color: estOuvert ? "white" : matiereActive.couleur,
+                      fontFamily:"'Nunito',sans-serif", fontWeight:900, fontSize:"0.72rem",
+                      padding:"5px 12px", borderRadius:"999px", flexShrink:0,
+                      transition:"all .2s",
+                    }}>
+                      Ch. {chapitre.ordre}
                     </div>
-                    <h3 className="text-slate-900 font-bold text-lg mt-2">{chapitre.titre}</h3>
-                    {chapitre.theme && (
-                      <p className="text-cyan-700 text-xs mt-1 font-semibold">{chapitre.theme}</p>
-                    )}
+
+                    {/* Title + meta */}
+                    <div style={{ flex:1, minWidth:0, position:"relative", zIndex:1 }}>
+                      <h3 style={{ fontFamily:"'Nunito',sans-serif", fontWeight:900, fontSize:"1.02rem", color:"#F1F5F9", margin:"0 0 4px", lineHeight:1.3 }}>
+                        {chapitre.titre}
+                      </h3>
+                      {chapitre.theme && (
+                        <p style={{ color:matiereActive.couleur, fontSize:"0.75rem", fontWeight:800, margin:0, opacity:.85 }}>{chapitre.theme}</p>
+                      )}
+                    </div>
+
+                    <div style={{ display:"flex", alignItems:"center", gap:"8px", flexShrink:0, position:"relative", zIndex:1 }}>
+                      <span style={{ color:"#F59E0B", fontSize:"0.78rem", fontWeight:900, background:"rgba(245,158,11,.1)", padding:"3px 10px", borderRadius:"999px", border:"1px solid rgba(245,158,11,.2)" }}>
+                        {formatJetonsDelta(chapitre.xp)}
+                      </span>
+                      <span style={{ color:estOuvert ? matiereActive.couleur : "#475569", fontSize:"0.85rem", transition:"transform .2s, color .2s", display:"inline-block", transform: estOuvert ? "rotate(180deg)" : "none" }}>▾</span>
+                    </div>
                   </div>
 
-                  {/* DÉTAIL — visible si ouvert */}
+                  {/* DÉTAIL CHAPITRE */}
                   {estOuvert && (
-                    <div className="px-5 pb-5 border-t border-slate-200 pt-4">
+                    <div style={{ padding:"0 20px 20px", borderTop:`1px solid rgba(30,53,96,.6)` }}>
 
                       {/* Question de gestion */}
                       {chapitre.question && (
-                        <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
-                          <p className="text-yellow-400 text-xs font-bold mb-1">❓ Question de gestion</p>
-                          <p className="text-slate-900 text-sm italic">{chapitre.question}</p>
+                        <div style={{ background:"rgba(245,158,11,.08)", border:"1px solid rgba(245,158,11,.22)", borderRadius:"14px", padding:"14px 16px", margin:"16px 0 14px" }}>
+                          <p style={{ color:"#F59E0B", fontSize:"0.7rem", fontWeight:900, margin:"0 0 6px", textTransform:"uppercase", letterSpacing:"0.1em" }}>❓ Question de gestion</p>
+                          <p style={{ color:"#CBD5E1", fontSize:"0.9rem", fontStyle:"italic", margin:0, lineHeight:1.6 }}>{chapitre.question}</p>
                         </div>
                       )}
 
                       {/* Notions */}
                       {chapitre.notions && chapitre.notions.length > 0 && (
-                        <div className="mb-4">
-                          <p className="text-blue-400 text-xs font-bold mb-2">📖 Notions à maîtriser ({chapitre.notions.length})</p>
-                          <div className="flex flex-wrap gap-2">
+                        <div style={{ marginBottom:"14px" }}>
+                          <p style={{ color:matiereActive.couleur, fontSize:"0.7rem", fontWeight:900, margin:"14px 0 8px", textTransform:"uppercase", letterSpacing:"0.1em" }}>
+                            📖 Notions à maîtriser ({chapitre.notions.length})
+                          </p>
+                          <div style={{ display:"flex", flexWrap:"wrap", gap:"6px" }}>
                             {chapitre.notions.map((notion, i) => (
-                              <span key={i} className="bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-full border border-blue-200">
+                              <span key={i} style={{
+                                background:`${matiereActive.couleur}12`, color:matiereActive.couleur,
+                                border:`1px solid ${matiereActive.couleur}30`,
+                                fontFamily:"'Nunito',sans-serif", fontWeight:800, fontSize:"0.75rem",
+                                padding:"4px 12px", borderRadius:"999px",
+                              }}>
                                 {notion}
                               </span>
                             ))}
@@ -183,32 +278,44 @@ export default function Chapitres({ profil, onXPGagne }) {
 
                       {/* Compétences */}
                       {chapitre.competences && chapitre.competences.length > 0 && (
-                        <div className="mb-4">
-                          <p className="text-green-400 text-xs font-bold mb-2">✅ Compétences visées ({chapitre.competences.length})</p>
-                          <ul className="space-y-1">
+                        <div style={{ marginBottom:"14px" }}>
+                          <p style={{ color:"#10B981", fontSize:"0.7rem", fontWeight:900, margin:"14px 0 8px", textTransform:"uppercase", letterSpacing:"0.1em" }}>
+                            ✅ Compétences visées ({chapitre.competences.length})
+                          </p>
+                          <div style={{ display:"flex", flexDirection:"column", gap:"5px" }}>
                             {chapitre.competences.map((comp, i) => (
-                              <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
-                                <span className="text-green-400 mt-0.5 shrink-0">→</span>
-                                {comp}
-                              </li>
+                              <div key={i} style={{ display:"flex", alignItems:"flex-start", gap:"8px" }}>
+                                <span style={{ color:"#10B981", flexShrink:0, marginTop:"2px", fontSize:"0.9rem" }}>→</span>
+                                <span style={{ color:"#CBD5E1", fontSize:"0.86rem", fontWeight:700, lineHeight:1.5 }}>{comp}</span>
+                              </div>
                             ))}
-                          </ul>
+                          </div>
                         </div>
                       )}
 
-                      {/* Boutons */}
-                      <div className="flex gap-3 mt-4">
-                        <button
-                          onClick={() => ouvrirAppEtGagnerXP(chapitre.url_app, "application")}
-                          className={`flex-1 font-bold py-3 px-4 rounded-lg transition-all ${chapitre.url_app ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-gray-700 text-gray-500 cursor-not-allowed"}`}
-                        >
-                          🎮 {chapitre.url_app ? `Lancer l'application (${formatJetonsDelta(XP_PAR_ACTION.application)})` : "Bientôt disponible"}
+                      {/* Actions */}
+                      <div style={{ display:"flex", gap:"10px", marginTop:"18px" }}>
+                        <button className="ch-btn" onClick={() => ouvrirAppEtGagnerXP(chapitre.url_app, "application")}
+                          style={{
+                            flex:1, fontFamily:"'Nunito',sans-serif", fontWeight:900, fontSize:"0.88rem",
+                            padding:"13px 10px", borderRadius:"14px", cursor: chapitre.url_app ? "pointer" : "not-allowed",
+                            border:"none",
+                            background: chapitre.url_app ? `linear-gradient(135deg,${matiereActive.couleur},${matiereActive.couleur}CC)` : "rgba(30,53,96,.4)",
+                            color: chapitre.url_app ? "white" : "#334155",
+                            boxShadow: chapitre.url_app ? `0 6px 20px ${matiereActive.couleur}40` : "none",
+                          }}>
+                          🎮 {chapitre.url_app ? `Application · ${formatJetonsDelta(XP_PAR_ACTION.application)}` : "Bientôt disponible"}
                         </button>
-                        <button
-                          onClick={() => ouvrirAppEtGagnerXP(chapitre.url_fiche, "fiche")}
-                          className={`flex-1 font-bold py-3 px-4 rounded-lg transition-all ${chapitre.url_fiche ? "bg-cyan-600 hover:bg-cyan-700 text-white" : "bg-slate-200 text-slate-400 cursor-not-allowed"}`}
-                        >
-                          📄 {chapitre.url_fiche ? `Carte mentale / fiche (${formatJetonsDelta(XP_PAR_ACTION.fiche)})` : "Bientôt disponible"}
+                        <button className="ch-btn" onClick={() => ouvrirAppEtGagnerXP(chapitre.url_fiche, "fiche")}
+                          style={{
+                            flex:1, fontFamily:"'Nunito',sans-serif", fontWeight:900, fontSize:"0.88rem",
+                            padding:"13px 10px", borderRadius:"14px", cursor: chapitre.url_fiche ? "pointer" : "not-allowed",
+                            border:"none",
+                            background: chapitre.url_fiche ? "linear-gradient(135deg,#06B6D4,#0EA5E9)" : "rgba(30,53,96,.4)",
+                            color: chapitre.url_fiche ? "white" : "#334155",
+                            boxShadow: chapitre.url_fiche ? "0 6px 20px rgba(6,182,212,.35)" : "none",
+                          }}>
+                          📄 {chapitre.url_fiche ? `Fiche · ${formatJetonsDelta(XP_PAR_ACTION.fiche)}` : "Bientôt disponible"}
                         </button>
                       </div>
                     </div>
@@ -218,6 +325,7 @@ export default function Chapitres({ profil, onXPGagne }) {
             })}
           </div>
         )}
+
       </div>
     </div>
   );

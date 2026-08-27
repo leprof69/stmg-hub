@@ -451,17 +451,17 @@ export default function Profil({ profil, onRefaire, onDeconnexion }: { profil: R
 
       {/* POPUP CGU */}
       {showCGU&&(
-        <div style={{ position:"fixed",inset:0,background:"rgba(0,0,0,0.8)",zIndex:2000,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px" }}>
-          <div style={{ background:"white",borderRadius:"24px",maxWidth:"500px",width:"100%",maxHeight:"80vh",display:"flex",flexDirection:"column" }}>
-            <div style={{ padding:"20px 24px",borderBottom:"1px solid #E5E7EB",display:"flex",justifyContent:"space-between",alignItems:"center" }}>
-              <p style={{ fontFamily:"'Fredoka One',cursive",color:"#1A1A2E",fontSize:"1.1rem",margin:0 }}>{"📋 CGU & RGPD"}</p>
-              <button onClick={()=>setShowCGU(false)} style={{ background:"none",border:"none",fontSize:"1.5rem",cursor:"pointer",color:"#9CA3AF" }}>{"×"}</button>
+        <div style={{ position:"fixed",inset:0,background:"rgba(2,6,23,.85)",zIndex:2000,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px",backdropFilter:"blur(8px)" }}>
+          <div style={{ background:"rgba(13,27,53,.97)",border:"1px solid rgba(30,53,96,.9)",borderRadius:"24px",maxWidth:"500px",width:"100%",maxHeight:"80vh",display:"flex",flexDirection:"column",boxShadow:"0 24px 64px rgba(0,0,0,.6)" }}>
+            <div style={{ padding:"20px 24px",borderBottom:"1px solid rgba(30,53,96,.7)",display:"flex",justifyContent:"space-between",alignItems:"center" }}>
+              <p style={{ fontFamily:"'Nunito',sans-serif",fontWeight:900,color:"#F1F5F9",fontSize:"1.1rem",margin:0 }}>📋 CGU & RGPD</p>
+              <button onClick={()=>setShowCGU(false)} style={{ background:"none",border:"none",fontSize:"1.5rem",cursor:"pointer",color:"#475569" }}>×</button>
             </div>
             <div style={{ padding:"20px 24px",overflowY:"auto",flex:1 }}>
-              <pre style={{ color:"#374151",fontSize:"0.75rem",whiteSpace:"pre-wrap",lineHeight:1.8,fontFamily:"'Nunito',sans-serif" }}>{CGU_TEXTE}</pre>
+              <pre style={{ color:"#94A3B8",fontSize:"0.75rem",whiteSpace:"pre-wrap",lineHeight:1.8,fontFamily:"'Nunito',sans-serif" }}>{CGU_TEXTE}</pre>
             </div>
-            <div style={{ padding:"16px 24px",borderTop:"1px solid #E5E7EB" }}>
-              <button onClick={()=>setShowCGU(false)} style={{ width:"100%",background:"linear-gradient(135deg,#0EA5E9,#2563EB)",color:"white",border:"none",fontFamily:"'Fredoka One',cursive",fontSize:"1rem",padding:"12px",borderRadius:"12px",cursor:"pointer" }}>Fermer</button>
+            <div style={{ padding:"16px 24px",borderTop:"1px solid rgba(30,53,96,.7)" }}>
+              <button onClick={()=>setShowCGU(false)} style={{ width:"100%",background:"linear-gradient(135deg,#2563EB,#0EA5E9)",color:"white",border:"none",fontFamily:"'Nunito',sans-serif",fontWeight:900,fontSize:"1rem",padding:"12px",borderRadius:"12px",cursor:"pointer",boxShadow:"0 4px 16px rgba(37,99,235,.4)" }}>Fermer</button>
             </div>
           </div>
         </div>
@@ -469,35 +469,37 @@ export default function Profil({ profil, onRefaire, onDeconnexion }: { profil: R
 
       {/* POPUP CONTACT */}
       {showContact&&(
-        <div style={{ position:"fixed",inset:0,background:"rgba(0,0,0,0.8)",zIndex:2000,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px" }}>
-          <div style={{ background:"white",borderRadius:"24px",maxWidth:"400px",width:"100%",padding:"28px" }}>
-            <p style={{ fontFamily:"'Fredoka One',cursive",color:"#1A1A2E",fontSize:"1.3rem",margin:"0 0 20px" }}>{"📧 Nous contacter"}</p>
+        <div style={{ position:"fixed",inset:0,background:"rgba(2,6,23,.85)",zIndex:2000,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px",backdropFilter:"blur(8px)" }}>
+          <div style={{ background:"rgba(13,27,53,.97)",border:"1px solid rgba(30,53,96,.9)",borderRadius:"24px",maxWidth:"400px",width:"100%",padding:"28px",boxShadow:"0 24px 64px rgba(0,0,0,.6)" }}>
+            <p style={{ fontFamily:"'Nunito',sans-serif",fontWeight:900,color:"#F1F5F9",fontSize:"1.3rem",margin:"0 0 20px" }}>📧 Nous contacter</p>
             {[
               { label:"Responsable", valeur:"Khalifa SOUCI" },
               { label:"Email",       valeur:"lelaboduprof69@gmail.com" },
             ].map((item,i)=>(
-              <div key={i} style={{ background:"#F8FAFC",borderRadius:"14px",padding:"14px 16px",marginBottom:"10px" }}>
-                <p style={{ color:"#9CA3AF",fontSize:"0.8rem",margin:"0 0 4px" }}>{item.label}</p>
-                <p style={{ color:"#1A1A2E",fontWeight:"700",fontSize:"0.95rem",margin:0 }}>{item.valeur}</p>
+              <div key={i} style={{ background:"rgba(30,53,96,.3)",border:"1px solid rgba(30,53,96,.6)",borderRadius:"14px",padding:"14px 16px",marginBottom:"10px" }}>
+                <p style={{ color:"#475569",fontSize:"0.75rem",margin:"0 0 4px",fontWeight:700,textTransform:"uppercase",letterSpacing:"0.08em" }}>{item.label}</p>
+                <p style={{ color:"#E2E8F0",fontWeight:800,fontSize:"0.95rem",margin:0 }}>{item.valeur}</p>
               </div>
             ))}
-            <button onClick={()=>setShowContact(false)} style={{ width:"100%",background:"linear-gradient(135deg,#0EA5E9,#2563EB)",color:"white",border:"none",fontFamily:"'Fredoka One',cursive",fontSize:"1rem",padding:"12px",borderRadius:"12px",cursor:"pointer",marginTop:"8px" }}>Fermer</button>
+            <button onClick={()=>setShowContact(false)} style={{ width:"100%",background:"linear-gradient(135deg,#2563EB,#0EA5E9)",color:"white",border:"none",fontFamily:"'Nunito',sans-serif",fontWeight:900,fontSize:"1rem",padding:"12px",borderRadius:"12px",cursor:"pointer",marginTop:"8px",boxShadow:"0 4px 16px rgba(37,99,235,.4)" }}>Fermer</button>
           </div>
         </div>
       )}
 
       {/* POPUP JOKER */}
       {showJoker&&(
-        <div style={{ position:"fixed",inset:0,background:"rgba(0,0,0,0.8)",zIndex:2000,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px" }}>
-          <div style={{ background:"white",borderRadius:"24px",maxWidth:"380px",width:"100%",padding:"32px",textAlign:"center" }}>
-            <p style={{ fontSize:"4rem",margin:"0 0 12px" }}>{"🃏"}</p>
-            <p style={{ fontFamily:"'Fredoka One',cursive",color:"#1A1A2E",fontSize:"1.4rem",margin:"0 0 8px" }}>Utiliser ton Joker ?</p>
-            <p style={{ color:"#9CA3AF",fontSize:"0.85rem",margin:"0 0 24px",lineHeight:1.8 }}>
-              {"✅ Jetons conservés\n✅ Badges conservés\n✅ Chapitres conservés\n✅ Cartes conservées\n⚠️ Famille et Totems réinitialisés\n⚠️ Joker non récupérable"}
-            </p>
+        <div style={{ position:"fixed",inset:0,background:"rgba(2,6,23,.85)",zIndex:2000,display:"flex",alignItems:"center",justifyContent:"center",padding:"16px",backdropFilter:"blur(8px)" }}>
+          <div style={{ background:"rgba(13,27,53,.97)",border:"1px solid rgba(245,158,11,.3)",borderRadius:"24px",maxWidth:"380px",width:"100%",padding:"32px",textAlign:"center",boxShadow:"0 24px 64px rgba(0,0,0,.6)" }}>
+            <p style={{ fontSize:"4rem",margin:"0 0 12px" }}>🃏</p>
+            <p style={{ fontFamily:"'Nunito',sans-serif",fontWeight:900,color:"#F1F5F9",fontSize:"1.4rem",margin:"0 0 8px" }}>Utiliser ton Joker ?</p>
+            <div style={{ background:"rgba(30,53,96,.35)",border:"1px solid rgba(30,53,96,.6)",borderRadius:"14px",padding:"14px 16px",marginBottom:"22px",textAlign:"left" }}>
+              {["✅ Jetons conservés","✅ Badges conservés","✅ Chapitres conservés","✅ Cartes conservées","⚠️ Famille et Totems réinitialisés","⚠️ Joker non récupérable"].map((line,i)=>(
+                <p key={i} style={{ color:line.startsWith("⚠️")?"#F59E0B":"#10B981",fontFamily:"'Nunito',sans-serif",fontWeight:700,fontSize:"0.85rem",margin:i===0?"0":"5px 0 0",lineHeight:1.5 }}>{line}</p>
+              ))}
+            </div>
             <div style={{ display:"flex",gap:"12px" }}>
-              <button onClick={()=>setShowJoker(false)} style={{ flex:1,background:"#F3F4F6",color:"#374151",border:"none",fontFamily:"'Fredoka One',cursive",fontSize:"1rem",padding:"14px",borderRadius:"14px",cursor:"pointer" }}>Annuler</button>
-              <button onClick={utiliserJoker} disabled={chargement} style={{ flex:1,background:"linear-gradient(135deg,#F59E0B,#B45309)",color:"white",border:"none",fontFamily:"'Fredoka One',cursive",fontSize:"1rem",padding:"14px",borderRadius:"14px",cursor:"pointer" }}>
+              <button onClick={()=>setShowJoker(false)} style={{ flex:1,background:"rgba(30,53,96,.4)",color:"#94A3B8",border:"1px solid rgba(30,53,96,.7)",fontFamily:"'Nunito',sans-serif",fontWeight:800,fontSize:"1rem",padding:"14px",borderRadius:"14px",cursor:"pointer" }}>Annuler</button>
+              <button onClick={utiliserJoker} disabled={chargement} style={{ flex:1,background:"linear-gradient(135deg,#F59E0B,#B45309)",color:"white",border:"none",fontFamily:"'Nunito',sans-serif",fontWeight:900,fontSize:"1rem",padding:"14px",borderRadius:"14px",cursor:"pointer",boxShadow:"0 4px 16px rgba(245,158,11,.4)" }}>
                 {chargement?"⏳...":"🃏 Confirmer"}
               </button>
             </div>

@@ -45,15 +45,12 @@ export default function AdminOverviewPanel() {
         </p>
         <p style={{ margin: 0, color: "#334155", fontSize: "0.86rem", lineHeight: 1.5 }}>
           {
-            "Utilise les sections du menu : \u00c9l\u00e8ves (suivi d\u00e9taill\u00e9), Examens & DS (copies Bac + QCM SDGN), Jetons (r\u00e9compenses du jour). Les filtres classe / lyc\u00e9e s\u2019appliquent partout."
+            "Utilise les sections du menu : \u00c9l\u00e8ves (suivi d\u00e9taill\u00e9), Jetons (r\u00e9compenses du jour). Les filtres classe / lyc\u00e9e s\u2019appliquent partout."
           }
         </p>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 12 }}>
           <AdminBtn onClick={() => a.setSectionActif("eleves")} color={a.COLORS.S} small>
             {"\u2192 \u00c9l\u00e8ves"}
-          </AdminBtn>
-          <AdminBtn onClick={() => a.setSectionActif("examens")} color={a.COLORS.B} small>
-            {"\u2192 Examens & DS"}
           </AdminBtn>
           <AdminBtn onClick={() => a.setSectionActif("jetons")} color={a.COLORS.U} small>
             {"\u2192 Jetons"}
@@ -74,14 +71,6 @@ export default function AdminOverviewPanel() {
         <StatCard label={"Actifs 7 derniers jours"} value={s.actifs7j} border="#BFDBFE" color="#0284C7" />
         <StatCard label={"Inactifs (+7j)"} value={s.inactifs7j} border="#FECACA" color="#DC2626" />
         <StatCard label={"Actions d\u00e9tect\u00e9es aujourd\u2019hui"} value={s.actionsToday} border="#FDE68A" color="#D97706" />
-        <StatCard label={"Signaux anti-triche (historique)"} value={s.suspicions} border="#FCA5A5" color="#BE123C" />
-        <StatCard
-          label={"Validations SDGN (jour)"}
-          value={s.sdgnValidationsToday}
-          sub={"exercices corrig\u00e9s aujourd\u2019hui"}
-          border="#DDD6FE"
-          color="#6D28D9"
-        />
         <StatCard
           label={"Temps connect\u00e9 aujourd\u2019hui"}
           value={a.formatDuration(s.sessionTodaySec)}
@@ -93,13 +82,6 @@ export default function AdminOverviewPanel() {
           value={`${Number(s.participationTotal || 0).toFixed(1)} pts`}
           border="#FDE68A"
           color="#B45309"
-        />
-        <StatCard
-          label={"\u00c9l\u00e8ves ayant fait Focus"}
-          value={s.elevesFocus}
-          sub={`${s.focusTodayTotal} activit\u00e9(s) Focus aujourd\u2019hui`}
-          border="#BBF7D0"
-          color="#15803D"
         />
       </div>
 
@@ -140,39 +122,6 @@ export default function AdminOverviewPanel() {
               >
                 {`${e.nomAffiche} \u2014 R\u00e9tablir`}
               </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {a.elevesSuspects.length > 0 && (
-        <div
-          style={{
-            marginBottom: 12,
-            background: "#FFF1F2",
-            border: "1px solid #FDA4AF",
-            borderRadius: 12,
-            padding: "12px 14px",
-          }}
-        >
-          <p style={{ margin: "0 0 6px", color: "#9F1239", fontFamily: "'Fredoka One', cursive", fontSize: "0.88rem" }}>
-            {"Signalements missions (historique)"}
-          </p>
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-            {a.elevesSuspects.map((e) => (
-              <span
-                key={`ov-suspect-${e.id}`}
-                style={{
-                  background: "#BE123C",
-                  color: "white",
-                  borderRadius: 999,
-                  padding: "4px 9px",
-                  fontSize: "0.75rem",
-                  fontWeight: 700,
-                }}
-              >
-                {`${e.nomAffiche} \u00b7 ${e.antiCheatEvents} signalement(s)`}
-              </span>
             ))}
           </div>
         </div>

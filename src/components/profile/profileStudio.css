@@ -137,9 +137,9 @@
 }
 .ps-tab--active {
   color: #f8fafc;
-  border-color: rgba(167, 139, 250, 0.45);
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(236, 72, 153, 0.12));
-  box-shadow: 0 0 24px rgba(139, 92, 246, 0.2);
+  border-color: rgba(14, 165, 233, 0.45);
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.22), rgba(37, 99, 235, 0.14));
+  box-shadow: 0 0 24px rgba(14, 165, 233, 0.2);
 }
 .ps-scroll {
   flex: 1;
@@ -162,12 +162,12 @@
 }
 .ps-card:hover {
   transform: translateY(-3px) scale(1.02);
-  border-color: rgba(167, 139, 250, 0.35);
+  border-color: rgba(14, 165, 233, 0.35);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
 }
 .ps-card--active {
-  border-color: #a78bfa;
-  box-shadow: 0 0 0 1px #a78bfa55, 0 12px 40px rgba(139, 92, 246, 0.35);
+  border-color: #0EA5E9;
+  box-shadow: 0 0 0 1px #0EA5E955, 0 12px 40px rgba(14, 165, 233, 0.35);
 }
 .ps-card--locked {
   opacity: 0.55;
@@ -226,13 +226,13 @@
   transition: all 0.15s;
 }
 .ps-deco-tile:hover {
-  background: rgba(167, 139, 250, 0.12);
-  border-color: rgba(167, 139, 250, 0.35);
+  background: rgba(14, 165, 233, 0.10);
+  border-color: rgba(14, 165, 233, 0.30);
 }
 .ps-deco-tile--on {
-  background: rgba(167, 139, 250, 0.2);
-  border-color: #a78bfa;
-  box-shadow: 0 0 20px rgba(167, 139, 250, 0.35);
+  background: rgba(14, 165, 233, 0.18);
+  border-color: #0EA5E9;
+  box-shadow: 0 0 20px rgba(14, 165, 233, 0.30);
 }
 .ps-footer {
   flex-shrink: 0;
@@ -252,10 +252,10 @@
   cursor: pointer;
   font-family: "Fredoka One", cursive;
   color: white;
-  background: linear-gradient(135deg, #8b5cf6, #ec4899, #f59e0b);
+  background: linear-gradient(135deg, #0EA5E9, #2563EB, #F59E0B);
   background-size: 200% 200%;
   animation: ps-shimmer 4s ease infinite;
-  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.45);
+  box-shadow: 0 8px 32px rgba(14, 165, 233, 0.45);
 }
 .ps-save:disabled {
   opacity: 0.6;
@@ -279,9 +279,9 @@
   transition: all 0.15s;
 }
 .ps-chip--on {
-  color: #e9d5ff;
-  border-color: rgba(167, 139, 250, 0.5);
-  background: rgba(139, 92, 246, 0.2);
+  color: #bae6fd;
+  border-color: rgba(14, 165, 233, 0.5);
+  background: rgba(14, 165, 233, 0.18);
 }
 .ps-input {
   width: 100%;
@@ -400,7 +400,7 @@
   margin: 0 0 4px;
   font-size: 0.78rem;
   font-weight: 900;
-  color: #e9d5ff;
+  color: #bae6fd;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }

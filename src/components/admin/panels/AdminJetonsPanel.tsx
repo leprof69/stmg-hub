@@ -1,8 +1,11 @@
+import { useState } from "react";
 import AdminBtn from "../AdminBtn";
 import { useAdmin } from "../AdminContext";
 
 export default function AdminJetonsPanel() {
   const a = useAdmin();
+  const [confirmationSaison, setConfirmationSaison] = useState("");
+  const [confirmationNettoyage, setConfirmationNettoyage] = useState("");
 
   return (
     <div
@@ -286,6 +289,94 @@ export default function AdminJetonsPanel() {
           })}
         </div>
       )}
+
+      <div
+        style={{
+          background: `linear-gradient(135deg, ${a.COLORS.H}12, ${a.COLORS.H}05)`,
+          border: `2px solid ${a.COLORS.H}40`,
+          borderRadius: 18,
+          padding: 18,
+          marginBottom: 20,
+        }}
+      >
+        <p style={{ fontFamily: "'Fredoka One', cursive", color: a.COLORS.H, margin: "0 0 6px", fontSize: "1.05rem" }}>
+          {"⚠️ Nouvelle saison — zone dangereuse"}
+        </p>
+        <p style={{ color: "#7F1D1D", fontSize: "0.85rem", margin: "0 0 14px", lineHeight: 1.5 }}>
+          {
+            "Remet à 0 pour TOUS les élèves (comptes conservés) : jetons, jetons dépensés, prestige, collection de cartes, chapitres/missions complétés, séries de connexion, classe (lycée conservé). Irréversible."
+          }
+        </p>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+          <input
+            type="text"
+            value={confirmationSaison}
+            onChange={(e) => setConfirmationSaison(e.target.value)}
+            placeholder='Tape "RESET" pour confirmer'
+            style={{
+              padding: "8px 12px",
+              borderRadius: 10,
+              border: `2px solid ${a.COLORS.H}40`,
+              fontFamily: "'Fredoka One', cursive",
+              fontSize: "0.85rem",
+            }}
+          />
+          <AdminBtn
+            onClick={() => {
+              void a.resetSaisonComplete();
+              setConfirmationSaison("");
+            }}
+            color={a.COLORS.H}
+            disabled={a.resetSaisonLoading || confirmationSaison.trim().toUpperCase() !== "RESET"}
+          >
+            {a.resetSaisonLoading ? "⏳ Réinitialisation…" : "Réinitialiser la saison"}
+          </AdminBtn>
+        </div>
+      </div>
+
+      <div
+        style={{
+          background: `linear-gradient(135deg, ${a.COLORS.H}12, ${a.COLORS.H}05)`,
+          border: `2px solid ${a.COLORS.H}40`,
+          borderRadius: 18,
+          padding: 18,
+          marginBottom: 20,
+        }}
+      >
+        <p style={{ fontFamily: "'Fredoka One', cursive", color: a.COLORS.H, margin: "0 0 6px", fontSize: "1.05rem" }}>
+          {"🧹 Nettoyer les anciennes fonctionnalités"}
+        </p>
+        <p style={{ color: "#7F1D1D", fontSize: "0.85rem", margin: "0 0 14px", lineHeight: 1.5 }}>
+          {
+            "Supprime les données orphelines laissées par DS, Missions, Objectif Bac et Focus (champs sur les comptes + collections Firestore dédiées). N'affecte ni comptes, ni jetons/prestige/cartes. Irréversible."
+          }
+        </p>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+          <input
+            type="text"
+            value={confirmationNettoyage}
+            onChange={(e) => setConfirmationNettoyage(e.target.value)}
+            placeholder='Tape "NETTOYER" pour confirmer'
+            style={{
+              padding: "8px 12px",
+              borderRadius: 10,
+              border: `2px solid ${a.COLORS.H}40`,
+              fontFamily: "'Fredoka One', cursive",
+              fontSize: "0.85rem",
+            }}
+          />
+          <AdminBtn
+            onClick={() => {
+              void a.nettoyerAnciennesFonctionnalites();
+              setConfirmationNettoyage("");
+            }}
+            color={a.COLORS.H}
+            disabled={a.nettoyageLoading || confirmationNettoyage.trim().toUpperCase() !== "NETTOYER"}
+          >
+            {a.nettoyageLoading ? "⏳ Nettoyage…" : "Nettoyer les données orphelines"}
+          </AdminBtn>
+        </div>
+      </div>
 
       {a.messagesRecompense.length > 0 && (
         <div style={{ background: "#F0FDF4", borderRadius: 16, padding: 16, border: "1px solid #BBF7D0" }}>

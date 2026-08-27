@@ -56,9 +56,6 @@ export default function AdminFiltersBar() {
         <option value="aujourdhui">Actifs aujourd&apos;hui</option>
         <option value="7jours">Actifs 7 jours</option>
         <option value="inactifs">Inactifs +7 jours</option>
-        <option value="focus">Ont fait Focus</option>
-        <option value="pas_focus">N&apos;ont pas fait Focus</option>
-        <option value="sdgn">Au moins une mission SDGN</option>
         <option value="participation">Participation cartes (&ge; 1 pt)</option>
         <option value="sans_participation">Sans participation (0 pt)</option>
         <option value="jetons_suspendus">Jetons suspendus (anti-triche)</option>

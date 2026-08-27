@@ -19,17 +19,13 @@ const Chapitres = lazy(() => import("./pages/Chapitres"));
 const Badges = lazy(() => import("./pages/MesBadges"));
 const Admin = lazy(() => import("./pages/Admin"));
 const Profil = lazy(() => import("./pages/Profil"));
-const Missions = lazy(() => import("./pages/Missions"));
 const Classement = lazy(() => import("./pages/Classement"));
 const Cartes = lazy(() => import("./pages/Cartes"));
-const ObjectifBac = lazy(() => import("./pages/ObjectifBac"));
 const Flashcards = lazy(() => import("./pages/Flashcards"));
 const Duel = lazy(() => import("./pages/Duel"));
 const Jeux = lazy(() => import("./pages/Jeux"));
 const VisiteSalon = lazy(() => import("./pages/VisiteSalon"));
-const DS = lazy(() => import("./pages/DS"));
 import { PlatformIntegrityProvider } from "./contexts/PlatformIntegrityContext";
-import { DsImmersiveProvider } from "./contexts/DsImmersiveContext";
 import "./App.css";
 
 function App() {
@@ -44,7 +40,6 @@ function App() {
   /** Tant que true (défaut), on affiche la page d'accueil publique même si Firebase a une session. */
   const [accueilSiteVisible, setAccueilSiteVisible] = useState(true);
   const [modeLogin, setModeLogin] = useState<"connexion" | "inscription">("connexion");
-  const [dsImmersive, setDsImmersive] = useState(false);
   const sessionConnexionMarquee = useRef(false);
   const dernierePageTrackee = useRef("");
   const sessionActive = useRef(false);
@@ -310,19 +305,16 @@ function App() {
     `nav-btn${page === id ? " active" : ""}${isAdmin ? " admin" : ""}`;
 
   const NAV_ACCENTS = {
-    dashboard: "#0ea5e9",
-    chapitres: "#2563eb",
-    missions: "#f97316",
-    "objectif-bac": "#e11d48",
-    classement: "#f59e0b",
-    cartes: "#06b6d4",
-    flashcards: "#8b5cf6",
-    badges: "#14b8a6",
-    profil: "#3b82f6",
-    duel: "#facc15",
-    jeux: "#a78bfa",
-    admin: "#ef4444",
-    ds: "#64748b",
+    dashboard:      "#0EA5E9",
+    chapitres:      "#2563EB",
+    classement:     "#F59E0B",
+    cartes:         "#06B6D4",
+    flashcards:     "#10B981",
+    badges:         "#14B8A6",
+    profil:         "#3B82F6",
+    duel:           "#FACC15",
+    jeux:           "#F97316",
+    admin:          "#EF4444",
   };
 
   return (
@@ -332,9 +324,7 @@ function App() {
       xpSuspendedFromProfile={Boolean(profil?.platformIntegrity?.xpSuspended)}
       onAfterViolation={onAfterPlatformIntegrityViolation}
     >
-      <DsImmersiveProvider immersive={dsImmersive} setImmersive={setDsImmersive}>
       <div className="app-shell">
-      {!dsImmersive && (
       <nav className="top-nav">
         <button onClick={() => setAfficherAccueil(true)} className="nav-brand">
           🎓 STMG HUB
@@ -349,17 +339,8 @@ function App() {
         <button onClick={() => setPage("chapitres")} className={navBtnClass("chapitres")} style={{ "--nav-accent": NAV_ACCENTS.chapitres } as CSSProperties}>
           📚 Chapitres
         </button>
-        <button onClick={() => setPage("missions")} className={navBtnClass("missions")} style={{ "--nav-accent": NAV_ACCENTS.missions } as CSSProperties}>
-          🎯 Missions
-        </button>
-        <button onClick={() => setPage("ds")} className={navBtnClass("ds")} style={{ "--nav-accent": NAV_ACCENTS.ds } as CSSProperties}>
-          📝 DS
-        </button>
         <button onClick={() => setPage("jeux")} className={navBtnClass("jeux")} style={{ "--nav-accent": NAV_ACCENTS.jeux } as CSSProperties}>
           🎮 Jeux
-        </button>
-        <button onClick={() => setPage("objectif-bac")} className={navBtnClass("objectif-bac")} style={{ "--nav-accent": NAV_ACCENTS["objectif-bac"] } as CSSProperties}>
-          🎓 Objectif Bac
         </button>
         <button onClick={() => setPage("classement")} className={navBtnClass("classement")} style={{ "--nav-accent": NAV_ACCENTS.classement } as CSSProperties}>
           🏆 Classement
@@ -379,7 +360,6 @@ function App() {
           </button>
         )}
       </nav>
-      )}
 
       <Suspense
         fallback={
@@ -390,18 +370,8 @@ function App() {
       >
         {page === "dashboard" && <Dashboard profil={profil} />}
         {page === "chapitres" && <Chapitres profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
-        {page === "missions" && <Missions profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
-        {page === "ds" && (
-          <DS
-            profil={profil}
-            onExamFinished={() => {
-              if (utilisateur) void chargerProfil(utilisateur);
-            }}
-          />
-        )}
         {page === "duel" && <Duel profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
         {page === "jeux" && <Jeux profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
-        {page === "objectif-bac" && <ObjectifBac profil={profil} onXPGagne={() => chargerProfil(utilisateur)} />}
         {page === "classement" && <Classement profil={profil} onVisiterProfil={(uid:string)=>{ setVisitedUid(uid); setPage("visite"); }} />}
         {page === "visite" && visitedUid && (
           <VisiteSalon visitedUid={visitedUid} myProfil={profil} onBack={()=>{ setPage("classement"); setVisitedUid(null); }}/>
@@ -419,7 +389,6 @@ function App() {
         {page === "admin" && <Admin />}
       </Suspense>
       </div>
-      </DsImmersiveProvider>
     </PlatformIntegrityProvider>
   );
 }

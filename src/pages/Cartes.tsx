@@ -23,6 +23,15 @@ const CSS_KEYFRAMES = `
 @keyframes titlePulse { 0%,100%{transform:scale(1);text-shadow:0 0 20px #FFD70080} 50%{transform:scale(1.04);text-shadow:0 0 40px #FFD700cc,0 0 80px #FFD70066} }
 @keyframes floatBg { 0%,100%{transform:translateY(0) rotate(0deg)} 33%{transform:translateY(-8px) rotate(1deg)} 66%{transform:translateY(4px) rotate(-1deg)} }
 @keyframes holoPrism { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+@keyframes arrowR { 0%,100%{transform:translateX(0);opacity:.4} 50%{transform:translateX(7px);opacity:.95} }
+@keyframes arrowL { 0%,100%{transform:translateX(0);opacity:.4} 50%{transform:translateX(-7px);opacity:.95} }
+@keyframes rainbowBurst { 0%{opacity:0;transform:scale(0.3)} 18%{opacity:1} 70%{opacity:0.85} 100%{opacity:0;transform:scale(3.2)} }
+@keyframes rainbowFlow { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+@keyframes tearPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.03)} }
+@keyframes packShakeHard { 0%,100%{transform:translate(0,0)} 10%{transform:translate(-6px,3px)} 20%{transform:translate(6px,-3px)} 30%{transform:translate(-5px,2px)} 40%{transform:translate(5px,-2px)} 50%{transform:translate(-4px,1px)} 60%{transform:translate(4px,-1px)} 70%{transform:translate(-3px,0)} 80%{transform:translate(3px,0)} 90%{transform:translate(-1px,0)} }
+@keyframes crackPulse { 0%,100%{opacity:.8;box-shadow:0 0 10px #fff,0 0 22px #F472B6} 50%{opacity:1;box-shadow:0 0 20px #fff,0 0 44px #F472B6,0 0 70px rgba(244,114,182,.5)} }
+@keyframes halfFlyLeft { 0%{transform:translateX(-4px)} 100%{transform:translateX(-380px) rotate(-22deg) translateY(-35px);opacity:0} }
+@keyframes halfFlyRight { 0%{transform:translateX(4px)} 100%{transform:translateX(380px) rotate(22deg) translateY(-35px);opacity:0} }
 `;
 
 // ─── Rarity config ──────────────────────────────────────────────────────────────
@@ -93,57 +102,191 @@ const ParticleExplosion = ({ active }) => {
   );
 };
 
-// ─── AnimationOuverture (refonte complète TCG) ────────────────────────────────
+// ─── AnimationOuverture (TCG — déchirer + locked + split + arc-en-ciel) ───────
 const AnimationOuverture = ({ cartes, onVoirCollection, onOuvrirAutrePack }) => {
-  const [phase, setPhase] = useState("idle"); // idle | shaking | flash | revealing | done
+  // phases: idle → locked → tearing → flash → revealing → done
+  const [phase, setPhase] = useState("idle");
   const [visibleCount, setVisibleCount] = useState(0);
   const [showParticles, setShowParticles] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragX, setDragX] = useState(0);
+  const [tearDir, setTearDir] = useState(1);
+  const [rainbowBurstActive, setRainbowBurstActive] = useState(false);
 
-  const handleOpenPack = () => {
-    if (phase !== "idle") return;
-    setPhase("shaking");
+  const isDraggingRef = useRef(false);
+  const startXRef = useRef(0);
+  const startYRef = useRef(0);
+  const dragXRef = useRef(0);
+  const didTrigger = useRef(false);
+
+  // Seuil plus élevé = crack bien visible avant de déclencher
+  const TEAR_THRESHOLD = 125;
+
+  const triggerTear = (dir) => {
+    if (didTrigger.current) return;
+    didTrigger.current = true;
+    isDraggingRef.current = false;
+    setIsDragging(false);
+    dragXRef.current = 0;
+    setDragX(0);
+    setTearDir(dir);
+    // Phase 1 : pack fissuré + vibration intense (700ms)
+    setPhase("locked");
+
     setTimeout(() => {
+      // Phase 2 : les 2 moitiés s'envolent (700ms CSS transition)
+      setPhase("tearing");
       setShowParticles(true);
-      setPhase("flash");
+
+      // Phase 3 : flash pendant que les moitiés volent encore (après 350ms)
       setTimeout(() => {
-        setPhase("revealing");
-        let count = 0;
-        const revealNext = () => {
-          count++;
-          setVisibleCount(count);
-          if (count < cartes.length) setTimeout(revealNext, 700);
-          else setTimeout(() => setPhase("done"), 1000);
-        };
-        revealNext();
-      }, 700);
-    }, 1400);
+        setPhase("flash");
+        // Phase 4 : révélation des cartes (après 500ms)
+        setTimeout(() => {
+          setPhase("revealing");
+          let count = 0;
+          const revealNext = () => {
+            count++;
+            setVisibleCount(count);
+            const card = cartes[count - 1];
+            if (card && ["rare", "epique", "legendaire", "ultra_rare"].includes(card.rarete)) {
+              setRainbowBurstActive(true);
+              setTimeout(() => setRainbowBurstActive(false), 1600);
+            }
+            if (count < cartes.length) setTimeout(revealNext, 750);
+            else setTimeout(() => setPhase("done"), 1000);
+          };
+          revealNext();
+        }, 500);
+      }, 350);
+    }, 700);
   };
 
+  const onStart = (clientX, clientY) => {
+    if (phase !== "idle" || didTrigger.current) return;
+    isDraggingRef.current = true;
+    startXRef.current = clientX;
+    startYRef.current = clientY;
+    dragXRef.current = 0;
+    setDragX(0);
+    setIsDragging(true);
+  };
+
+  const onMove = (clientX, clientY) => {
+    if (!isDraggingRef.current || phase !== "idle") return;
+    const dx = clientX - startXRef.current;
+    const dy = clientY - (startYRef.current || 0);
+    // Ignorer si le mouvement est surtout vertical (défilement mobile)
+    if (Math.abs(dx) < Math.abs(dy) * 1.2) return;
+    dragXRef.current = dx;
+    setDragX(dx);
+    if (Math.abs(dx) >= TEAR_THRESHOLD) {
+      isDraggingRef.current = false;
+      setIsDragging(false);
+      triggerTear(dx > 0 ? 1 : -1);
+    }
+  };
+
+  const onEnd = () => {
+    if (!isDraggingRef.current) return;
+    isDraggingRef.current = false;
+    setIsDragging(false);
+    const dx = dragXRef.current;
+    if (Math.abs(dx) >= TEAR_THRESHOLD * 0.7) {
+      triggerTear(dx > 0 ? 1 : -1);
+    } else {
+      dragXRef.current = 0;
+      setDragX(0);
+    }
+  };
+
+  const progress = Math.min(Math.abs(dragX) / TEAR_THRESHOLD, 1);
   const allDone = phase === "done";
 
+  // ─── Contenu intérieur du pack (partagé entre les 2 moitiés) ───────────────
+  const packBg = "linear-gradient(135deg, #0f0521 0%, #1e0a45 40%, #2d1054 70%, #4c1d95 100%)";
+
+  const renderPackFace = (showDragFx = false) => (
+    <>
+      <div style={{
+        position: "absolute", inset: 0, pointerEvents: "none",
+        background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,.13) 50%, transparent 70%)",
+        backgroundSize: "200% 100%",
+        animation: "shimmer 2.5s linear infinite",
+      }} />
+      {showDragFx && isDragging && (
+        <div style={{
+          position: "absolute", top: "6px", bottom: "6px", left: "50%",
+          transform: "translateX(-50%)",
+          width: `${1.5 + progress * 5}px`,
+          background: `linear-gradient(to bottom, transparent, rgba(255,255,255,${.4 + progress * .6}) 50%, transparent)`,
+          boxShadow: `0 0 ${4 + progress * 24}px rgba(255,255,255,${.5 + progress * .5}), 0 0 ${8 + progress * 48}px rgba(244,114,182,${progress})`,
+          borderRadius: "3px", zIndex: 10, pointerEvents: "none",
+        }} />
+      )}
+      {showDragFx && isDragging && progress > 0.45 && (
+        <div style={{
+          position: "absolute", inset: 0, pointerEvents: "none", zIndex: 5,
+          background: `radial-gradient(ellipse at center, rgba(244,114,182,${(progress - .45) * .75}) 0%, transparent 70%)`,
+        }} />
+      )}
+      <span style={{ fontSize: "3rem", filter: `drop-shadow(0 0 ${10 + progress * 12}px #7C3AED)`, position: "relative", zIndex: 3 }}>🎓</span>
+      <p style={{ fontFamily: "'Fredoka One', cursive", color: "#FFD700", fontSize: "1.1rem", margin: 0, letterSpacing: ".05em", textShadow: "0 0 20px #FFD70080", position: "relative", zIndex: 3 }}>STMG HUB</p>
+      <div style={{ background: "rgba(255,215,0,.15)", border: "1px solid #FFD70040", borderRadius: "100px", padding: "3px 14px", color: "#FFD700", fontFamily: "'Fredoka One', cursive", fontSize: ".75rem", position: "relative", zIndex: 3 }}>
+        {cartes.length} {cartes.length > 1 ? "cartes" : "carte"}
+      </div>
+      {["top:8px;left:10px", "top:8px;right:10px", "bottom:8px;left:10px", "bottom:8px;right:10px"].map((pos, j) => (
+        <span key={j} style={{ position: "absolute", fontSize: ".7rem", opacity: .38, ...Object.fromEntries(pos.split(";").map(p => p.split(":"))) }}>✦</span>
+      ))}
+    </>
+  );
+
+  // Style commun du pack (plein 180×252)
+  const packFullStyle = {
+    width: "180px", height: "252px",
+    borderRadius: "20px",
+    background: packBg,
+    position: "relative", overflow: "hidden",
+    display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "10px",
+  };
+
   return (
-    <div style={{
-      position: "fixed", inset: 0, zIndex: 2000,
-      background: "radial-gradient(ellipse at 30% 20%, #1a0533 0%, #0a0a0f 60%, #000 100%)",
-      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-      gap: "32px", padding: "20px", overflow: "hidden",
-    }}>
-      {/* Ambient gold particles background */}
+    <div
+      onMouseMove={e => onMove(e.clientX, e.clientY)}
+      onMouseUp={onEnd}
+      onMouseLeave={onEnd}
+      style={{
+        position: "fixed", inset: 0, zIndex: 2000,
+        background: "radial-gradient(ellipse at 30% 20%, #1a0533 0%, #0a0a0f 60%, #000 100%)",
+        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+        gap: "28px", padding: "20px", overflow: "hidden",
+        userSelect: "none",
+      }}
+    >
+      {/* Burst arc-en-ciel sur carte rare */}
+      {rainbowBurstActive && (
+        <div style={{
+          position: "fixed", inset: 0, zIndex: 8, pointerEvents: "none",
+          background: "radial-gradient(ellipse at center, rgba(255,255,255,.95) 0%, rgba(244,114,182,.72) 18%, rgba(124,58,237,.55) 36%, rgba(6,182,212,.35) 56%, transparent 76%)",
+          animation: "rainbowBurst 1.4s ease-out forwards",
+        }} />
+      )}
+
+      {/* Particules ambiantes */}
       {[...Array(12)].map((_, i) => (
         <div key={i} style={{
           position: "absolute",
-          width: 2 + Math.random() * 3,
-          height: 2 + Math.random() * 3,
+          width: 2 + (i % 3), height: 2 + (i % 3),
           borderRadius: "50%",
-          background: "#FFD700",
-          opacity: 0.3 + Math.random() * 0.4,
-          top: `${5 + i * 8}%`,
-          left: `${5 + (i * 17) % 90}%`,
+          background: i % 3 === 0 ? "#FFD700" : i % 3 === 1 ? "#F472B6" : "#06B6D4",
+          opacity: 0.18 + (i % 4) * 0.1,
+          top: `${5 + i * 8}%`, left: `${5 + (i * 17) % 90}%`,
           animation: `floatBg ${3 + i * 0.7}s ease-in-out ${i * 0.4}s infinite`,
+          pointerEvents: "none",
         }} />
       ))}
 
-      {/* Flash overlay */}
+      {/* Flash blanc */}
       {phase === "flash" && (
         <div style={{
           position: "fixed", inset: 0, zIndex: 20,
@@ -153,78 +296,143 @@ const AnimationOuverture = ({ cartes, onVoirCollection, onOuvrirAutrePack }) => 
         }} />
       )}
 
-      {/* Title */}
+      {/* Titre */}
       <div style={{ textAlign: "center", zIndex: 5 }}>
         <h2 style={{
-          fontFamily: "'Fredoka One', cursive", margin: "0 0 4px",
-          fontSize: "clamp(1.5rem, 4vw, 2.4rem)",
-          color: "#FFD700",
-          animation: allDone ? "titlePulse 2s ease-in-out infinite" : "none",
-          textShadow: allDone ? "0 0 30px #FFD700aa" : "none",
+          fontFamily: "'Fredoka One', cursive", margin: "0 0 6px",
+          fontSize: "clamp(1.5rem, 4vw, 2.4rem)", color: "#FFD700",
+          animation: allDone ? "titlePulse 2s ease-in-out infinite" : phase === "locked" ? "titlePulse .4s ease-in-out infinite" : "none",
+          textShadow: allDone ? "0 0 30px #FFD700aa" : "0 0 20px #FFD70040",
         }}>
-          {allDone ? "✨ Nouvelles cartes !" : phase === "idle" ? "🎁 Ton pack t'attend" : "🌟 Révélation en cours..."}
+          {allDone ? "✨ Nouvelles cartes !" : phase === "idle" ? "🎁 Ton pack t'attend" : phase === "locked" ? "⚡ Ça va craquer..." : phase === "tearing" ? "💥 DÉCHIRÉ !" : "🌟 Révélation..."}
         </h2>
         {phase === "idle" && (
-          <p style={{ color: "#94A3B8", fontFamily: "'Nunito', sans-serif", margin: 0, fontSize: "0.9rem" }}>
-            Clique sur le pack pour découvrir tes cartes
+          <p style={{ color: "#94A3B8", fontFamily: "'Nunito', sans-serif", margin: 0, fontSize: ".88rem", fontWeight: 700 }}>
+            Glisse le pack à gauche ou à droite pour le déchirer
+          </p>
+        )}
+        {phase === "locked" && (
+          <p style={{ color: "#F472B6", fontFamily: "'Nunito', sans-serif", margin: 0, fontSize: ".85rem", fontWeight: 900, textShadow: "0 0 14px #F472B680" }}>
+            Prêt à exploser ! 💥
           </p>
         )}
       </div>
 
-      {/* Pack closed (shown during idle/shaking/flash) */}
-      {(phase === "idle" || phase === "shaking" || phase === "flash") && (
-        <div style={{ position: "relative", zIndex: 5 }}>
+      {/* Zone du pack */}
+      {["idle", "locked", "tearing"].includes(phase) && (
+        <div style={{ position: "relative", zIndex: 5, display: "flex", flexDirection: "column", alignItems: "center", gap: "18px" }}>
           <ParticleExplosion active={showParticles} />
-          <div
-            onClick={handleOpenPack}
-            style={{
-              width: "180px", height: "252px",
-              borderRadius: "20px",
-              background: "linear-gradient(135deg, #0f0521 0%, #1e0a45 40%, #2d1054 70%, #4c1d95 100%)",
-              border: "2px solid #7C3AED",
-              boxShadow: "0 0 40px #7C3AED60, 0 20px 60px rgba(0,0,0,0.6)",
-              position: "relative", overflow: "hidden",
-              cursor: phase === "idle" ? "pointer" : "default",
-              animation: phase === "idle" ? "packFloat 3s ease-in-out infinite" : phase === "shaking" ? "packShake 0.25s ease-in-out infinite" : "none",
-              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "10px",
-            }}
-          >
-            {/* Shimmer */}
-            <div style={{
-              position: "absolute", inset: 0, pointerEvents: "none",
-              background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.12) 50%, transparent 70%)",
-              backgroundSize: "200% 100%",
-              animation: "shimmer 2.5s linear infinite",
-            }} />
-            {/* Content */}
-            <span style={{ fontSize: "3rem", filter: "drop-shadow(0 0 12px #7C3AED)" }}>🎓</span>
-            <p style={{ fontFamily: "'Fredoka One', cursive", color: "#FFD700", fontSize: "1.1rem", margin: 0, letterSpacing: "0.05em", textShadow: "0 0 20px #FFD70080" }}>STMG HUB</p>
-            <div style={{ background: "rgba(255,215,0,0.15)", border: "1px solid #FFD70040", borderRadius: "100px", padding: "3px 14px", color: "#FFD700", fontFamily: "'Fredoka One', cursive", fontSize: "0.75rem" }}>
-              {cartes.length} {cartes.length > 1 ? "cartes" : "carte"}
+
+          {/* ── IDLE : pack entier draggable ── */}
+          {phase === "idle" && (
+            <div
+              onMouseDown={e => { e.preventDefault(); onStart(e.clientX, e.clientY); }}
+              onTouchStart={e => onStart(e.touches[0].clientX, e.touches[0].clientY)}
+              onTouchMove={e => { e.preventDefault(); onMove(e.touches[0].clientX, e.touches[0].clientY); }}
+              onTouchEnd={onEnd}
+              style={{
+                ...packFullStyle,
+                touchAction: "none",
+                border: `2px solid ${isDragging && progress > 0.55 ? "#F472B6" : "#7C3AED"}`,
+                boxShadow: isDragging
+                  ? `0 0 ${20 + progress * 72}px ${progress > 0.55 ? "#F472B660" : "#7C3AED55"}, 0 20px 60px rgba(0,0,0,.6)`
+                  : "0 0 40px #7C3AED60, 0 20px 60px rgba(0,0,0,.6)",
+                cursor: isDragging ? "grabbing" : "grab",
+                transform: isDragging
+                  ? `translateX(${dragX * 0.55}px) rotate(${dragX * 0.12}deg) scale(${1 + progress * 0.08})`
+                  : "none",
+                transition: isDragging ? "none" : "transform .32s cubic-bezier(0.34,1.56,0.64,1), box-shadow .2s, border-color .2s",
+                animation: !isDragging ? "packFloat 3s ease-in-out infinite" : "none",
+              }}
+            >
+              {renderPackFace(true)}
             </div>
-            {/* Corner stars */}
-            {["top:8px;left:10px", "top:8px;right:10px", "bottom:8px;left:10px", "bottom:8px;right:10px"].map((pos, i) => (
-              <span key={i} style={{ position: "absolute", fontSize: "0.7rem", opacity: 0.4, ...Object.fromEntries(pos.split(";").map(p => p.split(":"))) }}>✦</span>
-            ))}
-          </div>
+          )}
+
+          {/* ── LOCKED + TEARING : 2 moitiés ── */}
+          {(phase === "locked" || phase === "tearing") && (
+            <div style={{
+              position: "relative", width: "180px", height: "252px",
+              // Vibration intense pendant locked
+              animation: phase === "locked" ? "packShakeHard .12s linear infinite" : "none",
+            }}>
+              {/* Moitié GAUCHE */}
+              <div style={{
+                position: "absolute", inset: 0,
+                clipPath: "polygon(0 0, 50% 0, 50% 100%, 0 100%)",
+                animation: phase === "tearing" ? "halfFlyLeft .72s ease-in forwards" : "none",
+              }}>
+                <div style={{
+                  ...packFullStyle,
+                  border: "2px solid #F472B6",
+                  boxShadow: "0 0 65px #F472B680, 0 20px 60px rgba(0,0,0,.7)",
+                }}>
+                  {renderPackFace(false)}
+                </div>
+              </div>
+
+              {/* Moitié DROITE */}
+              <div style={{
+                position: "absolute", inset: 0,
+                clipPath: "polygon(50% 0, 100% 0, 100% 100%, 50% 100%)",
+                animation: phase === "tearing" ? "halfFlyRight .72s ease-in forwards" : "none",
+              }}>
+                <div style={{
+                  ...packFullStyle,
+                  border: "2px solid #F472B6",
+                  boxShadow: "0 0 65px #F472B680, 0 20px 60px rgba(0,0,0,.7)",
+                }}>
+                  {renderPackFace(false)}
+                </div>
+              </div>
+
+              {/* Ligne de crack lumineuse entre les 2 moitiés (visible pendant locked) */}
+              {phase === "locked" && (
+                <div style={{
+                  position: "absolute", top: 0, bottom: 0, left: "50%",
+                  transform: "translateX(-50%)",
+                  width: "5px",
+                  background: "linear-gradient(to bottom, transparent 0%, #fff 18%, #F472B6 50%, #fff 82%, transparent 100%)",
+                  animation: "crackPulse .3s ease-in-out infinite",
+                  zIndex: 30, pointerEvents: "none",
+                }} />
+              )}
+            </div>
+          )}
+
+          {/* Barre de progression + flèches (phase idle seulement) */}
+          {phase === "idle" && (
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+              <div style={{ width: "180px", height: "5px", background: "rgba(255,255,255,.07)", borderRadius: "100px", overflow: "hidden" }}>
+                <div style={{
+                  height: "100%",
+                  width: `${progress * 100}%`,
+                  background: progress > 0.6
+                    ? "linear-gradient(90deg, #7C3AED, #F472B6, #FBBF24)"
+                    : "linear-gradient(90deg, #7C3AED, #06B6D4)",
+                  borderRadius: "100px",
+                  boxShadow: progress > 0.1 ? `0 0 ${4 + progress * 14}px rgba(244,114,182,.85)` : "none",
+                  transition: isDragging ? "none" : "width .3s ease",
+                }} />
+              </div>
+              {!isDragging && (
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", color: "rgba(255,255,255,.38)", fontFamily: "'Nunito', sans-serif", fontWeight: 800, fontSize: ".82rem" }}>
+                  <span style={{ display: "inline-block", animation: "arrowL 1.3s ease-in-out infinite" }}>←</span>
+                  <span>tire pour déchirer</span>
+                  <span style={{ display: "inline-block", animation: "arrowR 1.3s ease-in-out .65s infinite" }}>→</span>
+                </div>
+              )}
+              {isDragging && progress >= 0.58 && (
+                <p style={{ color: "#F472B6", fontFamily: "'Nunito', sans-serif", fontWeight: 900, fontSize: ".8rem", margin: 0, textShadow: "0 0 10px #F472B680", animation: "tearPulse .5s ease-in-out infinite" }}>
+                  Encore un peu... 🔥
+                </p>
+              )}
+            </div>
+          )}
         </div>
       )}
 
-      {/* CTA button (idle only) */}
-      {phase === "idle" && (
-        <button onClick={handleOpenPack} style={{
-          background: "linear-gradient(135deg, #FFD700, #F59E0B, #D97706)",
-          color: "#0a0a0f", border: "none",
-          fontFamily: "'Fredoka One', cursive", fontSize: "1.15rem",
-          padding: "14px 36px", borderRadius: "100px", cursor: "pointer",
-          boxShadow: "0 0 30px #FFD70080, 0 8px 25px rgba(0,0,0,0.4)",
-          zIndex: 5,
-        }}>
-          ✨ Ouvrir le pack
-        </button>
-      )}
-
-      {/* Cards revealed */}
+      {/* Grille de cartes révélées */}
       {(phase === "revealing" || phase === "done") && (
         <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", justifyContent: "center", zIndex: 5, padding: "0 10px" }}>
           {cartes.map((carte, i) => {
@@ -232,63 +440,68 @@ const AnimationOuverture = ({ cartes, onVoirCollection, onOuvrirAutrePack }) => 
             const visible = i < visibleCount;
             const isLegendary = carte.rarete === "legendaire";
             const isPrismatic = carte.rarete === "ultra_rare";
+            const isRarePlus = ["rare", "epique", "legendaire", "ultra_rare"].includes(carte.rarete);
             return (
               <div key={i} style={{
                 width: "clamp(120px, 22vw, 165px)",
                 opacity: visible ? 1 : 0,
-                transform: visible ? "translateY(0) scale(1)" : "translateY(50px) scale(0.7)",
-                transition: "opacity 0.45s ease, transform 0.45s cubic-bezier(0.34,1.56,0.64,1)",
-                transitionDelay: visible ? "0s" : "0s",
+                transform: visible ? "translateY(0) scale(1)" : "translateY(55px) scale(0.65)",
+                transition: "opacity .5s ease, transform .5s cubic-bezier(0.34,1.56,0.64,1)",
               }}>
-                {/* Card */}
                 <div style={{
                   borderRadius: "16px",
                   background: cfg.gradient,
                   border: `2px solid ${cfg.glow}60`,
-                  boxShadow: `0 0 30px ${cfg.glow}50, 0 8px 30px rgba(0,0,0,0.5)`,
+                  boxShadow: isRarePlus && visible
+                    ? `0 0 40px ${cfg.glow}70, 0 8px 30px rgba(0,0,0,.5)`
+                    : `0 0 25px ${cfg.glow}40, 0 8px 25px rgba(0,0,0,.5)`,
                   overflow: "hidden",
                   animation: isLegendary ? "legendaryGlow 2s ease-in-out infinite" : isPrismatic ? "prismaticShift 3s linear infinite" : "none",
                   display: "flex", flexDirection: "column",
+                  position: "relative",
                 }}>
-                  {/* Rarity badge */}
-                  <div style={{ padding: "8px 10px 4px", display: "flex", alignItems: "center", gap: "5px" }}>
+                  {/* Shimmer arc-en-ciel pour les cartes rare+ */}
+                  {isRarePlus && visible && (
+                    <div style={{
+                      position: "absolute", inset: 0, zIndex: 10, pointerEvents: "none",
+                      background: "linear-gradient(135deg, rgba(244,114,182,.32), rgba(124,58,237,.32), rgba(6,182,212,.32), rgba(16,185,129,.32), rgba(251,191,36,.32))",
+                      backgroundSize: "300% 300%",
+                      animation: "rainbowFlow 2.5s linear infinite",
+                      mixBlendMode: "screen",
+                      borderRadius: "14px",
+                    }} />
+                  )}
+                  <div style={{ padding: "8px 10px 4px", display: "flex", alignItems: "center", gap: "5px", position: "relative", zIndex: 11 }}>
                     <span style={{
                       background: `${cfg.glow}25`, border: `1px solid ${cfg.glow}50`,
                       borderRadius: "100px", padding: "2px 9px",
-                      fontFamily: "'Fredoka One', cursive", fontSize: "0.65rem",
+                      fontFamily: "'Fredoka One', cursive", fontSize: ".65rem",
                       color: cfg.glow, whiteSpace: "nowrap",
                     }}>
                       {cfg.emoji} {cfg.label}
                     </span>
                   </div>
-                  {/* Card image */}
                   <div style={{ position: "relative", aspectRatio: "3/4", overflow: "hidden" }}>
                     <img src={carte.image} alt={carte.nom}
                       style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
                       onError={e => { e.currentTarget.style.display = "none"; }}
                     />
-                    {/* Holographic shimmer overlay */}
                     <div style={{
                       position: "absolute", inset: 0, pointerEvents: "none",
-                      background: "linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.07) 50%, transparent 70%)",
+                      background: "linear-gradient(135deg, transparent 30%, rgba(255,255,255,.07) 50%, transparent 70%)",
                       backgroundSize: "200% 100%",
                       animation: "shimmer 3s linear infinite",
                     }} />
-                    {/* Fallback icon if no image */}
-                    <div style={{
-                      position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
-                      opacity: 0.3,
-                    }}>
+                    <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", opacity: .3 }}>
                       <Icon icon={cfg.icon} width={40} />
                     </div>
                   </div>
-                  {/* Card name + stats */}
-                  <div style={{ padding: "8px 10px 10px", textAlign: "center" }}>
-                    <p style={{ fontFamily: "'Fredoka One', cursive", color: "white", fontSize: "0.75rem", margin: "0 0 2px", lineHeight: 1.2 }}>
+                  <div style={{ padding: "8px 10px 10px", textAlign: "center", position: "relative", zIndex: 11 }}>
+                    <p style={{ fontFamily: "'Fredoka One', cursive", color: "white", fontSize: ".75rem", margin: "0 0 2px", lineHeight: 1.2 }}>
                       {carte.nom}
                     </p>
                     {cfg.bonus > 0 && (
-                      <p style={{ color: "#FFD700", fontSize: "0.6rem", margin: 0, fontFamily: "'Nunito', sans-serif", fontWeight: 700 }}>
+                      <p style={{ color: "#FFD700", fontSize: ".6rem", margin: 0, fontFamily: "'Nunito', sans-serif", fontWeight: 700 }}>
                         ⭐ +{cfg.bonus} pt participation
                       </p>
                     )}
@@ -300,7 +513,7 @@ const AnimationOuverture = ({ cartes, onVoirCollection, onOuvrirAutrePack }) => 
         </div>
       )}
 
-      {/* Post-reveal action buttons */}
+      {/* Boutons post-révélation */}
       {allDone && (
         <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", justifyContent: "center", zIndex: 5 }}>
           <button onClick={onVoirCollection} style={{
@@ -308,7 +521,7 @@ const AnimationOuverture = ({ cartes, onVoirCollection, onOuvrirAutrePack }) => 
             color: "white", border: "none",
             fontFamily: "'Fredoka One', cursive", fontSize: "1rem",
             padding: "14px 28px", borderRadius: "100px", cursor: "pointer",
-            boxShadow: "0 0 25px #7C3AED60, 0 6px 20px rgba(0,0,0,0.4)",
+            boxShadow: "0 0 25px #7C3AED60, 0 6px 20px rgba(0,0,0,.4)",
           }}>
             🃏 Voir ma collection
           </button>

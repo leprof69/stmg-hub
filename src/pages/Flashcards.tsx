@@ -29,16 +29,38 @@ const STOP_WORDS = new Set([
 type DeckCategory = FlashcardProgramme | "tous";
 
 const CATEGORY_LABELS: Record<DeckCategory, string> = {
-  tous: "Toutes les matières",
+  tous: "Toutes",
   management: "Management",
   droit: "Droit",
   économie: "Économie",
-  sciences_gestion: "Sciences de Gestion",
-  gestion_finance: "Gestion & Finance",
+  sciences_gestion: "Sc. Gestion",
+  gestion_finance: "Gestion Fin.",
   mercatique: "Mercatique",
-  ressources_humaines: "Ressources Humaines",
-  numérique_si: "Numérique & SI",
+  ressources_humaines: "RH",
+  numérique_si: "Num & SI",
 };
+
+const CATEGORY_COLORS: Partial<Record<DeckCategory, string>> = {
+  tous:              "#2563EB",
+  management:        "#2563EB",
+  droit:             "#0EA5E9",
+  économie:          "#10B981",
+  sciences_gestion:  "#06B6D4",
+  gestion_finance:   "#10B981",
+  mercatique:        "#F97316",
+  ressources_humaines:"#F59E0B",
+  numérique_si:      "#3B82F6",
+};
+
+const CSS = `
+@keyframes fc-up   { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
+@keyframes fc-orb  { 0%,100%{opacity:.4} 50%{opacity:.75} }
+@keyframes fc-pop  { 0%{transform:scale(1)} 50%{transform:scale(1.12)} 100%{transform:scale(1)} }
+.fc-cat { transition:all .18s ease; cursor:pointer; }
+.fc-cat:hover { opacity:.85; }
+.fc-btn { transition:all .18s ease; }
+.fc-btn:hover { opacity:.88; transform:translateY(-1px); }
+`;
 
 function shuffleArray<T>(arr: T[]): T[] {
   const copy = [...arr];
@@ -116,6 +138,14 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   const current = deck[index] || null;
   const masteredCount = cards.length - remaining.length;
   const progressPct = cards.length ? Math.round((masteredCount / cards.length) * 100) : 0;
+  const activeCatColor = CATEGORY_COLORS[category] ?? "#2563EB";
+
+  useEffect(() => {
+    const s = document.createElement("style");
+    s.textContent = CSS;
+    document.head.appendChild(s);
+    return () => { try { document.head.removeChild(s); } catch {} };
+  }, []);
 
   useEffect(() => {
     setDeck(shuffleArray(remaining));
@@ -129,16 +159,10 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   useEffect(() => {
     const load = async () => {
       const user = auth.currentUser;
-      if (!user) {
-        setLoading(false);
-        return;
-      }
+      if (!user) { setLoading(false); return; }
       try {
         const snap = await getDoc(doc(db, "users", user.uid));
-        if (!snap.exists()) {
-          setLoading(false);
-          return;
-        }
+        if (!snap.exists()) { setLoading(false); return; }
         const data = snap.data();
         const stored = data?.[STORAGE_KEY];
         if (stored?.version === FLASHCARDS_DATA_VERSION && stored?.validatedIds) {
@@ -256,18 +280,13 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   };
 
   const handleContinueAfterCorrection = () => {
-    if (pendingAutoAction === "mastered") {
-      void handleMastered(true);
-      return;
-    }
-    if (pendingAutoAction === "retry") {
-      handleNotMastered(true);
-    }
+    if (pendingAutoAction === "mastered") { void handleMastered(true); return; }
+    if (pendingAutoAction === "retry") { handleNotMastered(true); }
   };
 
   const handleToggleCard = () => {
     if (!answerChecked) {
-      setBanner("R?ponds d'abord puis clique sur ? V—rifier ma réponse ? pour voir la correction.");
+      setBanner("Réponds d'abord puis clique sur « Vérifier ma réponse » pour voir la correction.");
       setCardEmoji("✍️");
       setTimeout(() => setCardEmoji(""), 850);
       return;
@@ -287,7 +306,7 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
       await persist(nextValidated, 0);
       setBanner("Progression du pack réinitialisée.");
     } catch {
-      setBanner("R—initialisation locale effectu—e.");
+      setBanner("Réinitialisation locale effectuée.");
     }
     setSessionGood(0);
   };
@@ -313,7 +332,6 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
   const onTouchStart = (e: TouchEvent<HTMLDivElement>) => {
     setTouchStartX(e.changedTouches[0]?.clientX ?? null);
   };
-
   const onTouchEnd = () => {
     if (touchStartX === null) return;
     setTouchStartX(null);
@@ -321,235 +339,218 @@ export default function Flashcards({ profil, onXPGagne }: Props) {
 
   if (loading) {
     return (
-      <div className="min-h-screen p-6" style={{ display: "grid", placeItems: "center", background: "radial-gradient(circle at 20% 10%, #E0E7FF 0%, #F8FAFF 35%, #F1F5F9 100%)" }}>
-        <div style={{ background: "white", borderRadius: 16, border: "1px solid #DBEAFE", padding: 18, boxShadow: "0 10px 30px rgba(30, 41, 59, 0.08)" }}>
-          Chargement des flashcards...
+      <div style={{ minHeight:"100vh", display:"grid", placeItems:"center" }}>
+        <div style={{ background:"rgba(13,27,53,.8)", borderRadius:16, border:"1px solid rgba(30,53,96,.8)", padding:"18px 24px", color:"#94A3B8", fontFamily:"'Nunito',sans-serif", fontWeight:800 }}>
+          ⏳ Chargement des flashcards...
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen p-3" style={{ background: "#F1F5F9", fontFamily: "Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif" }}>
-      <div className="max-w-3xl mx-auto" style={{ display: "grid", gap: 12 }}>
-        <section style={{ background: "#fff", borderRadius: 16, border: "1px solid #E2E8F0", padding: 16, boxShadow: "0 4px 20px rgba(15, 23, 42, 0.06)" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
+    <div style={{ minHeight:"100vh", padding:"28px 14px 52px", fontFamily:"'Nunito',system-ui,sans-serif", color:"#F1F5F9", position:"relative" }}>
+
+      {/* Ambient orb */}
+      <div style={{ position:"fixed", top:"8%", left:"50%", transform:"translateX(-50%)", width:"600px", height:"300px", background:`radial-gradient(ellipse, ${activeCatColor}14 0%, transparent 70%)`, pointerEvents:"none", zIndex:0, animation:"fc-orb 5s ease-in-out infinite", transition:"background .5s" }} />
+
+      <div style={{ maxWidth:700, margin:"0 auto", display:"grid", gap:14, position:"relative", zIndex:1 }}>
+
+        {/* ══ HEADER ══ */}
+        <section style={{
+          background:"linear-gradient(145deg,rgba(13,27,53,.97),rgba(7,16,35,.98))",
+          borderRadius:24, border:"1px solid rgba(30,53,96,.8)", padding:"22px 20px 18px",
+          backdropFilter:"blur(14px)",
+          animation:"fc-up .5s ease both",
+          boxShadow:`0 0 40px ${activeCatColor}14, 0 14px 40px rgba(0,0,0,.35)`,
+        }}>
+          <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:10, flexWrap:"wrap", marginBottom:16 }}>
             <div>
-              <h1 style={{ margin: 0, fontSize: "1.5rem", color: "#0F172A", fontWeight: 800 }}>Flashcards</h1>
-              <p style={{ margin: "4px 0 0", color: "#64748B", fontSize: 14 }}>
-                {masteredCount} / {cards.length} cartes validees ? {remaining.length} restantes
+              <h1 style={{
+                margin:"0 0 4px", fontFamily:"'Nunito',sans-serif", fontWeight:900, fontSize:"2rem",
+                background:`linear-gradient(135deg,#F1F5F9 30%,${activeCatColor})`,
+                WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent",
+              }}>
+                🧠 Flashcards
+              </h1>
+              <p style={{ margin:0, color:"#475569", fontSize:"0.82rem", fontWeight:700 }}>
+                <span style={{ color:activeCatColor, fontWeight:900 }}>{masteredCount}</span> / {cards.length} validées · <span style={{ color:"#F59E0B" }}>{remaining.length}</span> restantes
               </p>
             </div>
-            <button
-              type="button"
-              onClick={resetProgress}
-              style={{ borderRadius: 8, border: "1px solid #E2E8F0", background: "#F8FAFC", color: "#64748B", padding: "6px 10px", fontWeight: 600, fontSize: 13, cursor: "pointer" }}
-            >
-              Reinitialiser
-            </button>
+            <div style={{ display:"flex", alignItems:"center", gap:"8px", flexWrap:"wrap" }}>
+              {cardEmoji && (
+                <span style={{ fontSize:"1.5rem", animation:"fc-pop .4s ease" }}>{cardEmoji}</span>
+              )}
+              <button type="button" onClick={resetProgress}
+                style={{ borderRadius:12, border:"1px solid rgba(30,53,96,.75)", background:"rgba(30,53,96,.35)", color:"#64748B", padding:"7px 14px", fontWeight:800, fontSize:"0.82rem", cursor:"pointer", fontFamily:"'Nunito',sans-serif", transition:"all .18s" }}>
+                Réinitialiser
+              </button>
+            </div>
           </div>
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 14 }}>
-            {(["tous", "management", "droit", "economie", "sciences_gestion", "gestion_finance", "mercatique", "ressources_humaines", "numerique_si"] as DeckCategory[]).map((cat) => {
+
+          {/* Category tabs */}
+          <div style={{ display:"flex", gap:"6px", flexWrap:"wrap", marginBottom:16 }}>
+            {(["tous","management","droit","économie","sciences_gestion","gestion_finance","mercatique","ressources_humaines","numérique_si"] as DeckCategory[]).map((cat) => {
               const active = category === cat;
+              const catColor = CATEGORY_COLORS[cat] ?? "#2563EB";
               return (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setCategory(cat)}
+                <button key={cat} type="button" className="fc-cat" onClick={() => setCategory(cat)}
                   style={{
-                    borderRadius: 8,
-                    border: active ? "1px solid #4F46E5" : "1px solid #E2E8F0",
-                    background: active ? "#EEF2FF" : "#fff",
-                    color: active ? "#4338CA" : "#475569",
-                    padding: "6px 11px",
-                    fontWeight: active ? 700 : 500,
-                    fontSize: 13,
-                    cursor: "pointer",
-                  }}
-                >
+                    borderRadius:10,
+                    border: active ? `1.5px solid ${catColor}65` : "1px solid rgba(30,53,96,.7)",
+                    background: active ? `${catColor}1E` : "rgba(13,27,53,.5)",
+                    color: active ? catColor : "#64748B",
+                    padding:"6px 12px", fontWeight: active ? 800 : 700, fontSize:"0.78rem",
+                    fontFamily:"'Nunito',sans-serif",
+                    boxShadow: active ? `0 0 12px ${catColor}25` : "none",
+                  }}>
                   {CATEGORY_LABELS[cat]}
                 </button>
               );
             })}
           </div>
 
-          <div style={{ marginTop: 14 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, fontSize: 13, color: "#64748B" }}>
-              <span>Progression du pack</span>
-              <span style={{ fontWeight: 700, color: "#334155" }}>{progressPct}%</span>
+          {/* Progress bar */}
+          <div>
+            <div style={{ display:"flex", justifyContent:"space-between", marginBottom:7, fontSize:"0.72rem", fontWeight:700 }}>
+              <span style={{ color:"#475569" }}>Progression</span>
+              <span style={{ color:progressPct === 100 ? "#10B981" : activeCatColor }}>{progressPct}%</span>
             </div>
-            <div style={{ height: 8, borderRadius: 999, background: "#E2E8F0", overflow: "hidden" }}>
-              <div
-                style={{
-                  width: `${progressPct}%`,
-                  height: "100%",
-                  borderRadius: 999,
-                  background: "#4F46E5",
-                  transition: "width 350ms ease",
-                }}
-              />
+            <div style={{ height:12, borderRadius:999, background:"rgba(30,53,96,.55)", overflow:"hidden" }}>
+              <div style={{ width:`${progressPct}%`, height:"100%", borderRadius:999, background:`linear-gradient(90deg,${activeCatColor},#10B981)`, transition:"width 500ms ease", boxShadow:"0 0 12px rgba(16,185,129,.4)" }} />
             </div>
           </div>
-          {banner && <p style={{ marginTop: 10, color: "#0F766E", fontWeight: 700 }}>{banner}</p>}
+
+          {banner && (
+            <p style={{ marginTop:12, color: banner.startsWith("❌") ? "#F87171" : "#10B981", fontWeight:800, fontSize:"0.88rem", margin:"12px 0 0" }}>
+              {banner}
+            </p>
+          )}
         </section>
 
+        {/* ══ CARTE ══ */}
         {!current ? (
-          <section style={{ background: "white", borderRadius: 20, border: "1px solid #DBEAFE", padding: 24, textAlign: "center", boxShadow: "0 10px 30px rgba(30, 41, 59, 0.06)" }}>
-            <p style={{ fontSize: 28, margin: "0 0 8px" }}>Bravo !</p>
-            <p style={{ margin: 0, color: "#475569" }}>Tu as validé toutes les cartes du pack.</p>
+          <section style={{
+            background:"linear-gradient(135deg,rgba(16,185,129,.1),rgba(13,27,53,.85))",
+            borderRadius:24, border:"1px solid rgba(16,185,129,.3)", padding:"40px 24px",
+            textAlign:"center", backdropFilter:"blur(14px)",
+            boxShadow:"0 0 40px rgba(16,185,129,.12)",
+          }}>
+            <p style={{ fontSize:"3rem", margin:"0 0 12px" }}>🎉</p>
+            <h2 style={{ fontFamily:"'Nunito',sans-serif", fontWeight:900, fontSize:"1.5rem", margin:"0 0 8px", background:"linear-gradient(135deg,#10B981,#06B6D4)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
+              Pack terminé !
+            </h2>
+            <p style={{ margin:0, color:"#64748B", fontWeight:700, fontSize:"0.9rem" }}>Tu as validé toutes les cartes du pack. Bravo !</p>
           </section>
         ) : (
-          <section style={{ background: "#fff", borderRadius: 16, border: "1px solid #E2E8F0", padding: 14, boxShadow: "0 4px 20px rgba(15, 23, 42, 0.06)" }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8, gap: 8, flexWrap: "wrap" }}>
-              <p style={{ margin: 0, color: "#334155", fontWeight: 800 }}>{current.notion}</p>
-              <span style={{ background: "#F8FAFC", color: "#334155", borderRadius: 999, padding: "4px 10px", fontWeight: 700, fontSize: 12, border: "1px solid #E2E8F0" }}>{formatJetonsDelta(current.xp)}</span>
+          <section style={{
+            background:"rgba(13,27,53,.82)", borderRadius:22,
+            border:`1px solid rgba(30,53,96,.8)`, padding:18,
+            backdropFilter:"blur(14px)",
+            animation:"fc-up .5s .06s ease both",
+          }}>
+            {/* Card info */}
+            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:14, gap:8, flexWrap:"wrap" }}>
+              <div>
+                <p style={{ margin:0, color:activeCatColor, fontWeight:900, fontSize:"0.72rem", textTransform:"uppercase", letterSpacing:"0.1em", marginBottom:3 }}>
+                  {CATEGORY_LABELS[current.programme] ?? current.programme}
+                </p>
+                <p style={{ margin:0, color:"#F1F5F9", fontWeight:900, fontSize:"1rem" }}>{current.notion}</p>
+              </div>
+              <span style={{ background:"rgba(245,158,11,.15)", color:"#F59E0B", borderRadius:999, padding:"4px 14px", fontWeight:900, fontSize:"0.78rem", border:"1px solid rgba(245,158,11,.3)", flexShrink:0 }}>
+                {formatJetonsDelta(current.xp)}
+              </span>
             </div>
-            <div
-              onClick={handleToggleCard}
-              onTouchStart={onTouchStart}
-              onTouchEnd={onTouchEnd}
-              style={{
-                minHeight: 240,
-                perspective: 1200,
-                cursor: "pointer",
-                userSelect: "none",
-                opacity: transitioningCard ? 0.62 : 1,
-                transition: "opacity 260ms ease",
-              }}
-            >
-              <div
-                style={{
-                  position: "relative",
-                  minHeight: 240,
-                  transformStyle: "preserve-3d",
-                  transition: "transform 620ms cubic-bezier(0.2, 0.9, 0.2, 1)",
-                  transform: showAnswer ? "rotateY(180deg)" : "rotateY(0deg)",
-                }}
-              >
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    border: "1px solid #E2E8F0",
-                    borderRadius: 16,
-                    padding: 22,
-                    background: "#FFFFFF",
-                    backfaceVisibility: "hidden",
-                    display: "grid",
-                    alignContent: "center",
-                    boxShadow: "0 4px 16px rgba(15,23,42,0.06)",
-                  }}
-                >
-                  <p style={{ margin: "0 0 8px", color: "#334155", fontSize: 12, fontWeight: 800, letterSpacing: 0.4, textTransform: "uppercase" }}>
-                    Question
-                  </p>
-                  <p style={{ margin: 0, color: "#0F172A", lineHeight: 1.65, fontSize: "1.05rem", fontWeight: 700 }}>
-                    {current.question}
-                  </p>
+
+            {/* Flip card */}
+            <div onClick={handleToggleCard} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
+              style={{ minHeight:220, perspective:1200, cursor:"pointer", userSelect:"none", opacity:transitioningCard?.62:1, transition:"opacity 260ms ease" }}>
+              <div style={{ position:"relative", minHeight:220, transformStyle:"preserve-3d", transition:"transform 620ms cubic-bezier(0.2,0.9,0.2,1)", transform:showAnswer?"rotateY(180deg)":"rotateY(0deg)" }}>
+
+                {/* Face QUESTION */}
+                <div style={{
+                  position:"absolute", inset:0,
+                  border:`2px solid ${activeCatColor}35`, borderRadius:18, padding:"22px 24px",
+                  background:"linear-gradient(145deg,rgba(7,16,35,.95),rgba(13,27,53,.92))",
+                  backfaceVisibility:"hidden", display:"grid", alignContent:"center",
+                  boxShadow:`0 0 30px ${activeCatColor}18, 0 8px 24px rgba(0,0,0,.35)`,
+                }}>
+                  <p style={{ margin:"0 0 12px", color:activeCatColor, fontSize:"0.7rem", fontWeight:900, letterSpacing:"0.12em", textTransform:"uppercase" }}>❓ Question</p>
+                  <p style={{ margin:0, color:"#F1F5F9", lineHeight:1.7, fontSize:"1.05rem", fontWeight:700 }}>{current.question}</p>
                 </div>
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    border: "1px solid #E2E8F0",
-                    borderRadius: 16,
-                    padding: 22,
-                    background: "#F8FAFC",
-                    transform: "rotateY(180deg)",
-                    backfaceVisibility: "hidden",
-                    display: "grid",
-                    alignContent: "center",
-                    boxShadow: "0 8px 24px rgba(30, 41, 59, 0.08)",
-                  }}
-                >
-                  <p style={{ margin: "0 0 8px", color: "#334155", fontSize: 12, fontWeight: 800, letterSpacing: 0.4, textTransform: "uppercase" }}>
-                    Correction
-                  </p>
-                  <p style={{ margin: 0, color: "#1E293B", lineHeight: 1.65, fontSize: "1.02rem" }}>
-                    {current.reponse}
-                  </p>
+
+                {/* Face CORRECTION */}
+                <div style={{
+                  position:"absolute", inset:0,
+                  border:"2px solid rgba(16,185,129,.38)", borderRadius:18, padding:"22px 24px",
+                  background:"linear-gradient(145deg,rgba(7,16,35,.97),rgba(4,20,18,.95))",
+                  transform:"rotateY(180deg)", backfaceVisibility:"hidden",
+                  display:"grid", alignContent:"center",
+                  boxShadow:"0 0 30px rgba(16,185,129,.18), 0 8px 24px rgba(0,0,0,.4)",
+                }}>
+                  <p style={{ margin:"0 0 12px", color:"#10B981", fontSize:"0.7rem", fontWeight:900, letterSpacing:"0.12em", textTransform:"uppercase" }}>✅ Correction</p>
+                  <p style={{ margin:0, color:"#D1FAE5", lineHeight:1.7, fontSize:"1.02rem", fontWeight:700 }}>{current.reponse}</p>
                 </div>
               </div>
             </div>
-            <div style={{ marginTop: 12, border: "1px solid #DBEAFE", background: "#F8FAFF", borderRadius: 14, padding: 12 }}>
-              <label htmlFor="flashcards-answer" style={{ color: "#334155", fontWeight: 700, fontSize: 14 }}>
-                Ta réponse (zone sous la carte) :
+
+            {/* Answer zone */}
+            <div style={{
+              marginTop:16,
+              border:`1px solid ${answerChecked ? (answerAccepted ? "rgba(16,185,129,.45)" : "rgba(248,113,113,.45)") : "rgba(37,99,235,.3)"}`,
+              background:"rgba(4,13,28,.75)", borderRadius:16, padding:16,
+              transition:"border-color .3s",
+            }}>
+              <label htmlFor="flashcards-answer" style={{ color:"#94A3B8", fontWeight:800, fontSize:"0.82rem", display:"block", marginBottom:8 }}>
+                ✍️ Ta réponse :
               </label>
-              <textarea
-                id="flashcards-answer"
-                value={learnerAnswer}
-                onChange={(e) => {
-                  setLearnerAnswer(e.target.value);
-                  setAnswerChecked(false);
-                  setAnswerAccepted(false);
-                  setPendingAutoAction(null);
-                }}
-                placeholder="Écris une définition courte avec les mots cl’s..."
+              <textarea id="flashcards-answer" value={learnerAnswer}
+                onChange={(e) => { setLearnerAnswer(e.target.value); setAnswerChecked(false); setAnswerAccepted(false); setPendingAutoAction(null); }}
+                placeholder="Écris une définition courte avec les mots clés..."
                 rows={3}
                 disabled={pendingAutoAction !== null || isActionBusy || transitioningCard}
                 style={{
-                  marginTop: 8,
-                  width: "100%",
-                  borderRadius: 12,
-                  border: "1px solid #CBD5E1",
-                  padding: 12,
-                  fontFamily: "inherit",
-                  fontSize: 15,
-                  resize: "vertical",
-                  background: "#FFFFFF",
-                  boxShadow: "inset 0 1px 2px rgba(15, 23, 42, 0.08)",
+                  width:"100%", borderRadius:12, border:"1px solid rgba(30,53,96,.8)", padding:12,
+                  fontFamily:"'Nunito',sans-serif", fontWeight:700, fontSize:15, resize:"vertical",
+                  background:"rgba(4,13,28,.85)", color:"#F1F5F9", outline:"none", boxSizing:"border-box",
                 }}
               />
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center", marginTop: 8 }}>
-                <button
-                  onClick={handleCheckAnswer}
+              <div style={{ display:"flex", gap:8, flexWrap:"wrap", alignItems:"center", marginTop:12 }}>
+                <button className="fc-btn" onClick={handleCheckAnswer}
                   disabled={!learnerAnswer.trim() || isActionBusy || transitioningCard || pendingAutoAction !== null}
                   style={{
-                    border: "none",
-                    borderRadius: 10,
-                    background: learnerAnswer.trim() && !isActionBusy && !transitioningCard && pendingAutoAction === null ? "#2563EB" : "#94A3B8",
-                    color: "white",
-                    padding: "8px 12px",
-                    fontWeight: 700,
+                    border:"none", borderRadius:12,
+                    background: learnerAnswer.trim() && !isActionBusy && !transitioningCard && pendingAutoAction === null
+                      ? `linear-gradient(135deg,${activeCatColor},${activeCatColor}CC)`
+                      : "rgba(30,53,96,.45)",
+                    color:"white", padding:"10px 18px", fontWeight:900,
                     cursor: learnerAnswer.trim() && !isActionBusy && !transitioningCard && pendingAutoAction === null ? "pointer" : "not-allowed",
-                  }}
-                >
-                  V—rifier ma réponse
+                    fontFamily:"'Nunito',sans-serif", fontSize:"0.88rem",
+                    boxShadow: learnerAnswer.trim() && pendingAutoAction === null ? `0 4px 16px ${activeCatColor}40` : "none",
+                  }}>
+                  Vérifier ma réponse
                 </button>
+
                 {answerChecked && (
-                  <span style={{ color: answerAccepted ? "#166534" : "#9F1239", fontWeight: 700 }}>
-                    {answerAccepted ? "Réponse acceptée : carte validée à l'Étape suivante." : "Réponse insuffisante : carte renvoyée à revoir à l'Étape suivante."}
+                  <span style={{ color: answerAccepted ? "#10B981" : "#F87171", fontWeight:900, fontSize:"0.88rem" }}>
+                    {answerAccepted ? "✅ Réponse acceptée !" : "❌ Réponse insuffisante — à revoir."}
                   </span>
                 )}
+
                 {pendingAutoAction && (
-                  <button
-                    onClick={handleContinueAfterCorrection}
-                    disabled={isActionBusy || transitioningCard}
-                    style={{
-                      border: "none",
-                      borderRadius: 10,
-                      background: "#0F766E",
-                      color: "white",
-                      padding: "8px 12px",
-                      fontWeight: 700,
-                      cursor: isActionBusy || transitioningCard ? "not-allowed" : "pointer",
-                    }}
-                  >
-                    Continuer
+                  <button className="fc-btn" onClick={handleContinueAfterCorrection} disabled={isActionBusy || transitioningCard}
+                    style={{ border:"none", borderRadius:12, background:"linear-gradient(135deg,#10B981,#06B6D4)", color:"white", padding:"10px 18px", fontWeight:900, cursor: isActionBusy || transitioningCard ? "not-allowed" : "pointer", fontFamily:"'Nunito',sans-serif", fontSize:"0.88rem", boxShadow:"0 4px 16px rgba(16,185,129,.4)" }}>
+                    Continuer →
                   </button>
                 )}
               </div>
             </div>
-            {cardEmoji && (
-              <div style={{ marginTop: 10, textAlign: "center", fontSize: "1.5rem", fontWeight: 800, color: "#334155", animation: "popin 220ms ease-out" }}>
-                {cardEmoji}
-              </div>
-            )}
-            <p style={{ margin: "10px 0 0", color: "#64748B", fontSize: 13 }}>
-              Écris ta réponse puis clique sur à V—rifier ma réponse —. Tu vois la correction, puis à Continuer à applique la décision automatique.
+
+            <p style={{ margin:"12px 0 0", color:"#334155", fontSize:"0.78rem", fontWeight:700 }}>
+              Écris ta réponse · clique sur "Vérifier" · lis la correction · "Continuer" applique la décision automatique.
             </p>
           </section>
         )}
+
       </div>
     </div>
   );

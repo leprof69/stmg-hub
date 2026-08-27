@@ -7,18 +7,21 @@ import type { UserProfile } from "../services/userProfileService";
 // ---------------------------------------------------------------------------
 // TYPES
 // ---------------------------------------------------------------------------
+export type AvatarStyle = "classic" | "notionists" | "lorelei" | "pixel";
 export type AvatarConfig = {
   skinColor:string; top:string; hairColor:string;
   accessories:string; facialHair:string; clothing:string;
   clothesColor:string; eyes:string; eyebrows:string; mouth:string;
   bgColor:string; bgType:string; frame:string;
   nose:string; sticker:string;
+  avatarStyle?:AvatarStyle;
 };
 export const DEFAULT_AVATAR: AvatarConfig = {
   skinColor:"edb98a",top:"shortFlat",hairColor:"724133",
   accessories:"none",facialHair:"none",clothing:"shirtCrewNeck",
   clothesColor:"5199e4",eyes:"default",eyebrows:"default",mouth:"smile",
   bgColor:"b6e3f4",bgType:"solid",frame:"none",nose:"none",sticker:"none",
+  avatarStyle:"classic",
 };
 
 // ---------------------------------------------------------------------------
@@ -60,7 +63,7 @@ const CHEEK_MAP:Record<string,CheekCfg>={
 type StickerDef={icon:string;top:string;left:string;sz:number;rotation?:string;color?:string};
 const STICKER_CFG:Record<string,StickerDef|null>={
   none:null,
-  headphones:    {icon:"solar:headphones-round-bold-duotone",top:"0%", left:"52%",sz:0.30,rotation:"-6deg", color:"#a78bfa"},
+  headphones:    {icon:"solar:headphones-round-bold-duotone",top:"0%", left:"52%",sz:0.30,rotation:"-6deg", color:"#0EA5E9"},
   controller:    {icon:"solar:gamepad-bold-duotone",         top:"68%",left:"55%",sz:0.27,rotation:"8deg",  color:"#60a5fa"},
   micro:         {icon:"solar:microphone-3-bold-duotone",    top:"58%",left:"62%",sz:0.26,rotation:"12deg", color:"#f472b6"},
   wifi:          {icon:"solar:wi-fi-bold-duotone",           top:"2%", left:"60%",sz:0.24,rotation:"0deg",  color:"#4ade80"},
@@ -68,7 +71,7 @@ const STICKER_CFG:Record<string,StickerDef|null>={
   sunglasses:    {icon:"solar:sun-glasses-bold-duotone",     top:"30%",left:"-5%",sz:0.28,rotation:"-5deg", color:"#94a3b8"},
   music:         {icon:"solar:music-notes-bold-duotone",     top:"6%", left:"64%",sz:0.24,rotation:"12deg", color:"#34d399"},
   medal:         {icon:"solar:medal-star-bold-duotone",      top:"62%",left:"62%",sz:0.28,rotation:"8deg",  color:"#fbbf24"},
-  diploma:       {icon:"solar:diploma-bold-duotone",         top:"66%",left:"-2%",sz:0.26,rotation:"-8deg", color:"#a78bfa"},
+  diploma:       {icon:"solar:diploma-bold-duotone",         top:"66%",left:"-2%",sz:0.26,rotation:"-8deg", color:"#F59E0B"},
   planet:        {icon:"solar:planet-bold-duotone",          top:"2%", left:"56%",sz:0.28,rotation:"0deg",  color:"#60a5fa"},
   sakura:        {icon:"noto:cherry-blossom",                top:"3%", left:"60%",sz:0.26,rotation:"8deg"},
   butterfly:     {icon:"noto:butterfly",                     top:"1%", left:"54%",sz:0.28,rotation:"5deg"},
@@ -145,9 +148,75 @@ function sanitize(cfg:AvatarConfig):AvatarConfig{
 }
 
 // ---------------------------------------------------------------------------
-// DICEBEAR URL
+// DICEBEAR URL  — builders per style
 // ---------------------------------------------------------------------------
+function buildNotionistsUrl(cfg:AvatarConfig,size:number):string{
+  const p:string[]=[];
+  const a=(k:string,v:string|number)=>p.push(`${k}=${encodeURIComponent(String(v))}`);
+  const raw=(k:string,v:string)=>p.push(`${k}=${v}`);
+  a("skinColor",cfg.skinColor);a("hairColor",cfg.hairColor);
+  const n=(s:string)=>s.startsWith("n_")?s.slice(2):"";
+  const hair=n(cfg.top);         if(hair&&hair!=="none")a("hair",hair);
+  const eyes=n(cfg.eyes);        if(eyes&&eyes!=="none")a("eyes",eyes);
+  const brows=n(cfg.eyebrows);   if(brows&&brows!=="none")a("brows",brows);
+  const lips=n(cfg.mouth);       if(lips&&lips!=="none")a("lips",lips);
+  const nose=n(cfg.nose);        if(nose&&nose!=="none")a("nose",nose);
+  const glasses=n(cfg.accessories);
+  if(glasses&&glasses!=="none"){a("glasses",glasses);a("glassesProbability",100);}else a("glassesProbability",0);
+  const gesture=n(cfg.clothing); if(gesture&&gesture!=="none")a("gesture",gesture);
+  if(cfg.bgType==="gradientLinear"){raw("backgroundColor",cfg.bgColor);a("backgroundType","gradientLinear");}
+  else{a("backgroundColor",cfg.bgColor);a("backgroundType","solid");}
+  a("size",size);
+  return `https://api.dicebear.com/9.x/notionists/svg?${p.join("&")}`;
+}
+
+function buildLoreleiUrl(cfg:AvatarConfig,size:number):string{
+  const p:string[]=[];
+  const a=(k:string,v:string|number)=>p.push(`${k}=${encodeURIComponent(String(v))}`);
+  const raw=(k:string,v:string)=>p.push(`${k}=${v}`);
+  a("skinColor",cfg.skinColor);a("hairColor",cfg.hairColor);
+  const l=(s:string)=>s.startsWith("l_")?s.slice(2):"";
+  const head=l(cfg.top);       if(head&&head!=="none")a("head",head);
+  const eyes=l(cfg.eyes);      if(eyes&&eyes!=="none")a("eyes",eyes);
+  const eyebrows=l(cfg.eyebrows);if(eyebrows&&eyebrows!=="none")a("eyebrows",eyebrows);
+  const mouth=l(cfg.mouth);    if(mouth&&mouth!=="none")a("mouth",mouth);
+  const glasses=l(cfg.accessories);
+  if(glasses&&glasses!=="none"){a("glasses",glasses);a("glassesProbability",100);}else a("glassesProbability",0);
+  const earrings=l(cfg.clothing);
+  if(earrings&&earrings!=="none"){a("earrings",earrings);a("earringsProbability",100);a("earringColor",cfg.clothesColor);}else a("earringsProbability",0);
+  if(cfg.bgType==="gradientLinear"){raw("backgroundColor",cfg.bgColor);a("backgroundType","gradientLinear");}
+  else{a("backgroundColor",cfg.bgColor);a("backgroundType","solid");}
+  a("size",size);
+  return `https://api.dicebear.com/9.x/lorelei/svg?${p.join("&")}`;
+}
+
+function buildPixelUrl(cfg:AvatarConfig,size:number):string{
+  const p:string[]=[];
+  const a=(k:string,v:string|number)=>p.push(`${k}=${encodeURIComponent(String(v))}`);
+  const raw=(k:string,v:string)=>p.push(`${k}=${v}`);
+  a("skinColor",cfg.skinColor);a("hairColor",cfg.hairColor);
+  const px=(s:string)=>s.startsWith("p_")?s.slice(2):"";
+  const hair=px(cfg.top);      if(hair&&hair!=="none")a("hair",hair);
+  const eyes=px(cfg.eyes);     if(eyes&&eyes!=="none")a("eyes",eyes);
+  const mouth=px(cfg.mouth);   if(mouth&&mouth!=="none")a("mouth",mouth);
+  const clothing=px(cfg.clothing);if(clothing&&clothing!=="none"){a("clothing",clothing);a("clothingColor",cfg.clothesColor);}
+  const beard=px(cfg.facialHair);
+  if(beard&&beard!=="none"){a("beard",beard);a("beardProbability",100);}else a("beardProbability",0);
+  const glasses=px(cfg.accessories);
+  if(glasses&&glasses!=="none"){a("glasses",glasses);a("glassesProbability",100);}else a("glassesProbability",0);
+  const hat=px(cfg.nose);
+  if(hat&&hat!=="none"){a("hat",hat);a("hatProbability",100);}else a("hatProbability",0);
+  if(cfg.bgType==="gradientLinear"){raw("backgroundColor",cfg.bgColor);a("backgroundType","gradientLinear");}
+  else{a("backgroundColor",cfg.bgColor);a("backgroundType","solid");}
+  a("size",size);
+  return `https://api.dicebear.com/9.x/pixel-art/svg?${p.join("&")}`;
+}
+
 export function buildDiceBearUrl(cfg:AvatarConfig,size=256):string{
+  const style=cfg.avatarStyle||"classic";
+  if(style==="notionists")return buildNotionistsUrl(cfg,size);
+  if(style==="lorelei")   return buildLoreleiUrl(cfg,size);
+  if(style==="pixel")     return buildPixelUrl(cfg,size);
   const s=sanitize(cfg);const p:string[]=[];
   const a=(k:string,v:string|number)=>p.push(`${k}=${encodeURIComponent(String(v))}`);
   const raw=(k:string,v:string)=>p.push(`${k}=${v}`);
@@ -169,28 +238,51 @@ export function buildDiceBearUrl(cfg:AvatarConfig,size=256):string{
 // ---------------------------------------------------------------------------
 // ITEM TYPES
 // ---------------------------------------------------------------------------
-export type Category="skinColor"|"top"|"hairColor"|"clothing"|"clothesColor"|"eyes"|"eyebrows"|"nose"|"mouth"|"accessories"|"facialHair"|"bg"|"sticker";
+export type Category="avatarStyle"|"skinColor"|"top"|"hairColor"|"clothing"|"clothesColor"|"eyes"|"eyebrows"|"nose"|"mouth"|"accessories"|"facialHair"|"bg"|"sticker";
 export type Rarity="gratuit"|"commun"|"rare"|"epique"|"legendaire"|"prestige";
 export type ShopItem={
   id:string;category:Category;name:string;price:number;rarity:Rarity;
   previewColor?:string;previewEmoji?:string;stickerIcon?:string;
   seasonal?:boolean;minPrestige?:number;
+  forStyle?:AvatarStyle;
 };
 
 function applyItem(cfg:AvatarConfig,item:ShopItem):AvatarConfig{
+  if(item.category==="avatarStyle"){
+    const ns=item.id as AvatarStyle;
+    return{...cfg,...STYLE_DEFAULTS[ns],avatarStyle:ns};
+  }
   if(item.category==="bg"){const[c,t]=item.id.split("|");return{...cfg,bgColor:c,bgType:t};}
   return{...cfg,[item.category]:item.id};
 }
 
+const STYLE_DEFAULTS:Record<AvatarStyle,Partial<AvatarConfig>>={
+  classic:{top:"shortFlat",eyes:"default",eyebrows:"default",mouth:"smile",accessories:"none",clothing:"shirtCrewNeck",clothesColor:"5199e4",facialHair:"none",nose:"none"},
+  notionists:{top:"n_variant01",eyes:"n_variant01",eyebrows:"n_variant01",mouth:"n_variant01",nose:"n_variant01",accessories:"n_none",clothing:"n_none",facialHair:"none",clothesColor:"5199e4"},
+  lorelei:{top:"l_variant01",eyes:"l_variant01",eyebrows:"l_variant01",mouth:"l_happy",accessories:"l_none",clothing:"l_none",facialHair:"none",clothesColor:"5199e4",nose:"none"},
+  pixel:{top:"p_variant01",eyes:"p_variant01",eyebrows:"none",mouth:"p_variant01",accessories:"p_none",clothing:"p_variant01",clothesColor:"5199e4",facialHair:"p_none",nose:"p_none"},
+};
+const STYLE_CATS:Record<AvatarStyle,Category[]>={
+  classic:    ["avatarStyle","skinColor","top","hairColor","clothing","clothesColor","eyes","eyebrows","nose","mouth","accessories","facialHair","bg","sticker"],
+  notionists: ["avatarStyle","skinColor","top","hairColor","eyes","eyebrows","nose","mouth","accessories","clothing","bg","sticker"],
+  lorelei:    ["avatarStyle","skinColor","top","hairColor","eyes","eyebrows","mouth","accessories","clothing","bg","sticker"],
+  pixel:      ["avatarStyle","skinColor","top","hairColor","clothing","clothesColor","eyes","mouth","accessories","facialHair","nose","bg","sticker"],
+};
+type CatMeta2={label:string;icon:string};
+const CAT_META_OVERRIDES:Partial<Record<AvatarStyle,Partial<Record<Category,CatMeta2>>>>={
+  notionists:{top:{label:"Cheveux",icon:"solar:scissor-bold-duotone"},clothing:{label:"Geste",icon:"solar:hand-heart-bold-duotone"},nose:{label:"Nez",icon:"solar:face-scan-circle-bold-duotone"}},
+  lorelei:   {top:{label:"Visage",icon:"solar:user-circle-bold-duotone"},clothing:{label:"Bijoux",icon:"solar:star-bold-duotone"}},
+  pixel:     {nose:{label:"Chapeau",icon:"solar:sun-2-bold-duotone"},facialHair:{label:"Barbe",icon:"solar:user-bold-duotone"}},
+};
+
 const MINI_CATS=new Set<Category>(["eyes","eyebrows","mouth"]);
-const BASE_MINI:AvatarConfig={skinColor:"edb98a",top:"shortFlat",hairColor:"724133",accessories:"none",facialHair:"none",clothing:"shirtCrewNeck",clothesColor:"5199e4",eyes:"default",eyebrows:"defaultNatural",mouth:"smile",bgColor:"e0f2fe",bgType:"solid",frame:"none",nose:"none",sticker:"none"};
+const BASE_MINI:AvatarConfig={skinColor:"edb98a",top:"shortFlat",hairColor:"724133",accessories:"none",facialHair:"none",clothing:"shirtCrewNeck",clothesColor:"5199e4",eyes:"default",eyebrows:"defaultNatural",mouth:"smile",bgColor:"e0f2fe",bgType:"solid",frame:"none",nose:"none",sticker:"none",avatarStyle:"classic"};
 
 // ---------------------------------------------------------------------------
 // AVATAR SVG
 // ---------------------------------------------------------------------------
 export function AvatarSVG({config,size=200}:{config:AvatarConfig;size?:number}){
-  const[loaded,setLoaded]=useState(false);
-  const[errored,setErrored]=useState(false);
+  const[goodSrc,setGoodSrc]=useState("");
   const url=buildDiceBearUrl(config,Math.round(size*2));
   const fc=FRAME_CFG[config.frame||"none"]||FRAME_CFG.none;
   const cheek=CHEEK_MAP[config.nose||"none"]||{};
@@ -201,27 +293,28 @@ export function AvatarSVG({config,size=200}:{config:AvatarConfig;size?:number}){
   const cW=size*0.20,cH=size*0.11,cT=size*0.61,cX=size*0.10;
   const tFz=Math.max(7,size*0.10),pSz=Math.max(10,size*0.14);
   const sPx=stk?Math.round(size*stk.sz):0;
+  const hasGood=goodSrc.length>0;
   return(
     <div style={{position:"relative",width:FULL,height:FULL,display:"inline-flex",flexShrink:0,borderRadius:size*0.10,overflow:"hidden"}}>
       <div style={{position:"absolute",width:FULL*2,height:FULL*2,top:-FULL/2,left:-FULL/2,background:`conic-gradient(from 0deg,${fc.conic})`,animation:`frameRotate ${fc.speed} linear infinite`,boxShadow:fc.glow||"none"}}/>
-      <div style={{position:"absolute",inset:PAD,borderRadius:size*0.08,overflow:"hidden",background:"linear-gradient(135deg,#e0f2fe,#ddd6fe)",display:"flex",alignItems:"center",justifyContent:"center"}}>
+      <div style={{position:"absolute",inset:PAD,borderRadius:size*0.08,overflow:"hidden",background:"linear-gradient(135deg,#e0f2fe,#bae6fd)",display:"flex",alignItems:"center",justifyContent:"center"}}>
         {particles&&particles.map((ic,i)=>(
           <div key={i} style={{position:"absolute",top:PPOS[i].top,left:PPOS[i].left,right:(PPOS[i] as {right?:string}).right,width:pSz,height:pSz,zIndex:0,pointerEvents:"none",animation:`particleFloat ${2+i*0.5}s ease-in-out ${i*0.3}s infinite alternate`}}>
             <Icon icon={ic} width={pSz} height={pSz}/>
           </div>
         ))}
-        {(!loaded&&!errored)&&<div style={{fontSize:size>80?"2rem":"1.3rem"}}>{"🧑"}</div>}
-        {errored&&<div style={{fontSize:size>80?"2rem":"1.3rem"}}>{"🧑"}</div>}
-        <img src={url} width={size} height={size} alt="Avatar" draggable={false}
-          onLoad={()=>{setLoaded(true);setErrored(false);}}
-          onError={()=>{setErrored(true);setLoaded(false);}}
-          style={{display:loaded?"block":"none",position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",zIndex:1}}/>
-        {loaded&&cheek.leftBg&&<>
+        {!hasGood&&<div style={{fontSize:size>80?"2rem":"1.3rem"}}>{"🧑"}</div>}
+        <img src={url} alt="" aria-hidden draggable={false}
+          onLoad={()=>setGoodSrc(url)}
+          style={{display:"none"}}/>
+        {hasGood&&<img src={goodSrc} width={size} height={size} alt="Avatar" draggable={false}
+          style={{display:"block",position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",zIndex:1}}/>}
+        {hasGood&&cheek.leftBg&&<>
           <div style={{position:"absolute",left:cX,top:cT,width:cW,height:cH,background:cheek.leftBg,borderRadius:"50%",filter:"blur(5px)",pointerEvents:"none",transform:"rotate(-10deg)",zIndex:2}}/>
           <div style={{position:"absolute",right:cX,top:cT,width:cW,height:cH,background:cheek.rightBg,borderRadius:"50%",filter:"blur(5px)",pointerEvents:"none",transform:"rotate(10deg)",zIndex:2}}/>
         </>}
-        {loaded&&cheek.text&&<div style={{position:"absolute",left:"50%",top:cheek.textTop||"56%",transform:"translate(-50%,-50%)",fontSize:tFz,lineHeight:1,pointerEvents:"none",userSelect:"none",zIndex:2,filter:"drop-shadow(0 1px 2px rgba(0,0,0,0.3))"}}>{cheek.text}</div>}
-        {loaded&&stk&&<div style={{position:"absolute",top:stk.top,left:stk.left,width:sPx,height:sPx,zIndex:3,pointerEvents:"none",transform:`rotate(${stk.rotation||"0deg"})`,filter:"drop-shadow(0 2px 5px rgba(0,0,0,0.45))",animation:"stickerBounce 3s ease-in-out infinite"}}>
+        {hasGood&&cheek.text&&<div style={{position:"absolute",left:"50%",top:cheek.textTop||"56%",transform:"translate(-50%,-50%)",fontSize:tFz,lineHeight:1,pointerEvents:"none",userSelect:"none",zIndex:2,filter:"drop-shadow(0 1px 2px rgba(0,0,0,0.3))"}}>{cheek.text}</div>}
+        {hasGood&&stk&&<div style={{position:"absolute",top:stk.top,left:stk.left,width:sPx,height:sPx,zIndex:3,pointerEvents:"none",transform:`rotate(${stk.rotation||"0deg"})`,filter:"drop-shadow(0 2px 5px rgba(0,0,0,0.45))",animation:"stickerBounce 3s ease-in-out infinite"}}>
           <Icon icon={stk.icon} width={sPx} height={sPx} color={stk.color||undefined}/>
         </div>}
       </div>
@@ -233,6 +326,7 @@ function MiniPreview({item}:{item:ShopItem}){
   const url=buildDiceBearUrl(applyItem(BASE_MINI,item),80);
   return <img src={url} alt="" loading="lazy" style={{width:"100%",height:"100%",objectFit:"cover",borderRadius:"6px",display:"block"}}/>;
 }
+function canUseMini(item:ShopItem):boolean{return MINI_CATS.has(item.category)&&!item.forStyle;}
 
 // ---------------------------------------------------------------------------
 // CSS
@@ -262,13 +356,14 @@ const RS:Record<Rarity,{text:string;border:string;bg:string;label:string}>={
   gratuit:  {text:"#64748b",border:"rgba(100,116,139,0.2)", bg:"rgba(100,116,139,0.06)",label:"Gratuit"},
   commun:   {text:"#4ade80",border:"rgba(34,197,94,0.22)",  bg:"rgba(34,197,94,0.07)",  label:"Commun"},
   rare:     {text:"#60a5fa",border:"rgba(59,130,246,0.22)", bg:"rgba(59,130,246,0.07)", label:"Rare"},
-  epique:   {text:"#c084fc",border:"rgba(168,85,247,0.25)", bg:"rgba(168,85,247,0.08)", label:"Épique"},
+  epique:   {text:"#F97316",border:"rgba(249,115,22,0.25)",  bg:"rgba(249,115,22,0.08)",  label:"Épique"},
   legendaire:{text:"#fbbf24",border:"rgba(251,191,36,0.3)", bg:"rgba(251,191,36,0.08)", label:"Légendaire"},
   prestige: {text:"#ffd700",border:"rgba(255,215,0,0.35)",  bg:"rgba(255,215,0,0.10)",  label:"Prestige 👑"},
 };
 
 type CatMeta={label:string;icon:string};
 const CAT_META:Record<Category,CatMeta>={
+  avatarStyle: {label:"Style",    icon:"solar:magic-stick-bold-duotone"},
   skinColor:   {label:"Peau",     icon:"solar:user-bold-duotone"},
   top:         {label:"Coiffure", icon:"solar:scissor-bold-duotone"},
   hairColor:   {label:"Cheveux",  icon:"solar:palette-bold-duotone"},
@@ -283,7 +378,7 @@ const CAT_META:Record<Category,CatMeta>={
   bg:          {label:"Fond",     icon:"solar:gallery-bold-duotone"},
   sticker:     {label:"Stickers", icon:"solar:sticker-smile-circle-bold-duotone"},
 };
-const CAT_ORDER:Category[]=["skinColor","top","hairColor","clothing","clothesColor","eyes","eyebrows","nose","mouth","accessories","facialHair","bg","sticker"];
+const CAT_ORDER:Category[]=["avatarStyle","skinColor","top","hairColor","clothing","clothesColor","eyes","eyebrows","nose","mouth","accessories","facialHair","bg","sticker"];
 
 // ---------------------------------------------------------------------------
 // PRESETS
@@ -320,6 +415,7 @@ const CHESTS=[
 ];
 function pickRandom(weights:Record<Rarity,number>,owned:string[],profil:UserProfile):ShopItem|null{
   const pool=ALL_ITEMS.filter(i=>{
+    if(i.category==="avatarStyle")return false;
     if(i.seasonal)return false;
     if(i.minPrestige&&(profil.prestige||0)<i.minPrestige)return false;
     if(owned.includes(`${i.category}::${i.id}`))return false;
@@ -334,6 +430,184 @@ function pickRandom(weights:Record<Rarity,number>,owned:string[],profil:UserProf
 // CATALOG
 // ---------------------------------------------------------------------------
 export const ALL_ITEMS:ShopItem[]=[
+  // AVATAR STYLE SELECTOR
+  {id:"classic",    category:"avatarStyle",name:"Classic",    price:0,  rarity:"gratuit",previewEmoji:"🎨"},
+  {id:"notionists", category:"avatarStyle",name:"Notionists", price:150,rarity:"rare",   previewEmoji:"✏️"},
+  {id:"lorelei",    category:"avatarStyle",name:"Lorelei",    price:150,rarity:"rare",   previewEmoji:"🌸"},
+  {id:"pixel",      category:"avatarStyle",name:"Pixel Art",  price:100,rarity:"commun", previewEmoji:"🕹️"},
+
+  // ── NOTIONISTS ────────────────────────────────────────────────────────────
+  // Cheveux (top)
+  {id:"n_variant01",category:"top",forStyle:"notionists",name:"Classique",  price:0, rarity:"gratuit",previewEmoji:"✂️"},
+  {id:"n_variant02",category:"top",forStyle:"notionists",name:"Ondulé",     price:0, rarity:"gratuit",previewEmoji:"〰️"},
+  {id:"n_variant03",category:"top",forStyle:"notionists",name:"Court net",  price:0, rarity:"gratuit",previewEmoji:"🧑"},
+  {id:"n_variant04",category:"top",forStyle:"notionists",name:"Long lisse", price:8, rarity:"commun", previewEmoji:"👧"},
+  {id:"n_variant05",category:"top",forStyle:"notionists",name:"Bouclé",     price:10,rarity:"commun", previewEmoji:"🌀"},
+  {id:"n_variant06",category:"top",forStyle:"notionists",name:"Afro",       price:12,rarity:"commun", previewEmoji:"🌳"},
+  {id:"n_variant07",category:"top",forStyle:"notionists",name:"Bangs",      price:10,rarity:"commun", previewEmoji:"💁"},
+  {id:"n_variant08",category:"top",forStyle:"notionists",name:"Bob",        price:12,rarity:"commun", previewEmoji:"👩"},
+  {id:"n_variant09",category:"top",forStyle:"notionists",name:"Tresses",    price:18,rarity:"rare",   previewEmoji:"🎀"},
+  {id:"n_variant10",category:"top",forStyle:"notionists",name:"Chignon",    price:15,rarity:"commun", previewEmoji:"💁"},
+  {id:"n_variant11",category:"top",forStyle:"notionists",name:"Frisé",      price:15,rarity:"commun", previewEmoji:"⚡"},
+  {id:"n_variant12",category:"top",forStyle:"notionists",name:"Wavy long",  price:20,rarity:"rare",   previewEmoji:"🌊"},
+  // Yeux (eyes)
+  {id:"n_variant01",category:"eyes",forStyle:"notionists",name:"Naturels",  price:0, rarity:"gratuit",previewEmoji:"👁️"},
+  {id:"n_variant02",category:"eyes",forStyle:"notionists",name:"Expressifs",price:8, rarity:"commun", previewEmoji:"✨"},
+  {id:"n_variant03",category:"eyes",forStyle:"notionists",name:"Rêveurs",   price:8, rarity:"commun", previewEmoji:"💫"},
+  {id:"n_variant04",category:"eyes",forStyle:"notionists",name:"Ronds",     price:8, rarity:"commun", previewEmoji:"🔵"},
+  {id:"n_variant05",category:"eyes",forStyle:"notionists",name:"Amandes",   price:10,rarity:"commun", previewEmoji:"🍃"},
+  {id:"n_variant06",category:"eyes",forStyle:"notionists",name:"Pétillants",price:15,rarity:"rare",   previewEmoji:"⭐"},
+  {id:"n_variant07",category:"eyes",forStyle:"notionists",name:"Intenses",  price:15,rarity:"rare",   previewEmoji:"🔥"},
+  {id:"n_variant08",category:"eyes",forStyle:"notionists",name:"Doux",      price:12,rarity:"commun", previewEmoji:"🌙"},
+  // Sourcils (eyebrows)
+  {id:"n_variant01",category:"eyebrows",forStyle:"notionists",name:"Naturels",price:0, rarity:"gratuit",previewEmoji:"〰️"},
+  {id:"n_variant02",category:"eyebrows",forStyle:"notionists",name:"Arqués",  price:8, rarity:"commun", previewEmoji:"🌈"},
+  {id:"n_variant03",category:"eyebrows",forStyle:"notionists",name:"Droits",  price:8, rarity:"commun", previewEmoji:"➖"},
+  {id:"n_variant04",category:"eyebrows",forStyle:"notionists",name:"Froncés", price:10,rarity:"commun", previewEmoji:"😠"},
+  {id:"n_variant05",category:"eyebrows",forStyle:"notionists",name:"Fins",    price:8, rarity:"commun", previewEmoji:"🖊️"},
+  {id:"n_variant06",category:"eyebrows",forStyle:"notionists",name:"Vifs",    price:12,rarity:"rare",   previewEmoji:"⚡"},
+  // Bouche (mouth / lips)
+  {id:"n_variant01",category:"mouth",forStyle:"notionists",name:"Sourire",   price:0, rarity:"gratuit",previewEmoji:"😊"},
+  {id:"n_variant02",category:"mouth",forStyle:"notionists",name:"Discret",   price:8, rarity:"commun", previewEmoji:"🙂"},
+  {id:"n_variant03",category:"mouth",forStyle:"notionists",name:"Espiègle",  price:10,rarity:"commun", previewEmoji:"😏"},
+  {id:"n_variant04",category:"mouth",forStyle:"notionists",name:"Ouvert",    price:10,rarity:"commun", previewEmoji:"😮"},
+  {id:"n_variant05",category:"mouth",forStyle:"notionists",name:"Sincère",   price:10,rarity:"commun", previewEmoji:"😌"},
+  {id:"n_variant06",category:"mouth",forStyle:"notionists",name:"Mystère",   price:18,rarity:"rare",   previewEmoji:"😶"},
+  {id:"n_variant07",category:"mouth",forStyle:"notionists",name:"Large",     price:12,rarity:"commun", previewEmoji:"😁"},
+  {id:"n_variant08",category:"mouth",forStyle:"notionists",name:"Doux",      price:8, rarity:"commun", previewEmoji:"🥰"},
+  // Nez (nose)
+  {id:"n_variant01",category:"nose",forStyle:"notionists",name:"Standard",  price:0, rarity:"gratuit",previewEmoji:"👃"},
+  {id:"n_variant02",category:"nose",forStyle:"notionists",name:"Arrondi",   price:8, rarity:"commun", previewEmoji:"⭕"},
+  {id:"n_variant03",category:"nose",forStyle:"notionists",name:"Pointu",    price:8, rarity:"commun", previewEmoji:"▲"},
+  {id:"n_variant04",category:"nose",forStyle:"notionists",name:"Bouton",    price:8, rarity:"commun", previewEmoji:"🔘"},
+  // Lunettes (accessories)
+  {id:"n_none",    category:"accessories",forStyle:"notionists",name:"Aucune",       price:0, rarity:"gratuit",previewEmoji:"🚫"},
+  {id:"n_variant01",category:"accessories",forStyle:"notionists",name:"Rondes",      price:0, rarity:"gratuit",previewEmoji:"🔵"},
+  {id:"n_variant02",category:"accessories",forStyle:"notionists",name:"Rectangles",  price:12,rarity:"commun", previewEmoji:"🟦"},
+  {id:"n_variant03",category:"accessories",forStyle:"notionists",name:"Tendance",    price:15,rarity:"commun", previewEmoji:"😎"},
+  {id:"n_variant04",category:"accessories",forStyle:"notionists",name:"Minimalistes",price:12,rarity:"commun", previewEmoji:"🕶️"},
+  {id:"n_variant05",category:"accessories",forStyle:"notionists",name:"Futuristes",  price:20,rarity:"rare",   previewEmoji:"🤖"},
+  // Geste (clothing)
+  {id:"n_none",     category:"clothing",forStyle:"notionists",name:"Neutre",     price:0, rarity:"gratuit",previewEmoji:"🧍"},
+  {id:"n_wave",     category:"clothing",forStyle:"notionists",name:"Bonjour !",  price:0, rarity:"gratuit",previewEmoji:"👋"},
+  {id:"n_fistbump", category:"clothing",forStyle:"notionists",name:"Poing levé", price:10,rarity:"commun", previewEmoji:"✊"},
+  {id:"n_point",    category:"clothing",forStyle:"notionists",name:"En avant !", price:8, rarity:"commun", previewEmoji:"👆"},
+  {id:"n_okSign",   category:"clothing",forStyle:"notionists",name:"OK !",       price:8, rarity:"commun", previewEmoji:"👌"},
+  {id:"n_handshake",category:"clothing",forStyle:"notionists",name:"Poignée",    price:18,rarity:"rare",   previewEmoji:"🤝"},
+  {id:"n_waveReverse",category:"clothing",forStyle:"notionists",name:"Bye !",    price:8, rarity:"commun", previewEmoji:"🙋"},
+
+  // ── LORELEI ───────────────────────────────────────────────────────────────
+  // Visage (top / head shape)
+  {id:"l_variant01",category:"top",forStyle:"lorelei",name:"Oval",      price:0, rarity:"gratuit",previewEmoji:"🥚"},
+  {id:"l_variant02",category:"top",forStyle:"lorelei",name:"Rond",      price:0, rarity:"gratuit",previewEmoji:"⭕"},
+  {id:"l_variant03",category:"top",forStyle:"lorelei",name:"Carré",     price:8, rarity:"commun", previewEmoji:"🟥"},
+  {id:"l_variant04",category:"top",forStyle:"lorelei",name:"Cœur",      price:10,rarity:"commun", previewEmoji:"❤️"},
+  {id:"l_variant05",category:"top",forStyle:"lorelei",name:"Long",      price:10,rarity:"commun", previewEmoji:"📐"},
+  {id:"l_variant06",category:"top",forStyle:"lorelei",name:"Fin",       price:12,rarity:"commun", previewEmoji:"✏️"},
+  {id:"l_variant07",category:"top",forStyle:"lorelei",name:"Anguleux",  price:18,rarity:"rare",   previewEmoji:"💎"},
+  {id:"l_variant08",category:"top",forStyle:"lorelei",name:"Parfait",   price:25,rarity:"epique", previewEmoji:"⭐"},
+  // Yeux (eyes)
+  {id:"l_variant01",category:"eyes",forStyle:"lorelei",name:"Naturels",  price:0, rarity:"gratuit",previewEmoji:"👁️"},
+  {id:"l_variant02",category:"eyes",forStyle:"lorelei",name:"Brillants", price:8, rarity:"commun", previewEmoji:"✨"},
+  {id:"l_variant03",category:"eyes",forStyle:"lorelei",name:"Rêveurs",   price:8, rarity:"commun", previewEmoji:"💫"},
+  {id:"l_variant04",category:"eyes",forStyle:"lorelei",name:"Intenses",  price:10,rarity:"commun", previewEmoji:"🔥"},
+  {id:"l_variant05",category:"eyes",forStyle:"lorelei",name:"Doux",      price:8, rarity:"commun", previewEmoji:"🌙"},
+  {id:"l_variant06",category:"eyes",forStyle:"lorelei",name:"Vifs",      price:12,rarity:"commun", previewEmoji:"⚡"},
+  {id:"l_variant07",category:"eyes",forStyle:"lorelei",name:"Expressifs",price:15,rarity:"rare",   previewEmoji:"🎭"},
+  {id:"l_variant08",category:"eyes",forStyle:"lorelei",name:"Kawaii",    price:18,rarity:"rare",   previewEmoji:"🌸"},
+  {id:"l_variant09",category:"eyes",forStyle:"lorelei",name:"Amande",    price:15,rarity:"rare",   previewEmoji:"💚"},
+  {id:"l_variant10",category:"eyes",forStyle:"lorelei",name:"Mystère",   price:25,rarity:"epique", previewEmoji:"🌌"},
+  // Sourcils (eyebrows)
+  {id:"l_variant01",category:"eyebrows",forStyle:"lorelei",name:"Naturels",price:0, rarity:"gratuit",previewEmoji:"〰️"},
+  {id:"l_variant02",category:"eyebrows",forStyle:"lorelei",name:"Arqués",  price:8, rarity:"commun", previewEmoji:"🌈"},
+  {id:"l_variant03",category:"eyebrows",forStyle:"lorelei",name:"Droits",  price:8, rarity:"commun", previewEmoji:"➖"},
+  {id:"l_variant04",category:"eyebrows",forStyle:"lorelei",name:"Fins",    price:8, rarity:"commun", previewEmoji:"🖊️"},
+  {id:"l_variant05",category:"eyebrows",forStyle:"lorelei",name:"Accent",  price:10,rarity:"commun", previewEmoji:"✒️"},
+  {id:"l_variant06",category:"eyebrows",forStyle:"lorelei",name:"Puissants",price:15,rarity:"rare",  previewEmoji:"💥"},
+  // Bouche (mouth)
+  {id:"l_happy",    category:"mouth",forStyle:"lorelei",name:"Sourire",    price:0, rarity:"gratuit",previewEmoji:"😊"},
+  {id:"l_nervous",  category:"mouth",forStyle:"lorelei",name:"Nerveux",    price:8, rarity:"commun", previewEmoji:"😬"},
+  {id:"l_sad",      category:"mouth",forStyle:"lorelei",name:"Mélancolie", price:8, rarity:"commun", previewEmoji:"😢"},
+  {id:"l_surprised",category:"mouth",forStyle:"lorelei",name:"Surprise",   price:8, rarity:"commun", previewEmoji:"😮"},
+  {id:"l_variant01",category:"mouth",forStyle:"lorelei",name:"Mystérieux", price:15,rarity:"rare",   previewEmoji:"😏"},
+  {id:"l_variant02",category:"mouth",forStyle:"lorelei",name:"Kawaii",     price:18,rarity:"rare",   previewEmoji:"🌸"},
+  {id:"l_variant03",category:"mouth",forStyle:"lorelei",name:"Cool",       price:12,rarity:"commun", previewEmoji:"😎"},
+  // Lunettes (accessories)
+  {id:"l_none",     category:"accessories",forStyle:"lorelei",name:"Aucune",   price:0, rarity:"gratuit",previewEmoji:"🚫"},
+  {id:"l_variant01",category:"accessories",forStyle:"lorelei",name:"Rondes",   price:0, rarity:"gratuit",previewEmoji:"🔵"},
+  {id:"l_variant02",category:"accessories",forStyle:"lorelei",name:"Cat Eye",  price:15,rarity:"commun", previewEmoji:"🐱"},
+  {id:"l_variant03",category:"accessories",forStyle:"lorelei",name:"Rectangles",price:12,rarity:"commun",previewEmoji:"🟦"},
+  {id:"l_variant04",category:"accessories",forStyle:"lorelei",name:"Demi-lune",price:12,rarity:"commun", previewEmoji:"🌙"},
+  {id:"l_variant05",category:"accessories",forStyle:"lorelei",name:"Futuristes",price:20,rarity:"rare",  previewEmoji:"🤖"},
+  // Bijoux (clothing / earrings)
+  {id:"l_none",     category:"clothing",forStyle:"lorelei",name:"Aucun",   price:0, rarity:"gratuit",previewEmoji:"🚫"},
+  {id:"l_variant01",category:"clothing",forStyle:"lorelei",name:"Perles",  price:0, rarity:"gratuit",previewEmoji:"🫧"},
+  {id:"l_variant02",category:"clothing",forStyle:"lorelei",name:"Créoles", price:12,rarity:"commun", previewEmoji:"⭕"},
+  {id:"l_variant03",category:"clothing",forStyle:"lorelei",name:"Gouttes", price:15,rarity:"commun", previewEmoji:"💧"},
+  {id:"l_variant04",category:"clothing",forStyle:"lorelei",name:"Étoiles", price:18,rarity:"rare",   previewEmoji:"⭐"},
+  {id:"l_variant05",category:"clothing",forStyle:"lorelei",name:"Créoles L",price:15,rarity:"commun",previewEmoji:"🔮"},
+  {id:"l_variant06",category:"clothing",forStyle:"lorelei",name:"Diamants",price:30,rarity:"epique", previewEmoji:"💎"},
+
+  // ── PIXEL ART ─────────────────────────────────────────────────────────────
+  // Cheveux (top)
+  {id:"p_variant01",category:"top",forStyle:"pixel",name:"Spike",    price:0, rarity:"gratuit",previewEmoji:"⚡"},
+  {id:"p_variant02",category:"top",forStyle:"pixel",name:"Court",    price:0, rarity:"gratuit",previewEmoji:"✂️"},
+  {id:"p_variant03",category:"top",forStyle:"pixel",name:"Long",     price:8, rarity:"commun", previewEmoji:"👧"},
+  {id:"p_variant04",category:"top",forStyle:"pixel",name:"Afro",     price:10,rarity:"commun", previewEmoji:"🌳"},
+  {id:"p_variant05",category:"top",forStyle:"pixel",name:"Mohawk",   price:15,rarity:"rare",   previewEmoji:"🤘"},
+  {id:"p_variant06",category:"top",forStyle:"pixel",name:"Bangs",    price:8, rarity:"commun", previewEmoji:"💁"},
+  {id:"p_variant07",category:"top",forStyle:"pixel",name:"Bob pixel", price:10,rarity:"commun", previewEmoji:"👩"},
+  {id:"p_variant08",category:"top",forStyle:"pixel",name:"Rasé",     price:10,rarity:"commun", previewEmoji:"🥚"},
+  {id:"p_variant09",category:"top",forStyle:"pixel",name:"Wavy",     price:15,rarity:"rare",   previewEmoji:"🌊"},
+  // Tenue (clothing)
+  {id:"p_variant01",category:"clothing",forStyle:"pixel",name:"T-Shirt",  price:0, rarity:"gratuit",previewEmoji:"👕"},
+  {id:"p_variant02",category:"clothing",forStyle:"pixel",name:"Hoodie",   price:0, rarity:"gratuit",previewEmoji:"🧥"},
+  {id:"p_variant03",category:"clothing",forStyle:"pixel",name:"Veste",    price:8, rarity:"commun", previewEmoji:"🥼"},
+  {id:"p_variant04",category:"clothing",forStyle:"pixel",name:"Armure",   price:20,rarity:"rare",   previewEmoji:"🛡️"},
+  {id:"p_variant05",category:"clothing",forStyle:"pixel",name:"Kimono",   price:18,rarity:"rare",   previewEmoji:"🎌"},
+  {id:"p_variant06",category:"clothing",forStyle:"pixel",name:"Uniforme", price:15,rarity:"commun", previewEmoji:"🎓"},
+  {id:"p_variant07",category:"clothing",forStyle:"pixel",name:"Sport",    price:10,rarity:"commun", previewEmoji:"⚽"},
+  {id:"p_variant08",category:"clothing",forStyle:"pixel",name:"Punk",     price:20,rarity:"rare",   previewEmoji:"🤘"},
+  {id:"p_variant09",category:"clothing",forStyle:"pixel",name:"Pixel Max",price:30,rarity:"epique", previewEmoji:"🕹️"},
+  {id:"p_variant10",category:"clothing",forStyle:"pixel",name:"Chemise",  price:8, rarity:"commun", previewEmoji:"👔"},
+  {id:"p_variant11",category:"clothing",forStyle:"pixel",name:"Pull",     price:8, rarity:"commun", previewEmoji:"🧶"},
+  {id:"p_variant12",category:"clothing",forStyle:"pixel",name:"Combo OP", price:35,rarity:"legendaire",previewEmoji:"💥"},
+  // Yeux (eyes)
+  {id:"p_variant01",category:"eyes",forStyle:"pixel",name:"Pixel",     price:0, rarity:"gratuit",previewEmoji:"👁️"},
+  {id:"p_variant02",category:"eyes",forStyle:"pixel",name:"Clin d'œil",price:8, rarity:"commun", previewEmoji:"😉"},
+  {id:"p_variant03",category:"eyes",forStyle:"pixel",name:"Anime",     price:10,rarity:"commun", previewEmoji:"✨"},
+  {id:"p_variant04",category:"eyes",forStyle:"pixel",name:"Endormi",   price:10,rarity:"commun", previewEmoji:"😴"},
+  {id:"p_variant05",category:"eyes",forStyle:"pixel",name:"Croix X",   price:15,rarity:"rare",   previewEmoji:"💀"},
+  {id:"p_variant06",category:"eyes",forStyle:"pixel",name:"Étoile",    price:18,rarity:"rare",   previewEmoji:"⭐"},
+  {id:"p_variant07",category:"eyes",forStyle:"pixel",name:"Larmes",    price:15,rarity:"rare",   previewEmoji:"😢"},
+  // Bouche (mouth)
+  {id:"p_variant01",category:"mouth",forStyle:"pixel",name:"Standard",  price:0, rarity:"gratuit",previewEmoji:"😐"},
+  {id:"p_variant02",category:"mouth",forStyle:"pixel",name:"Sourire",   price:0, rarity:"gratuit",previewEmoji:"😊"},
+  {id:"p_variant03",category:"mouth",forStyle:"pixel",name:"Triste",    price:8, rarity:"commun", previewEmoji:"😢"},
+  {id:"p_variant04",category:"mouth",forStyle:"pixel",name:"Grimace",   price:10,rarity:"commun", previewEmoji:"😬"},
+  {id:"p_variant05",category:"mouth",forStyle:"pixel",name:"Langue",    price:10,rarity:"commun", previewEmoji:"😛"},
+  {id:"p_variant06",category:"mouth",forStyle:"pixel",name:"Cool",      price:15,rarity:"rare",   previewEmoji:"😎"},
+  // Chapeau (nose / hat)
+  {id:"p_none",     category:"nose",forStyle:"pixel",name:"Aucun",     price:0, rarity:"gratuit",previewEmoji:"🚫"},
+  {id:"p_variant01",category:"nose",forStyle:"pixel",name:"Casquette", price:0, rarity:"gratuit",previewEmoji:"🧢"},
+  {id:"p_variant02",category:"nose",forStyle:"pixel",name:"Chapeau",   price:12,rarity:"commun", previewEmoji:"🎩"},
+  {id:"p_variant03",category:"nose",forStyle:"pixel",name:"Bonnet",    price:12,rarity:"commun", previewEmoji:"🧣"},
+  {id:"p_variant04",category:"nose",forStyle:"pixel",name:"Couronne",  price:30,rarity:"epique", previewEmoji:"👑"},
+  // Barbe (facialHair / beard)
+  {id:"p_none",     category:"facialHair",forStyle:"pixel",name:"Aucune",  price:0, rarity:"gratuit",previewEmoji:"🚫"},
+  {id:"p_variant01",category:"facialHair",forStyle:"pixel",name:"3 jours", price:10,rarity:"commun", previewEmoji:"🧔"},
+  {id:"p_variant02",category:"facialHair",forStyle:"pixel",name:"Courte",  price:12,rarity:"commun", previewEmoji:"🧔"},
+  {id:"p_variant03",category:"facialHair",forStyle:"pixel",name:"Longue",  price:15,rarity:"rare",   previewEmoji:"🧔"},
+  {id:"p_variant04",category:"facialHair",forStyle:"pixel",name:"Viking",  price:25,rarity:"epique", previewEmoji:"⚔️"},
+  {id:"p_variant05",category:"facialHair",forStyle:"pixel",name:"Hipster", price:18,rarity:"rare",   previewEmoji:"🎸"},
+  // Lunettes pixel (accessories)
+  {id:"p_none",     category:"accessories",forStyle:"pixel",name:"Aucune",   price:0, rarity:"gratuit",previewEmoji:"🚫"},
+  {id:"p_variant01",category:"accessories",forStyle:"pixel",name:"Pixel",    price:0, rarity:"gratuit",previewEmoji:"🕶️"},
+  {id:"p_variant02",category:"accessories",forStyle:"pixel",name:"Rondes",   price:10,rarity:"commun", previewEmoji:"🔵"},
+  {id:"p_variant03",category:"accessories",forStyle:"pixel",name:"Solaires", price:12,rarity:"commun", previewEmoji:"😎"},
+  {id:"p_variant04",category:"accessories",forStyle:"pixel",name:"Neon",     price:20,rarity:"rare",   previewEmoji:"🌈"},
+  {id:"p_variant05",category:"accessories",forStyle:"pixel",name:"Cyber",    price:25,rarity:"epique", previewEmoji:"🤖"},
+
   // PEAU
   {id:"614335",category:"skinColor",name:"Ébène",          price:0, rarity:"gratuit",previewColor:"#614335"},
   {id:"ae5d29",category:"skinColor",name:"Brun foncé",           price:0, rarity:"gratuit",previewColor:"#ae5d29"},
@@ -544,8 +818,11 @@ const rand=<T,>(a:T[])=>a[Math.floor(Math.random()*a.length)];
 const FREE=(cat:Category)=>ALL_ITEMS.filter(i=>i.category===cat&&i.price===0).map(i=>i.id);
 
 function randomAvatar():AvatarConfig{
-  const bgRaw=rand(FREE("bg"));const[bgColor,bgType]=bgRaw.split("|");
-  return{skinColor:rand(FREE("skinColor")),top:rand(ALL_ITEMS.filter(i=>i.category==="top").map(i=>i.id)),hairColor:rand(ALL_ITEMS.filter(i=>i.category==="hairColor").map(i=>i.id)),accessories:rand(ALL_ITEMS.filter(i=>i.category==="accessories").map(i=>i.id)),facialHair:rand(ALL_ITEMS.filter(i=>i.category==="facialHair").map(i=>i.id)),clothing:rand(FREE("clothing")),clothesColor:rand(ALL_ITEMS.filter(i=>i.category==="clothesColor").map(i=>i.id)),eyes:rand(ALL_ITEMS.filter(i=>i.category==="eyes").map(i=>i.id)),eyebrows:rand(ALL_ITEMS.filter(i=>i.category==="eyebrows").map(i=>i.id)),mouth:rand(ALL_ITEMS.filter(i=>i.category==="mouth").map(i=>i.id)),bgColor,bgType,frame:"none",nose:rand(FREE("nose")),sticker:rand(FREE("sticker"))};
+  const classic=ALL_ITEMS.filter(i=>!i.forStyle&&i.category!=="avatarStyle");
+  const cAll=(cat:Category)=>classic.filter(i=>i.category===cat).map(i=>i.id);
+  const cFree=(cat:Category)=>classic.filter(i=>i.category===cat&&i.price===0).map(i=>i.id);
+  const bgRaw=rand(cFree("bg"));const[bgColor,bgType]=bgRaw.split("|");
+  return{skinColor:rand(cFree("skinColor")),top:rand(cAll("top")),hairColor:rand(cAll("hairColor")),accessories:rand(cAll("accessories")),facialHair:rand(cAll("facialHair")),clothing:rand(cFree("clothing")),clothesColor:rand(cAll("clothesColor")),eyes:rand(cAll("eyes")),eyebrows:rand(cAll("eyebrows")),mouth:rand(cAll("mouth")),bgColor,bgType,frame:"none",nose:rand(cFree("nose")),sticker:rand(cFree("sticker")),avatarStyle:"classic"};
 }
 
 // ---------------------------------------------------------------------------
@@ -563,7 +840,6 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
   const[saved,setSaved]             =useState(false);
   const[toast,setToast]             =useState<{msg:string;ok:boolean}|null>(null);
   const[loading,setLoading]         =useState(true);
-  const[previewKey,setPreviewKey]   =useState(0);
   const[showChest,setShowChest]     =useState(false);
   const[openingChest,setOpeningChest]=useState<string|null>(null);
   const[chestResult,setChestResult] =useState<ShopItem|null>(null);
@@ -584,14 +860,22 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
     }).catch(()=>setLoading(false));
   },[]);
 
+  const curStyle=(avatar.avatarStyle||"classic") as AvatarStyle;
   const itemKey=(item:ShopItem)=>`${item.category}::${item.id}`;
   const isOwned=useCallback((item:ShopItem)=>item.price===0||owned.includes(itemKey(item)),[owned]);
   const isEquipped=(item:ShopItem)=>{
+    if(item.category==="avatarStyle")return curStyle===item.id;
     if(item.category==="bg"){const[c,t]=item.id.split("|");return avatar.bgColor===c&&avatar.bgType===t;}
     return(avatar as Record<string,string>)[item.category]===item.id;
   };
-  const equip=(item:ShopItem)=>{setAvatar(a=>applyItem(a,item));setPreviewKey(k=>k+1);};
-  const applyPreset=(p:Preset)=>{setAvatar(p.cfg);setPreviewKey(k=>k+1);};
+  const equip=(item:ShopItem)=>{
+    setAvatar(a=>applyItem(a,item));
+    if(item.category==="avatarStyle"){
+      const ns=item.id as AvatarStyle;
+      if(!STYLE_CATS[ns].includes(activeTab))setActiveTab("avatarStyle");
+    }
+  };
+  const applyPreset=(p:Preset)=>{setAvatar({...p.cfg,avatarStyle:"classic"});setActiveTab("skinColor");};
 
   const buy=async(item:ShopItem)=>{
     const key=itemKey(item);
@@ -642,14 +926,15 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
   };
 
   const displayConfig=hovered?applyItem(avatar,hovered):avatar;
-  const tabItems=ALL_ITEMS.filter(i=>i.category===activeTab);
-  const totalOwned=ALL_ITEMS.filter(isOwned).length;
+  const tabItems=ALL_ITEMS.filter(i=>i.category===activeTab&&(!i.forStyle||i.forStyle===curStyle));
+  const totalOwned=ALL_ITEMS.filter(i=>i.category!=="avatarStyle"&&isOwned(i)).length;
+  const totalItems=ALL_ITEMS.filter(i=>i.category!=="avatarStyle").length;
   const BOTTOM_H=72;
 
   if(loading)return(
     <div style={{minHeight:"100vh",background:"#070a12",display:"flex",alignItems:"center",justifyContent:"center"}}>
       <style>{AV_CSS}</style>
-      <div style={{width:"40px",height:"40px",border:"3px solid rgba(167,139,250,0.3)",borderTopColor:"#a78bfa",borderRadius:"50%",animation:"avSpin 0.8s linear infinite"}}/>
+      <div style={{width:"40px",height:"40px",border:"3px solid rgba(14,165,233,0.3)",borderTopColor:"#0EA5E9",borderRadius:"50%",animation:"avSpin 0.8s linear infinite"}}/>
     </div>
   );
 
@@ -669,7 +954,7 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
             </div>
             <div style={{fontSize:"0.65rem",color:RS[chestResult.rarity].text,fontWeight:800,textTransform:"uppercase",letterSpacing:"0.15em",marginBottom:"8px"}}>{RS[chestResult.rarity].label}</div>
             <div style={{fontSize:"1.3rem",fontWeight:900,color:"white",marginBottom:"22px"}}>{chestResult.name}</div>
-            <button onClick={()=>{equip(chestResult);setChestResult(null);}} style={{width:"100%",padding:"14px",borderRadius:"14px",background:`linear-gradient(135deg,${RS[chestResult.rarity].text},#a78bfa)`,color:"white",fontWeight:800,fontSize:"1rem",border:"none",cursor:"pointer"}}>{"💡 Equiper !"}</button>
+            <button onClick={()=>{equip(chestResult);setChestResult(null);}} style={{width:"100%",padding:"14px",borderRadius:"14px",background:`linear-gradient(135deg,${RS[chestResult.rarity].text},#0EA5E9)`,color:"white",fontWeight:800,fontSize:"1rem",border:"none",cursor:"pointer"}}>{"💡 Equiper !"}</button>
             <div style={{marginTop:"12px",fontSize:"0.72rem",color:"#475569"}}>Tap pour fermer</div>
           </div>
         </div>
@@ -682,7 +967,7 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
         <div style={{background:"rgba(7,10,18,0.96)",backdropFilter:"blur(20px)",borderBottom:"1px solid rgba(255,255,255,0.07)",padding:"10px 16px",display:"flex",alignItems:"center",gap:"10px",position:"sticky",top:0,zIndex:100}}>
           <div style={{flex:1}}>
             <div style={{fontSize:"0.58rem",color:"#475569",fontWeight:700,textTransform:"uppercase",letterSpacing:"0.12em"}}>{"Créateur d’avatar"}</div>
-            <div style={{fontSize:"0.95rem",fontWeight:900,background:"linear-gradient(90deg,#a78bfa,#ec4899)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>{"🎨 Mon Avatar"}</div>
+            <div style={{fontSize:"0.95rem",fontWeight:900,background:"linear-gradient(90deg,#2563EB,#0EA5E9)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>{"🎨 Mon Avatar"}</div>
           </div>
           <button onClick={()=>setShowChest(v=>!v)} style={{background:"rgba(251,191,36,0.12)",border:"1px solid rgba(251,191,36,0.3)",borderRadius:"10px",padding:"7px 12px",color:"#fbbf24",fontSize:"0.78rem",fontWeight:700,cursor:"pointer",display:"flex",alignItems:"center",gap:"5px"}}>
             <span style={{fontSize:"1rem"}}>{"📦"}</span>
@@ -690,14 +975,14 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
           <div style={{background:"rgba(251,191,36,0.12)",border:"1px solid rgba(251,191,36,0.3)",borderRadius:"10px",padding:"7px 12px",color:"#fbbf24",fontSize:"0.82rem",fontWeight:800}}>
             {"💰"} {jetons.toLocaleString("fr-FR")}
           </div>
-          <button onClick={saveAvatar} disabled={saving} style={{background:saved?"linear-gradient(135deg,#16a34a,#15803d)":"linear-gradient(135deg,#a78bfa,#818cf8)",color:"white",fontWeight:800,fontSize:"0.8rem",padding:"8px 14px",borderRadius:"10px",border:"none",cursor:"pointer",whiteSpace:"nowrap"}}>
+          <button onClick={saveAvatar} disabled={saving} style={{background:saved?"linear-gradient(135deg,#16a34a,#15803d)":"linear-gradient(135deg,#0EA5E9,#2563EB)",color:"white",fontWeight:800,fontSize:"0.8rem",padding:"8px 14px",borderRadius:"10px",border:"none",cursor:"pointer",whiteSpace:"nowrap"}}>
             {saving?"⏳":saved?"✅ OK":"💾 Sauver"}
           </button>
         </div>
 
         {/* ?? COFFRES PANEL */}
         {showChest&&(
-          <div style={{background:"linear-gradient(135deg,rgba(251,191,36,0.06),rgba(168,85,247,0.06))",borderBottom:"1px solid rgba(251,191,36,0.15)",padding:"14px 16px",animation:"slideUp 0.2s both"}}>
+          <div style={{background:"linear-gradient(135deg,rgba(251,191,36,0.06),rgba(14,165,233,0.06))",borderBottom:"1px solid rgba(251,191,36,0.15)",padding:"14px 16px",animation:"slideUp 0.2s both"}}>
             <div style={{fontSize:"0.65rem",color:"#fbbf24",fontWeight:800,textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:"12px"}}>{"📦 Coffres mystères"}</div>
             <div style={{display:"flex",gap:"10px",overflowX:"auto"}} className="no-sb">
               {CHESTS.map(c=>(
@@ -726,20 +1011,20 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
         )}
 
         {/* ?? AVATAR + PRESETS */}
-        <div style={{padding:"16px",background:"linear-gradient(180deg,rgba(167,139,250,0.04),transparent)"}}>
+        <div style={{padding:"16px",background:"linear-gradient(180deg,rgba(14,165,233,0.04),transparent)"}}>
           <div style={{display:"flex",gap:"14px",alignItems:"flex-start"}}>
             {/* Avatar */}
             <div style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",gap:"6px"}}>
-              <AvatarSVG key={`p${previewKey}${JSON.stringify(displayConfig)}`} config={displayConfig} size={140}/>
-              {hovered&&<div style={{background:"rgba(167,139,250,0.9)",color:"white",fontSize:"0.6rem",fontWeight:700,padding:"3px 10px",borderRadius:"20px",whiteSpace:"nowrap",textAlign:"center",maxWidth:"148px",overflow:"hidden",textOverflow:"ellipsis"}}>
+              <AvatarSVG key="avatar-preview" config={displayConfig} size={140}/>
+              {hovered&&<div style={{background:"rgba(14,165,233,0.9)",color:"white",fontSize:"0.6rem",fontWeight:700,padding:"3px 10px",borderRadius:"20px",whiteSpace:"nowrap",textAlign:"center",maxWidth:"148px",overflow:"hidden",textOverflow:"ellipsis"}}>
                 {"▶ "}{hovered.name}
               </div>}
               {/* Progress bar */}
               <div style={{width:"148px",display:"flex",alignItems:"center",gap:"6px"}}>
                 <div style={{flex:1,height:"3px",background:"rgba(255,255,255,0.07)",borderRadius:"2px",overflow:"hidden"}}>
-                  <div style={{height:"100%",background:"linear-gradient(90deg,#a78bfa,#ec4899)",width:`${totalOwned/ALL_ITEMS.length*100}%`,transition:"width 0.5s"}}/>
+                  <div style={{height:"100%",background:"linear-gradient(90deg,#0EA5E9,#2563EB)",width:`${totalOwned/totalItems*100}%`,transition:"width 0.5s"}}/>
                 </div>
-                <span style={{color:"#334155",fontSize:"0.58rem",flexShrink:0}}>{totalOwned}/{ALL_ITEMS.length}</span>
+                <span style={{color:"#334155",fontSize:"0.58rem",flexShrink:0}}>{totalOwned}/{totalItems}</span>
               </div>
             </div>
 
@@ -765,7 +1050,7 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
                     <span style={{fontSize:"0.52rem",color:"#94a3b8",textAlign:"center",lineHeight:1.1}}>{p.name}</span>
                   </button>
                 ))}
-                <button onClick={()=>{setAvatar(randomAvatar());setPreviewKey(k=>k+1);}} style={{background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.09)",borderRadius:"10px",padding:"6px 4px",color:"#475569",display:"flex",flexDirection:"column",alignItems:"center",gap:"2px",cursor:"pointer"}}>
+                <button onClick={()=>{setAvatar(randomAvatar());}} style={{background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.09)",borderRadius:"10px",padding:"6px 4px",color:"#475569",display:"flex",flexDirection:"column",alignItems:"center",gap:"2px",cursor:"pointer"}}>
                   <span style={{fontSize:"1.1rem"}}>{"🎲"}</span>
                   <span style={{fontSize:"0.52rem",color:"#475569",textAlign:"center",lineHeight:1.1}}>Aléa</span>
                 </button>
@@ -782,33 +1067,74 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
               defaultValue={activeTab==="clothesColor"?"#"+avatar.clothesColor:"#"+avatar.bgColor}
               onChange={e=>{const hex=e.target.value.slice(1);
                 if(activeTab==="clothesColor")setAvatar(a=>({...a,clothesColor:hex}));
-                else setAvatar(a=>({...a,bgColor:hex,bgType:"solid"}));
-                setPreviewKey(k=>k+1);}}
+                else setAvatar(a=>({...a,bgColor:hex,bgType:"solid"}));}}
               style={{width:"40px",height:"36px",border:"2px solid rgba(255,255,255,0.1)",borderRadius:"8px",cursor:"pointer",padding:0}}/>
             <span style={{fontSize:"0.68rem",color:"#334155"}}>Couleur libre</span>
           </div>
         )}
 
+        {/* ?? STYLE PICKER — onglet avatarStyle */}
+        {activeTab==="avatarStyle"&&(
+          <div style={{padding:"8px 12px 16px"}}>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}>
+              {ALL_ITEMS.filter(i=>i.category==="avatarStyle").map(item=>{
+                const own=isOwned(item);const eq=curStyle===item.id;
+                const rs=RS[item.rarity];const key=itemKey(item);
+                const bying=buying===key;const afford=jetons>=item.price;
+                const previewCfg:AvatarConfig={...DEFAULT_AVATAR,...STYLE_DEFAULTS[item.id as AvatarStyle],skinColor:avatar.skinColor,hairColor:avatar.hairColor,bgColor:"b6e3f4",bgType:"solid",frame:"none",sticker:"none",avatarStyle:item.id as AvatarStyle};
+                return(
+                  <div key={key} onClick={()=>{if(own)equip(item);}}
+                    style={{borderRadius:16,border:`2px solid ${eq?"#0EA5E9":"rgba(255,255,255,0.09)"}`,background:eq?"rgba(14,165,233,0.10)":"rgba(255,255,255,0.03)",overflow:"hidden",cursor:own?"pointer":"default",boxShadow:eq?"0 0 24px rgba(14,165,233,0.28)":"none",transition:"all 0.18s"}}>
+                    <div style={{display:"flex",justifyContent:"center",padding:"14px 0 10px",background:"rgba(0,0,0,0.18)"}}>
+                      <AvatarSVG key={`sc-${item.id}`} config={previewCfg} size={96}/>
+                    </div>
+                    <div style={{padding:"10px 12px"}}>
+                      <div style={{display:"flex",alignItems:"center",gap:"6px",marginBottom:"3px"}}>
+                        <span style={{fontSize:"1rem"}}>{item.previewEmoji}</span>
+                        <span style={{fontWeight:900,fontSize:"0.85rem",color:"white"}}>{item.name}</span>
+                      </div>
+                      <div style={{fontSize:"0.56rem",color:rs.text,fontWeight:800,textTransform:"uppercase",letterSpacing:"0.1em",marginBottom:"8px"}}>{rs.label}</div>
+                      {eq?(
+                        <div style={{padding:"5px",borderRadius:8,background:"rgba(14,165,233,0.18)",color:"#0EA5E9",fontSize:"0.65rem",fontWeight:700,textAlign:"center"}}>✓ Actif</div>
+                      ):own?(
+                        <button onClick={e=>{e.stopPropagation();equip(item);}} style={{width:"100%",padding:"6px",borderRadius:8,background:"rgba(74,222,128,0.12)",color:"#4ade80",border:"1px solid rgba(74,222,128,0.25)",fontSize:"0.65rem",fontWeight:700,cursor:"pointer"}}>Activer</button>
+                      ):(
+                        <button onClick={e=>{e.stopPropagation();buy(item);}} disabled={bying} style={{width:"100%",padding:"6px",borderRadius:8,background:afford?"rgba(14,165,233,0.14)":"rgba(255,255,255,0.04)",color:afford?"#0EA5E9":"#1e293b",border:"none",fontSize:"0.65rem",fontWeight:700,cursor:afford?"pointer":"not-allowed"}}>
+                          {bying?"⏳":`💰 ${item.price}j`}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{marginTop:12,padding:"10px 14px",background:"rgba(14,165,233,0.06)",borderRadius:12,border:"1px solid rgba(14,165,233,0.15)"}}>
+              <div style={{fontSize:"0.65rem",color:"#7dd3fc",fontWeight:700,lineHeight:1.5}}>🎨 Changer de style réinitialise les options spécifiques au style précédent. Tes stickers, fond et cadre sont préservés.</div>
+            </div>
+          </div>
+        )}
+
         {/* ?? ITEMS GRID */}
+        {activeTab!=="avatarStyle"&&(
         <div style={{padding:"8px 12px 16px"}}>
-          <div style={{display:"grid",gridTemplateColumns:`repeat(auto-fill,minmax(${MINI_CATS.has(activeTab)||activeTab==="sticker"?"105px":"90px"},1fr))`,gap:"8px"}}>
+          <div style={{display:"grid",gridTemplateColumns:`repeat(auto-fill,minmax(${canUseMini(tabItems[0])||activeTab==="sticker"?"105px":"90px"},1fr))`,gap:"8px"}}>
             {tabItems.map(item=>{
               const own=isOwned(item);const eq=isEquipped(item);
               const rs=RS[item.rarity];const key=itemKey(item);
               const bying=buying===key;const afford=jetons>=item.price;
               const locked=!!item.minPrestige&&(profil.prestige||0)<item.minPrestige;
-              const useMini=MINI_CATS.has(item.category);
+              const useMini=canUseMini(item);
               const stkDef=item.category==="sticker"?STICKER_CFG[item.id]:null;
               return(
                 <div key={key} className="av-item"
                   onMouseEnter={()=>setHovered(item)}
                   onMouseLeave={()=>setHovered(null)}
                   onClick={()=>{if(own&&!locked)equip(item);}}
-                  style={{background:eq?"rgba(167,139,250,0.16)":rs.bg,
-                    border:`1.5px solid ${eq?"rgba(167,139,250,0.55)":rs.border}`,
+                  style={{background:eq?"rgba(14,165,233,0.16)":rs.bg,
+                    border:`1.5px solid ${eq?"rgba(14,165,233,0.55)":rs.border}`,
                     borderRadius:"14px",padding:"10px 8px 8px",textAlign:"center",
                     cursor:own&&!locked?"pointer":"default",
-                    boxShadow:eq?"0 0 16px rgba(167,139,250,0.25)":"none",
+                    boxShadow:eq?"0 0 16px rgba(14,165,233,0.25)":"none",
                     animation:"avIn 0.18s both",opacity:locked?0.5:1}}>
                   {/* Preview */}
                   <div style={{width:"44px",height:"44px",borderRadius:"10px",margin:"0 auto 7px",overflow:"hidden",
@@ -826,7 +1152,7 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
                   {locked?(
                     <div style={{padding:"4px",borderRadius:"7px",background:"rgba(255,215,0,0.1)",color:"#ffd700",fontSize:"0.6rem",fontWeight:700}}>{`👑${item.minPrestige}`}</div>
                   ):eq?(
-                    <div style={{padding:"4px",borderRadius:"7px",background:"rgba(167,139,250,0.2)",color:"#a78bfa",fontSize:"0.62rem",fontWeight:700}}>{"✓ Équipé"}</div>
+                    <div style={{padding:"4px",borderRadius:"7px",background:"rgba(14,165,233,0.2)",color:"#0EA5E9",fontSize:"0.62rem",fontWeight:700}}>{"✓ Équipé"}</div>
                   ):own?(
                     <button onClick={e=>{e.stopPropagation();equip(item);}} style={{width:"100%",padding:"5px",borderRadius:"7px",background:"rgba(74,222,128,0.12)",color:"#4ade80",border:"1px solid rgba(74,222,128,0.25)",fontSize:"0.62rem",fontWeight:700,cursor:"pointer"}}>
                       {item.price===0?"🌸 Gratuit":"💡 Équiper"}
@@ -841,23 +1167,26 @@ export default function AvatarCreator({profil,onXPGagne}:Props){
             })}
           </div>
         </div>
+        )}
       </div>
 
       {/* ?? BOTTOM TAB BAR (fixe, style app mobile) */}
       <div className="no-sb" style={{position:"fixed",bottom:0,left:0,right:0,zIndex:200,background:"rgba(7,10,18,0.97)",backdropFilter:"blur(24px)",borderTop:"1px solid rgba(255,255,255,0.08)",display:"flex",overflowX:"auto",height:BOTTOM_H,padding:"0 4px",alignItems:"center",gap:"2px",boxShadow:"0 -4px 30px rgba(0,0,0,0.5)"}}>
-        {CAT_ORDER.map(cat=>{
-          const m=CAT_META[cat];const active=activeTab===cat;
+        {STYLE_CATS[curStyle].map(cat=>{
+          const overrides=CAT_META_OVERRIDES[curStyle]||{};
+          const m={...CAT_META[cat],...(overrides[cat]||{})};
+          const active=activeTab===cat;
           return(
             <button key={cat} className="av-tab" onClick={()=>setActiveTab(cat)}
               style={{flexShrink:0,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:"3px",padding:"6px 10px",minWidth:"52px",height:"56px",borderRadius:"12px",border:"none",cursor:"pointer",
-                background:active?"rgba(167,139,250,0.18)":"transparent",
+                background:active?"rgba(14,165,233,0.18)":"transparent",
                 transition:"all 0.15s"}}>
               <div style={{width:"24px",height:"24px",display:"flex",alignItems:"center",justifyContent:"center"}}>
                 <Icon icon={m.icon} width={active?22:18} height={active?22:18}
-                  color={active?"#c084fc":"#334155"}/>
+                  color={active?"#0EA5E9":"#475569"}/>
               </div>
-              <span style={{fontSize:"0.52rem",fontWeight:700,color:active?"#c084fc":"#334155",lineHeight:1,textAlign:"center",letterSpacing:"0.01em"}}>{m.label}</span>
-              {active&&<div style={{width:"4px",height:"4px",borderRadius:"50%",background:"#c084fc",position:"absolute",bottom:"6px"}}/>}
+              <span style={{fontSize:"0.52rem",fontWeight:700,color:active?"#0EA5E9":"#475569",lineHeight:1,textAlign:"center",letterSpacing:"0.01em"}}>{m.label}</span>
+              {active&&<div style={{width:"4px",height:"4px",borderRadius:"50%",background:"#0EA5E9",position:"absolute",bottom:"6px"}}/>}
             </button>
           );
         })}

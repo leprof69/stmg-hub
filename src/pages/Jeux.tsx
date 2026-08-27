@@ -83,13 +83,13 @@ const GAMES = [
     subtitle: "Style Slam / jeu télé",
     desc: "Devine un terme du cours SDGN Première (chapitres 1 à 13) grâce à des indices de cours. En secours : une vraie question QCM du programme, pas un choix de mots au hasard.",
     tags: ["SDGN Première", "Indices cours", "QCM secours"],
-    border:   "border-violet-400/30",
-    glow:     "rgba(167,139,250,0.35)",
-    tagColor: "bg-violet-500/15 text-violet-200 border-violet-400/25",
-    btnFrom:  "#a78bfa", btnTo: "#ec4899",
-    btnShadow:"rgba(167,139,250,0.5)",
-    accent:   "#a78bfa",
-    grad:     "radial-gradient(ellipse 90% 60% at 80% 20%,rgba(167,139,250,0.18) 0%,transparent 60%),rgba(12,6,18,0.78)",
+    border:   "border-cyan-400/30",
+    glow:     "rgba(6,182,212,0.35)",
+    tagColor: "bg-cyan-500/15 text-cyan-200 border-cyan-400/25",
+    btnFrom:  "#06B6D4", btnTo: "#ec4899",
+    btnShadow:"rgba(6,182,212,0.5)",
+    accent:   "#06B6D4",
+    grad:     "radial-gradient(ellipse 90% 60% at 80% 20%,rgba(6,182,212,0.18) 0%,transparent 60%),rgba(2,14,18,0.78)",
   },
   {
     id: "jetons" as const,
@@ -116,9 +116,9 @@ const GAMES = [
     border:   "border-blue-400/30",
     glow:     "rgba(96,165,250,0.3)",
     tagColor: "bg-blue-500/15 text-blue-200 border-blue-400/25",
-    btnFrom:  "#60a5fa", btnTo: "#c084fc",
+    btnFrom:  "#60a5fa", btnTo: "#06B6D4",
     btnShadow:"rgba(96,165,250,0.5)",
-    accent:   "#818cf8",
+    accent:   "#60a5fa",
     grad:     "radial-gradient(ellipse 90% 60% at 80% 20%,rgba(96,165,250,0.15) 0%,transparent 60%),rgba(3,8,20,0.72)",
   },
   {
@@ -146,7 +146,7 @@ const GAMES = [
     border:   "border-pink-400/30",
     glow:     "rgba(236,72,153,0.3)",
     tagColor: "bg-pink-500/15 text-pink-200 border-pink-400/25",
-    btnFrom:  "#ec4899", btnTo: "#a78bfa",
+    btnFrom:  "#ec4899", btnTo: "#F97316",
     btnShadow:"rgba(236,72,153,0.5)",
     accent:   "#ec4899",
     grad:     "radial-gradient(ellipse 90% 60% at 80% 20%,rgba(236,72,153,0.15) 0%,transparent 60%),rgba(15,3,15,0.72)",
@@ -255,15 +255,15 @@ export default function Jeux({ profil, onXPGagne }: Props) {
       <div className="relative z-10 mx-auto max-w-lg px-4 pt-8 sm:pt-10">
         <header className="mb-8 text-center">
           <div className="mb-3 inline-flex items-center gap-2">
-            <span className="rounded-full border border-violet-400/25 bg-violet-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-violet-200/90">Arcade STMG</span>
+            <span className="rounded-full border border-amber-400/25 bg-amber-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-amber-200/90">Arcade STMG</span>
           </div>
           <h1 className="text-4xl font-black tracking-tight sm:text-5xl"
-            style={{ background:"linear-gradient(135deg,#a78bfa 0%,#818cf8 25%,#38bdf8 55%,#4ade80 80%,#fbbf24 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
+            style={{ background:"linear-gradient(135deg,#F97316 0%,#F59E0B 25%,#06B6D4 55%,#4ade80 80%,#2563EB 100%)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
             {EJ.game} Espace Jeux
           </h1>
           <p className="mt-2.5 text-sm text-slate-400">
             Joue, révise et remporte des{" "}<span className="font-semibold text-amber-300">jetons {EJ.coin}</span>,{" "}
-            du <span className="font-semibold text-violet-300">prestige {EJ.star}</span>{" "}et des{" "}
+            du <span className="font-semibold text-sky-300">prestige {EJ.star}</span>{" "}et des{" "}
             <span className="font-semibold text-pink-300">cartes rares {EJ.medal}</span>.
           </p>
         </header>

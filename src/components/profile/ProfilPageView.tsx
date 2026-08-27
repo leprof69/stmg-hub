@@ -319,7 +319,7 @@ export default function ProfilPageView({
                     </p>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 10 }}>
                       <TradeMini card={offer.fromCard as { image: string; nom: string }} label="Il donne" color="#059669" textColor={textMain} />
-                      <span style={{ fontSize: "1.25rem", fontWeight: 900, color: "#818cf8" }}>{"\u21C4"}</span>
+                      <span style={{ fontSize: "1.25rem", fontWeight: 900, color: "#0EA5E9" }}>{"\u21C4"}</span>
                       <TradeMini card={offer.toCard as { image: string; nom: string }} label="Tu donnes" color="#dc2626" textColor={textMain} />
                     </div>
                     <div style={{ display: "flex", gap: 8 }}>
@@ -329,7 +329,7 @@ export default function ProfilPageView({
                       <button
                         type="button"
                         className="pp-btn-primary"
-                        style={{ background: "#4f46e5", color: "#fff" }}
+                        style={{ background: "#2563EB", color: "#fff" }}
                         disabled={acceptingTrade === offer.id}
                         onClick={() => onAcceptTrade(offer)}
                       >
@@ -348,7 +348,13 @@ export default function ProfilPageView({
               <InfoRow label={"\u00c2ge"} value={`${profil.age} ans`} muted={textMuted} main={textMain} />
               <InfoRow
                 label="Classe"
-                value={profil.classe === "premiere" ? "Premi\u00e8re STMG" : "Terminale STMG"}
+                value={
+                  profil.classe === "premiere"
+                    ? "Premi\u00e8re STMG"
+                    : profil.classe === "terminale"
+                    ? "Terminale STMG"
+                    : "Non renseign\u00e9e"
+                }
                 muted={textMuted}
                 main={textMain}
               />

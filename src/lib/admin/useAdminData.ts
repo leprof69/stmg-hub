@@ -6,49 +6,22 @@ import { doc, setDoc, collection, getDocs, deleteDoc, updateDoc, deleteField } f
 import * as XLSX from "xlsx";
 import { formatJetons, formatJetonsDelta } from "../jetons";
 import { getPrestigeTotal } from "../../services/userProfileService";
-import {
-  buildExportReportForAdmin,
-  buildPremiereDsReportingRows,
-  buildReportingRowsFromDsSdgnSummaries,
-  buildTerminaleDsReportingRows,
-} from "../adminDsSdgnReport";
-import {
-  DS_SDGN_QCM_EXAM_ID,
-  DS_SDGN_TERMINALE_QCM_EXAM_ID,
-} from "../../services/dsTabExamService";
-import {
-  backfillDsSdgnResultsFromUsers,
-  fetchAllDsSdgnResultSummaries,
-  type DsSdgnResultSummary,
-} from "../../services/dsSdgnResultsService";
-import {
-  fetchAllDsSdgnNotes,
-  rebuildAllDsSdgnNotesFromUsers,
-  type DsSdgnNote,
-} from "../../services/dsSdgnNotesService";
-import { hasDsTabExamData } from "../../services/dsTabExamService";
 import { buildReportingRows } from "./buildReportingRows";
 import {
   ADMIN_COLORS,
   ADMIN_SECTIONS,
-  EMOJI_PAR_MATIERE,
   FAMILLE_COLORS,
   FAMILLE_EMOJIS,
   RECOMPENSES_INDIVIDUEL,
   RECOMPENSES_FAMILLE,
 } from "./adminConstants";
-import { DS_EXAM_ID, DS_LOCK_TYPE, DS_EXERCISES, DS_EXERCISE_BY_ID } from "./adminDsConstants";
-import { col, splitMotsCles, toDayKey, formatDuration, formatDateFr } from "./adminUtils";
+import { col, toDayKey, formatDuration, formatDateFr } from "./adminUtils";
 
 export function useAdminData() {
   const [fichierChapitres, setFichierChapitres] = useState(null);
   const [importChapitres, setImportChapitres] = useState({ loading: false, succes: 0, erreurs: 0, message: "" });
-  const [fichierMissions, setFichierMissions] = useState(null);
-  const [importMissions, setImportMissions] = useState({ loading: false, succes: 0, erreurs: 0, message: "" });
   const [eleves, setEleves] = useState([]);
   const [usersAll, setUsersAll] = useState([]);
-  const [dsSdgnSummaries, setDsSdgnSummaries] = useState<DsSdgnResultSummary[]>([]);
-  const [dsSdgnNotes, setDsSdgnNotes] = useState<DsSdgnNote[]>([]);
   const [chargementEleves, setChargementEleves] = useState(false);
   const [recompenseEnCours, setRecompenseEnCours] = useState(false);
   const [messagesRecompense, setMessagesRecompense] = useState([]);
@@ -61,8 +34,8 @@ export function useAdminData() {
   const [recompensesVoirTous, setRecompensesVoirTous] = useState(false);
   const [filtreActivite, setFiltreActivite] = useState("tous");
   const [rechercheEleve, setRechercheEleve] = useState("");
-  const [resetDsLoading, setResetDsLoading] = useState(false);
-  const [sdgnExpanded, setSdgnExpanded] = useState({});
+  const [resetSaisonLoading, setResetSaisonLoading] = useState(false);
+  const [nettoyageLoading, setNettoyageLoading] = useState(false);
   const [resetPwdUserId, setResetPwdUserId] = useState(null);
   const [flashReporting, setFlashReporting] = useState("");
   const [quickJetons, setQuickJetons] = useState({});
@@ -91,34 +64,6 @@ export function useAdminData() {
         .filter(u => u.role !== "admin")
         .sort((a, b) => getPrestigeTotal(b) - getPrestigeTotal(a));
       setEleves(users);
-
-      let summaries = await fetchAllDsSdgnResultSummaries();
-      const withDsTab = users.filter(
-        (u) => u.role !== "admin" && hasDsTabExamData(u as Record<string, unknown>),
-      ).length;
-      if (summaries.length < withDsTab) {
-        try {
-          const backfill = await backfillDsSdgnResultsFromUsers(allUsers);
-          if (backfill.errors.length) {
-            console.warn("Backfill dsSdgnResults partial", backfill.errors);
-          }
-          summaries = await fetchAllDsSdgnResultSummaries();
-        } catch (backfillErr) {
-          console.error("Backfill dsSdgnResults", backfillErr);
-        }
-      }
-      setDsSdgnSummaries(summaries);
-
-      try {
-        const notesRebuild = await rebuildAllDsSdgnNotesFromUsers(allUsers);
-        if (notesRebuild.errors.length) {
-          console.warn("dsSdgnNotes rebuild", notesRebuild.errors);
-        }
-      } catch (notesErr) {
-        console.error("dsSdgnNotes rebuild", notesErr);
-      }
-      const notes = await fetchAllDsSdgnNotes();
-      setDsSdgnNotes(notes);
 
       const famillesMap = {};
       users.forEach(u => {
@@ -183,7 +128,7 @@ export function useAdminData() {
   const retablirJetonsAntiTriche = async (userId, nomAffiche) => {
     if (
       !window.confirm(
-        `Rétablir les jetons pour ${nomAffiche} ?\n\nL'élève pourra à nouveau gagner des jetons (Missions, jeux, etc.).\nCela ne modifie pas la note du DS QCM si il a été disqualifié.`,
+        `Rétablir les jetons pour ${nomAffiche} ?\n\nL'élève pourra à nouveau gagner des jetons (jeux, cartes, etc.).`,
       )
     ) {
       return;
@@ -298,72 +243,11 @@ export function useAdminData() {
   const todayKey = toDayKey();
   const reportingRows = useMemo(() => buildReportingRows(eleves, todayKey), [eleves, todayKey]);
 
-  const terminaleReportingRows = useMemo(
-    () => reportingRows.filter((eleve) => eleve.classe === "terminale"),
-    [reportingRows]
-  );
-
   const adminSelfRecord = useMemo(() => {
     const uid = auth.currentUser?.uid;
     if (!uid) return null;
     return usersAll.find((u) => u.id === uid) ?? null;
   }, [usersAll]);
-
-  const premiereReportingRows = useMemo(() => {
-    if (dsSdgnNotes.length > 0) {
-      return buildReportingRowsFromDsSdgnSummaries(
-        dsSdgnNotes.map((n) => ({
-          uid: n.uid,
-          examId: DS_SDGN_QCM_EXAM_ID,
-          prenom: n.prenom,
-          nom: n.nom,
-          email: n.email,
-          classe: n.classe,
-          gradeOn20: n.gradeOn20,
-          scorePoints: n.scorePoints,
-          totalQuestions: n.totalQuestions,
-          questionsAnswered: n.questionsAnswered ?? 0,
-          correctCount: 0,
-          wrongCount: 0,
-          forcedZero: false,
-          status: (n.status as "completed") || "completed",
-          completed: n.gradeOn20 > 0,
-          finishedAt: n.updatedAt,
-          answersCount: n.questionsAnswered ?? 0,
-          updatedAt: n.updatedAt,
-        })),
-        usersAll,
-        DS_SDGN_QCM_EXAM_ID,
-      );
-    }
-    if (dsSdgnSummaries.length > 0) {
-      const premiereSummaries = dsSdgnSummaries.filter(
-        (s) => (s.examId ?? DS_SDGN_QCM_EXAM_ID) === DS_SDGN_QCM_EXAM_ID,
-      );
-      if (premiereSummaries.length > 0) {
-        return buildReportingRowsFromDsSdgnSummaries(
-          premiereSummaries,
-          usersAll,
-          DS_SDGN_QCM_EXAM_ID,
-        );
-      }
-    }
-    return buildPremiereDsReportingRows(eleves);
-  }, [dsSdgnNotes, dsSdgnSummaries, usersAll, eleves]);
-
-  const terminaleDsReportingRows = useMemo(() => {
-    const terminaleSummaries = dsSdgnSummaries.filter(
-      (s) => (s.examId ?? DS_SDGN_QCM_EXAM_ID) === DS_SDGN_TERMINALE_QCM_EXAM_ID,
-    );
-    if (terminaleSummaries.length > 0) {
-      return buildReportingRowsFromDsSdgnSummaries(
-        terminaleSummaries,
-        usersAll,
-        DS_SDGN_TERMINALE_QCM_EXAM_ID,
-      );
-    }
-    return buildTerminaleDsReportingRows(eleves);
-  }, [dsSdgnSummaries, usersAll, eleves]);
 
   const reportingFiltres = useMemo(() => {
     return reportingRows.filter((eleve) => {
@@ -375,9 +259,6 @@ export function useAdminData() {
       if (filtreActivite === "aujourdhui") okActivite = eleve.estActifAujourdhui;
       if (filtreActivite === "7jours") okActivite = eleve.joursSansActivite !== null && eleve.joursSansActivite <= 7;
       if (filtreActivite === "inactifs") okActivite = eleve.joursSansActivite !== null && eleve.joursSansActivite > 7;
-      if (filtreActivite === "focus") okActivite = (eleve.focusTotal || 0) > 0;
-      if (filtreActivite === "pas_focus") okActivite = (eleve.focusTotal || 0) === 0;
-      if (filtreActivite === "sdgn") okActivite = (eleve.sdgnExerciseCount || 0) > 0;
       if (filtreActivite === "participation") okActivite = (eleve.participationPoints || 0) >= 1;
       if (filtreActivite === "sans_participation") okActivite = (eleve.participationPoints || 0) <= 0;
       if (filtreActivite === "jetons_suspendus") okActivite = Boolean(eleve.platformIntegrity?.xpSuspended);
@@ -389,9 +270,6 @@ export function useAdminData() {
       }
       if (triReporting === "participation" || triReporting === "participation_note") {
         return (b.participationPoints || 0) - (a.participationPoints || 0);
-      }
-      if (triReporting === "sdgn") {
-        return (b.sdgnExerciseCount || 0) - (a.sdgnExerciseCount || 0);
       }
       if (triReporting === "jetons") {
         return (b.xp || 0) - (a.xp || 0);
@@ -413,242 +291,124 @@ export function useAdminData() {
     const actifs7j = reportingRows.filter((e) => e.joursSansActivite !== null && e.joursSansActivite <= 7).length;
     const inactifs7j = reportingRows.filter((e) => e.joursSansActivite !== null && e.joursSansActivite > 7).length;
     const actionsToday = reportingRows.reduce(
-      (sum, e) =>
-        sum +
-        e.missionsToday +
-        (e.sdgnClaimsToday || 0) +
-        e.objectifToday +
-        e.focusToday +
-        (e.lastVisit === todayKey ? 1 : 0),
+      (sum, e) => sum + (e.lastVisit === todayKey ? 1 : 0),
       0
     );
-    const sdgnValidationsToday = reportingRows.reduce((sum, e) => sum + (e.sdgnClaimsToday || 0), 0);
-    const suspicions = reportingRows.reduce((sum, e) => sum + (e.antiCheatEvents || 0), 0);
     const sessionTodaySec = reportingRows.reduce((sum, e) => sum + (e.sessionTodaySec || 0), 0);
     const participationTotal = reportingRows.reduce((sum, e) => sum + (Number(e.participationPoints) || 0), 0);
-    const elevesFocus = reportingRows.filter((e) => (e.focusTotal || 0) > 0).length;
-    const focusTodayTotal = reportingRows.reduce((sum, e) => sum + (e.focusToday || 0), 0);
     return {
       total,
       actifsAujourdhui,
       actifs7j,
       inactifs7j,
       actionsToday,
-      sdgnValidationsToday,
-      suspicions,
       sessionTodaySec,
       participationTotal,
-      elevesFocus,
-      focusTodayTotal,
     };
   }, [reportingRows, todayKey]);
 
-  const dsCopiesRows = useMemo(() => {
-    return usersAll
-      .filter((user) => {
-        const okClasse = filtreClasse === "toutes" || user.classe === filtreClasse;
-        const okLycee = filtreLycee === "tous" || user.lycee === filtreLycee;
-        const haystack = `${user.prenom || ""} ${user.nom || ""} ${user.email || ""}`.toLowerCase();
-        const okRecherche = !rechercheEleve.trim() || haystack.includes(rechercheEleve.toLowerCase());
-        return okClasse && okLycee && okRecherche;
-      })
-      .map((eleve) => {
-        const exam = eleve.objectifBacDs?.[DS_EXAM_ID];
-        if (!exam) return null;
-        const submissions = exam.submissions || {};
-        const answersCount = Object.values(submissions).reduce((sum, item) => {
-          if (item?.answer) return sum + 1;
-          const questionMap = item?.questions || {};
-          return sum + Object.values(questionMap).filter((q) => q?.answer).length;
-        }, 0);
-        return {
-          ...eleve,
-          nomAffiche: eleve.prenom || eleve.nom || eleve.email || `Élève ${eleve.id.slice(0, 6)}`,
-          dsExam: exam,
-          answersCount,
-        };
-      })
-      .filter(Boolean)
-      .sort((a, b) => (a.nomAffiche || "").localeCompare(b.nomAffiche || "", "fr"));
-  }, [usersAll, filtreClasse, filtreLycee, rechercheEleve]);
-
-  const exportAllDsCopiesPdf = async () => {
-    if (!dsCopiesRows.length) {
-      alert("Aucune copie DS trouvée avec les filtres actuels.");
-      return;
-    }
-    const { jsPDF } = await import("jspdf");
-    const docPdf = new jsPDF({ unit: "pt", format: "a4" });
-    const page = { left: 40, right: 555, top: 42, bottom: 800 };
-    const contentWidth = page.right - page.left;
-    let y = page.top;
-    let pageNumber = 1;
-
-    const drawFooter = () => {
-      docPdf.setFont("helvetica", "normal");
-      docPdf.setFontSize(9);
-      docPdf.setTextColor(100, 116, 139);
-      docPdf.text(`Page ${pageNumber}`, page.right, 825, { align: "right" });
-      docPdf.setTextColor(15, 23, 42);
-    };
-
-    const newPage = () => {
-      drawFooter();
-      docPdf.addPage();
-      pageNumber += 1;
-      y = page.top;
-    };
-
-    const ensureSpace = (neededHeight = 20) => {
-      if (y + neededHeight > page.bottom) {
-        newPage();
-      }
-    };
-
-    const writeText = (text, opts = {}) => {
-      const {
-        size = 10.5,
-        bold = false,
-        color = [15, 23, 42],
-        lineHeight = 14,
-        indent = 0,
-      } = opts;
-      docPdf.setFont("helvetica", bold ? "bold" : "normal");
-      docPdf.setFontSize(size);
-      docPdf.setTextColor(color[0], color[1], color[2]);
-      const width = contentWidth - indent;
-      const lines = docPdf.splitTextToSize(String(text || ""), width);
-      ensureSpace(lines.length * lineHeight + 2);
-      docPdf.text(lines, page.left + indent, y);
-      y += lines.length * lineHeight;
-      docPdf.setTextColor(15, 23, 42);
-    };
-
-    const writeSectionTitle = (title, tone = "default") => {
-      const palette = tone === "danger"
-        ? { fill: [254, 226, 226], border: [248, 113, 113], text: [153, 27, 27] }
-        : tone === "info"
-          ? { fill: [219, 234, 254], border: [96, 165, 250], text: [30, 64, 175] }
-          : { fill: [241, 245, 249], border: [148, 163, 184], text: [30, 41, 59] };
-
-      ensureSpace(28);
-      docPdf.setFillColor(palette.fill[0], palette.fill[1], palette.fill[2]);
-      docPdf.setDrawColor(palette.border[0], palette.border[1], palette.border[2]);
-      docPdf.roundedRect(page.left, y, contentWidth, 22, 4, 4, "FD");
-      docPdf.setFont("helvetica", "bold");
-      docPdf.setFontSize(11);
-      docPdf.setTextColor(palette.text[0], palette.text[1], palette.text[2]);
-      docPdf.text(String(title), page.left + 8, y + 15);
-      docPdf.setTextColor(15, 23, 42);
-      y += 28;
-    };
-
-    writeText("STMG HUB - Export global copies DS", { size: 16, bold: true, lineHeight: 18 });
-    writeText(`Sujet : ${DS_LOCK_TYPE}`, { size: 11, bold: true });
-    writeText(`Date export : ${new Date().toLocaleString("fr-FR")} | Élèves exportés : ${dsCopiesRows.length}`, { size: 10 });
-    y += 6;
-
-    dsCopiesRows.forEach((row, idx) => {
-      if (idx > 0) newPage();
-      const submissions = row.dsExam?.submissions || {};
-      const submissionEntries = Object.entries(submissions).sort(([a], [b]) => a.localeCompare(b, "fr"));
-      const isDisqualified = Boolean(row.dsExam?.forcedZero);
-      const antiCheatLabel = isDisqualified ? "DISQUALIFIÉ (sortie de page => 0)" : "Conforme";
-
-      writeSectionTitle(`Copie ${idx + 1} - ${row.nomAffiche}`, isDisqualified ? "danger" : "info");
-      writeText(`Classe : ${row.classe || "-"} | Lycée : ${row.lycee || "-"}`, { size: 10 });
-      writeText(`Email : ${row.email || "non renseigné"}`, { size: 10 });
-      writeText(`Statut anti-triche : ${antiCheatLabel}`, { size: 10.5, bold: true, color: isDisqualified ? [153, 27, 27] : [22, 101, 52] });
-      writeText(`Exercices rendus : ${submissionEntries.length}/${DS_EXERCISES.length}`, { size: 10, bold: true });
-      y += 6;
-
-      if (!submissionEntries.length) {
-        writeText("Aucune réponse enregistrée pour cet élève.", { size: 10.5, color: [71, 85, 105] });
-        return;
-      }
-
-      submissionEntries.forEach(([exerciseId, submission], sIdx) => {
-        const refExercise = DS_EXERCISE_BY_ID[exerciseId];
-        const exerciceBareme = (refExercise?.questions || []).reduce((sum, question) => sum + (Number(question.points) || 0), 0);
-        writeSectionTitle(
-          `Exercice ${sIdx + 1} - ${submission?.title || refExercise?.title || "Sans titre"} ${exerciceBareme ? `(barème /${exerciceBareme})` : ""}`
-        );
-
-        if (submission?.answer) {
-          writeText(`Heure de rendu : ${submission?.submittedAt ? new Date(submission.submittedAt).toLocaleString("fr-FR") : "non renseignée"}`, { size: 9.5, color: [71, 85, 105] });
-          writeText("Réponse élève :", { size: 10, bold: true });
-          writeText(submission?.answer || "(vide)", { size: 10, indent: 10 });
-          y += 4;
-          return;
-        }
-
-        const questionEntries = Object.entries(submission?.questions || {});
-        if (!questionEntries.length) {
-          writeText("Aucune réponse enregistrée pour cet exercice.", { size: 10.5, color: [71, 85, 105] });
-          y += 4;
-          return;
-        }
-
-        questionEntries.forEach(([qId, qData], qIdx) => {
-          const refQuestion = refExercise?.questions?.find((question) => question.id === qId);
-          const points = Number(refQuestion?.points) || 0;
-          writeText(`Q${qIdx + 1} ${points ? `- Barème /${points}` : ""}`, { size: 10.5, bold: true, color: [30, 64, 175] });
-          writeText(`Énoncé : ${qData?.prompt || refQuestion?.prompt || "non renseigné"}`, { size: 9.8, color: [30, 41, 59], indent: 8 });
-          writeText(`Réponse élève : ${qData?.answer || "(vide)"}`, { size: 10, indent: 8 });
-          writeText(`Correction attendue : ${refQuestion?.expected || "Correction non renseignée."}`, { size: 9.8, indent: 8, color: [71, 85, 105] });
-          writeText(`Validation : ${qData?.validatedAt ? new Date(qData.validatedAt).toLocaleString("fr-FR") : "non renseignée"}`, { size: 9.2, indent: 8, color: [100, 116, 139] });
-          y += 4;
-        });
-      });
-    });
-
-    drawFooter();
-    docPdf.save(`copies-ds-${DS_EXAM_ID}.pdf`);
-  };
-
-  const resetDsLocksForFilteredStudents = async () => {
-    const targets = usersAll.filter((user) => {
-      const okClasse = filtreClasse === "toutes" || user.classe === filtreClasse;
-      const okLycee = filtreLycee === "tous" || user.lycee === filtreLycee;
-      const haystack = `${user.prenom || ""} ${user.nom || ""} ${user.email || ""}`.toLowerCase();
-      const okRecherche = !rechercheEleve.trim() || haystack.includes(rechercheEleve.toLowerCase());
-      return okClasse && okLycee && okRecherche;
-    });
+  /**
+   * Nouvelle saison : remet à 0 le classement (jetons, prestige, collection de cartes,
+   * chapitres/missions complétés, séries de connexion, classe) pour TOUS les élèves, quels que
+   * soient les filtres actifs. Les comptes eux-mêmes (identité, rôle, lycée...) ne sont
+   * pas touchés. Irréversible — double confirmation gérée côté UI + ici.
+   */
+  const resetSaisonComplete = async () => {
+    const targets = usersAll.filter((user) => user.role !== "admin");
     if (!targets.length) {
-      alert("Aucun élève ciblé avec les filtres actuels.");
+      alert("Aucun élève à réinitialiser.");
       return;
     }
     if (
       !window.confirm(
-        `Réinitialiser les copies DS Objectif Bac pour ${targets.length} élève(s) ?\n\nLe QCM SDGN Première n'est pas effacé.`,
+        `Réinitialiser la saison pour ${targets.length} élève(s) ?\n\n` +
+          "Remis à 0 pour tout le monde : jetons, jetons dépensés, prestige, " +
+          "collection de cartes, chapitres/missions complétés, séries de connexion, classe.\n" +
+          "Le lycée est conservé. Les comptes élèves ne sont PAS supprimés.\n\n" +
+          "Cette action est IRRÉVERSIBLE. Continuer ?",
       )
     ) {
       return;
     }
-
-    setResetDsLoading(true);
+    setResetSaisonLoading(true);
     try {
       await Promise.all(
         targets.map((user) =>
           updateDoc(doc(db, "users", user.id), {
-            [`objectifBacDs.${DS_EXAM_ID}`]: deleteField(),
+            xp: 0,
+            xpDepensee: 0,
+            prestige: 0,
+            prestigeBase: 0,
+            prestigeGifted: 0,
+            prestigeDonBonus: 0,
+            niveau: 1,
+            badges: [],
+            cartes: {},
+            chapitresCompletes: [],
+            missionsCompletes: [],
+            connexions_consecutives: 0,
+            classe: "",
+            missionsHistorique: deleteField(),
+            missionsProgress: deleteField(),
+            dernierPackMystere: deleteField(),
           }),
         ),
       );
       await chargerEleves();
-      alert(`DS réinitialisé pour ${targets.length} élève(s).`);
+      alert(`Saison réinitialisée pour ${targets.length} élève(s).`);
     } catch (err) {
-      console.error("Reset DS global impossible", err);
-      alert("Erreur lors du reset DS global.");
+      console.error("Reset saison impossible", err);
+      alert("Erreur lors du reset de saison. Vérifie la console.");
     } finally {
-      setResetDsLoading(false);
+      setResetSaisonLoading(false);
     }
   };
 
-  const elevesSuspects = useMemo(
-    () => [...reportingRows].filter((e) => (e.antiCheatEvents || 0) > 0).sort((a, b) => (b.antiCheatEvents || 0) - (a.antiCheatEvents || 0)).slice(0, 8),
-    [reportingRows]
-  );
+  /**
+   * Nettoyage unique après la suppression des fonctionnalités DS / Missions / Objectif Bac / Focus :
+   * efface les champs devenus orphelins sur tous les comptes, ainsi que les collections Firestore
+   * dédiées à ces fonctionnalités. N'affecte ni l'identité des comptes, ni jetons/prestige/cartes.
+   */
+  const nettoyerAnciennesFonctionnalites = async () => {
+    if (
+      !window.confirm(
+        "Nettoyer les données des fonctionnalités supprimées (DS, Missions, Objectif Bac, Focus) ?\n\n" +
+          "Efface sur tous les comptes : dsTab, objectifBacDs, objectifBacProgress, focusProgress.\n" +
+          "Supprime aussi les collections Firestore : dsSdgnResults, dsSdgnNotes, missions, examConfig.\n\n" +
+          "N'affecte ni les comptes, ni jetons/prestige/cartes. Cette action est IRRÉVERSIBLE. Continuer ?",
+      )
+    ) {
+      return;
+    }
+    setNettoyageLoading(true);
+    try {
+      await Promise.all(
+        usersAll.map((user) =>
+          updateDoc(doc(db, "users", user.id), {
+            dsTab: deleteField(),
+            objectifBacDs: deleteField(),
+            objectifBacProgress: deleteField(),
+            focusProgress: deleteField(),
+          }),
+        ),
+      );
+
+      const collectionsAEffacer = ["dsSdgnResults", "dsSdgnNotes", "missions"];
+      for (const nomCollection of collectionsAEffacer) {
+        const snapshot = await getDocs(collection(db, nomCollection));
+        await Promise.all(snapshot.docs.map((d) => deleteDoc(doc(db, nomCollection, d.id))));
+      }
+      await deleteDoc(doc(db, "examConfig", "ds_sdgn_premiere_qcm_v1"));
+
+      await chargerEleves();
+      alert("Nettoyage terminé.");
+    } catch (err) {
+      console.error("Nettoyage anciennes fonctionnalités impossible", err);
+      alert("Erreur lors du nettoyage. Vérifie la console.");
+    } finally {
+      setNettoyageLoading(false);
+    }
+  };
 
   const elevesJetonsSuspendus = useMemo(
     () =>
@@ -699,64 +459,6 @@ export function useAdminData() {
     reader.readAsArrayBuffer(fichierChapitres);
   };
 
-  // ✅ IMPORT MISSIONS — lit aussi la colonne "correction"
-  const importerMissions = async () => {
-    if (!fichierMissions) return;
-    setImportMissions({ loading: true, succes: 0, erreurs: 0, message: "⏳ Import en cours..." });
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      try {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const rows = XLSX.utils.sheet_to_json(sheet);
-        let succes = 0, erreurs = 0;
-        for (const row of rows) {
-          try {
-            const id = String(col(row, "id", "ID", "Id")).trim();
-            const type = String(col(row, "type", "Type")).trim().toLowerCase();
-            const niveau = String(col(row, "niveau", "Niveau", "classe", "Classe") || (type === "mensuelle" || type === "hebdomadaire" ? "terminale" : "premiere")).trim().toLowerCase();
-            const difficulte = Math.max(1, Math.min(5, parseInt(col(row, "difficulte", "Difficulté", "difficulty")) || 1));
-            const titre = String(col(row, "titre", "Titre", "titre mission", "Titre mission")).trim();
-            if (!id || !titre) { erreurs++; continue; }
-            const matiere = String(col(row, "matiere", "Matière", "Matiere")).trim();
-            const correction = String(col(row, "correction", "Correction", "correction_reference", "Correction référence", "Correction de référence")).trim();
-            const theme = String(col(row, "theme", "Theme", "thème", "Thème")).trim();
-            const chapitre = String(col(row, "chapitre", "Chapitre")).trim();
-            const ordre = parseInt(col(row, "ordre", "Ordre")) || 0;
-            const motsClesRaw = col(row, "mots_cles", "mots-clés", "Mots-clés", "mots cles", "Mots clés");
-            await setDoc(doc(db, "missions", id), {
-              id, type, niveau, difficulte, matiere,
-              emoji: EMOJI_PAR_MATIERE[matiere] || "🎯",
-              theme,
-              chapitre,
-              ordre,
-              titre,
-              contexte: String(col(row, "contexte", "Contexte")).trim(),
-              question: String(col(row, "question", "Question")).trim(),
-              mots_cles: splitMotsCles(motsClesRaw),
-              correction,
-              xp: parseInt(col(row, "xp", "XP")) || 25,
-            });
-            succes++;
-          } catch { erreurs++; }
-        }
-        setImportMissions({ loading: false, succes, erreurs, message: `✅ ${succes} missions importées !` });
-      } catch {
-        setImportMissions({ loading: false, succes: 0, erreurs: 1, message: "❌ Erreur de lecture du fichier" });
-      }
-    };
-    reader.readAsArrayBuffer(fichierMissions);
-  };
-
-  const resetMissions = async () => {
-    if (!window.confirm("Supprimer toutes les missions existantes ?")) return;
-    const snapshot = await getDocs(collection(db, "missions"));
-    for (const d of snapshot.docs) await deleteDoc(doc(db, "missions", d.id));
-    alert("✅ Toutes les missions supprimées !");
-  };
-
-
   return {
     COLORS: ADMIN_COLORS,
     ADMIN_SECTIONS,
@@ -764,92 +466,15 @@ export function useAdminData() {
     familleEmojis: FAMILLE_EMOJIS,
     RECOMPENSES_INDIVIDUEL,
     RECOMPENSES_FAMILLE,
-    DS_EXAM_ID,
-    DS_LOCK_TYPE,
-    DS_EXERCISES,
     formatDateFr,
     formatDuration,
     toDayKey,
     fichierChapitres,
     setFichierChapitres,
     importChapitres,
-    fichierMissions,
-    setFichierMissions,
-    importMissions,
     eleves,
     usersAll,
     adminSelfRecord,
-    buildDsSdgnExportReport: async (examId: string) => {
-      await rebuildAllDsSdgnNotesFromUsers(usersAll);
-      await backfillDsSdgnResultsFromUsers(usersAll);
-      const snapshot = await getDocs(collection(db, "users"));
-      const allUsers = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
-      const isTerminale = examId === DS_SDGN_TERMINALE_QCM_EXAM_ID;
-      const examLabel = isTerminale
-        ? "DS SDGN Terminale \u2014 QCM chronom\u00e9tr\u00e9"
-        : "DS SDGN Premi\u00e8re \u2014 QCM chronom\u00e9tr\u00e9";
-
-      let rows;
-      if (!isTerminale) {
-        const notes = await fetchAllDsSdgnNotes();
-        if (notes.length > 0) {
-          rows = buildReportingRowsFromDsSdgnSummaries(
-            notes.map((n) => ({
-              uid: n.uid,
-              examId: DS_SDGN_QCM_EXAM_ID,
-              prenom: n.prenom,
-              nom: n.nom,
-              email: n.email,
-              classe: n.classe,
-              gradeOn20: n.gradeOn20,
-              scorePoints: n.scorePoints,
-              totalQuestions: n.totalQuestions,
-              questionsAnswered: n.questionsAnswered ?? 0,
-              correctCount: 0,
-              wrongCount: 0,
-              forcedZero: false,
-              status: n.status || "completed",
-              completed: n.gradeOn20 > 0,
-              finishedAt: n.updatedAt,
-              answersCount: n.questionsAnswered ?? 0,
-              updatedAt: n.updatedAt,
-            })),
-            allUsers,
-            DS_SDGN_QCM_EXAM_ID,
-          );
-        } else {
-          const summaries = await fetchAllDsSdgnResultSummaries();
-          const premiereSummaries = summaries.filter(
-            (s) => (s.examId ?? DS_SDGN_QCM_EXAM_ID) === DS_SDGN_QCM_EXAM_ID,
-          );
-          if (premiereSummaries.length > 0) {
-            rows = buildReportingRowsFromDsSdgnSummaries(
-              premiereSummaries,
-              allUsers,
-              DS_SDGN_QCM_EXAM_ID,
-            );
-          } else {
-            rows = buildPremiereDsReportingRows(allUsers.filter((u) => u.role !== "admin"));
-          }
-        }
-      } else {
-        const summaries = await fetchAllDsSdgnResultSummaries();
-        const terminaleSummaries = summaries.filter(
-          (s) => (s.examId ?? DS_SDGN_QCM_EXAM_ID) === DS_SDGN_TERMINALE_QCM_EXAM_ID,
-        );
-        if (terminaleSummaries.length > 0) {
-          rows = buildReportingRowsFromDsSdgnSummaries(
-            terminaleSummaries,
-            allUsers,
-            DS_SDGN_TERMINALE_QCM_EXAM_ID,
-          );
-        } else {
-          rows = buildTerminaleDsReportingRows(allUsers.filter((u) => u.role !== "admin"));
-        }
-      }
-
-      return buildExportReportForAdmin(rows, allUsers, examId, examLabel);
-    },
     chargementEleves,
     erreurEleves,
     recompenseEnCours,
@@ -870,9 +495,6 @@ export function useAdminData() {
     setFiltreActivite,
     rechercheEleve,
     setRechercheEleve,
-    resetDsLoading,
-    sdgnExpanded,
-    setSdgnExpanded,
     resetPwdUserId,
     flashReporting,
     setFlashReporting,
@@ -898,20 +520,15 @@ export function useAdminData() {
     statsParClasse,
     statsParLycee,
     reportingRows,
-    terminaleReportingRows,
-    premiereReportingRows,
-    terminaleDsReportingRows,
     reportingFiltres,
     maxParticipationReporting,
     dashboardStats,
-    dsCopiesRows,
-    exportAllDsCopiesPdf,
-    resetDsLocksForFilteredStudents,
-    elevesSuspects,
+    resetSaisonComplete,
+    resetSaisonLoading,
+    nettoyerAnciennesFonctionnalites,
+    nettoyageLoading,
     elevesJetonsSuspendus,
     importerChapitres,
-    importerMissions,
-    resetMissions,
     getPrestigeTotal,
     formatJetons,
     formatJetonsDelta,

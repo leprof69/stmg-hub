@@ -4,34 +4,27 @@ const AIDE_ITEMS = [
   {
     emoji: "\ud83d\udcca",
     titre: "Vue d\u2019ensemble",
-    texte:
-      "Indicateurs du jour : activit\u00e9, SDGN, anti-triche, temps connect\u00e9. Alertes jetons suspendus et signalements missions.",
+    texte: "Indicateurs du jour : activit\u00e9, temps connect\u00e9. Alertes jetons suspendus.",
     couleurKey: "B" as const,
   },
   {
     emoji: "\ud83d\udc65",
     titre: "\u00c9l\u00e8ves",
     texte:
-      "Tableau d\u00e9taill\u00e9 : missions, Focus, cartes, ajustement jetons, reset mot de passe, r\u00e9tablir jetons si suspendus.",
+      "Tableau d\u00e9taill\u00e9 : activit\u00e9, cartes, ajustement jetons, reset mot de passe, r\u00e9tablir jetons si suspendus.",
     couleurKey: "S" as const,
-  },
-  {
-    emoji: "\ud83d\udcdd",
-    titre: "Examens & DS",
-    texte:
-      "Export PDF copies Bac, reset copies Bac (filtres), PDF notes + notions DS SDGN Premiere, revisions Bac Terminale.",
-    couleurKey: "G" as const,
   },
   {
     emoji: "\ud83c\udfc6",
     titre: "Jetons",
-    texte: "Podium prestige : distribution de jetons bonus top 5 \u00e9l\u00e8ves et familles.",
+    texte:
+      "Podium prestige : distribution de jetons bonus top 5 \u00e9l\u00e8ves et familles. Zone dangereuse : reset de saison, nettoyage des anciennes fonctionnalit\u00e9s.",
     couleurKey: "U" as const,
   },
   {
     emoji: "\ud83d\udce5",
     titre: "Imports",
-    texte: "Chapitres et missions depuis Excel ; colonne correction pour l\u2019IA Missions.",
+    texte: "Chapitres depuis Excel.",
     couleurKey: "T" as const,
   },
 ];
@@ -63,16 +56,27 @@ export default function AdminAidePanel() {
           <tbody>
             <tr>
               <td style={{ padding: "8px 10px", fontWeight: 800 }}>{"R\u00e9tablir jetons"}</td>
-              <td style={{ padding: "8px 10px" }}>{"L\u2019\u00e9l\u00e8ve regagne des jetons (Missions, jeux)"}</td>
+              <td style={{ padding: "8px 10px" }}>{"L\u2019\u00e9l\u00e8ve regagne des jetons (jeux, cartes)"}</td>
               <td style={{ padding: "8px 10px", fontFamily: "monospace", fontSize: "0.78rem" }}>
                 platformIntegrity.xpSuspended = false
               </td>
             </tr>
             <tr>
-              <td style={{ padding: "8px 10px", fontWeight: 800 }}>{"Reset copies DS Bac"}</td>
-              <td style={{ padding: "8px 10px" }}>{"Efface les r\u00e9ponses Objectif Bac (pas le QCM SDGN)"}</td>
+              <td style={{ padding: "8px 10px", fontWeight: 800, color: "#B91C1C" }}>{"R\u00e9initialiser la saison (Jetons)"}</td>
+              <td style={{ padding: "8px 10px" }}>
+                {"TOUS les \u00e9l\u00e8ves repartent \u00e0 0 : jetons, prestige, cartes, chapitres/missions, s\u00e9ries de connexion, classe. Lyc\u00e9e conserv\u00e9. Comptes conserv\u00e9s. Irr\u00e9versible."}
+              </td>
               <td style={{ padding: "8px 10px", fontFamily: "monospace", fontSize: "0.78rem" }}>
-                objectifBacDs.{a.DS_EXAM_ID}
+                xp, xpDepensee, prestige*, cartes, chapitresCompletes, missionsCompletes, missionsProgress, missionsHistorique, connexions_consecutives, classe
+              </td>
+            </tr>
+            <tr>
+              <td style={{ padding: "8px 10px", fontWeight: 800, color: "#B91C1C" }}>{"Nettoyer anciennes fonctionnalit\u00e9s (Jetons)"}</td>
+              <td style={{ padding: "8px 10px" }}>
+                {"Supprime les donn\u00e9es orphelines des fonctionnalit\u00e9s retir\u00e9es (DS, Missions, Objectif Bac, Focus). Comptes \u00e9l\u00e8ves non affect\u00e9s autrement. Irr\u00e9versible."}
+              </td>
+              <td style={{ padding: "8px 10px", fontFamily: "monospace", fontSize: "0.78rem" }}>
+                dsTab, objectifBacDs, objectifBacProgress, focusProgress + collections dsSdgnResults, dsSdgnNotes, missions, examConfig
               </td>
             </tr>
           </tbody>

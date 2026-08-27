@@ -367,8 +367,8 @@ export default function ProfileStudio({
             fontWeight: 800,
             fontSize: "0.65rem",
             cursor: "pointer",
-            background: active ? "rgba(167,139,250,0.35)" : "rgba(74,222,128,0.15)",
-            color: active ? "#e9d5ff" : "#4ade80",
+            background: active ? "rgba(14,165,233,0.25)" : "rgba(74,222,128,0.15)",
+            color: active ? "#bae6fd" : "#4ade80",
           }}
         >
           {active ? "\u2713 Actif" : "Choisir"}
@@ -431,7 +431,7 @@ export default function ProfileStudio({
             style={{
               fontFamily: "'Fredoka One', cursive",
               fontSize: "1.15rem",
-              background: "linear-gradient(90deg,#e9d5ff,#f9a8d4,#fde68a)",
+              background: "linear-gradient(90deg,#7dd3fc,#f9a8d4,#fde68a)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
@@ -439,7 +439,7 @@ export default function ProfileStudio({
             Studio Profil
           </div>
           <div style={{ fontSize: "0.68rem", color: "#64748b", marginTop: 2 }}>
-            Design 2026  aperu en direct
+            Design 2026 — aperçu en direct
           </div>
         </div>
         <div
@@ -900,8 +900,8 @@ export default function ProfileStudio({
                     marginBottom: 12,
                     padding: 10,
                     borderRadius: 14,
-                    background: "rgba(167,139,250,0.08)",
-                    border: "1px dashed rgba(167,139,250,0.25)",
+                    background: "rgba(14,165,233,0.06)",
+                    border: "1px dashed rgba(14,165,233,0.22)",
                   }}
                 >
                   {localSalon.deco.length === 0 ? (
@@ -922,7 +922,7 @@ export default function ProfileStudio({
                             border:
                               selectedDecoEm === em
                                 ? "2px solid rgba(251,191,36,0.9)"
-                                : "1px solid rgba(167,139,250,0.35)",
+                                : "1px solid rgba(14,165,233,0.30)",
                             background:
                               selectedDecoEm === em
                                 ? "rgba(251,191,36,0.12)"
@@ -991,7 +991,7 @@ export default function ProfileStudio({
                         <span
                           style={{
                             fontSize: "0.5rem",
-                            color: on ? "#c084fc" : "#94a3b8",
+                            color: on ? "#0EA5E9" : "#94a3b8",
                             maxWidth: "100%",
                             overflow: "hidden",
                             textOverflow: "ellipsis",

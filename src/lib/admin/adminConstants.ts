@@ -13,7 +13,6 @@ export const ADMIN_COLORS = {
 export const ADMIN_SECTIONS = [
   { id: "overview", label: "Vue d\u2019ensemble" },
   { id: "eleves", label: "\u00c9l\u00e8ves" },
-  { id: "examens", label: "Examens & DS" },
   { id: "jetons", label: "Jetons & r\u00e9compenses" },
   { id: "contenus", label: "Imports" },
   { id: "aide", label: "Aide" },
